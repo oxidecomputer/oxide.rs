@@ -92,6 +92,12 @@ pub mod types {
         pub vlan_id: ::std::option::Option<u16>,
     }
 
+    impl ::std::convert::From<&Address> for Address {
+        fn from(value: &Address) -> Self {
+            value.clone()
+        }
+    }
+
     impl Address {
         pub fn builder() -> builder::Address {
             Default::default()
@@ -144,6 +150,12 @@ pub mod types {
         /// this is always phy0. On a 2x breakout the options are phy0 and phy1,
         /// on 4x phy0-phy3, etc.
         pub link_name: Name,
+    }
+
+    impl ::std::convert::From<&AddressConfig> for AddressConfig {
+        fn from(value: &AddressConfig) -> Self {
+            value.clone()
+        }
     }
 
     impl AddressConfig {
@@ -230,6 +242,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&AddressLot> for AddressLot {
+        fn from(value: &AddressLot) -> Self {
+            value.clone()
+        }
+    }
+
     impl AddressLot {
         pub fn builder() -> builder::AddressLot {
             Default::default()
@@ -283,6 +301,12 @@ pub mod types {
         pub last_address: ::std::net::IpAddr,
     }
 
+    impl ::std::convert::From<&AddressLotBlock> for AddressLotBlock {
+        fn from(value: &AddressLotBlock) -> Self {
+            value.clone()
+        }
+    }
+
     impl AddressLotBlock {
         pub fn builder() -> builder::AddressLotBlock {
             Default::default()
@@ -326,6 +350,12 @@ pub mod types {
         pub first_address: ::std::net::IpAddr,
         /// The last address in the lot (inclusive).
         pub last_address: ::std::net::IpAddr,
+    }
+
+    impl ::std::convert::From<&AddressLotBlockCreate> for AddressLotBlockCreate {
+        fn from(value: &AddressLotBlockCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl AddressLotBlockCreate {
@@ -374,6 +404,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AddressLotBlockResultsPage> for AddressLotBlockResultsPage {
+        fn from(value: &AddressLotBlockResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AddressLotBlockResultsPage {
@@ -434,6 +470,12 @@ pub mod types {
         pub name: Name,
     }
 
+    impl ::std::convert::From<&AddressLotCreate> for AddressLotCreate {
+        fn from(value: &AddressLotCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl AddressLotCreate {
         pub fn builder() -> builder::AddressLotCreate {
             Default::default()
@@ -482,6 +524,12 @@ pub mod types {
         pub blocks: ::std::vec::Vec<AddressLotBlock>,
         /// The address lot that was created.
         pub lot: AddressLot,
+    }
+
+    impl ::std::convert::From<&AddressLotCreateResponse> for AddressLotCreateResponse {
+        fn from(value: &AddressLotCreateResponse) -> Self {
+            value.clone()
+        }
     }
 
     impl AddressLotCreateResponse {
@@ -538,6 +586,12 @@ pub mod types {
         /// Pool address lots are used by IP pools.
         #[serde(rename = "pool")]
         Pool,
+    }
+
+    impl ::std::convert::From<&Self> for AddressLotKind {
+        fn from(value: &AddressLotKind) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for AddressLotKind {
@@ -627,6 +681,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&AddressLotResultsPage> for AddressLotResultsPage {
+        fn from(value: &AddressLotResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl AddressLotResultsPage {
         pub fn builder() -> builder::AddressLotResultsPage {
             Default::default()
@@ -675,6 +735,12 @@ pub mod types {
         pub blocks: ::std::vec::Vec<AddressLotBlock>,
         /// The address lot.
         pub lot: AddressLot,
+    }
+
+    impl ::std::convert::From<&AddressLotViewResponse> for AddressLotViewResponse {
+        fn from(value: &AddressLotViewResponse) -> Self {
+            value.clone()
+        }
     }
 
     impl AddressLotViewResponse {
@@ -764,6 +830,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&AffinityGroup> for AffinityGroup {
+        fn from(value: &AffinityGroup) -> Self {
+            value.clone()
+        }
+    }
+
     impl AffinityGroup {
         pub fn builder() -> builder::AffinityGroup {
             Default::default()
@@ -809,6 +881,12 @@ pub mod types {
         pub failure_domain: FailureDomain,
         pub name: Name,
         pub policy: AffinityPolicy,
+    }
+
+    impl ::std::convert::From<&AffinityGroupCreate> for AffinityGroupCreate {
+        fn from(value: &AffinityGroupCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl AffinityGroupCreate {
@@ -887,6 +965,12 @@ pub mod types {
         },
     }
 
+    impl ::std::convert::From<&Self> for AffinityGroupMember {
+        fn from(value: &AffinityGroupMember) -> Self {
+            value.clone()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -927,6 +1011,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AffinityGroupMemberResultsPage> for AffinityGroupMemberResultsPage {
+        fn from(value: &AffinityGroupMemberResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AffinityGroupMemberResultsPage {
@@ -977,6 +1067,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&AffinityGroupResultsPage> for AffinityGroupResultsPage {
+        fn from(value: &AffinityGroupResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl AffinityGroupResultsPage {
         pub fn builder() -> builder::AffinityGroupResultsPage {
             Default::default()
@@ -1024,6 +1120,12 @@ pub mod types {
         pub description: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&AffinityGroupUpdate> for AffinityGroupUpdate {
+        fn from(value: &AffinityGroupUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for AffinityGroupUpdate {
@@ -1097,6 +1199,12 @@ pub mod types {
         /// If the affinity request cannot be satisfied, fail explicitly.
         #[serde(rename = "fail")]
         Fail,
+    }
+
+    impl ::std::convert::From<&Self> for AffinityPolicy {
+        fn from(value: &AffinityPolicy) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for AffinityPolicy {
@@ -1175,6 +1283,12 @@ pub mod types {
         pub switch_histories: ::std::vec::Vec<SwitchBgpHistory>,
     }
 
+    impl ::std::convert::From<&AggregateBgpMessageHistory> for AggregateBgpMessageHistory {
+        fn from(value: &AggregateBgpMessageHistory) -> Self {
+            value.clone()
+        }
+    }
+
     impl AggregateBgpMessageHistory {
         pub fn builder() -> builder::AggregateBgpMessageHistory {
             Default::default()
@@ -1215,6 +1329,12 @@ pub mod types {
         pub description: ::std::string::String,
         /// The name of the alert class.
         pub name: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&AlertClass> for AlertClass {
+        fn from(value: &AlertClass) -> Self {
+            value.clone()
+        }
     }
 
     impl AlertClass {
@@ -1263,6 +1383,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AlertClassResultsPage> for AlertClassResultsPage {
+        fn from(value: &AlertClassResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AlertClassResultsPage {
@@ -1369,6 +1495,12 @@ pub mod types {
         pub trigger: AlertDeliveryTrigger,
     }
 
+    impl ::std::convert::From<&AlertDelivery> for AlertDelivery {
+        fn from(value: &AlertDelivery) -> Self {
+            value.clone()
+        }
+    }
+
     impl AlertDelivery {
         pub fn builder() -> builder::AlertDelivery {
             Default::default()
@@ -1422,6 +1554,12 @@ pub mod types {
         Webhook(::std::vec::Vec<WebhookDeliveryAttempt>),
     }
 
+    impl ::std::convert::From<&Self> for AlertDeliveryAttempts {
+        fn from(value: &AlertDeliveryAttempts) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::vec::Vec<WebhookDeliveryAttempt>> for AlertDeliveryAttempts {
         fn from(value: ::std::vec::Vec<WebhookDeliveryAttempt>) -> Self {
             Self::Webhook(value)
@@ -1452,6 +1590,12 @@ pub mod types {
     )]
     pub struct AlertDeliveryId {
         pub delivery_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&AlertDeliveryId> for AlertDeliveryId {
+        fn from(value: &AlertDeliveryId) -> Self {
+            value.clone()
+        }
     }
 
     impl AlertDeliveryId {
@@ -1500,6 +1644,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AlertDeliveryResultsPage> for AlertDeliveryResultsPage {
+        fn from(value: &AlertDeliveryResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AlertDeliveryResultsPage {
@@ -1572,6 +1722,12 @@ pub mod types {
         /// retried again.
         #[serde(rename = "failed")]
         Failed,
+    }
+
+    impl ::std::convert::From<&Self> for AlertDeliveryState {
+        fn from(value: &AlertDeliveryState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for AlertDeliveryState {
@@ -1680,6 +1836,12 @@ pub mod types {
         Probe,
     }
 
+    impl ::std::convert::From<&Self> for AlertDeliveryTrigger {
+        fn from(value: &AlertDeliveryTrigger) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for AlertDeliveryTrigger {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -1783,6 +1945,12 @@ pub mod types {
         pub resends_started: ::std::option::Option<u32>,
     }
 
+    impl ::std::convert::From<&AlertProbeResult> for AlertProbeResult {
+        fn from(value: &AlertProbeResult) -> Self {
+            value.clone()
+        }
+    }
+
     impl AlertProbeResult {
         pub fn builder() -> builder::AlertProbeResult {
             Default::default()
@@ -1877,6 +2045,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&AlertReceiver> for AlertReceiver {
+        fn from(value: &AlertReceiver) -> Self {
+            value.clone()
+        }
+    }
+
     impl AlertReceiver {
         pub fn builder() -> builder::AlertReceiver {
             Default::default()
@@ -1939,6 +2113,12 @@ pub mod types {
         },
     }
 
+    impl ::std::convert::From<&Self> for AlertReceiverKind {
+        fn from(value: &AlertReceiverKind) -> Self {
+            value.clone()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -1979,6 +2159,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AlertReceiverResultsPage> for AlertReceiverResultsPage {
+        fn from(value: &AlertReceiverResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AlertReceiverResultsPage {
@@ -2028,6 +2214,12 @@ pub mod types {
     impl ::std::convert::From<AlertSubscription> for ::std::string::String {
         fn from(value: AlertSubscription) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&AlertSubscription> for AlertSubscription {
+        fn from(value: &AlertSubscription) -> Self {
+            value.clone()
         }
     }
 
@@ -2119,6 +2311,12 @@ pub mod types {
         pub subscription: AlertSubscription,
     }
 
+    impl ::std::convert::From<&AlertSubscriptionCreate> for AlertSubscriptionCreate {
+        fn from(value: &AlertSubscriptionCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl AlertSubscriptionCreate {
         pub fn builder() -> builder::AlertSubscriptionCreate {
             Default::default()
@@ -2154,6 +2352,12 @@ pub mod types {
     pub struct AlertSubscriptionCreated {
         /// The new subscription added to the receiver.
         pub subscription: AlertSubscription,
+    }
+
+    impl ::std::convert::From<&AlertSubscriptionCreated> for AlertSubscriptionCreated {
+        fn from(value: &AlertSubscriptionCreated) -> Self {
+            value.clone()
+        }
     }
 
     impl AlertSubscriptionCreated {
@@ -2212,6 +2416,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&AllowList> for AllowList {
+        fn from(value: &AllowList) -> Self {
+            value.clone()
+        }
+    }
+
     impl AllowList {
         pub fn builder() -> builder::AllowList {
             Default::default()
@@ -2248,6 +2458,12 @@ pub mod types {
     pub struct AllowListUpdate {
         /// The new list of allowed source IPs.
         pub allowed_ips: AllowedSourceIps,
+    }
+
+    impl ::std::convert::From<&AllowListUpdate> for AllowListUpdate {
+        fn from(value: &AllowListUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl AllowListUpdate {
@@ -2320,6 +2536,12 @@ pub mod types {
         /// All others are prevented from reaching rack services.
         #[serde(rename = "list")]
         List(::std::vec::Vec<IpNet>),
+    }
+
+    impl ::std::convert::From<&Self> for AllowedSourceIps {
+        fn from(value: &AllowedSourceIps) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::convert::From<::std::vec::Vec<IpNet>> for AllowedSourceIps {
@@ -2409,6 +2631,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&AntiAffinityGroup> for AntiAffinityGroup {
+        fn from(value: &AntiAffinityGroup) -> Self {
+            value.clone()
+        }
+    }
+
     impl AntiAffinityGroup {
         pub fn builder() -> builder::AntiAffinityGroup {
             Default::default()
@@ -2454,6 +2682,12 @@ pub mod types {
         pub failure_domain: FailureDomain,
         pub name: Name,
         pub policy: AffinityPolicy,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupCreate> for AntiAffinityGroupCreate {
+        fn from(value: &AntiAffinityGroupCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl AntiAffinityGroupCreate {
@@ -2535,6 +2769,12 @@ pub mod types {
         },
     }
 
+    impl ::std::convert::From<&Self> for AntiAffinityGroupMember {
+        fn from(value: &AntiAffinityGroupMember) -> Self {
+            value.clone()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -2575,6 +2815,14 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupMemberResultsPage>
+        for AntiAffinityGroupMemberResultsPage
+    {
+        fn from(value: &AntiAffinityGroupMemberResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AntiAffinityGroupMemberResultsPage {
@@ -2625,6 +2873,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&AntiAffinityGroupResultsPage> for AntiAffinityGroupResultsPage {
+        fn from(value: &AntiAffinityGroupResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl AntiAffinityGroupResultsPage {
         pub fn builder() -> builder::AntiAffinityGroupResultsPage {
             Default::default()
@@ -2672,6 +2926,12 @@ pub mod types {
         pub description: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupUpdate> for AntiAffinityGroupUpdate {
+        fn from(value: &AntiAffinityGroupUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for AntiAffinityGroupUpdate {
@@ -2807,6 +3067,12 @@ pub mod types {
         pub user_agent: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&AuditLogEntry> for AuditLogEntry {
+        fn from(value: &AuditLogEntry) -> Self {
+            value.clone()
+        }
+    }
+
     impl AuditLogEntry {
         pub fn builder() -> builder::AuditLogEntry {
             Default::default()
@@ -2918,6 +3184,12 @@ pub mod types {
         Unauthenticated,
     }
 
+    impl ::std::convert::From<&Self> for AuditLogEntryActor {
+        fn from(value: &AuditLogEntryActor) -> Self {
+            value.clone()
+        }
+    }
+
     /// Result of an audit log entry
     ///
     /// <details><summary>JSON schema</summary>
@@ -3027,6 +3299,12 @@ pub mod types {
         Unknown,
     }
 
+    impl ::std::convert::From<&Self> for AuditLogEntryResult {
+        fn from(value: &AuditLogEntryResult) -> Self {
+            value.clone()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -3067,6 +3345,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AuditLogEntryResultsPage> for AuditLogEntryResultsPage {
+        fn from(value: &AuditLogEntryResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl AuditLogEntryResultsPage {
@@ -3157,6 +3441,12 @@ pub mod types {
         ViewableToAll,
     }
 
+    impl ::std::convert::From<&Self> for AuthzScope {
+        fn from(value: &AuthzScope) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for AuthzScope {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -3245,6 +3535,12 @@ pub mod types {
         pub serial: ::std::string::String,
     }
 
+    impl ::std::convert::From<&Baseboard> for Baseboard {
+        fn from(value: &Baseboard) -> Self {
+            value.clone()
+        }
+    }
+
     impl Baseboard {
         pub fn builder() -> builder::Baseboard {
             Default::default()
@@ -3284,6 +3580,12 @@ pub mod types {
         SingleHop,
         #[serde(rename = "multi_hop")]
         MultiHop,
+    }
+
+    impl ::std::convert::From<&Self> for BfdMode {
+        fn from(value: &BfdMode) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for BfdMode {
@@ -3372,6 +3674,12 @@ pub mod types {
         /// The switch to enable this session on. Must be `switch0` or
         /// `switch1`.
         pub switch: Name,
+    }
+
+    impl ::std::convert::From<&BfdSessionDisable> for BfdSessionDisable {
+        fn from(value: &BfdSessionDisable) -> Self {
+            value.clone()
+        }
     }
 
     impl BfdSessionDisable {
@@ -3474,6 +3782,12 @@ pub mod types {
         pub switch: Name,
     }
 
+    impl ::std::convert::From<&BfdSessionEnable> for BfdSessionEnable {
+        fn from(value: &BfdSessionEnable) -> Self {
+            value.clone()
+        }
+    }
+
     impl BfdSessionEnable {
         pub fn builder() -> builder::BfdSessionEnable {
             Default::default()
@@ -3549,6 +3863,12 @@ pub mod types {
         /// the init state.
         #[serde(rename = "up")]
         Up,
+    }
+
+    impl ::std::convert::From<&Self> for BfdState {
+        fn from(value: &BfdState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for BfdState {
@@ -3664,6 +3984,12 @@ pub mod types {
         pub switch: Name,
     }
 
+    impl ::std::convert::From<&BfdStatus> for BfdStatus {
+        fn from(value: &BfdStatus) -> Self {
+            value.clone()
+        }
+    }
+
     impl BfdStatus {
         pub fn builder() -> builder::BfdStatus {
             Default::default()
@@ -3737,6 +4063,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&BgpAnnounceSet> for BgpAnnounceSet {
+        fn from(value: &BgpAnnounceSet) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpAnnounceSet {
         pub fn builder() -> builder::BgpAnnounceSet {
             Default::default()
@@ -3783,6 +4115,12 @@ pub mod types {
         pub announcement: ::std::vec::Vec<BgpAnnouncementCreate>,
         pub description: ::std::string::String,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&BgpAnnounceSetCreate> for BgpAnnounceSetCreate {
+        fn from(value: &BgpAnnounceSetCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl BgpAnnounceSetCreate {
@@ -3840,6 +4178,12 @@ pub mod types {
         pub network: IpNet,
     }
 
+    impl ::std::convert::From<&BgpAnnouncement> for BgpAnnouncement {
+        fn from(value: &BgpAnnouncement) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpAnnouncement {
         pub fn builder() -> builder::BgpAnnouncement {
             Default::default()
@@ -3888,6 +4232,12 @@ pub mod types {
         pub address_lot_block: NameOrId,
         /// The network being announced.
         pub network: IpNet,
+    }
+
+    impl ::std::convert::From<&BgpAnnouncementCreate> for BgpAnnouncementCreate {
+        fn from(value: &BgpAnnouncementCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl BgpAnnouncementCreate {
@@ -3983,6 +4333,12 @@ pub mod types {
         pub vrf: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&BgpConfig> for BgpConfig {
+        fn from(value: &BgpConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpConfig {
         pub fn builder() -> builder::BgpConfig {
             Default::default()
@@ -4059,6 +4415,12 @@ pub mod types {
         pub vrf: ::std::option::Option<Name>,
     }
 
+    impl ::std::convert::From<&BgpConfigCreate> for BgpConfigCreate {
+        fn from(value: &BgpConfigCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpConfigCreate {
         pub fn builder() -> builder::BgpConfigCreate {
             Default::default()
@@ -4107,6 +4469,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&BgpConfigResultsPage> for BgpConfigResultsPage {
+        fn from(value: &BgpConfigResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpConfigResultsPage {
         pub fn builder() -> builder::BgpConfigResultsPage {
             Default::default()
@@ -4145,6 +4513,12 @@ pub mod types {
     pub struct BgpExported {
         /// Exported routes indexed by peer address.
         pub exports: ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<Ipv4Net>>,
+    }
+
+    impl ::std::convert::From<&BgpExported> for BgpExported {
+        fn from(value: &BgpExported) -> Self {
+            value.clone()
+        }
     }
 
     impl BgpExported {
@@ -4213,6 +4587,12 @@ pub mod types {
         pub switch: SwitchLocation,
     }
 
+    impl ::std::convert::From<&BgpImportedRouteIpv4> for BgpImportedRouteIpv4 {
+        fn from(value: &BgpImportedRouteIpv4) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpImportedRouteIpv4 {
         pub fn builder() -> builder::BgpImportedRouteIpv4 {
             Default::default()
@@ -4242,6 +4622,12 @@ pub mod types {
     impl ::std::convert::From<BgpMessageHistory> for ::serde_json::Value {
         fn from(value: BgpMessageHistory) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&BgpMessageHistory> for BgpMessageHistory {
+        fn from(value: &BgpMessageHistory) -> Self {
+            value.clone()
         }
     }
 
@@ -4488,6 +4874,12 @@ pub mod types {
         pub vlan_id: ::std::option::Option<u16>,
     }
 
+    impl ::std::convert::From<&BgpPeer> for BgpPeer {
+        fn from(value: &BgpPeer) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpPeer {
         pub fn builder() -> builder::BgpPeer {
             Default::default()
@@ -4535,6 +4927,12 @@ pub mod types {
         /// phy1, on 4x phy0-phy3, etc.
         pub link_name: Name,
         pub peers: ::std::vec::Vec<BgpPeer>,
+    }
+
+    impl ::std::convert::From<&BgpPeerConfig> for BgpPeerConfig {
+        fn from(value: &BgpPeerConfig) -> Self {
+            value.clone()
+        }
     }
 
     impl BgpPeerConfig {
@@ -4657,6 +5055,12 @@ pub mod types {
         /// keepalive messages with peers.
         #[serde(rename = "established")]
         Established,
+    }
+
+    impl ::std::convert::From<&Self> for BgpPeerState {
+        fn from(value: &BgpPeerState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for BgpPeerState {
@@ -4794,6 +5198,12 @@ pub mod types {
         pub switch: SwitchLocation,
     }
 
+    impl ::std::convert::From<&BgpPeerStatus> for BgpPeerStatus {
+        fn from(value: &BgpPeerStatus) -> Self {
+            value.clone()
+        }
+    }
+
     impl BgpPeerStatus {
         pub fn builder() -> builder::BgpPeerStatus {
             Default::default()
@@ -4904,6 +5314,12 @@ pub mod types {
         RangeFrom { start: f64 },
     }
 
+    impl ::std::convert::From<&Self> for BinRangedouble {
+        fn from(value: &BinRangedouble) -> Self {
+            value.clone()
+        }
+    }
+
     /// A type storing a range over `T`.
     ///
     /// This type supports ranges similar to the `RangeTo`, `Range` and
@@ -5006,6 +5422,12 @@ pub mod types {
         /// A range bounded inclusively below and unbounded above, `start..`.
         #[serde(rename = "range_from")]
         RangeFrom { start: f32 },
+    }
+
+    impl ::std::convert::From<&Self> for BinRangefloat {
+        fn from(value: &BinRangefloat) -> Self {
+            value.clone()
+        }
     }
 
     /// A type storing a range over `T`.
@@ -5112,6 +5534,12 @@ pub mod types {
         RangeFrom { start: i16 },
     }
 
+    impl ::std::convert::From<&Self> for BinRangeint16 {
+        fn from(value: &BinRangeint16) -> Self {
+            value.clone()
+        }
+    }
+
     /// A type storing a range over `T`.
     ///
     /// This type supports ranges similar to the `RangeTo`, `Range` and
@@ -5214,6 +5642,12 @@ pub mod types {
         /// A range bounded inclusively below and unbounded above, `start..`.
         #[serde(rename = "range_from")]
         RangeFrom { start: i32 },
+    }
+
+    impl ::std::convert::From<&Self> for BinRangeint32 {
+        fn from(value: &BinRangeint32) -> Self {
+            value.clone()
+        }
     }
 
     /// A type storing a range over `T`.
@@ -5320,6 +5754,12 @@ pub mod types {
         RangeFrom { start: i64 },
     }
 
+    impl ::std::convert::From<&Self> for BinRangeint64 {
+        fn from(value: &BinRangeint64) -> Self {
+            value.clone()
+        }
+    }
+
     /// A type storing a range over `T`.
     ///
     /// This type supports ranges similar to the `RangeTo`, `Range` and
@@ -5422,6 +5862,12 @@ pub mod types {
         /// A range bounded inclusively below and unbounded above, `start..`.
         #[serde(rename = "range_from")]
         RangeFrom { start: i8 },
+    }
+
+    impl ::std::convert::From<&Self> for BinRangeint8 {
+        fn from(value: &BinRangeint8) -> Self {
+            value.clone()
+        }
     }
 
     /// A type storing a range over `T`.
@@ -5532,6 +5978,12 @@ pub mod types {
         RangeFrom { start: u16 },
     }
 
+    impl ::std::convert::From<&Self> for BinRangeuint16 {
+        fn from(value: &BinRangeuint16) -> Self {
+            value.clone()
+        }
+    }
+
     /// A type storing a range over `T`.
     ///
     /// This type supports ranges similar to the `RangeTo`, `Range` and
@@ -5638,6 +6090,12 @@ pub mod types {
         /// A range bounded inclusively below and unbounded above, `start..`.
         #[serde(rename = "range_from")]
         RangeFrom { start: u32 },
+    }
+
+    impl ::std::convert::From<&Self> for BinRangeuint32 {
+        fn from(value: &BinRangeuint32) -> Self {
+            value.clone()
+        }
     }
 
     /// A type storing a range over `T`.
@@ -5748,6 +6206,12 @@ pub mod types {
         RangeFrom { start: u64 },
     }
 
+    impl ::std::convert::From<&Self> for BinRangeuint64 {
+        fn from(value: &BinRangeuint64) -> Self {
+            value.clone()
+        }
+    }
+
     /// A type storing a range over `T`.
     ///
     /// This type supports ranges similar to the `RangeTo`, `Range` and
@@ -5856,6 +6320,12 @@ pub mod types {
         RangeFrom { start: u8 },
     }
 
+    impl ::std::convert::From<&Self> for BinRangeuint8 {
+        fn from(value: &BinRangeuint8) -> Self {
+            value.clone()
+        }
+    }
+
     /// Type storing bin edges and a count of samples within it.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5896,6 +6366,12 @@ pub mod types {
         pub count: u64,
         /// The range of the support covered by this bin.
         pub range: BinRangedouble,
+    }
+
+    impl ::std::convert::From<&Bindouble> for Bindouble {
+        fn from(value: &Bindouble) -> Self {
+            value.clone()
+        }
     }
 
     impl Bindouble {
@@ -5946,6 +6422,12 @@ pub mod types {
         pub range: BinRangefloat,
     }
 
+    impl ::std::convert::From<&Binfloat> for Binfloat {
+        fn from(value: &Binfloat) -> Self {
+            value.clone()
+        }
+    }
+
     impl Binfloat {
         pub fn builder() -> builder::Binfloat {
             Default::default()
@@ -5992,6 +6474,12 @@ pub mod types {
         pub count: u64,
         /// The range of the support covered by this bin.
         pub range: BinRangeint16,
+    }
+
+    impl ::std::convert::From<&Binint16> for Binint16 {
+        fn from(value: &Binint16) -> Self {
+            value.clone()
+        }
     }
 
     impl Binint16 {
@@ -6042,6 +6530,12 @@ pub mod types {
         pub range: BinRangeint32,
     }
 
+    impl ::std::convert::From<&Binint32> for Binint32 {
+        fn from(value: &Binint32) -> Self {
+            value.clone()
+        }
+    }
+
     impl Binint32 {
         pub fn builder() -> builder::Binint32 {
             Default::default()
@@ -6088,6 +6582,12 @@ pub mod types {
         pub count: u64,
         /// The range of the support covered by this bin.
         pub range: BinRangeint64,
+    }
+
+    impl ::std::convert::From<&Binint64> for Binint64 {
+        fn from(value: &Binint64) -> Self {
+            value.clone()
+        }
     }
 
     impl Binint64 {
@@ -6138,6 +6638,12 @@ pub mod types {
         pub range: BinRangeint8,
     }
 
+    impl ::std::convert::From<&Binint8> for Binint8 {
+        fn from(value: &Binint8) -> Self {
+            value.clone()
+        }
+    }
+
     impl Binint8 {
         pub fn builder() -> builder::Binint8 {
             Default::default()
@@ -6184,6 +6690,12 @@ pub mod types {
         pub count: u64,
         /// The range of the support covered by this bin.
         pub range: BinRangeuint16,
+    }
+
+    impl ::std::convert::From<&Binuint16> for Binuint16 {
+        fn from(value: &Binuint16) -> Self {
+            value.clone()
+        }
     }
 
     impl Binuint16 {
@@ -6234,6 +6746,12 @@ pub mod types {
         pub range: BinRangeuint32,
     }
 
+    impl ::std::convert::From<&Binuint32> for Binuint32 {
+        fn from(value: &Binuint32) -> Self {
+            value.clone()
+        }
+    }
+
     impl Binuint32 {
         pub fn builder() -> builder::Binuint32 {
             Default::default()
@@ -6280,6 +6798,12 @@ pub mod types {
         pub count: u64,
         /// The range of the support covered by this bin.
         pub range: BinRangeuint64,
+    }
+
+    impl ::std::convert::From<&Binuint64> for Binuint64 {
+        fn from(value: &Binuint64) -> Self {
+            value.clone()
+        }
     }
 
     impl Binuint64 {
@@ -6330,6 +6854,12 @@ pub mod types {
         pub range: BinRangeuint8,
     }
 
+    impl ::std::convert::From<&Binuint8> for Binuint8 {
+        fn from(value: &Binuint8) -> Self {
+            value.clone()
+        }
+    }
+
     impl Binuint8 {
         pub fn builder() -> builder::Binuint8 {
             Default::default()
@@ -6365,6 +6895,12 @@ pub mod types {
     impl ::std::convert::From<BlockSize> for i64 {
         fn from(value: BlockSize) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&BlockSize> for BlockSize {
+        fn from(value: &BlockSize) -> Self {
+            value.clone()
         }
     }
 
@@ -6420,6 +6956,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<&ByteCount> for ByteCount {
+        fn from(value: &ByteCount) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<u64> for ByteCount {
         fn from(value: u64) -> Self {
             Self(value)
@@ -6436,6 +6978,13 @@ pub mod types {
     impl ::std::convert::TryFrom<&str> for ByteCount {
         type Error = <u64 as ::std::str::FromStr>::Err;
         fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for ByteCount {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
@@ -6537,6 +7086,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Certificate> for Certificate {
+        fn from(value: &Certificate) -> Self {
+            value.clone()
+        }
+    }
+
     impl Certificate {
         pub fn builder() -> builder::Certificate {
             Default::default()
@@ -6600,6 +7155,12 @@ pub mod types {
         pub service: ServiceUsingCertificate,
     }
 
+    impl ::std::convert::From<&CertificateCreate> for CertificateCreate {
+        fn from(value: &CertificateCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl CertificateCreate {
         pub fn builder() -> builder::CertificateCreate {
             Default::default()
@@ -6646,6 +7207,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&CertificateResultsPage> for CertificateResultsPage {
+        fn from(value: &CertificateResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl CertificateResultsPage {
@@ -6696,6 +7263,12 @@ pub mod types {
         pub time_last_used: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&ConsoleSession> for ConsoleSession {
+        fn from(value: &ConsoleSession) -> Self {
+            value.clone()
+        }
+    }
+
     impl ConsoleSession {
         pub fn builder() -> builder::ConsoleSession {
             Default::default()
@@ -6744,6 +7317,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&ConsoleSessionResultsPage> for ConsoleSessionResultsPage {
+        fn from(value: &ConsoleSessionResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl ConsoleSessionResultsPage {
         pub fn builder() -> builder::ConsoleSessionResultsPage {
             Default::default()
@@ -6781,6 +7360,12 @@ pub mod types {
     pub struct Cumulativedouble {
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: f64,
+    }
+
+    impl ::std::convert::From<&Cumulativedouble> for Cumulativedouble {
+        fn from(value: &Cumulativedouble) -> Self {
+            value.clone()
+        }
     }
 
     impl Cumulativedouble {
@@ -6822,6 +7407,12 @@ pub mod types {
         pub value: f32,
     }
 
+    impl ::std::convert::From<&Cumulativefloat> for Cumulativefloat {
+        fn from(value: &Cumulativefloat) -> Self {
+            value.clone()
+        }
+    }
+
     impl Cumulativefloat {
         pub fn builder() -> builder::Cumulativefloat {
             Default::default()
@@ -6859,6 +7450,12 @@ pub mod types {
     pub struct Cumulativeint64 {
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: i64,
+    }
+
+    impl ::std::convert::From<&Cumulativeint64> for Cumulativeint64 {
+        fn from(value: &Cumulativeint64) -> Self {
+            value.clone()
+        }
     }
 
     impl Cumulativeint64 {
@@ -6899,6 +7496,12 @@ pub mod types {
     pub struct Cumulativeuint64 {
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: u64,
+    }
+
+    impl ::std::convert::From<&Cumulativeuint64> for Cumulativeuint64 {
+        fn from(value: &Cumulativeuint64) -> Self {
+            value.clone()
+        }
     }
 
     impl Cumulativeuint64 {
@@ -6976,6 +7579,12 @@ pub mod types {
         pub silo_id: ::uuid::Uuid,
         /// Name of the silo to which this user belongs.
         pub silo_name: Name,
+    }
+
+    impl ::std::convert::From<&CurrentUser> for CurrentUser {
+        fn from(value: &CurrentUser) -> Self {
+            value.clone()
+        }
     }
 
     impl CurrentUser {
@@ -7583,6 +8192,12 @@ pub mod types {
         Missing(MissingDatum),
     }
 
+    impl ::std::convert::From<&Self> for Datum {
+        fn from(value: &Datum) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<bool> for Datum {
         fn from(value: bool) -> Self {
             Self::Bool(value)
@@ -7855,6 +8470,12 @@ pub mod types {
         HistogramF64,
     }
 
+    impl ::std::convert::From<&Self> for DatumType {
+        fn from(value: &DatumType) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for DatumType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -7987,6 +8608,12 @@ pub mod types {
         pub public_cert: ::std::string::String,
     }
 
+    impl ::std::convert::From<&DerEncodedKeyPair> for DerEncodedKeyPair {
+        fn from(value: &DerEncodedKeyPair) -> Self {
+            value.clone()
+        }
+    }
+
     impl DerEncodedKeyPair {
         pub fn builder() -> builder::DerEncodedKeyPair {
             Default::default()
@@ -8045,6 +8672,12 @@ pub mod types {
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
+    impl ::std::convert::From<&DeviceAccessToken> for DeviceAccessToken {
+        fn from(value: &DeviceAccessToken) -> Self {
+            value.clone()
+        }
+    }
+
     impl DeviceAccessToken {
         pub fn builder() -> builder::DeviceAccessToken {
             Default::default()
@@ -8085,6 +8718,12 @@ pub mod types {
         pub client_id: ::uuid::Uuid,
         pub device_code: ::std::string::String,
         pub grant_type: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&DeviceAccessTokenRequest> for DeviceAccessTokenRequest {
+        fn from(value: &DeviceAccessTokenRequest) -> Self {
+            value.clone()
+        }
     }
 
     impl DeviceAccessTokenRequest {
@@ -8133,6 +8772,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&DeviceAccessTokenResultsPage> for DeviceAccessTokenResultsPage {
+        fn from(value: &DeviceAccessTokenResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl DeviceAccessTokenResultsPage {
@@ -8202,6 +8847,12 @@ pub mod types {
         pub ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
     }
 
+    impl ::std::convert::From<&DeviceAuthRequest> for DeviceAuthRequest {
+        fn from(value: &DeviceAuthRequest) -> Self {
+            value.clone()
+        }
+    }
+
     impl DeviceAuthRequest {
         pub fn builder() -> builder::DeviceAuthRequest {
             Default::default()
@@ -8231,6 +8882,12 @@ pub mod types {
     )]
     pub struct DeviceAuthVerify {
         pub user_code: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&DeviceAuthVerify> for DeviceAuthVerify {
+        fn from(value: &DeviceAuthVerify) -> Self {
+            value.clone()
+        }
     }
 
     impl DeviceAuthVerify {
@@ -8275,6 +8932,12 @@ pub mod types {
     pub enum Digest {
         #[serde(rename = "sha256")]
         Sha256(::std::string::String),
+    }
+
+    impl ::std::convert::From<&Self> for Digest {
+        fn from(value: &Digest) -> Self {
+            value.clone()
+        }
     }
 
     /// View of a Disk
@@ -8396,6 +9059,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Disk> for Disk {
+        fn from(value: &Disk) -> Self {
+            value.clone()
+        }
+    }
+
     impl Disk {
         pub fn builder() -> builder::Disk {
             Default::default()
@@ -8462,6 +9131,12 @@ pub mod types {
         Distributed(DiskSource),
     }
 
+    impl ::std::convert::From<&Self> for DiskBackend {
+        fn from(value: &DiskBackend) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<DiskSource> for DiskBackend {
         fn from(value: DiskSource) -> Self {
             Self::Distributed(value)
@@ -8521,6 +9196,12 @@ pub mod types {
         pub size: ByteCount,
     }
 
+    impl ::std::convert::From<&DiskCreate> for DiskCreate {
+        fn from(value: &DiskCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl DiskCreate {
         pub fn builder() -> builder::DiskCreate {
             Default::default()
@@ -8556,6 +9237,12 @@ pub mod types {
     pub struct DiskPath {
         /// Name or ID of the disk
         pub disk: NameOrId,
+    }
+
+    impl ::std::convert::From<&DiskPath> for DiskPath {
+        fn from(value: &DiskPath) -> Self {
+            value.clone()
+        }
     }
 
     impl DiskPath {
@@ -8604,6 +9291,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&DiskResultsPage> for DiskResultsPage {
+        fn from(value: &DiskResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl DiskResultsPage {
@@ -8731,6 +9424,12 @@ pub mod types {
         /// an external source.
         #[serde(rename = "importing_blocks")]
         ImportingBlocks { block_size: BlockSize },
+    }
+
+    impl ::std::convert::From<&Self> for DiskSource {
+        fn from(value: &DiskSource) -> Self {
+            value.clone()
+        }
     }
 
     /// State of a Disk
@@ -8975,6 +9674,12 @@ pub mod types {
         Faulted,
     }
 
+    impl ::std::convert::From<&Self> for DiskState {
+        fn from(value: &DiskState) -> Self {
+            value.clone()
+        }
+    }
+
     /// `DiskType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -9007,6 +9712,12 @@ pub mod types {
         Distributed,
         #[serde(rename = "local")]
         Local,
+    }
+
+    impl ::std::convert::From<&Self> for DiskType {
+        fn from(value: &DiskType) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for DiskType {
@@ -9160,6 +9871,12 @@ pub mod types {
         pub sum_of_samples: f64,
     }
 
+    impl ::std::convert::From<&Distributiondouble> for Distributiondouble {
+        fn from(value: &Distributiondouble) -> Self {
+            value.clone()
+        }
+    }
+
     impl Distributiondouble {
         pub fn builder() -> builder::Distributiondouble {
             Default::default()
@@ -9272,6 +9989,12 @@ pub mod types {
         pub sum_of_samples: i64,
     }
 
+    impl ::std::convert::From<&Distributionint64> for Distributionint64 {
+        fn from(value: &Distributionint64) -> Self {
+            value.clone()
+        }
+    }
+
     impl Distributionint64 {
         pub fn builder() -> builder::Distributionint64 {
             Default::default()
@@ -9342,6 +10065,12 @@ pub mod types {
         pub pool: ::std::option::Option<NameOrId>,
     }
 
+    impl ::std::convert::From<&EphemeralIpCreate> for EphemeralIpCreate {
+        fn from(value: &EphemeralIpCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for EphemeralIpCreate {
         fn default() -> Self {
             Self {
@@ -9391,6 +10120,12 @@ pub mod types {
         pub error_code: ::std::option::Option<::std::string::String>,
         pub message: ::std::string::String,
         pub request_id: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&Error> for Error {
+        fn from(value: &Error) -> Self {
+            value.clone()
+        }
     }
 
     impl Error {
@@ -9610,6 +10345,12 @@ pub mod types {
         },
     }
 
+    impl ::std::convert::From<&Self> for ExternalIp {
+        fn from(value: &ExternalIp) -> Self {
+            value.clone()
+        }
+    }
+
     /// Parameters for creating an external IP address for instances.
     ///
     /// <details><summary>JSON schema</summary>
@@ -9722,6 +10463,12 @@ pub mod types {
         Floating { floating_ip: NameOrId },
     }
 
+    impl ::std::convert::From<&Self> for ExternalIpCreate {
+        fn from(value: &ExternalIpCreate) -> Self {
+            value.clone()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -9762,6 +10509,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&ExternalIpResultsPage> for ExternalIpResultsPage {
+        fn from(value: &ExternalIpResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl ExternalIpResultsPage {
@@ -9808,6 +10561,12 @@ pub mod types {
         /// Instances are considered co-located if they are on the same sled
         #[serde(rename = "sled")]
         Sled,
+    }
+
+    impl ::std::convert::From<&Self> for FailureDomain {
+        fn from(value: &FailureDomain) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for FailureDomain {
@@ -9895,6 +10654,12 @@ pub mod types {
         pub source: FieldSource,
     }
 
+    impl ::std::convert::From<&FieldSchema> for FieldSchema {
+        fn from(value: &FieldSchema) -> Self {
+            value.clone()
+        }
+    }
+
     impl FieldSchema {
         pub fn builder() -> builder::FieldSchema {
             Default::default()
@@ -9935,6 +10700,12 @@ pub mod types {
         Target,
         #[serde(rename = "metric")]
         Metric,
+    }
+
+    impl ::std::convert::From<&Self> for FieldSource {
+        fn from(value: &FieldSource) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for FieldSource {
@@ -10046,6 +10817,12 @@ pub mod types {
         Uuid,
         #[serde(rename = "bool")]
         Bool,
+    }
+
+    impl ::std::convert::From<&Self> for FieldType {
+        fn from(value: &FieldType) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for FieldType {
@@ -10387,6 +11164,12 @@ pub mod types {
         Bool(bool),
     }
 
+    impl ::std::convert::From<&Self> for FieldValue {
+        fn from(value: &FieldValue) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<i8> for FieldValue {
         fn from(value: i8) -> Self {
             Self::I8(value)
@@ -10496,6 +11279,12 @@ pub mod types {
         pub snapshot_name: ::std::option::Option<Name>,
     }
 
+    impl ::std::convert::From<&FinalizeDisk> for FinalizeDisk {
+        fn from(value: &FinalizeDisk) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for FinalizeDisk {
         fn default() -> Self {
             Self {
@@ -10545,6 +11334,12 @@ pub mod types {
         Collaborator,
         #[serde(rename = "viewer")]
         Viewer,
+    }
+
+    impl ::std::convert::From<&Self> for FleetRole {
+        fn from(value: &FleetRole) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for FleetRole {
@@ -10632,6 +11427,12 @@ pub mod types {
         pub role_assignments: ::std::vec::Vec<FleetRoleRoleAssignment>,
     }
 
+    impl ::std::convert::From<&FleetRolePolicy> for FleetRolePolicy {
+        fn from(value: &FleetRolePolicy) -> Self {
+            value.clone()
+        }
+    }
+
     impl FleetRolePolicy {
         pub fn builder() -> builder::FleetRolePolicy {
             Default::default()
@@ -10682,6 +11483,12 @@ pub mod types {
         pub identity_id: ::uuid::Uuid,
         pub identity_type: IdentityType,
         pub role_name: FleetRole,
+    }
+
+    impl ::std::convert::From<&FleetRoleRoleAssignment> for FleetRoleRoleAssignment {
+        fn from(value: &FleetRoleRoleAssignment) -> Self {
+            value.clone()
+        }
     }
 
     impl FleetRoleRoleAssignment {
@@ -10794,6 +11601,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&FloatingIp> for FloatingIp {
+        fn from(value: &FloatingIp) -> Self {
+            value.clone()
+        }
+    }
+
     impl FloatingIp {
         pub fn builder() -> builder::FloatingIp {
             Default::default()
@@ -10844,6 +11657,12 @@ pub mod types {
         /// Name or ID of the resource that this IP address should be attached
         /// to
         pub parent: NameOrId,
+    }
+
+    impl ::std::convert::From<&FloatingIpAttach> for FloatingIpAttach {
+        fn from(value: &FloatingIpAttach) -> Self {
+            value.clone()
+        }
     }
 
     impl FloatingIpAttach {
@@ -10945,6 +11764,12 @@ pub mod types {
         pub pool: ::std::option::Option<NameOrId>,
     }
 
+    impl ::std::convert::From<&FloatingIpCreate> for FloatingIpCreate {
+        fn from(value: &FloatingIpCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl FloatingIpCreate {
         pub fn builder() -> builder::FloatingIpCreate {
             Default::default()
@@ -10982,6 +11807,12 @@ pub mod types {
     pub enum FloatingIpParentKind {
         #[serde(rename = "instance")]
         Instance,
+    }
+
+    impl ::std::convert::From<&Self> for FloatingIpParentKind {
+        fn from(value: &FloatingIpParentKind) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for FloatingIpParentKind {
@@ -11069,6 +11900,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&FloatingIpResultsPage> for FloatingIpResultsPage {
+        fn from(value: &FloatingIpResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl FloatingIpResultsPage {
         pub fn builder() -> builder::FloatingIpResultsPage {
             Default::default()
@@ -11116,6 +11953,12 @@ pub mod types {
         pub description: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&FloatingIpUpdate> for FloatingIpUpdate {
+        fn from(value: &FloatingIpUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for FloatingIpUpdate {
@@ -11175,6 +12018,12 @@ pub mod types {
         pub silo_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&Group> for Group {
+        fn from(value: &Group) -> Self {
+            value.clone()
+        }
+    }
+
     impl Group {
         pub fn builder() -> builder::Group {
             Default::default()
@@ -11221,6 +12070,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&GroupResultsPage> for GroupResultsPage {
+        fn from(value: &GroupResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl GroupResultsPage {
@@ -11355,6 +12210,12 @@ pub mod types {
         pub sum_of_samples: f64,
     }
 
+    impl ::std::convert::From<&Histogramdouble> for Histogramdouble {
+        fn from(value: &Histogramdouble) -> Self {
+            value.clone()
+        }
+    }
+
     impl Histogramdouble {
         pub fn builder() -> builder::Histogramdouble {
             Default::default()
@@ -11485,6 +12346,12 @@ pub mod types {
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub sum_of_samples: f64,
+    }
+
+    impl ::std::convert::From<&Histogramfloat> for Histogramfloat {
+        fn from(value: &Histogramfloat) -> Self {
+            value.clone()
+        }
     }
 
     impl Histogramfloat {
@@ -11622,6 +12489,12 @@ pub mod types {
         pub sum_of_samples: i64,
     }
 
+    impl ::std::convert::From<&Histogramint16> for Histogramint16 {
+        fn from(value: &Histogramint16) -> Self {
+            value.clone()
+        }
+    }
+
     impl Histogramint16 {
         pub fn builder() -> builder::Histogramint16 {
             Default::default()
@@ -11755,6 +12628,12 @@ pub mod types {
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
+    }
+
+    impl ::std::convert::From<&Histogramint32> for Histogramint32 {
+        fn from(value: &Histogramint32) -> Self {
+            value.clone()
+        }
     }
 
     impl Histogramint32 {
@@ -11892,6 +12771,12 @@ pub mod types {
         pub sum_of_samples: i64,
     }
 
+    impl ::std::convert::From<&Histogramint64> for Histogramint64 {
+        fn from(value: &Histogramint64) -> Self {
+            value.clone()
+        }
+    }
+
     impl Histogramint64 {
         pub fn builder() -> builder::Histogramint64 {
             Default::default()
@@ -12025,6 +12910,12 @@ pub mod types {
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
+    }
+
+    impl ::std::convert::From<&Histogramint8> for Histogramint8 {
+        fn from(value: &Histogramint8) -> Self {
+            value.clone()
+        }
     }
 
     impl Histogramint8 {
@@ -12164,6 +13055,12 @@ pub mod types {
         pub sum_of_samples: i64,
     }
 
+    impl ::std::convert::From<&Histogramuint16> for Histogramuint16 {
+        fn from(value: &Histogramuint16) -> Self {
+            value.clone()
+        }
+    }
+
     impl Histogramuint16 {
         pub fn builder() -> builder::Histogramuint16 {
             Default::default()
@@ -12299,6 +13196,12 @@ pub mod types {
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
+    }
+
+    impl ::std::convert::From<&Histogramuint32> for Histogramuint32 {
+        fn from(value: &Histogramuint32) -> Self {
+            value.clone()
+        }
     }
 
     impl Histogramuint32 {
@@ -12438,6 +13341,12 @@ pub mod types {
         pub sum_of_samples: i64,
     }
 
+    impl ::std::convert::From<&Histogramuint64> for Histogramuint64 {
+        fn from(value: &Histogramuint64) -> Self {
+            value.clone()
+        }
+    }
+
     impl Histogramuint64 {
         pub fn builder() -> builder::Histogramuint64 {
             Default::default()
@@ -12575,6 +13484,12 @@ pub mod types {
         pub sum_of_samples: i64,
     }
 
+    impl ::std::convert::From<&Histogramuint8> for Histogramuint8 {
+        fn from(value: &Histogramuint8) -> Self {
+            value.clone()
+        }
+    }
+
     impl Histogramuint8 {
         pub fn builder() -> builder::Histogramuint8 {
             Default::default()
@@ -12626,6 +13541,12 @@ pub mod types {
     impl ::std::convert::From<Hostname> for ::std::string::String {
         fn from(value: Hostname) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&Hostname> for Hostname {
+        fn from(value: &Hostname) -> Self {
+            value.clone()
         }
     }
 
@@ -12741,6 +13662,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<&IcmpParamRange> for IcmpParamRange {
+        fn from(value: &IcmpParamRange) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::str::FromStr for IcmpParamRange {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -12838,6 +13765,12 @@ pub mod types {
         /// sort in increasing order of "id"
         #[serde(rename = "id_ascending")]
         IdAscending,
+    }
+
+    impl ::std::convert::From<&Self> for IdSortMode {
+        fn from(value: &IdSortMode) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for IdSortMode {
@@ -12959,6 +13892,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&IdentityProvider> for IdentityProvider {
+        fn from(value: &IdentityProvider) -> Self {
+            value.clone()
+        }
+    }
+
     impl IdentityProvider {
         pub fn builder() -> builder::IdentityProvider {
             Default::default()
@@ -13007,6 +13946,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&IdentityProviderResultsPage> for IdentityProviderResultsPage {
+        fn from(value: &IdentityProviderResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl IdentityProviderResultsPage {
         pub fn builder() -> builder::IdentityProviderResultsPage {
             Default::default()
@@ -13048,6 +13993,12 @@ pub mod types {
         /// SAML identity provider
         #[serde(rename = "saml")]
         Saml,
+    }
+
+    impl ::std::convert::From<&Self> for IdentityProviderType {
+        fn from(value: &IdentityProviderType) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for IdentityProviderType {
@@ -13126,6 +14077,12 @@ pub mod types {
         SiloUser,
         #[serde(rename = "silo_group")]
         SiloGroup,
+    }
+
+    impl ::std::convert::From<&Self> for IdentityType {
+        fn from(value: &IdentityType) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for IdentityType {
@@ -13229,6 +14186,12 @@ pub mod types {
         Url { url: ::std::string::String },
         #[serde(rename = "base64_encoded_xml")]
         Base64EncodedXml { data: ::std::string::String },
+    }
+
+    impl ::std::convert::From<&Self> for IdpMetadataSource {
+        fn from(value: &IdpMetadataSource) -> Self {
+            value.clone()
+        }
     }
 
     /// View of an image
@@ -13369,6 +14332,12 @@ pub mod types {
         pub version: ::std::string::String,
     }
 
+    impl ::std::convert::From<&Image> for Image {
+        fn from(value: &Image) -> Self {
+            value.clone()
+        }
+    }
+
     impl Image {
         pub fn builder() -> builder::Image {
             Default::default()
@@ -13433,6 +14402,12 @@ pub mod types {
         pub version: ::std::string::String,
     }
 
+    impl ::std::convert::From<&ImageCreate> for ImageCreate {
+        fn from(value: &ImageCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ImageCreate {
         pub fn builder() -> builder::ImageCreate {
             Default::default()
@@ -13481,6 +14456,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&ImageResultsPage> for ImageResultsPage {
+        fn from(value: &ImageResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl ImageResultsPage {
         pub fn builder() -> builder::ImageResultsPage {
             Default::default()
@@ -13527,6 +14508,12 @@ pub mod types {
         Snapshot(::uuid::Uuid),
     }
 
+    impl ::std::convert::From<&Self> for ImageSource {
+        fn from(value: &ImageSource) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::uuid::Uuid> for ImageSource {
         fn from(value: ::uuid::Uuid) -> Self {
             Self::Snapshot(value)
@@ -13564,6 +14551,12 @@ pub mod types {
     pub struct ImportBlocksBulkWrite {
         pub base64_encoded_data: ::std::string::String,
         pub offset: u64,
+    }
+
+    impl ::std::convert::From<&ImportBlocksBulkWrite> for ImportBlocksBulkWrite {
+        fn from(value: &ImportBlocksBulkWrite) -> Self {
+            value.clone()
+        }
     }
 
     impl ImportBlocksBulkWrite {
@@ -13631,6 +14624,12 @@ pub mod types {
         NoFiltering,
         #[serde(rename = "allow")]
         Allow(::std::vec::Vec<IpNet>),
+    }
+
+    impl ::std::convert::From<&Self> for ImportExportPolicy {
+        fn from(value: &ImportExportPolicy) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::convert::From<::std::vec::Vec<IpNet>> for ImportExportPolicy {
@@ -13874,6 +14873,12 @@ pub mod types {
         pub time_run_state_updated: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Instance> for Instance {
+        fn from(value: &Instance) -> Self {
+            value.clone()
+        }
+    }
+
     impl Instance {
         pub fn builder() -> builder::Instance {
             Default::default()
@@ -13938,6 +14943,12 @@ pub mod types {
         /// availability of the system.
         #[serde(rename = "best_effort")]
         BestEffort,
+    }
+
+    impl ::std::convert::From<&Self> for InstanceAutoRestartPolicy {
+        fn from(value: &InstanceAutoRestartPolicy) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for InstanceAutoRestartPolicy {
@@ -14016,6 +15027,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<&InstanceCpuCount> for InstanceCpuCount {
+        fn from(value: &InstanceCpuCount) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<u16> for InstanceCpuCount {
         fn from(value: u16) -> Self {
             Self(value)
@@ -14032,6 +15049,13 @@ pub mod types {
     impl ::std::convert::TryFrom<&str> for InstanceCpuCount {
         type Error = <u16 as ::std::str::FromStr>::Err;
         fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for InstanceCpuCount {
+        type Error = <u16 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
@@ -14140,6 +15164,12 @@ pub mod types {
         /// An AMD Turin-like CPU platform.
         #[serde(rename = "amd_turin")]
         AmdTurin,
+    }
+
+    impl ::std::convert::From<&Self> for InstanceCpuPlatform {
+        fn from(value: &InstanceCpuPlatform) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for InstanceCpuPlatform {
@@ -14496,6 +15526,12 @@ pub mod types {
         pub user_data: ::std::string::String,
     }
 
+    impl ::std::convert::From<&InstanceCreate> for InstanceCreate {
+        fn from(value: &InstanceCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl InstanceCreate {
         pub fn builder() -> builder::InstanceCreate {
             Default::default()
@@ -14600,6 +15636,12 @@ pub mod types {
             /// A disk name to attach
             name: Name,
         },
+    }
+
+    impl ::std::convert::From<&Self> for InstanceDiskAttachment {
+        fn from(value: &InstanceDiskAttachment) -> Self {
+            value.clone()
+        }
     }
 
     /// An `InstanceNetworkInterface` represents a virtual network interface
@@ -14734,6 +15776,12 @@ pub mod types {
         pub vpc_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&InstanceNetworkInterface> for InstanceNetworkInterface {
+        fn from(value: &InstanceNetworkInterface) -> Self {
+            value.clone()
+        }
+    }
+
     impl InstanceNetworkInterface {
         pub fn builder() -> builder::InstanceNetworkInterface {
             Default::default()
@@ -14830,6 +15878,12 @@ pub mod types {
         None,
     }
 
+    impl ::std::convert::From<&Self> for InstanceNetworkInterfaceAttachment {
+        fn from(value: &InstanceNetworkInterfaceAttachment) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::vec::Vec<InstanceNetworkInterfaceCreate>>
         for InstanceNetworkInterfaceAttachment
     {
@@ -14918,6 +15972,12 @@ pub mod types {
         pub vpc_name: Name,
     }
 
+    impl ::std::convert::From<&InstanceNetworkInterfaceCreate> for InstanceNetworkInterfaceCreate {
+        fn from(value: &InstanceNetworkInterfaceCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl InstanceNetworkInterfaceCreate {
         pub fn builder() -> builder::InstanceNetworkInterfaceCreate {
             Default::default()
@@ -14964,6 +16024,14 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&InstanceNetworkInterfaceResultsPage>
+        for InstanceNetworkInterfaceResultsPage
+    {
+        fn from(value: &InstanceNetworkInterfaceResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl InstanceNetworkInterfaceResultsPage {
@@ -15059,6 +16127,12 @@ pub mod types {
         pub transit_ips: ::std::vec::Vec<IpNet>,
     }
 
+    impl ::std::convert::From<&InstanceNetworkInterfaceUpdate> for InstanceNetworkInterfaceUpdate {
+        fn from(value: &InstanceNetworkInterfaceUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for InstanceNetworkInterfaceUpdate {
         fn default() -> Self {
             Self {
@@ -15118,6 +16192,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&InstanceResultsPage> for InstanceResultsPage {
+        fn from(value: &InstanceResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl InstanceResultsPage {
         pub fn builder() -> builder::InstanceResultsPage {
             Default::default()
@@ -15171,6 +16251,12 @@ pub mod types {
         /// The absolute offset since boot (suitable for use as `byte_offset` in
         /// a subsequent request) of the last byte returned in `data`.
         pub last_byte_offset: u64,
+    }
+
+    impl ::std::convert::From<&InstanceSerialConsoleData> for InstanceSerialConsoleData {
+        fn from(value: &InstanceSerialConsoleData) -> Self {
+            value.clone()
+        }
     }
 
     impl InstanceSerialConsoleData {
@@ -15319,6 +16405,12 @@ pub mod types {
         /// The instance has been deleted.
         #[serde(rename = "destroyed")]
         Destroyed,
+    }
+
+    impl ::std::convert::From<&Self> for InstanceState {
+        fn from(value: &InstanceState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for InstanceState {
@@ -15557,6 +16649,12 @@ pub mod types {
         pub ncpus: InstanceCpuCount,
     }
 
+    impl ::std::convert::From<&InstanceUpdate> for InstanceUpdate {
+        fn from(value: &InstanceUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl InstanceUpdate {
         pub fn builder() -> builder::InstanceUpdate {
             Default::default()
@@ -15626,6 +16724,12 @@ pub mod types {
         IfIndex(u32),
         #[serde(rename = "port_number")]
         PortNumber(u32),
+    }
+
+    impl ::std::convert::From<&Self> for InterfaceNum {
+        fn from(value: &InterfaceNum) -> Self {
+            value.clone()
+        }
     }
 
     /// An internet gateway provides a path between VPC networks and external
@@ -15703,6 +16807,12 @@ pub mod types {
         pub vpc_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&InternetGateway> for InternetGateway {
+        fn from(value: &InternetGateway) -> Self {
+            value.clone()
+        }
+    }
+
     impl InternetGateway {
         pub fn builder() -> builder::InternetGateway {
             Default::default()
@@ -15738,6 +16848,12 @@ pub mod types {
     pub struct InternetGatewayCreate {
         pub description: ::std::string::String,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&InternetGatewayCreate> for InternetGatewayCreate {
+        fn from(value: &InternetGatewayCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl InternetGatewayCreate {
@@ -15827,6 +16943,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&InternetGatewayIpAddress> for InternetGatewayIpAddress {
+        fn from(value: &InternetGatewayIpAddress) -> Self {
+            value.clone()
+        }
+    }
+
     impl InternetGatewayIpAddress {
         pub fn builder() -> builder::InternetGatewayIpAddress {
             Default::default()
@@ -15868,6 +16990,12 @@ pub mod types {
         pub address: ::std::net::IpAddr,
         pub description: ::std::string::String,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&InternetGatewayIpAddressCreate> for InternetGatewayIpAddressCreate {
+        fn from(value: &InternetGatewayIpAddressCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl InternetGatewayIpAddressCreate {
@@ -15916,6 +17044,14 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&InternetGatewayIpAddressResultsPage>
+        for InternetGatewayIpAddressResultsPage
+    {
+        fn from(value: &InternetGatewayIpAddressResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl InternetGatewayIpAddressResultsPage {
@@ -16005,6 +17141,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&InternetGatewayIpPool> for InternetGatewayIpPool {
+        fn from(value: &InternetGatewayIpPool) -> Self {
+            value.clone()
+        }
+    }
+
     impl InternetGatewayIpPool {
         pub fn builder() -> builder::InternetGatewayIpPool {
             Default::default()
@@ -16045,6 +17187,12 @@ pub mod types {
         pub description: ::std::string::String,
         pub ip_pool: NameOrId,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&InternetGatewayIpPoolCreate> for InternetGatewayIpPoolCreate {
+        fn from(value: &InternetGatewayIpPoolCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl InternetGatewayIpPoolCreate {
@@ -16095,6 +17243,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&InternetGatewayIpPoolResultsPage> for InternetGatewayIpPoolResultsPage {
+        fn from(value: &InternetGatewayIpPoolResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl InternetGatewayIpPoolResultsPage {
         pub fn builder() -> builder::InternetGatewayIpPoolResultsPage {
             Default::default()
@@ -16143,6 +17297,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&InternetGatewayResultsPage> for InternetGatewayResultsPage {
+        fn from(value: &InternetGatewayResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl InternetGatewayResultsPage {
         pub fn builder() -> builder::InternetGatewayResultsPage {
             Default::default()
@@ -16188,6 +17348,12 @@ pub mod types {
     pub enum IpNet {
         V4(Ipv4Net),
         V6(Ipv6Net),
+    }
+
+    impl ::std::convert::From<&Self> for IpNet {
+        fn from(value: &IpNet) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::str::FromStr for IpNet {
@@ -16338,6 +17504,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&IpPool> for IpPool {
+        fn from(value: &IpPool) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPool {
         pub fn builder() -> builder::IpPool {
             Default::default()
@@ -16415,6 +17587,12 @@ pub mod types {
         pub pool_type: IpPoolType,
     }
 
+    impl ::std::convert::From<&IpPoolCreate> for IpPoolCreate {
+        fn from(value: &IpPoolCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPoolCreate {
         pub fn builder() -> builder::IpPoolCreate {
             Default::default()
@@ -16461,6 +17639,12 @@ pub mod types {
         /// up to 4 default pools total.
         pub is_default: bool,
         pub silo: NameOrId,
+    }
+
+    impl ::std::convert::From<&IpPoolLinkSilo> for IpPoolLinkSilo {
+        fn from(value: &IpPoolLinkSilo) -> Self {
+            value.clone()
+        }
     }
 
     impl IpPoolLinkSilo {
@@ -16512,6 +17696,12 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&IpPoolRange> for IpPoolRange {
+        fn from(value: &IpPoolRange) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPoolRange {
         pub fn builder() -> builder::IpPoolRange {
             Default::default()
@@ -16560,6 +17750,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&IpPoolRangeResultsPage> for IpPoolRangeResultsPage {
+        fn from(value: &IpPoolRangeResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPoolRangeResultsPage {
         pub fn builder() -> builder::IpPoolRangeResultsPage {
             Default::default()
@@ -16606,6 +17802,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&IpPoolResultsPage> for IpPoolResultsPage {
+        fn from(value: &IpPoolResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl IpPoolResultsPage {
@@ -16666,6 +17868,12 @@ pub mod types {
         pub silo_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&IpPoolSiloLink> for IpPoolSiloLink {
+        fn from(value: &IpPoolSiloLink) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPoolSiloLink {
         pub fn builder() -> builder::IpPoolSiloLink {
             Default::default()
@@ -16714,6 +17922,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&IpPoolSiloLinkResultsPage> for IpPoolSiloLinkResultsPage {
+        fn from(value: &IpPoolSiloLinkResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPoolSiloLinkResultsPage {
         pub fn builder() -> builder::IpPoolSiloLinkResultsPage {
             Default::default()
@@ -16759,6 +17973,12 @@ pub mod types {
         /// existing default of the same type and version will remain linked but
         /// will no longer be the default.
         pub is_default: bool,
+    }
+
+    impl ::std::convert::From<&IpPoolSiloUpdate> for IpPoolSiloUpdate {
+        fn from(value: &IpPoolSiloUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl IpPoolSiloUpdate {
@@ -16818,6 +18038,12 @@ pub mod types {
         /// mixed).
         #[serde(rename = "multicast")]
         Multicast,
+    }
+
+    impl ::std::convert::From<&Self> for IpPoolType {
+        fn from(value: &IpPoolType) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for IpPoolType {
@@ -16908,6 +18134,12 @@ pub mod types {
         pub name: ::std::option::Option<Name>,
     }
 
+    impl ::std::convert::From<&IpPoolUpdate> for IpPoolUpdate {
+        fn from(value: &IpPoolUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for IpPoolUpdate {
         fn default() -> Self {
             Self {
@@ -16971,6 +18203,12 @@ pub mod types {
         pub remaining: f64,
     }
 
+    impl ::std::convert::From<&IpPoolUtilization> for IpPoolUtilization {
+        fn from(value: &IpPoolUtilization) -> Self {
+            value.clone()
+        }
+    }
+
     impl IpPoolUtilization {
         pub fn builder() -> builder::IpPoolUtilization {
             Default::default()
@@ -17011,6 +18249,12 @@ pub mod types {
     pub enum IpRange {
         V4(Ipv4Range),
         V6(Ipv6Range),
+    }
+
+    impl ::std::convert::From<&Self> for IpRange {
+        fn from(value: &IpRange) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::convert::From<Ipv4Range> for IpRange {
@@ -17058,6 +18302,12 @@ pub mod types {
         V4,
         #[serde(rename = "v6")]
         V6,
+    }
+
+    impl ::std::convert::From<&Self> for IpVersion {
+        fn from(value: &IpVersion) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for IpVersion {
@@ -17152,6 +18402,12 @@ pub mod types {
     impl ::std::convert::From<Ipv4Net> for ::std::string::String {
         fn from(value: Ipv4Net) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&Ipv4Net> for Ipv4Net {
+        fn from(value: &Ipv4Net) -> Self {
+            value.clone()
         }
     }
 
@@ -17253,6 +18509,12 @@ pub mod types {
         pub last: ::std::net::Ipv4Addr,
     }
 
+    impl ::std::convert::From<&Ipv4Range> for Ipv4Range {
+        fn from(value: &Ipv4Range) -> Self {
+            value.clone()
+        }
+    }
+
     impl Ipv4Range {
         pub fn builder() -> builder::Ipv4Range {
             Default::default()
@@ -17314,6 +18576,12 @@ pub mod types {
     impl ::std::convert::From<Ipv6Net> for ::std::string::String {
         fn from(value: Ipv6Net) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&Ipv6Net> for Ipv6Net {
+        fn from(value: &Ipv6Net) -> Self {
+            value.clone()
         }
     }
 
@@ -17432,6 +18700,12 @@ pub mod types {
         pub last: ::std::net::Ipv6Addr,
     }
 
+    impl ::std::convert::From<&Ipv6Range> for Ipv6Range {
+        fn from(value: &Ipv6Range) -> Self {
+            value.clone()
+        }
+    }
+
     impl Ipv6Range {
         pub fn builder() -> builder::Ipv6Range {
             Default::default()
@@ -17481,6 +18755,12 @@ pub mod types {
     impl ::std::convert::From<L4PortRange> for ::std::string::String {
         fn from(value: L4PortRange) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&L4PortRange> for L4PortRange {
+        fn from(value: &L4PortRange) -> Self {
+            value.clone()
         }
     }
 
@@ -17656,6 +18936,12 @@ pub mod types {
         pub tx_eq: ::std::option::Option<TxEqConfig>,
     }
 
+    impl ::std::convert::From<&LinkConfigCreate> for LinkConfigCreate {
+        fn from(value: &LinkConfigCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl LinkConfigCreate {
         pub fn builder() -> builder::LinkConfigCreate {
             Default::default()
@@ -17718,6 +19004,12 @@ pub mod types {
         /// Reed-Solomon forward error correction.
         #[serde(rename = "rs")]
         Rs,
+    }
+
+    impl ::std::convert::From<&Self> for LinkFec {
+        fn from(value: &LinkFec) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for LinkFec {
@@ -17885,6 +19177,12 @@ pub mod types {
         Speed400G,
     }
 
+    impl ::std::convert::From<&Self> for LinkSpeed {
+        fn from(value: &LinkSpeed) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for LinkSpeed {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -18042,6 +19340,12 @@ pub mod types {
         pub system_name: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&LldpLinkConfig> for LldpLinkConfig {
+        fn from(value: &LldpLinkConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl LldpLinkConfig {
         pub fn builder() -> builder::LldpLinkConfig {
             Default::default()
@@ -18135,6 +19439,12 @@ pub mod types {
         /// The LLDP system name TLV.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub system_name: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&LldpLinkConfigCreate> for LldpLinkConfigCreate {
+        fn from(value: &LldpLinkConfigCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl LldpLinkConfigCreate {
@@ -18251,6 +19561,12 @@ pub mod types {
         pub system_name: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&LldpNeighbor> for LldpNeighbor {
+        fn from(value: &LldpNeighbor) -> Self {
+            value.clone()
+        }
+    }
+
     impl LldpNeighbor {
         pub fn builder() -> builder::LldpNeighbor {
             Default::default()
@@ -18297,6 +19613,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&LldpNeighborResultsPage> for LldpNeighborResultsPage {
+        fn from(value: &LldpNeighborResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl LldpNeighborResultsPage {
@@ -18370,6 +19692,12 @@ pub mod types {
         pub rack_id: ::uuid::Uuid,
         /// Switch location where this loopback address is assigned.
         pub switch_location: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&LoopbackAddress> for LoopbackAddress {
+        fn from(value: &LoopbackAddress) -> Self {
+            value.clone()
+        }
     }
 
     impl LoopbackAddress {
@@ -18462,6 +19790,12 @@ pub mod types {
         pub switch_location: Name,
     }
 
+    impl ::std::convert::From<&LoopbackAddressCreate> for LoopbackAddressCreate {
+        fn from(value: &LoopbackAddressCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl LoopbackAddressCreate {
         pub fn builder() -> builder::LoopbackAddressCreate {
             Default::default()
@@ -18508,6 +19842,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&LoopbackAddressResultsPage> for LoopbackAddressResultsPage {
+        fn from(value: &LoopbackAddressResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl LoopbackAddressResultsPage {
@@ -18557,6 +19897,12 @@ pub mod types {
     impl ::std::convert::From<MacAddr> for ::std::string::String {
         fn from(value: MacAddr) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&MacAddr> for MacAddr {
+        fn from(value: &MacAddr) -> Self {
+            value.clone()
         }
     }
 
@@ -18663,6 +20009,12 @@ pub mod types {
         pub oid: ::std::option::Option<::std::vec::Vec<u8>>,
     }
 
+    impl ::std::convert::From<&ManagementAddress> for ManagementAddress {
+        fn from(value: &ManagementAddress) -> Self {
+            value.clone()
+        }
+    }
+
     impl ManagementAddress {
         pub fn builder() -> builder::ManagementAddress {
             Default::default()
@@ -18700,6 +20052,12 @@ pub mod types {
     pub struct Measurement {
         pub datum: Datum,
         pub timestamp: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&Measurement> for Measurement {
+        fn from(value: &Measurement) -> Self {
+            value.clone()
+        }
     }
 
     impl Measurement {
@@ -18748,6 +20106,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&MeasurementResultsPage> for MeasurementResultsPage {
+        fn from(value: &MeasurementResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl MeasurementResultsPage {
@@ -18816,6 +20180,12 @@ pub mod types {
         /// The value represents an accumulation between two points in time.
         #[serde(rename = "cumulative")]
         Cumulative,
+    }
+
+    impl ::std::convert::From<&Self> for MetricType {
+        fn from(value: &MetricType) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for MetricType {
@@ -18897,6 +20267,12 @@ pub mod types {
         pub datum_type: DatumType,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub start_time: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+    }
+
+    impl ::std::convert::From<&MissingDatum> for MissingDatum {
+        fn from(value: &MissingDatum) -> Self {
+            value.clone()
+        }
     }
 
     impl MissingDatum {
@@ -19020,6 +20396,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&MulticastGroup> for MulticastGroup {
+        fn from(value: &MulticastGroup) -> Self {
+            value.clone()
+        }
+    }
+
     impl MulticastGroup {
         pub fn builder() -> builder::MulticastGroup {
             Default::default()
@@ -19131,6 +20513,12 @@ pub mod types {
         pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
     }
 
+    impl ::std::convert::From<&MulticastGroupCreate> for MulticastGroupCreate {
+        fn from(value: &MulticastGroupCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl MulticastGroupCreate {
         pub fn builder() -> builder::MulticastGroupCreate {
             Default::default()
@@ -19229,6 +20617,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&MulticastGroupMember> for MulticastGroupMember {
+        fn from(value: &MulticastGroupMember) -> Self {
+            value.clone()
+        }
+    }
+
     impl MulticastGroupMember {
         pub fn builder() -> builder::MulticastGroupMember {
             Default::default()
@@ -19267,6 +20661,12 @@ pub mod types {
     pub struct MulticastGroupMemberAdd {
         /// Name or ID of the instance to add to the multicast group
         pub instance: NameOrId,
+    }
+
+    impl ::std::convert::From<&MulticastGroupMemberAdd> for MulticastGroupMemberAdd {
+        fn from(value: &MulticastGroupMemberAdd) -> Self {
+            value.clone()
+        }
     }
 
     impl MulticastGroupMemberAdd {
@@ -19317,6 +20717,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&MulticastGroupMemberResultsPage> for MulticastGroupMemberResultsPage {
+        fn from(value: &MulticastGroupMemberResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl MulticastGroupMemberResultsPage {
         pub fn builder() -> builder::MulticastGroupMemberResultsPage {
             Default::default()
@@ -19363,6 +20769,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&MulticastGroupResultsPage> for MulticastGroupResultsPage {
+        fn from(value: &MulticastGroupResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl MulticastGroupResultsPage {
@@ -19442,6 +20854,12 @@ pub mod types {
         pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
     }
 
+    impl ::std::convert::From<&MulticastGroupUpdate> for MulticastGroupUpdate {
+        fn from(value: &MulticastGroupUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for MulticastGroupUpdate {
         fn default() -> Self {
             Self {
@@ -19505,6 +20923,12 @@ pub mod types {
     impl ::std::convert::From<Name> for ::std::string::String {
         fn from(value: Name) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&Name> for Name {
+        fn from(value: &Name) -> Self {
+            value.clone()
         }
     }
 
@@ -19602,6 +21026,12 @@ pub mod types {
     pub enum NameOrId {
         Id(::uuid::Uuid),
         Name(Name),
+    }
+
+    impl ::std::convert::From<&Self> for NameOrId {
+        fn from(value: &NameOrId) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::str::FromStr for NameOrId {
@@ -19722,6 +21152,12 @@ pub mod types {
         IdAscending,
     }
 
+    impl ::std::convert::From<&Self> for NameOrIdSortMode {
+        fn from(value: &NameOrIdSortMode) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for NameOrIdSortMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -19808,6 +21244,12 @@ pub mod types {
         /// sort in increasing order of "name"
         #[serde(rename = "name_ascending")]
         NameAscending,
+    }
+
+    impl ::std::convert::From<&Self> for NameSortMode {
+        fn from(value: &NameSortMode) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for NameSortMode {
@@ -19904,6 +21346,12 @@ pub mod types {
         IEEE802(::std::vec::Vec<u8>),
     }
 
+    impl ::std::convert::From<&Self> for NetworkAddress {
+        fn from(value: &NetworkAddress) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::net::IpAddr> for NetworkAddress {
         fn from(value: ::std::net::IpAddr) -> Self {
             Self::IpAddr(value)
@@ -19994,6 +21442,12 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub transit_ips: ::std::vec::Vec<IpNet>,
         pub vni: Vni,
+    }
+
+    impl ::std::convert::From<&NetworkInterface> for NetworkInterface {
+        fn from(value: &NetworkInterface) -> Self {
+            value.clone()
+        }
     }
 
     impl NetworkInterface {
@@ -20090,6 +21544,12 @@ pub mod types {
         Probe(::uuid::Uuid),
     }
 
+    impl ::std::convert::From<&Self> for NetworkInterfaceKind {
+        fn from(value: &NetworkInterfaceKind) -> Self {
+            value.clone()
+        }
+    }
+
     /// The result of a successful OxQL query.
     ///
     /// <details><summary>JSON schema</summary>
@@ -20120,6 +21580,12 @@ pub mod types {
     pub struct OxqlQueryResult {
         /// Tables resulting from the query, each containing timeseries.
         pub tables: ::std::vec::Vec<OxqlTable>,
+    }
+
+    impl ::std::convert::From<&OxqlQueryResult> for OxqlQueryResult {
+        fn from(value: &OxqlQueryResult) -> Self {
+            value.clone()
+        }
     }
 
     impl OxqlQueryResult {
@@ -20171,6 +21637,12 @@ pub mod types {
         pub timeseries: ::std::vec::Vec<Timeseries>,
     }
 
+    impl ::std::convert::From<&OxqlTable> for OxqlTable {
+        fn from(value: &OxqlTable) -> Self {
+            value.clone()
+        }
+    }
+
     impl OxqlTable {
         pub fn builder() -> builder::OxqlTable {
             Default::default()
@@ -20212,6 +21684,12 @@ pub mod types {
         Ascending,
         #[serde(rename = "descending")]
         Descending,
+    }
+
+    impl ::std::convert::From<&Self> for PaginationOrder {
+        fn from(value: &PaginationOrder) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for PaginationOrder {
@@ -20295,6 +21773,12 @@ pub mod types {
     impl ::std::convert::From<Password> for ::std::string::String {
         fn from(value: Password) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&Password> for Password {
+        fn from(value: &Password) -> Self {
+            value.clone()
         }
     }
 
@@ -20451,6 +21935,12 @@ pub mod types {
         pub vendor: ::std::string::String,
     }
 
+    impl ::std::convert::From<&PhysicalDisk> for PhysicalDisk {
+        fn from(value: &PhysicalDisk) -> Self {
+            value.clone()
+        }
+    }
+
     impl PhysicalDisk {
         pub fn builder() -> builder::PhysicalDisk {
             Default::default()
@@ -20490,6 +21980,12 @@ pub mod types {
         M2,
         #[serde(rename = "u2")]
         U2,
+    }
+
+    impl ::std::convert::From<&Self> for PhysicalDiskKind {
+        fn from(value: &PhysicalDiskKind) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for PhysicalDiskKind {
@@ -20605,6 +22101,12 @@ pub mod types {
         Expunged,
     }
 
+    impl ::std::convert::From<&Self> for PhysicalDiskPolicy {
+        fn from(value: &PhysicalDiskPolicy) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for PhysicalDiskPolicy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -20692,6 +22194,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&PhysicalDiskResultsPage> for PhysicalDiskResultsPage {
+        fn from(value: &PhysicalDiskResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl PhysicalDiskResultsPage {
         pub fn builder() -> builder::PhysicalDiskResultsPage {
             Default::default()
@@ -20753,6 +22261,12 @@ pub mod types {
         /// hardware may be reused, but it will be treated as a brand-new disk.)
         #[serde(rename = "decommissioned")]
         Decommissioned,
+    }
+
+    impl ::std::convert::From<&Self> for PhysicalDiskState {
+        fn from(value: &PhysicalDiskState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for PhysicalDiskState {
@@ -20833,6 +22347,12 @@ pub mod types {
         pub status: PingStatus,
     }
 
+    impl ::std::convert::From<&Ping> for Ping {
+        fn from(value: &Ping) -> Self {
+            value.clone()
+        }
+    }
+
     impl Ping {
         pub fn builder() -> builder::Ping {
             Default::default()
@@ -20868,6 +22388,12 @@ pub mod types {
     pub enum PingStatus {
         #[serde(rename = "ok")]
         Ok,
+    }
+
+    impl ::std::convert::From<&Self> for PingStatus {
+        fn from(value: &PingStatus) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for PingStatus {
@@ -20964,6 +22490,12 @@ pub mod types {
         pub values: ::std::vec::Vec<Values>,
     }
 
+    impl ::std::convert::From<&Points> for Points {
+        fn from(value: &Points) -> Self {
+            value.clone()
+        }
+    }
+
     impl Points {
         pub fn builder() -> builder::Points {
             Default::default()
@@ -21043,6 +22575,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Probe> for Probe {
+        fn from(value: &Probe) -> Self {
+            value.clone()
+        }
+    }
+
     impl Probe {
         pub fn builder() -> builder::Probe {
             Default::default()
@@ -21102,6 +22640,12 @@ pub mod types {
         pub sled: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&ProbeCreate> for ProbeCreate {
+        fn from(value: &ProbeCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ProbeCreate {
         pub fn builder() -> builder::ProbeCreate {
             Default::default()
@@ -21153,6 +22697,12 @@ pub mod types {
         pub last_port: u16,
     }
 
+    impl ::std::convert::From<&ProbeExternalIp> for ProbeExternalIp {
+        fn from(value: &ProbeExternalIp) -> Self {
+            value.clone()
+        }
+    }
+
     impl ProbeExternalIp {
         pub fn builder() -> builder::ProbeExternalIp {
             Default::default()
@@ -21194,6 +22744,12 @@ pub mod types {
         Floating,
         #[serde(rename = "ephemeral")]
         Ephemeral,
+    }
+
+    impl ::std::convert::From<&Self> for ProbeExternalIpKind {
+        fn from(value: &ProbeExternalIpKind) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for ProbeExternalIpKind {
@@ -21293,6 +22849,12 @@ pub mod types {
         pub sled: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&ProbeInfo> for ProbeInfo {
+        fn from(value: &ProbeInfo) -> Self {
+            value.clone()
+        }
+    }
+
     impl ProbeInfo {
         pub fn builder() -> builder::ProbeInfo {
             Default::default()
@@ -21339,6 +22901,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&ProbeInfoResultsPage> for ProbeInfoResultsPage {
+        fn from(value: &ProbeInfoResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl ProbeInfoResultsPage {
@@ -21412,6 +22980,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Project> for Project {
+        fn from(value: &Project) -> Self {
+            value.clone()
+        }
+    }
+
     impl Project {
         pub fn builder() -> builder::Project {
             Default::default()
@@ -21447,6 +23021,12 @@ pub mod types {
     pub struct ProjectCreate {
         pub description: ::std::string::String,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&ProjectCreate> for ProjectCreate {
+        fn from(value: &ProjectCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl ProjectCreate {
@@ -21497,6 +23077,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&ProjectResultsPage> for ProjectResultsPage {
+        fn from(value: &ProjectResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl ProjectResultsPage {
         pub fn builder() -> builder::ProjectResultsPage {
             Default::default()
@@ -21541,6 +23127,12 @@ pub mod types {
         LimitedCollaborator,
         #[serde(rename = "viewer")]
         Viewer,
+    }
+
+    impl ::std::convert::From<&Self> for ProjectRole {
+        fn from(value: &ProjectRole) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for ProjectRole {
@@ -21630,6 +23222,12 @@ pub mod types {
         pub role_assignments: ::std::vec::Vec<ProjectRoleRoleAssignment>,
     }
 
+    impl ::std::convert::From<&ProjectRolePolicy> for ProjectRolePolicy {
+        fn from(value: &ProjectRolePolicy) -> Self {
+            value.clone()
+        }
+    }
+
     impl ProjectRolePolicy {
         pub fn builder() -> builder::ProjectRolePolicy {
             Default::default()
@@ -21682,6 +23280,12 @@ pub mod types {
         pub role_name: ProjectRole,
     }
 
+    impl ::std::convert::From<&ProjectRoleRoleAssignment> for ProjectRoleRoleAssignment {
+        fn from(value: &ProjectRoleRoleAssignment) -> Self {
+            value.clone()
+        }
+    }
+
     impl ProjectRoleRoleAssignment {
         pub fn builder() -> builder::ProjectRoleRoleAssignment {
             Default::default()
@@ -21729,6 +23333,12 @@ pub mod types {
         pub description: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&ProjectUpdate> for ProjectUpdate {
+        fn from(value: &ProjectUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for ProjectUpdate {
@@ -21833,6 +23443,12 @@ pub mod types {
         pub p: f64,
     }
 
+    impl ::std::convert::From<&Quantile> for Quantile {
+        fn from(value: &Quantile) -> Self {
+            value.clone()
+        }
+    }
+
     impl Quantile {
         pub fn builder() -> builder::Quantile {
             Default::default()
@@ -21885,6 +23501,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Rack> for Rack {
+        fn from(value: &Rack) -> Self {
+            value.clone()
+        }
+    }
+
     impl Rack {
         pub fn builder() -> builder::Rack {
             Default::default()
@@ -21931,6 +23553,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&RackResultsPage> for RackResultsPage {
+        fn from(value: &RackResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl RackResultsPage {
@@ -22006,6 +23634,12 @@ pub mod types {
         pub vid: ::std::option::Option<u16>,
     }
 
+    impl ::std::convert::From<&Route> for Route {
+        fn from(value: &Route) -> Self {
+            value.clone()
+        }
+    }
+
     impl Route {
         pub fn builder() -> builder::Route {
             Default::default()
@@ -22056,6 +23690,12 @@ pub mod types {
         pub link_name: Name,
         /// The set of routes assigned to a switch port.
         pub routes: ::std::vec::Vec<Route>,
+    }
+
+    impl ::std::convert::From<&RouteConfig> for RouteConfig {
+        fn from(value: &RouteConfig) -> Self {
+            value.clone()
+        }
     }
 
     impl RouteConfig {
@@ -22183,6 +23823,12 @@ pub mod types {
         /// Route applies to traffic destined for the specified VPC subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
+    }
+
+    impl ::std::convert::From<&Self> for RouteDestination {
+        fn from(value: &RouteDestination) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::convert::From<::std::net::IpAddr> for RouteDestination {
@@ -22346,6 +23992,12 @@ pub mod types {
         Drop,
     }
 
+    impl ::std::convert::From<&Self> for RouteTarget {
+        fn from(value: &RouteTarget) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::net::IpAddr> for RouteTarget {
         fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
@@ -22464,6 +24116,12 @@ pub mod types {
         pub vpc_router_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&RouterRoute> for RouterRoute {
+        fn from(value: &RouterRoute) -> Self {
+            value.clone()
+        }
+    }
+
     impl RouterRoute {
         pub fn builder() -> builder::RouterRoute {
             Default::default()
@@ -22523,6 +24181,12 @@ pub mod types {
         pub name: Name,
         /// The location that matched packets should be forwarded to.
         pub target: RouteTarget,
+    }
+
+    impl ::std::convert::From<&RouterRouteCreate> for RouterRouteCreate {
+        fn from(value: &RouterRouteCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl RouterRouteCreate {
@@ -22618,6 +24282,12 @@ pub mod types {
         Custom,
     }
 
+    impl ::std::convert::From<&Self> for RouterRouteKind {
+        fn from(value: &RouterRouteKind) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for RouterRouteKind {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -22709,6 +24379,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&RouterRouteResultsPage> for RouterRouteResultsPage {
+        fn from(value: &RouterRouteResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl RouterRouteResultsPage {
         pub fn builder() -> builder::RouterRouteResultsPage {
             Default::default()
@@ -22782,6 +24458,12 @@ pub mod types {
         pub name: ::std::option::Option<Name>,
         /// The location that matched packets should be forwarded to.
         pub target: RouteTarget,
+    }
+
+    impl ::std::convert::From<&RouterRouteUpdate> for RouterRouteUpdate {
+        fn from(value: &RouterRouteUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl RouterRouteUpdate {
@@ -22920,6 +24602,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&SamlIdentityProvider> for SamlIdentityProvider {
+        fn from(value: &SamlIdentityProvider) -> Self {
+            value.clone()
+        }
+    }
+
     impl SamlIdentityProvider {
         pub fn builder() -> builder::SamlIdentityProvider {
             Default::default()
@@ -23039,6 +24727,12 @@ pub mod types {
         pub technical_contact_email: ::std::string::String,
     }
 
+    impl ::std::convert::From<&SamlIdentityProviderCreate> for SamlIdentityProviderCreate {
+        fn from(value: &SamlIdentityProviderCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl SamlIdentityProviderCreate {
         pub fn builder() -> builder::SamlIdentityProviderCreate {
             Default::default()
@@ -23084,6 +24778,12 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+    }
+
+    impl ::std::convert::From<&ScimClientBearerToken> for ScimClientBearerToken {
+        fn from(value: &ScimClientBearerToken) -> Self {
+            value.clone()
+        }
     }
 
     impl ScimClientBearerToken {
@@ -23141,6 +24841,12 @@ pub mod types {
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
+    impl ::std::convert::From<&ScimClientBearerTokenValue> for ScimClientBearerTokenValue {
+        fn from(value: &ScimClientBearerTokenValue) -> Self {
+            value.clone()
+        }
+    }
+
     impl ScimClientBearerTokenValue {
         pub fn builder() -> builder::ScimClientBearerTokenValue {
             Default::default()
@@ -23183,6 +24889,12 @@ pub mod types {
         /// Path MTU discovery and better cope with fragmentation issues.
         /// Otherwise all inbound ICMP traffic will be dropped.
         pub enabled: bool,
+    }
+
+    impl ::std::convert::From<&ServiceIcmpConfig> for ServiceIcmpConfig {
+        fn from(value: &ServiceIcmpConfig) -> Self {
+            value.clone()
+        }
     }
 
     impl ServiceIcmpConfig {
@@ -23228,6 +24940,12 @@ pub mod types {
         /// This certificate is intended for access to the external API.
         #[serde(rename = "external_api")]
         ExternalApi,
+    }
+
+    impl ::std::convert::From<&Self> for ServiceUsingCertificate {
+        fn from(value: &ServiceUsingCertificate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for ServiceUsingCertificate {
@@ -23307,6 +25025,12 @@ pub mod types {
         pub system_version: SetTargetReleaseParamsSystemVersion,
     }
 
+    impl ::std::convert::From<&SetTargetReleaseParams> for SetTargetReleaseParams {
+        fn from(value: &SetTargetReleaseParams) -> Self {
+            value.clone()
+        }
+    }
+
     impl SetTargetReleaseParams {
         pub fn builder() -> builder::SetTargetReleaseParams {
             Default::default()
@@ -23352,6 +25076,14 @@ pub mod types {
     impl ::std::convert::From<SetTargetReleaseParamsSystemVersion> for ::std::string::String {
         fn from(value: SetTargetReleaseParamsSystemVersion) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&SetTargetReleaseParamsSystemVersion>
+        for SetTargetReleaseParamsSystemVersion
+    {
+        fn from(value: &SetTargetReleaseParamsSystemVersion) -> Self {
+            value.clone()
         }
     }
 
@@ -23535,6 +25267,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Silo> for Silo {
+        fn from(value: &Silo) -> Self {
+            value.clone()
+        }
+    }
+
     impl Silo {
         pub fn builder() -> builder::Silo {
             Default::default()
@@ -23581,6 +25319,12 @@ pub mod types {
         pub silo_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&SiloAuthSettings> for SiloAuthSettings {
+        fn from(value: &SiloAuthSettings) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloAuthSettings {
         pub fn builder() -> builder::SiloAuthSettings {
             Default::default()
@@ -23619,6 +25363,12 @@ pub mod types {
         /// Maximum lifetime of a device token in seconds. If set to null, users
         /// will be able to create tokens that do not expire.
         pub device_token_max_ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
+    }
+
+    impl ::std::convert::From<&SiloAuthSettingsUpdate> for SiloAuthSettingsUpdate {
+        fn from(value: &SiloAuthSettingsUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl SiloAuthSettingsUpdate {
@@ -23744,6 +25494,12 @@ pub mod types {
         pub tls_certificates: ::std::vec::Vec<CertificateCreate>,
     }
 
+    impl ::std::convert::From<&SiloCreate> for SiloCreate {
+        fn from(value: &SiloCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloCreate {
         pub fn builder() -> builder::SiloCreate {
             Default::default()
@@ -23821,6 +25577,12 @@ pub mod types {
         /// from the same authentication provider.
         #[serde(rename = "saml_scim")]
         SamlScim,
+    }
+
+    impl ::std::convert::From<&Self> for SiloIdentityMode {
+        fn from(value: &SiloIdentityMode) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SiloIdentityMode {
@@ -23974,6 +25736,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&SiloIpPool> for SiloIpPool {
+        fn from(value: &SiloIpPool) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloIpPool {
         pub fn builder() -> builder::SiloIpPool {
             Default::default()
@@ -24020,6 +25788,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SiloIpPoolResultsPage> for SiloIpPoolResultsPage {
+        fn from(value: &SiloIpPoolResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SiloIpPoolResultsPage {
@@ -24087,6 +25861,12 @@ pub mod types {
         pub storage: ByteCount,
     }
 
+    impl ::std::convert::From<&SiloQuotas> for SiloQuotas {
+        fn from(value: &SiloQuotas) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloQuotas {
         pub fn builder() -> builder::SiloQuotas {
             Default::default()
@@ -24149,6 +25929,12 @@ pub mod types {
         pub storage: ByteCount,
     }
 
+    impl ::std::convert::From<&SiloQuotasCreate> for SiloQuotasCreate {
+        fn from(value: &SiloQuotasCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloQuotasCreate {
         pub fn builder() -> builder::SiloQuotasCreate {
             Default::default()
@@ -24195,6 +25981,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SiloQuotasResultsPage> for SiloQuotasResultsPage {
+        fn from(value: &SiloQuotasResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SiloQuotasResultsPage {
@@ -24276,6 +26068,12 @@ pub mod types {
         pub storage: ::std::option::Option<ByteCount>,
     }
 
+    impl ::std::convert::From<&SiloQuotasUpdate> for SiloQuotasUpdate {
+        fn from(value: &SiloQuotasUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for SiloQuotasUpdate {
         fn default() -> Self {
             Self {
@@ -24334,6 +26132,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&SiloResultsPage> for SiloResultsPage {
+        fn from(value: &SiloResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloResultsPage {
         pub fn builder() -> builder::SiloResultsPage {
             Default::default()
@@ -24378,6 +26182,12 @@ pub mod types {
         LimitedCollaborator,
         #[serde(rename = "viewer")]
         Viewer,
+    }
+
+    impl ::std::convert::From<&Self> for SiloRole {
+        fn from(value: &SiloRole) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SiloRole {
@@ -24467,6 +26277,12 @@ pub mod types {
         pub role_assignments: ::std::vec::Vec<SiloRoleRoleAssignment>,
     }
 
+    impl ::std::convert::From<&SiloRolePolicy> for SiloRolePolicy {
+        fn from(value: &SiloRolePolicy) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloRolePolicy {
         pub fn builder() -> builder::SiloRolePolicy {
             Default::default()
@@ -24517,6 +26333,12 @@ pub mod types {
         pub identity_id: ::uuid::Uuid,
         pub identity_type: IdentityType,
         pub role_name: SiloRole,
+    }
+
+    impl ::std::convert::From<&SiloRoleRoleAssignment> for SiloRoleRoleAssignment {
+        fn from(value: &SiloRoleRoleAssignment) -> Self {
+            value.clone()
+        }
     }
 
     impl SiloRoleRoleAssignment {
@@ -24587,6 +26409,12 @@ pub mod types {
         pub silo_name: Name,
     }
 
+    impl ::std::convert::From<&SiloUtilization> for SiloUtilization {
+        fn from(value: &SiloUtilization) -> Self {
+            value.clone()
+        }
+    }
+
     impl SiloUtilization {
         pub fn builder() -> builder::SiloUtilization {
             Default::default()
@@ -24633,6 +26461,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SiloUtilizationResultsPage> for SiloUtilizationResultsPage {
+        fn from(value: &SiloUtilizationResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SiloUtilizationResultsPage {
@@ -24743,6 +26577,12 @@ pub mod types {
         pub usable_physical_ram: ByteCount,
     }
 
+    impl ::std::convert::From<&Sled> for Sled {
+        fn from(value: &Sled) -> Self {
+            value.clone()
+        }
+    }
+
     impl Sled {
         pub fn builder() -> builder::Sled {
             Default::default()
@@ -24774,6 +26614,12 @@ pub mod types {
     )]
     pub struct SledId {
         pub id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&SledId> for SledId {
+        fn from(value: &SledId) -> Self {
+            value.clone()
+        }
     }
 
     impl SledId {
@@ -24876,6 +26722,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&SledInstance> for SledInstance {
+        fn from(value: &SledInstance) -> Self {
+            value.clone()
+        }
+    }
+
     impl SledInstance {
         pub fn builder() -> builder::SledInstance {
             Default::default()
@@ -24922,6 +26774,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SledInstanceResultsPage> for SledInstanceResultsPage {
+        fn from(value: &SledInstanceResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SledInstanceResultsPage {
@@ -24999,6 +26857,12 @@ pub mod types {
         Expunged,
     }
 
+    impl ::std::convert::From<&Self> for SledPolicy {
+        fn from(value: &SledPolicy) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<SledProvisionPolicy> for SledPolicy {
         fn from(value: SledProvisionPolicy) -> Self {
             Self::InService(value)
@@ -25060,6 +26924,12 @@ pub mod types {
         /// on this sled unless manually migrated off.
         #[serde(rename = "non_provisionable")]
         NonProvisionable,
+    }
+
+    impl ::std::convert::From<&Self> for SledProvisionPolicy {
+        fn from(value: &SledProvisionPolicy) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SledProvisionPolicy {
@@ -25139,6 +27009,12 @@ pub mod types {
         pub state: SledProvisionPolicy,
     }
 
+    impl ::std::convert::From<&SledProvisionPolicyParams> for SledProvisionPolicyParams {
+        fn from(value: &SledProvisionPolicyParams) -> Self {
+            value.clone()
+        }
+    }
+
     impl SledProvisionPolicyParams {
         pub fn builder() -> builder::SledProvisionPolicyParams {
             Default::default()
@@ -25188,6 +27064,12 @@ pub mod types {
         pub old_state: SledProvisionPolicy,
     }
 
+    impl ::std::convert::From<&SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+        fn from(value: &SledProvisionPolicyResponse) -> Self {
+            value.clone()
+        }
+    }
+
     impl SledProvisionPolicyResponse {
         pub fn builder() -> builder::SledProvisionPolicyResponse {
             Default::default()
@@ -25234,6 +27116,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SledResultsPage> for SledResultsPage {
+        fn from(value: &SledResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SledResultsPage {
@@ -25296,6 +27184,12 @@ pub mod types {
         /// hardware may be reused, but it will be treated as a brand-new sled.)
         #[serde(rename = "decommissioned")]
         Decommissioned,
+    }
+
+    impl ::std::convert::From<&Self> for SledState {
+        fn from(value: &SledState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SledState {
@@ -25430,6 +27324,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Snapshot> for Snapshot {
+        fn from(value: &Snapshot) -> Self {
+            value.clone()
+        }
+    }
+
     impl Snapshot {
         pub fn builder() -> builder::Snapshot {
             Default::default()
@@ -25476,6 +27376,12 @@ pub mod types {
         /// The disk to be snapshotted
         pub disk: NameOrId,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&SnapshotCreate> for SnapshotCreate {
+        fn from(value: &SnapshotCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl SnapshotCreate {
@@ -25526,6 +27432,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&SnapshotResultsPage> for SnapshotResultsPage {
+        fn from(value: &SnapshotResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl SnapshotResultsPage {
         pub fn builder() -> builder::SnapshotResultsPage {
             Default::default()
@@ -25570,6 +27482,12 @@ pub mod types {
         Faulted,
         #[serde(rename = "destroyed")]
         Destroyed,
+    }
+
+    impl ::std::convert::From<&Self> for SnapshotState {
+        fn from(value: &SnapshotState) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SnapshotState {
@@ -25702,6 +27620,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&SshKey> for SshKey {
+        fn from(value: &SshKey) -> Self {
+            value.clone()
+        }
+    }
+
     impl SshKey {
         pub fn builder() -> builder::SshKey {
             Default::default()
@@ -25745,6 +27669,12 @@ pub mod types {
         pub name: Name,
         /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
         pub public_key: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&SshKeyCreate> for SshKeyCreate {
+        fn from(value: &SshKeyCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl SshKeyCreate {
@@ -25795,6 +27725,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&SshKeyResultsPage> for SshKeyResultsPage {
+        fn from(value: &SshKeyResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl SshKeyResultsPage {
         pub fn builder() -> builder::SshKeyResultsPage {
             Default::default()
@@ -25827,6 +27763,12 @@ pub mod types {
         /// User comment for the support bundle
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub user_comment: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleCreate> for SupportBundleCreate {
+        fn from(value: &SupportBundleCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for SupportBundleCreate {
@@ -25901,6 +27843,12 @@ pub mod types {
         pub user_comment: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&SupportBundleInfo> for SupportBundleInfo {
+        fn from(value: &SupportBundleInfo) -> Self {
+            value.clone()
+        }
+    }
+
     impl SupportBundleInfo {
         pub fn builder() -> builder::SupportBundleInfo {
             Default::default()
@@ -25947,6 +27895,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleInfoResultsPage> for SupportBundleInfoResultsPage {
+        fn from(value: &SupportBundleInfoResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SupportBundleInfoResultsPage {
@@ -26044,6 +27998,12 @@ pub mod types {
         Active,
     }
 
+    impl ::std::convert::From<&Self> for SupportBundleState {
+        fn from(value: &SupportBundleState) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for SupportBundleState {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -26121,6 +28081,12 @@ pub mod types {
         pub user_comment: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&SupportBundleUpdate> for SupportBundleUpdate {
+        fn from(value: &SupportBundleUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for SupportBundleUpdate {
         fn default() -> Self {
             Self {
@@ -26195,6 +28161,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Switch> for Switch {
+        fn from(value: &Switch) -> Self {
+            value.clone()
+        }
+    }
+
     impl Switch {
         pub fn builder() -> builder::Switch {
             Default::default()
@@ -26241,6 +28213,12 @@ pub mod types {
         pub history: ::std::collections::HashMap<::std::string::String, BgpMessageHistory>,
         /// Switch this message history is associated with.
         pub switch: SwitchLocation,
+    }
+
+    impl ::std::convert::From<&SwitchBgpHistory> for SwitchBgpHistory {
+        fn from(value: &SwitchBgpHistory) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchBgpHistory {
@@ -26318,6 +28296,12 @@ pub mod types {
         pub v6_enabled: bool,
     }
 
+    impl ::std::convert::From<&SwitchInterfaceConfig> for SwitchInterfaceConfig {
+        fn from(value: &SwitchInterfaceConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchInterfaceConfig {
         pub fn builder() -> builder::SwitchInterfaceConfig {
             Default::default()
@@ -26378,6 +28362,12 @@ pub mod types {
         pub link_name: Name,
         /// Whether or not IPv6 is enabled.
         pub v6_enabled: bool,
+    }
+
+    impl ::std::convert::From<&SwitchInterfaceConfigCreate> for SwitchInterfaceConfigCreate {
+        fn from(value: &SwitchInterfaceConfigCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchInterfaceConfigCreate {
@@ -26473,6 +28463,12 @@ pub mod types {
         Loopback,
     }
 
+    impl ::std::convert::From<&Self> for SwitchInterfaceKind {
+        fn from(value: &SwitchInterfaceKind) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<u16> for SwitchInterfaceKind {
         fn from(value: u16) -> Self {
             Self::Vlan(value)
@@ -26543,6 +28539,12 @@ pub mod types {
         /// specific to any particular port.
         #[serde(rename = "loopback")]
         Loopback,
+    }
+
+    impl ::std::convert::From<&Self> for SwitchInterfaceKind2 {
+        fn from(value: &SwitchInterfaceKind2) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SwitchInterfaceKind2 {
@@ -26618,6 +28620,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<&SwitchLinkState> for SwitchLinkState {
+        fn from(value: &SwitchLinkState) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::serde_json::Value> for SwitchLinkState {
         fn from(value: ::serde_json::Value) -> Self {
             Self(value)
@@ -26670,6 +28678,12 @@ pub mod types {
         /// Switch in lower slot
         #[serde(rename = "switch1")]
         Switch1,
+    }
+
+    impl ::std::convert::From<&Self> for SwitchLocation {
+        fn from(value: &SwitchLocation) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SwitchLocation {
@@ -26786,6 +28800,12 @@ pub mod types {
         pub switch_location: ::std::string::String,
     }
 
+    impl ::std::convert::From<&SwitchPort> for SwitchPort {
+        fn from(value: &SwitchPort) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPort {
         pub fn builder() -> builder::SwitchPort {
             Default::default()
@@ -26887,6 +28907,12 @@ pub mod types {
         pub vlan_id: ::std::option::Option<u16>,
     }
 
+    impl ::std::convert::From<&SwitchPortAddressView> for SwitchPortAddressView {
+        fn from(value: &SwitchPortAddressView) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortAddressView {
         pub fn builder() -> builder::SwitchPortAddressView {
             Default::default()
@@ -26924,6 +28950,12 @@ pub mod types {
     pub struct SwitchPortApplySettings {
         /// A name or id to use when applying switch port settings.
         pub port_settings: NameOrId,
+    }
+
+    impl ::std::convert::From<&SwitchPortApplySettings> for SwitchPortApplySettings {
+        fn from(value: &SwitchPortApplySettings) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchPortApplySettings {
@@ -26974,6 +29006,12 @@ pub mod types {
         pub port_settings_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&SwitchPortConfig> for SwitchPortConfig {
+        fn from(value: &SwitchPortConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortConfig {
         pub fn builder() -> builder::SwitchPortConfig {
             Default::default()
@@ -27010,6 +29048,12 @@ pub mod types {
     pub struct SwitchPortConfigCreate {
         /// Link geometry for the switch port.
         pub geometry: SwitchPortGeometry,
+    }
+
+    impl ::std::convert::From<&SwitchPortConfigCreate> for SwitchPortConfigCreate {
+        fn from(value: &SwitchPortConfigCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchPortConfigCreate {
@@ -27077,6 +29121,12 @@ pub mod types {
         /// The port contains four SFP28 links each with one lane.
         #[serde(rename = "sfp28x4")]
         Sfp28x4,
+    }
+
+    impl ::std::convert::From<&Self> for SwitchPortGeometry {
+        fn from(value: &SwitchPortGeometry) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SwitchPortGeometry {
@@ -27185,6 +29235,12 @@ pub mod types {
         /// The port contains four SFP28 links each with one lane.
         #[serde(rename = "sfp28x4")]
         Sfp28x4,
+    }
+
+    impl ::std::convert::From<&Self> for SwitchPortGeometry2 {
+        fn from(value: &SwitchPortGeometry2) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SwitchPortGeometry2 {
@@ -27363,6 +29419,12 @@ pub mod types {
         pub tx_eq_config: ::std::option::Option<TxEqConfig2>,
     }
 
+    impl ::std::convert::From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
+        fn from(value: &SwitchPortLinkConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortLinkConfig {
         pub fn builder() -> builder::SwitchPortLinkConfig {
             Default::default()
@@ -27409,6 +29471,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SwitchPortResultsPage> for SwitchPortResultsPage {
+        fn from(value: &SwitchPortResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchPortResultsPage {
@@ -27504,6 +29572,12 @@ pub mod types {
         /// reachable over an 802.1Q tagged L2 segment.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
+    }
+
+    impl ::std::convert::From<&SwitchPortRouteConfig> for SwitchPortRouteConfig {
+        fn from(value: &SwitchPortRouteConfig) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchPortRouteConfig {
@@ -27664,6 +29738,12 @@ pub mod types {
         pub vlan_interfaces: ::std::vec::Vec<SwitchVlanInterfaceConfig>,
     }
 
+    impl ::std::convert::From<&SwitchPortSettings> for SwitchPortSettings {
+        fn from(value: &SwitchPortSettings) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortSettings {
         pub fn builder() -> builder::SwitchPortSettings {
             Default::default()
@@ -27774,6 +29854,12 @@ pub mod types {
         pub routes: ::std::vec::Vec<RouteConfig>,
     }
 
+    impl ::std::convert::From<&SwitchPortSettingsCreate> for SwitchPortSettingsCreate {
+        fn from(value: &SwitchPortSettingsCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortSettingsCreate {
         pub fn builder() -> builder::SwitchPortSettingsCreate {
             Default::default()
@@ -27824,6 +29910,12 @@ pub mod types {
         pub port_settings_group_id: ::uuid::Uuid,
         /// The id of a port settings object referencing a port settings group.
         pub port_settings_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&SwitchPortSettingsGroups> for SwitchPortSettingsGroups {
+        fn from(value: &SwitchPortSettingsGroups) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchPortSettingsGroups {
@@ -27899,6 +29991,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&SwitchPortSettingsIdentity> for SwitchPortSettingsIdentity {
+        fn from(value: &SwitchPortSettingsIdentity) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortSettingsIdentity {
         pub fn builder() -> builder::SwitchPortSettingsIdentity {
             Default::default()
@@ -27947,6 +30045,14 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&SwitchPortSettingsIdentityResultsPage>
+        for SwitchPortSettingsIdentityResultsPage
+    {
+        fn from(value: &SwitchPortSettingsIdentityResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchPortSettingsIdentityResultsPage {
         pub fn builder() -> builder::SwitchPortSettingsIdentityResultsPage {
             Default::default()
@@ -27993,6 +30099,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SwitchResultsPage> for SwitchResultsPage {
+        fn from(value: &SwitchResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl SwitchResultsPage {
@@ -28046,6 +30158,12 @@ pub mod types {
         pub vlan_id: u16,
     }
 
+    impl ::std::convert::From<&SwitchVlanInterfaceConfig> for SwitchVlanInterfaceConfig {
+        fn from(value: &SwitchVlanInterfaceConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl SwitchVlanInterfaceConfig {
         pub fn builder() -> builder::SwitchVlanInterfaceConfig {
             Default::default()
@@ -28087,6 +30205,12 @@ pub mod types {
         CpusProvisioned,
         #[serde(rename = "ram_provisioned")]
         RamProvisioned,
+    }
+
+    impl ::std::convert::From<&Self> for SystemMetricName {
+        fn from(value: &SystemMetricName) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for SystemMetricName {
@@ -28173,6 +30297,14 @@ pub mod types {
     impl ::std::convert::From<SystemUpdateRepositoryViewSystemVersion> for ::std::string::String {
         fn from(value: SystemUpdateRepositoryViewSystemVersion) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&SystemUpdateRepositoryViewSystemVersion>
+        for SystemUpdateRepositoryViewSystemVersion
+    {
+        fn from(value: &SystemUpdateRepositoryViewSystemVersion) -> Self {
+            value.clone()
         }
     }
 
@@ -28279,6 +30411,12 @@ pub mod types {
         pub version: TargetReleaseVersion,
     }
 
+    impl ::std::convert::From<&TargetRelease> for TargetRelease {
+        fn from(value: &TargetRelease) -> Self {
+            value.clone()
+        }
+    }
+
     impl TargetRelease {
         pub fn builder() -> builder::TargetRelease {
             Default::default()
@@ -28323,6 +30461,12 @@ pub mod types {
     impl ::std::convert::From<TargetReleaseVersion> for ::std::string::String {
         fn from(value: TargetReleaseVersion) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&TargetReleaseVersion> for TargetReleaseVersion {
+        fn from(value: &TargetReleaseVersion) -> Self {
+            value.clone()
         }
     }
 
@@ -28440,6 +30584,12 @@ pub mod types {
         TimeAndIdDescending,
     }
 
+    impl ::std::convert::From<&Self> for TimeAndIdSortMode {
+        fn from(value: &TimeAndIdSortMode) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::fmt::Display for TimeAndIdSortMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -28524,6 +30674,12 @@ pub mod types {
         pub points: Points,
     }
 
+    impl ::std::convert::From<&Timeseries> for Timeseries {
+        fn from(value: &Timeseries) -> Self {
+            value.clone()
+        }
+    }
+
     impl Timeseries {
         pub fn builder() -> builder::Timeseries {
             Default::default()
@@ -28560,6 +30716,12 @@ pub mod types {
     pub struct TimeseriesDescription {
         pub metric: ::std::string::String,
         pub target: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&TimeseriesDescription> for TimeseriesDescription {
+        fn from(value: &TimeseriesDescription) -> Self {
+            value.clone()
+        }
     }
 
     impl TimeseriesDescription {
@@ -28610,6 +30772,12 @@ pub mod types {
     impl ::std::convert::From<TimeseriesName> for ::std::string::String {
         fn from(value: TimeseriesName) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&TimeseriesName> for TimeseriesName {
+        fn from(value: &TimeseriesName) -> Self {
+            value.clone()
         }
     }
 
@@ -28701,6 +30869,12 @@ pub mod types {
         pub query: ::std::string::String,
     }
 
+    impl ::std::convert::From<&TimeseriesQuery> for TimeseriesQuery {
+        fn from(value: &TimeseriesQuery) -> Self {
+            value.clone()
+        }
+    }
+
     impl TimeseriesQuery {
         pub fn builder() -> builder::TimeseriesQuery {
             Default::default()
@@ -28780,6 +30954,12 @@ pub mod types {
         pub version: ::std::num::NonZeroU8,
     }
 
+    impl ::std::convert::From<&TimeseriesSchema> for TimeseriesSchema {
+        fn from(value: &TimeseriesSchema) -> Self {
+            value.clone()
+        }
+    }
+
     impl TimeseriesSchema {
         pub fn builder() -> builder::TimeseriesSchema {
             Default::default()
@@ -28826,6 +31006,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&TimeseriesSchemaResultsPage> for TimeseriesSchemaResultsPage {
+        fn from(value: &TimeseriesSchemaResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl TimeseriesSchemaResultsPage {
@@ -28902,6 +31088,12 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&TufRepo> for TufRepo {
+        fn from(value: &TufRepo) -> Self {
+            value.clone()
+        }
+    }
+
     impl TufRepo {
         pub fn builder() -> builder::TufRepo {
             Default::default()
@@ -28948,6 +31140,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&TufRepoResultsPage> for TufRepoResultsPage {
+        fn from(value: &TufRepoResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl TufRepoResultsPage {
@@ -28999,6 +31197,12 @@ pub mod types {
     impl ::std::convert::From<TufRepoSystemVersion> for ::std::string::String {
         fn from(value: TufRepoSystemVersion) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&TufRepoSystemVersion> for TufRepoSystemVersion {
+        fn from(value: &TufRepoSystemVersion) -> Self {
+            value.clone()
         }
     }
 
@@ -29094,6 +31298,12 @@ pub mod types {
         pub status: TufRepoUploadStatus,
     }
 
+    impl ::std::convert::From<&TufRepoUpload> for TufRepoUpload {
+        fn from(value: &TufRepoUpload) -> Self {
+            value.clone()
+        }
+    }
+
     impl TufRepoUpload {
         pub fn builder() -> builder::TufRepoUpload {
             Default::default()
@@ -29149,6 +31359,12 @@ pub mod types {
         /// The repository did not exist, and was inserted into the database
         #[serde(rename = "inserted")]
         Inserted,
+    }
+
+    impl ::std::convert::From<&Self> for TufRepoUploadStatus {
+        fn from(value: &TufRepoUploadStatus) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for TufRepoUploadStatus {
@@ -29273,6 +31489,12 @@ pub mod types {
         pub pre2: ::std::option::Option<i32>,
     }
 
+    impl ::std::convert::From<&TxEqConfig> for TxEqConfig {
+        fn from(value: &TxEqConfig) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for TxEqConfig {
         fn default() -> Self {
             Self {
@@ -29368,6 +31590,12 @@ pub mod types {
         pub pre2: ::std::option::Option<i32>,
     }
 
+    impl ::std::convert::From<&TxEqConfig2> for TxEqConfig2 {
+        fn from(value: &TxEqConfig2) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::default::Default for TxEqConfig2 {
         fn default() -> Self {
             Self {
@@ -29426,6 +31654,12 @@ pub mod types {
         pub rack_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&UninitializedSled> for UninitializedSled {
+        fn from(value: &UninitializedSled) -> Self {
+            value.clone()
+        }
+    }
+
     impl UninitializedSled {
         pub fn builder() -> builder::UninitializedSled {
             Default::default()
@@ -29461,6 +31695,12 @@ pub mod types {
     pub struct UninitializedSledId {
         pub part: ::std::string::String,
         pub serial: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&UninitializedSledId> for UninitializedSledId {
+        fn from(value: &UninitializedSledId) -> Self {
+            value.clone()
+        }
     }
 
     impl UninitializedSledId {
@@ -29509,6 +31749,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&UninitializedSledResultsPage> for UninitializedSledResultsPage {
+        fn from(value: &UninitializedSledResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl UninitializedSledResultsPage {
@@ -29593,6 +31839,12 @@ pub mod types {
         /// Rotations per minute.
         #[serde(rename = "rpm")]
         Rpm,
+    }
+
+    impl ::std::convert::From<&Self> for Units {
+        fn from(value: &Units) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for Units {
@@ -29756,6 +32008,12 @@ pub mod types {
         pub time_last_step_planned: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&UpdateStatus> for UpdateStatus {
+        fn from(value: &UpdateStatus) -> Self {
+            value.clone()
+        }
+    }
+
     impl UpdateStatus {
         pub fn builder() -> builder::UpdateStatus {
             Default::default()
@@ -29809,6 +32067,12 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&UpdatesTrustRoot> for UpdatesTrustRoot {
+        fn from(value: &UpdatesTrustRoot) -> Self {
+            value.clone()
+        }
+    }
+
     impl UpdatesTrustRoot {
         pub fn builder() -> builder::UpdatesTrustRoot {
             Default::default()
@@ -29857,6 +32121,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&UpdatesTrustRootResultsPage> for UpdatesTrustRootResultsPage {
+        fn from(value: &UpdatesTrustRootResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl UpdatesTrustRootResultsPage {
         pub fn builder() -> builder::UpdatesTrustRootResultsPage {
             Default::default()
@@ -29903,6 +32173,12 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this user belongs
         pub silo_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&User> for User {
+        fn from(value: &User) -> Self {
+            value.clone()
+        }
     }
 
     impl User {
@@ -29981,6 +32257,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&UserBuiltin> for UserBuiltin {
+        fn from(value: &UserBuiltin) -> Self {
+            value.clone()
+        }
+    }
+
     impl UserBuiltin {
         pub fn builder() -> builder::UserBuiltin {
             Default::default()
@@ -30027,6 +32309,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&UserBuiltinResultsPage> for UserBuiltinResultsPage {
+        fn from(value: &UserBuiltinResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl UserBuiltinResultsPage {
@@ -30076,6 +32364,12 @@ pub mod types {
         pub external_id: UserId,
         /// how to set the user's login password
         pub password: UserPassword,
+    }
+
+    impl ::std::convert::From<&UserCreate> for UserCreate {
+        fn from(value: &UserCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl UserCreate {
@@ -30130,6 +32424,12 @@ pub mod types {
     impl ::std::convert::From<UserId> for ::std::string::String {
         fn from(value: UserId) -> Self {
             value.0
+        }
+    }
+
+    impl ::std::convert::From<&UserId> for UserId {
+        fn from(value: &UserId) -> Self {
+            value.clone()
         }
     }
 
@@ -30251,6 +32551,12 @@ pub mod types {
         LoginDisallowed,
     }
 
+    impl ::std::convert::From<&Self> for UserPassword {
+        fn from(value: &UserPassword) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<Password> for UserPassword {
         fn from(value: Password) -> Self {
             Self::Password(value)
@@ -30299,6 +32605,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&UserResultsPage> for UserResultsPage {
+        fn from(value: &UserResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl UserResultsPage {
         pub fn builder() -> builder::UserResultsPage {
             Default::default()
@@ -30334,6 +32646,12 @@ pub mod types {
     pub struct UsernamePasswordCredentials {
         pub password: Password,
         pub username: UserId,
+    }
+
+    impl ::std::convert::From<&UsernamePasswordCredentials> for UsernamePasswordCredentials {
+        fn from(value: &UsernamePasswordCredentials) -> Self {
+            value.clone()
+        }
     }
 
     impl UsernamePasswordCredentials {
@@ -30393,6 +32711,12 @@ pub mod types {
         /// associated with a stopped instances are not counted here whereas
         /// associated disks will still be counted
         pub provisioned: VirtualResourceCounts,
+    }
+
+    impl ::std::convert::From<&Utilization> for Utilization {
+        fn from(value: &Utilization) -> Self {
+            value.clone()
+        }
     }
 
     impl Utilization {
@@ -30597,6 +32921,12 @@ pub mod types {
         DoubleDistribution(::std::vec::Vec<::std::option::Option<Distributiondouble>>),
     }
 
+    impl ::std::convert::From<&Self> for ValueArray {
+        fn from(value: &ValueArray) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::vec::Vec<::std::option::Option<i64>>> for ValueArray {
         fn from(value: ::std::vec::Vec<::std::option::Option<i64>>) -> Self {
             Self::Integer(value)
@@ -30683,6 +33013,12 @@ pub mod types {
         pub values: ValueArray,
     }
 
+    impl ::std::convert::From<&Values> for Values {
+        fn from(value: &Values) -> Self {
+            value.clone()
+        }
+    }
+
     impl Values {
         pub fn builder() -> builder::Values {
             Default::default()
@@ -30738,6 +33074,12 @@ pub mod types {
         /// Sort in decreasing semantic version order (newest first)
         #[serde(rename = "version_descending")]
         VersionDescending,
+    }
+
+    impl ::std::convert::From<&Self> for VersionSortMode {
+        fn from(value: &VersionSortMode) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for VersionSortMode {
@@ -30838,6 +33180,12 @@ pub mod types {
         pub storage: ByteCount,
     }
 
+    impl ::std::convert::From<&VirtualResourceCounts> for VirtualResourceCounts {
+        fn from(value: &VirtualResourceCounts) -> Self {
+            value.clone()
+        }
+    }
+
     impl VirtualResourceCounts {
         pub fn builder() -> builder::VirtualResourceCounts {
             Default::default()
@@ -30875,6 +33223,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<&Vni> for Vni {
+        fn from(value: &Vni) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<u32> for Vni {
         fn from(value: u32) -> Self {
             Self(value)
@@ -30891,6 +33245,13 @@ pub mod types {
     impl ::std::convert::TryFrom<&str> for Vni {
         type Error = <u32 as ::std::str::FromStr>::Err;
         fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for Vni {
+        type Error = <u32 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
@@ -31013,6 +33374,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&Vpc> for Vpc {
+        fn from(value: &Vpc) -> Self {
+            value.clone()
+        }
+    }
+
     impl Vpc {
         pub fn builder() -> builder::Vpc {
             Default::default()
@@ -31081,6 +33448,12 @@ pub mod types {
         pub name: Name,
     }
 
+    impl ::std::convert::From<&VpcCreate> for VpcCreate {
+        fn from(value: &VpcCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcCreate {
         pub fn builder() -> builder::VpcCreate {
             Default::default()
@@ -31128,6 +33501,12 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub code: ::std::option::Option<IcmpParamRange>,
         pub icmp_type: u8,
+    }
+
+    impl ::std::convert::From<&VpcFirewallIcmpFilter> for VpcFirewallIcmpFilter {
+        fn from(value: &VpcFirewallIcmpFilter) -> Self {
+            value.clone()
+        }
     }
 
     impl VpcFirewallIcmpFilter {
@@ -31275,6 +33654,12 @@ pub mod types {
         pub vpc_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&VpcFirewallRule> for VpcFirewallRule {
+        fn from(value: &VpcFirewallRule) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcFirewallRule {
         pub fn builder() -> builder::VpcFirewallRule {
             Default::default()
@@ -31313,6 +33698,12 @@ pub mod types {
         Allow,
         #[serde(rename = "deny")]
         Deny,
+    }
+
+    impl ::std::convert::From<&Self> for VpcFirewallRuleAction {
+        fn from(value: &VpcFirewallRuleAction) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for VpcFirewallRuleAction {
@@ -31392,6 +33783,12 @@ pub mod types {
         Inbound,
         #[serde(rename = "outbound")]
         Outbound,
+    }
+
+    impl ::std::convert::From<&Self> for VpcFirewallRuleDirection {
+        fn from(value: &VpcFirewallRuleDirection) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for VpcFirewallRuleDirection {
@@ -31513,6 +33910,12 @@ pub mod types {
         /// If present, the networking protocols this rule applies to.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub protocols: ::std::option::Option<::std::vec::Vec<VpcFirewallRuleProtocol>>,
+    }
+
+    impl ::std::convert::From<&VpcFirewallRuleFilter> for VpcFirewallRuleFilter {
+        fn from(value: &VpcFirewallRuleFilter) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for VpcFirewallRuleFilter {
@@ -31668,6 +34071,12 @@ pub mod types {
         IpNet(IpNet),
     }
 
+    impl ::std::convert::From<&Self> for VpcFirewallRuleHostFilter {
+        fn from(value: &VpcFirewallRuleHostFilter) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::net::IpAddr> for VpcFirewallRuleHostFilter {
         fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
@@ -31763,6 +34172,12 @@ pub mod types {
         Icmp(::std::option::Option<VpcFirewallIcmpFilter>),
     }
 
+    impl ::std::convert::From<&Self> for VpcFirewallRuleProtocol {
+        fn from(value: &VpcFirewallRuleProtocol) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::option::Option<VpcFirewallIcmpFilter>>
         for VpcFirewallRuleProtocol
     {
@@ -31803,6 +34218,12 @@ pub mod types {
         Disabled,
         #[serde(rename = "enabled")]
         Enabled,
+    }
+
+    impl ::std::convert::From<&Self> for VpcFirewallRuleStatus {
+        fn from(value: &VpcFirewallRuleStatus) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for VpcFirewallRuleStatus {
@@ -31989,6 +34410,12 @@ pub mod types {
         IpNet(IpNet),
     }
 
+    impl ::std::convert::From<&Self> for VpcFirewallRuleTarget {
+        fn from(value: &VpcFirewallRuleTarget) -> Self {
+            value.clone()
+        }
+    }
+
     impl ::std::convert::From<::std::net::IpAddr> for VpcFirewallRuleTarget {
         fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
@@ -32107,6 +34534,12 @@ pub mod types {
         pub targets: ::std::vec::Vec<VpcFirewallRuleTarget>,
     }
 
+    impl ::std::convert::From<&VpcFirewallRuleUpdate> for VpcFirewallRuleUpdate {
+        fn from(value: &VpcFirewallRuleUpdate) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcFirewallRuleUpdate {
         pub fn builder() -> builder::VpcFirewallRuleUpdate {
             Default::default()
@@ -32141,6 +34574,12 @@ pub mod types {
     pub struct VpcFirewallRuleUpdateParams {
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub rules: ::std::vec::Vec<VpcFirewallRuleUpdate>,
+    }
+
+    impl ::std::convert::From<&VpcFirewallRuleUpdateParams> for VpcFirewallRuleUpdateParams {
+        fn from(value: &VpcFirewallRuleUpdateParams) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for VpcFirewallRuleUpdateParams {
@@ -32184,6 +34623,12 @@ pub mod types {
     )]
     pub struct VpcFirewallRules {
         pub rules: ::std::vec::Vec<VpcFirewallRule>,
+    }
+
+    impl ::std::convert::From<&VpcFirewallRules> for VpcFirewallRules {
+        fn from(value: &VpcFirewallRules) -> Self {
+            value.clone()
+        }
     }
 
     impl VpcFirewallRules {
@@ -32232,6 +34677,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&VpcResultsPage> for VpcResultsPage {
+        fn from(value: &VpcResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl VpcResultsPage {
@@ -32320,6 +34771,12 @@ pub mod types {
         pub vpc_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&VpcRouter> for VpcRouter {
+        fn from(value: &VpcRouter) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcRouter {
         pub fn builder() -> builder::VpcRouter {
             Default::default()
@@ -32355,6 +34812,12 @@ pub mod types {
     pub struct VpcRouterCreate {
         pub description: ::std::string::String,
         pub name: Name,
+    }
+
+    impl ::std::convert::From<&VpcRouterCreate> for VpcRouterCreate {
+        fn from(value: &VpcRouterCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl VpcRouterCreate {
@@ -32395,6 +34858,12 @@ pub mod types {
         System,
         #[serde(rename = "custom")]
         Custom,
+    }
+
+    impl ::std::convert::From<&Self> for VpcRouterKind {
+        fn from(value: &VpcRouterKind) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for VpcRouterKind {
@@ -32484,6 +34953,12 @@ pub mod types {
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
+    impl ::std::convert::From<&VpcRouterResultsPage> for VpcRouterResultsPage {
+        fn from(value: &VpcRouterResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcRouterResultsPage {
         pub fn builder() -> builder::VpcRouterResultsPage {
             Default::default()
@@ -32531,6 +35006,12 @@ pub mod types {
         pub description: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&VpcRouterUpdate> for VpcRouterUpdate {
+        fn from(value: &VpcRouterUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for VpcRouterUpdate {
@@ -32658,6 +35139,12 @@ pub mod types {
         pub vpc_id: ::uuid::Uuid,
     }
 
+    impl ::std::convert::From<&VpcSubnet> for VpcSubnet {
+        fn from(value: &VpcSubnet) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcSubnet {
         pub fn builder() -> builder::VpcSubnet {
             Default::default()
@@ -32765,6 +35252,12 @@ pub mod types {
         pub name: Name,
     }
 
+    impl ::std::convert::From<&VpcSubnetCreate> for VpcSubnetCreate {
+        fn from(value: &VpcSubnetCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl VpcSubnetCreate {
         pub fn builder() -> builder::VpcSubnetCreate {
             Default::default()
@@ -32811,6 +35304,12 @@ pub mod types {
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&VpcSubnetResultsPage> for VpcSubnetResultsPage {
+        fn from(value: &VpcSubnetResultsPage) -> Self {
+            value.clone()
+        }
     }
 
     impl VpcSubnetResultsPage {
@@ -32880,6 +35379,12 @@ pub mod types {
         pub description: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&VpcSubnetUpdate> for VpcSubnetUpdate {
+        fn from(value: &VpcSubnetUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for VpcSubnetUpdate {
@@ -32955,6 +35460,12 @@ pub mod types {
         pub dns_name: ::std::option::Option<Name>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&VpcUpdate> for VpcUpdate {
+        fn from(value: &VpcUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for VpcUpdate {
@@ -33040,6 +35551,12 @@ pub mod types {
         pub subscriptions: ::std::vec::Vec<AlertSubscription>,
     }
 
+    impl ::std::convert::From<&WebhookCreate> for WebhookCreate {
+        fn from(value: &WebhookCreate) -> Self {
+            value.clone()
+        }
+    }
+
     impl WebhookCreate {
         pub fn builder() -> builder::WebhookCreate {
             Default::default()
@@ -33120,6 +35637,12 @@ pub mod types {
         pub time_sent: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&WebhookDeliveryAttempt> for WebhookDeliveryAttempt {
+        fn from(value: &WebhookDeliveryAttempt) -> Self {
+            value.clone()
+        }
+    }
+
     impl WebhookDeliveryAttempt {
         pub fn builder() -> builder::WebhookDeliveryAttempt {
             Default::default()
@@ -33198,6 +35721,12 @@ pub mod types {
         /// but no response was received within the delivery timeout.
         #[serde(rename = "failed_timeout")]
         FailedTimeout,
+    }
+
+    impl ::std::convert::From<&Self> for WebhookDeliveryAttemptResult {
+        fn from(value: &WebhookDeliveryAttemptResult) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::fmt::Display for WebhookDeliveryAttemptResult {
@@ -33289,6 +35818,12 @@ pub mod types {
         pub duration_ms: u32,
         /// The HTTP status code returned from the webhook endpoint.
         pub status: u16,
+    }
+
+    impl ::std::convert::From<&WebhookDeliveryResponse> for WebhookDeliveryResponse {
+        fn from(value: &WebhookDeliveryResponse) -> Self {
+            value.clone()
+        }
     }
 
     impl WebhookDeliveryResponse {
@@ -33390,6 +35925,12 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&WebhookReceiver> for WebhookReceiver {
+        fn from(value: &WebhookReceiver) -> Self {
+            value.clone()
+        }
+    }
+
     impl WebhookReceiver {
         pub fn builder() -> builder::WebhookReceiver {
             Default::default()
@@ -33449,6 +35990,12 @@ pub mod types {
         pub endpoint: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&WebhookReceiverUpdate> for WebhookReceiverUpdate {
+        fn from(value: &WebhookReceiverUpdate) -> Self {
+            value.clone()
+        }
     }
 
     impl ::std::default::Default for WebhookReceiverUpdate {
@@ -33512,6 +36059,12 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
+    impl ::std::convert::From<&WebhookSecret> for WebhookSecret {
+        fn from(value: &WebhookSecret) -> Self {
+            value.clone()
+        }
+    }
+
     impl WebhookSecret {
         pub fn builder() -> builder::WebhookSecret {
             Default::default()
@@ -33543,6 +36096,12 @@ pub mod types {
     pub struct WebhookSecretCreate {
         /// The value of the shared secret key.
         pub secret: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&WebhookSecretCreate> for WebhookSecretCreate {
+        fn from(value: &WebhookSecretCreate) -> Self {
+            value.clone()
+        }
     }
 
     impl WebhookSecretCreate {
@@ -33581,6 +36140,12 @@ pub mod types {
         pub secrets: ::std::vec::Vec<WebhookSecret>,
     }
 
+    impl ::std::convert::From<&WebhookSecrets> for WebhookSecrets {
+        fn from(value: &WebhookSecrets) -> Self {
+            value.clone()
+        }
+    }
+
     impl WebhookSecrets {
         pub fn builder() -> builder::WebhookSecrets {
             Default::default()
@@ -33614,7 +36179,7 @@ pub mod types {
             {
                 self.address = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
                 self
             }
             pub fn address_lot<T>(mut self, value: T) -> Self
@@ -33624,7 +36189,7 @@ pub mod types {
             {
                 self.address_lot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address_lot: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
                 self
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
@@ -33634,7 +36199,7 @@ pub mod types {
             {
                 self.vlan_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vlan_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
                 self
             }
         }
@@ -33686,7 +36251,7 @@ pub mod types {
             {
                 self.addresses = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for addresses: {e}"));
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
                 self
             }
             pub fn link_name<T>(mut self, value: T) -> Self
@@ -33696,7 +36261,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
         }
@@ -33759,7 +36324,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -33769,7 +36334,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -33779,7 +36344,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -33789,7 +36354,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -33797,9 +36362,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -33807,9 +36372,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -33866,9 +36431,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
-                self.first_address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for first_address: {e}"));
+                self.first_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_address: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -33878,7 +36443,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn last_address<T>(mut self, value: T) -> Self
@@ -33886,9 +36451,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
-                self.last_address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for last_address: {e}"));
+                self.last_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_address: {}", e)
+                });
                 self
             }
         }
@@ -33937,9 +36502,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
-                self.first_address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for first_address: {e}"));
+                self.first_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_address: {}", e)
+                });
                 self
             }
             pub fn last_address<T>(mut self, value: T) -> Self
@@ -33947,9 +36512,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
-                self.last_address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for last_address: {e}"));
+                self.last_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_address: {}", e)
+                });
                 self
             }
         }
@@ -34004,7 +36569,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -34014,7 +36579,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -34070,7 +36635,7 @@ pub mod types {
             {
                 self.blocks = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for blocks: {e}"));
+                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -34080,7 +36645,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -34090,7 +36655,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -34100,7 +36665,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -34156,7 +36721,7 @@ pub mod types {
             {
                 self.blocks = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for blocks: {e}"));
+                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
                 self
             }
             pub fn lot<T>(mut self, value: T) -> Self
@@ -34166,7 +36731,7 @@ pub mod types {
             {
                 self.lot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for lot: {e}"));
+                    .map_err(|e| format!("error converting supplied value for lot: {}", e));
                 self
             }
         }
@@ -34218,7 +36783,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -34228,7 +36793,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -34280,7 +36845,7 @@ pub mod types {
             {
                 self.blocks = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for blocks: {e}"));
+                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
                 self
             }
             pub fn lot<T>(mut self, value: T) -> Self
@@ -34290,7 +36855,7 @@ pub mod types {
             {
                 self.lot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for lot: {e}"));
+                    .map_err(|e| format!("error converting supplied value for lot: {}", e));
                 self
             }
         }
@@ -34357,7 +36922,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn failure_domain<T>(mut self, value: T) -> Self
@@ -34366,7 +36931,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.failure_domain = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for failure_domain: {e}")
+                    format!("error converting supplied value for failure_domain: {}", e)
                 });
                 self
             }
@@ -34377,7 +36942,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -34387,7 +36952,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn policy<T>(mut self, value: T) -> Self
@@ -34397,7 +36962,7 @@ pub mod types {
             {
                 self.policy = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for policy: {e}"));
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -34407,7 +36972,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -34415,9 +36980,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -34425,9 +36990,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -34492,7 +37057,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn failure_domain<T>(mut self, value: T) -> Self
@@ -34501,7 +37066,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.failure_domain = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for failure_domain: {e}")
+                    format!("error converting supplied value for failure_domain: {}", e)
                 });
                 self
             }
@@ -34512,7 +37077,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn policy<T>(mut self, value: T) -> Self
@@ -34522,7 +37087,7 @@ pub mod types {
             {
                 self.policy = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for policy: {e}"));
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
         }
@@ -34581,7 +37146,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -34591,7 +37156,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -34648,7 +37213,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -34658,7 +37223,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -34710,7 +37275,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -34720,7 +37285,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -34769,7 +37334,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.switch_histories = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_histories: {e}")
+                    format!(
+                        "error converting supplied value for switch_histories: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -34817,7 +37385,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -34827,7 +37395,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -34879,7 +37447,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -34889,7 +37457,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -34953,7 +37521,7 @@ pub mod types {
             {
                 self.alert_class = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for alert_class: {e}"));
+                    .map_err(|e| format!("error converting supplied value for alert_class: {}", e));
                 self
             }
             pub fn alert_id<T>(mut self, value: T) -> Self
@@ -34963,7 +37531,7 @@ pub mod types {
             {
                 self.alert_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for alert_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for alert_id: {}", e));
                 self
             }
             pub fn attempts<T>(mut self, value: T) -> Self
@@ -34973,7 +37541,7 @@ pub mod types {
             {
                 self.attempts = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for attempts: {e}"));
+                    .map_err(|e| format!("error converting supplied value for attempts: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -34983,7 +37551,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn receiver_id<T>(mut self, value: T) -> Self
@@ -34993,7 +37561,7 @@ pub mod types {
             {
                 self.receiver_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for receiver_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for receiver_id: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -35003,7 +37571,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_started<T>(mut self, value: T) -> Self
@@ -35011,9 +37579,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_started = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_started: {e}"));
+                self.time_started = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_started: {}", e)
+                });
                 self
             }
             pub fn trigger<T>(mut self, value: T) -> Self
@@ -35023,7 +37591,7 @@ pub mod types {
             {
                 self.trigger = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for trigger: {e}"));
+                    .map_err(|e| format!("error converting supplied value for trigger: {}", e));
                 self
             }
         }
@@ -35082,7 +37650,7 @@ pub mod types {
             {
                 self.delivery_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for delivery_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for delivery_id: {}", e));
                 self
             }
         }
@@ -35133,7 +37701,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -35143,7 +37711,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -35193,7 +37761,7 @@ pub mod types {
             {
                 self.probe = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for probe: {e}"));
+                    .map_err(|e| format!("error converting supplied value for probe: {}", e));
                 self
             }
             pub fn resends_started<T>(mut self, value: T) -> Self
@@ -35202,7 +37770,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.resends_started = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for resends_started: {e}")
+                    format!("error converting supplied value for resends_started: {}", e)
                 });
                 self
             }
@@ -35271,7 +37839,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -35281,7 +37849,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -35291,7 +37859,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -35301,7 +37869,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn subscriptions<T>(mut self, value: T) -> Self
@@ -35309,9 +37877,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::AlertSubscription>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.subscriptions = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subscriptions: {e}"));
+                self.subscriptions = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscriptions: {}", e)
+                });
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -35319,9 +37887,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -35329,9 +37897,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -35394,7 +37962,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -35404,7 +37972,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -35449,9 +38017,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::AlertSubscription>,
                 T::Error: ::std::fmt::Display,
             {
-                self.subscription = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subscription: {e}"));
+                self.subscription = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscription: {}", e)
+                });
                 self
             }
         }
@@ -35494,9 +38062,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::AlertSubscription>,
                 T::Error: ::std::fmt::Display,
             {
-                self.subscription = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subscription: {e}"));
+                self.subscription = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscription: {}", e)
+                });
                 self
             }
         }
@@ -35551,7 +38119,7 @@ pub mod types {
             {
                 self.allowed_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for allowed_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for allowed_ips: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -35559,9 +38127,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -35569,9 +38137,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -35620,7 +38188,7 @@ pub mod types {
             {
                 self.allowed_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for allowed_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for allowed_ips: {}", e));
                 self
             }
         }
@@ -35685,7 +38253,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn failure_domain<T>(mut self, value: T) -> Self
@@ -35694,7 +38262,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.failure_domain = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for failure_domain: {e}")
+                    format!("error converting supplied value for failure_domain: {}", e)
                 });
                 self
             }
@@ -35705,7 +38273,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -35715,7 +38283,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn policy<T>(mut self, value: T) -> Self
@@ -35725,7 +38293,7 @@ pub mod types {
             {
                 self.policy = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for policy: {e}"));
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -35735,7 +38303,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -35743,9 +38311,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -35753,9 +38321,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -35820,7 +38388,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn failure_domain<T>(mut self, value: T) -> Self
@@ -35829,7 +38397,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.failure_domain = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for failure_domain: {e}")
+                    format!("error converting supplied value for failure_domain: {}", e)
                 });
                 self
             }
@@ -35840,7 +38408,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn policy<T>(mut self, value: T) -> Self
@@ -35850,7 +38418,7 @@ pub mod types {
             {
                 self.policy = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for policy: {e}"));
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
         }
@@ -35909,7 +38477,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -35919,7 +38487,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -35978,7 +38546,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -35988,7 +38556,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -36040,7 +38608,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -36050,7 +38618,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -36129,7 +38697,7 @@ pub mod types {
             {
                 self.actor = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for actor: {e}"));
+                    .map_err(|e| format!("error converting supplied value for actor: {}", e));
                 self
             }
             pub fn auth_method<T>(mut self, value: T) -> Self
@@ -36139,7 +38707,7 @@ pub mod types {
             {
                 self.auth_method = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for auth_method: {e}"));
+                    .map_err(|e| format!("error converting supplied value for auth_method: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -36149,7 +38717,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn operation_id<T>(mut self, value: T) -> Self
@@ -36157,9 +38725,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.operation_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for operation_id: {e}"));
+                self.operation_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for operation_id: {}", e)
+                });
                 self
             }
             pub fn request_id<T>(mut self, value: T) -> Self
@@ -36169,7 +38737,7 @@ pub mod types {
             {
                 self.request_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for request_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for request_id: {}", e));
                 self
             }
             pub fn request_uri<T>(mut self, value: T) -> Self
@@ -36179,7 +38747,7 @@ pub mod types {
             {
                 self.request_uri = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for request_uri: {e}"));
+                    .map_err(|e| format!("error converting supplied value for request_uri: {}", e));
                 self
             }
             pub fn result<T>(mut self, value: T) -> Self
@@ -36189,7 +38757,7 @@ pub mod types {
             {
                 self.result = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for result: {e}"));
+                    .map_err(|e| format!("error converting supplied value for result: {}", e));
                 self
             }
             pub fn source_ip<T>(mut self, value: T) -> Self
@@ -36199,7 +38767,7 @@ pub mod types {
             {
                 self.source_ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for source_ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for source_ip: {}", e));
                 self
             }
             pub fn time_completed<T>(mut self, value: T) -> Self
@@ -36208,7 +38776,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.time_completed = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_completed: {e}")
+                    format!("error converting supplied value for time_completed: {}", e)
                 });
                 self
             }
@@ -36217,9 +38785,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_started = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_started: {e}"));
+                self.time_started = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_started: {}", e)
+                });
                 self
             }
             pub fn user_agent<T>(mut self, value: T) -> Self
@@ -36229,7 +38797,7 @@ pub mod types {
             {
                 self.user_agent = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for user_agent: {e}"));
+                    .map_err(|e| format!("error converting supplied value for user_agent: {}", e));
                 self
             }
         }
@@ -36300,7 +38868,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -36310,7 +38878,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -36361,7 +38929,7 @@ pub mod types {
             {
                 self.part = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for part: {e}"));
+                    .map_err(|e| format!("error converting supplied value for part: {}", e));
                 self
             }
             pub fn revision<T>(mut self, value: T) -> Self
@@ -36371,7 +38939,7 @@ pub mod types {
             {
                 self.revision = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for revision: {e}"));
+                    .map_err(|e| format!("error converting supplied value for revision: {}", e));
                 self
             }
             pub fn serial<T>(mut self, value: T) -> Self
@@ -36381,7 +38949,7 @@ pub mod types {
             {
                 self.serial = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for serial: {e}"));
+                    .map_err(|e| format!("error converting supplied value for serial: {}", e));
                 self
             }
         }
@@ -36432,7 +39000,7 @@ pub mod types {
             {
                 self.remote = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for remote: {e}"));
+                    .map_err(|e| format!("error converting supplied value for remote: {}", e));
                 self
             }
             pub fn switch<T>(mut self, value: T) -> Self
@@ -36442,7 +39010,7 @@ pub mod types {
             {
                 self.switch = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
                 self
             }
         }
@@ -36503,7 +39071,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.detection_threshold = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for detection_threshold: {e}")
+                    format!(
+                        "error converting supplied value for detection_threshold: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -36514,7 +39085,7 @@ pub mod types {
             {
                 self.local = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for local: {e}"));
+                    .map_err(|e| format!("error converting supplied value for local: {}", e));
                 self
             }
             pub fn mode<T>(mut self, value: T) -> Self
@@ -36524,7 +39095,7 @@ pub mod types {
             {
                 self.mode = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mode: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mode: {}", e));
                 self
             }
             pub fn remote<T>(mut self, value: T) -> Self
@@ -36534,7 +39105,7 @@ pub mod types {
             {
                 self.remote = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for remote: {e}"));
+                    .map_err(|e| format!("error converting supplied value for remote: {}", e));
                 self
             }
             pub fn required_rx<T>(mut self, value: T) -> Self
@@ -36544,7 +39115,7 @@ pub mod types {
             {
                 self.required_rx = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for required_rx: {e}"));
+                    .map_err(|e| format!("error converting supplied value for required_rx: {}", e));
                 self
             }
             pub fn switch<T>(mut self, value: T) -> Self
@@ -36554,7 +39125,7 @@ pub mod types {
             {
                 self.switch = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
                 self
             }
         }
@@ -36625,7 +39196,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.detection_threshold = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for detection_threshold: {e}")
+                    format!(
+                        "error converting supplied value for detection_threshold: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -36636,7 +39210,7 @@ pub mod types {
             {
                 self.local = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for local: {e}"));
+                    .map_err(|e| format!("error converting supplied value for local: {}", e));
                 self
             }
             pub fn mode<T>(mut self, value: T) -> Self
@@ -36646,7 +39220,7 @@ pub mod types {
             {
                 self.mode = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mode: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mode: {}", e));
                 self
             }
             pub fn peer<T>(mut self, value: T) -> Self
@@ -36656,7 +39230,7 @@ pub mod types {
             {
                 self.peer = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for peer: {e}"));
+                    .map_err(|e| format!("error converting supplied value for peer: {}", e));
                 self
             }
             pub fn required_rx<T>(mut self, value: T) -> Self
@@ -36666,7 +39240,7 @@ pub mod types {
             {
                 self.required_rx = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for required_rx: {e}"));
+                    .map_err(|e| format!("error converting supplied value for required_rx: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -36676,7 +39250,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn switch<T>(mut self, value: T) -> Self
@@ -36686,7 +39260,7 @@ pub mod types {
             {
                 self.switch = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
                 self
             }
         }
@@ -36757,7 +39331,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -36767,7 +39341,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -36777,7 +39351,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -36785,9 +39359,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -36795,9 +39369,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -36855,9 +39429,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::BgpAnnouncementCreate>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.announcement = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for announcement: {e}"));
+                self.announcement = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for announcement: {}", e)
+                });
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -36867,7 +39441,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -36877,7 +39451,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -36931,7 +39505,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for address_lot_block_id: {e}")
+                    format!(
+                        "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -36941,7 +39518,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.announce_set_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for announce_set_id: {e}")
+                    format!("error converting supplied value for announce_set_id: {}", e)
                 });
                 self
             }
@@ -36952,7 +39529,7 @@ pub mod types {
             {
                 self.network = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for network: {e}"));
+                    .map_err(|e| format!("error converting supplied value for network: {}", e));
                 self
             }
         }
@@ -37002,7 +39579,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for address_lot_block: {e}")
+                    format!(
+                        "error converting supplied value for address_lot_block: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -37013,7 +39593,7 @@ pub mod types {
             {
                 self.network = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for network: {e}"));
+                    .map_err(|e| format!("error converting supplied value for network: {}", e));
                 self
             }
         }
@@ -37081,7 +39661,7 @@ pub mod types {
             {
                 self.asn = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for asn: {e}"));
+                    .map_err(|e| format!("error converting supplied value for asn: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -37091,7 +39671,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -37101,7 +39681,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -37111,7 +39691,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -37119,9 +39699,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -37129,9 +39709,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vrf<T>(mut self, value: T) -> Self
@@ -37141,7 +39721,7 @@ pub mod types {
             {
                 self.vrf = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vrf: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vrf: {}", e));
                 self
             }
         }
@@ -37208,7 +39788,7 @@ pub mod types {
             {
                 self.asn = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for asn: {e}"));
+                    .map_err(|e| format!("error converting supplied value for asn: {}", e));
                 self
             }
             pub fn bgp_announce_set_id<T>(mut self, value: T) -> Self
@@ -37217,7 +39797,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.bgp_announce_set_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for bgp_announce_set_id: {e}")
+                    format!(
+                        "error converting supplied value for bgp_announce_set_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -37228,7 +39811,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -37238,7 +39821,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn vrf<T>(mut self, value: T) -> Self
@@ -37248,7 +39831,7 @@ pub mod types {
             {
                 self.vrf = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vrf: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vrf: {}", e));
                 self
             }
         }
@@ -37306,7 +39889,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -37316,7 +39899,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -37371,7 +39954,7 @@ pub mod types {
             {
                 self.exports = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for exports: {e}"));
+                    .map_err(|e| format!("error converting supplied value for exports: {}", e));
                 self
             }
         }
@@ -37422,7 +40005,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn nexthop<T>(mut self, value: T) -> Self
@@ -37432,7 +40015,7 @@ pub mod types {
             {
                 self.nexthop = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for nexthop: {e}"));
+                    .map_err(|e| format!("error converting supplied value for nexthop: {}", e));
                 self
             }
             pub fn prefix<T>(mut self, value: T) -> Self
@@ -37442,7 +40025,7 @@ pub mod types {
             {
                 self.prefix = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for prefix: {e}"));
+                    .map_err(|e| format!("error converting supplied value for prefix: {}", e));
                 self
             }
             pub fn switch<T>(mut self, value: T) -> Self
@@ -37452,7 +40035,7 @@ pub mod types {
             {
                 self.switch = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
                 self
             }
         }
@@ -37541,7 +40124,7 @@ pub mod types {
             {
                 self.addr = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for addr: {e}"));
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
                 self
             }
             pub fn allowed_export<T>(mut self, value: T) -> Self
@@ -37550,7 +40133,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.allowed_export = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for allowed_export: {e}")
+                    format!("error converting supplied value for allowed_export: {}", e)
                 });
                 self
             }
@@ -37560,7 +40143,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.allowed_import = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for allowed_import: {e}")
+                    format!("error converting supplied value for allowed_import: {}", e)
                 });
                 self
             }
@@ -37571,7 +40154,7 @@ pub mod types {
             {
                 self.bgp_config = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bgp_config: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bgp_config: {}", e));
                 self
             }
             pub fn communities<T>(mut self, value: T) -> Self
@@ -37581,7 +40164,7 @@ pub mod types {
             {
                 self.communities = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for communities: {e}"));
+                    .map_err(|e| format!("error converting supplied value for communities: {}", e));
                 self
             }
             pub fn connect_retry<T>(mut self, value: T) -> Self
@@ -37589,9 +40172,9 @@ pub mod types {
                 T: ::std::convert::TryInto<u32>,
                 T::Error: ::std::fmt::Display,
             {
-                self.connect_retry = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for connect_retry: {e}"));
+                self.connect_retry = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for connect_retry: {}", e)
+                });
                 self
             }
             pub fn delay_open<T>(mut self, value: T) -> Self
@@ -37601,7 +40184,7 @@ pub mod types {
             {
                 self.delay_open = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for delay_open: {e}"));
+                    .map_err(|e| format!("error converting supplied value for delay_open: {}", e));
                 self
             }
             pub fn enforce_first_as<T>(mut self, value: T) -> Self
@@ -37610,7 +40193,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.enforce_first_as = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for enforce_first_as: {e}")
+                    format!(
+                        "error converting supplied value for enforce_first_as: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -37621,7 +40207,7 @@ pub mod types {
             {
                 self.hold_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for hold_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for hold_time: {}", e));
                 self
             }
             pub fn idle_hold_time<T>(mut self, value: T) -> Self
@@ -37630,7 +40216,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.idle_hold_time = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for idle_hold_time: {e}")
+                    format!("error converting supplied value for idle_hold_time: {}", e)
                 });
                 self
             }
@@ -37640,7 +40226,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_name: {e}")
+                    format!("error converting supplied value for interface_name: {}", e)
                 });
                 self
             }
@@ -37651,7 +40237,7 @@ pub mod types {
             {
                 self.keepalive = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for keepalive: {e}"));
+                    .map_err(|e| format!("error converting supplied value for keepalive: {}", e));
                 self
             }
             pub fn local_pref<T>(mut self, value: T) -> Self
@@ -37661,7 +40247,7 @@ pub mod types {
             {
                 self.local_pref = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_pref: {e}"));
+                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
                 self
             }
             pub fn md5_auth_key<T>(mut self, value: T) -> Self
@@ -37669,9 +40255,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.md5_auth_key = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for md5_auth_key: {e}"));
+                self.md5_auth_key = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for md5_auth_key: {}", e)
+                });
                 self
             }
             pub fn min_ttl<T>(mut self, value: T) -> Self
@@ -37681,7 +40267,7 @@ pub mod types {
             {
                 self.min_ttl = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min_ttl: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min_ttl: {}", e));
                 self
             }
             pub fn multi_exit_discriminator<T>(mut self, value: T) -> Self
@@ -37690,7 +40276,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.multi_exit_discriminator = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for multi_exit_discriminator: {e}")
+                    format!(
+                        "error converting supplied value for multi_exit_discriminator: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -37701,7 +40290,7 @@ pub mod types {
             {
                 self.remote_asn = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for remote_asn: {e}"));
+                    .map_err(|e| format!("error converting supplied value for remote_asn: {}", e));
                 self
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
@@ -37711,7 +40300,7 @@ pub mod types {
             {
                 self.vlan_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vlan_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
                 self
             }
         }
@@ -37792,7 +40381,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn peers<T>(mut self, value: T) -> Self
@@ -37802,7 +40391,7 @@ pub mod types {
             {
                 self.peers = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for peers: {e}"));
+                    .map_err(|e| format!("error converting supplied value for peers: {}", e));
                 self
             }
         }
@@ -37861,7 +40450,7 @@ pub mod types {
             {
                 self.addr = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for addr: {e}"));
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
                 self
             }
             pub fn local_asn<T>(mut self, value: T) -> Self
@@ -37871,7 +40460,7 @@ pub mod types {
             {
                 self.local_asn = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_asn: {e}"));
+                    .map_err(|e| format!("error converting supplied value for local_asn: {}", e));
                 self
             }
             pub fn remote_asn<T>(mut self, value: T) -> Self
@@ -37881,7 +40470,7 @@ pub mod types {
             {
                 self.remote_asn = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for remote_asn: {e}"));
+                    .map_err(|e| format!("error converting supplied value for remote_asn: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -37891,7 +40480,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn state_duration_millis<T>(mut self, value: T) -> Self
@@ -37900,7 +40489,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.state_duration_millis = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for state_duration_millis: {e}")
+                    format!(
+                        "error converting supplied value for state_duration_millis: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -37911,7 +40503,7 @@ pub mod types {
             {
                 self.switch = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
                 self
             }
         }
@@ -37968,7 +40560,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -37978,7 +40570,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38027,7 +40619,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38037,7 +40629,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38086,7 +40678,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38096,7 +40688,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38145,7 +40737,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38155,7 +40747,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38204,7 +40796,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38214,7 +40806,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38263,7 +40855,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38273,7 +40865,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38322,7 +40914,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38332,7 +40924,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38381,7 +40973,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38391,7 +40983,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38440,7 +41032,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38450,7 +41042,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38499,7 +41091,7 @@ pub mod types {
             {
                 self.count = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for count: {e}"));
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -38509,7 +41101,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
         }
@@ -38574,7 +41166,7 @@ pub mod types {
             {
                 self.cert = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cert: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cert: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -38584,7 +41176,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -38594,7 +41186,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -38604,7 +41196,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn service<T>(mut self, value: T) -> Self
@@ -38614,7 +41206,7 @@ pub mod types {
             {
                 self.service = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for service: {e}"));
+                    .map_err(|e| format!("error converting supplied value for service: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -38622,9 +41214,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -38632,9 +41224,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -38699,7 +41291,7 @@ pub mod types {
             {
                 self.cert = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cert: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cert: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -38709,7 +41301,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn key<T>(mut self, value: T) -> Self
@@ -38719,7 +41311,7 @@ pub mod types {
             {
                 self.key = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for key: {e}"));
+                    .map_err(|e| format!("error converting supplied value for key: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -38729,7 +41321,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn service<T>(mut self, value: T) -> Self
@@ -38739,7 +41331,7 @@ pub mod types {
             {
                 self.service = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for service: {e}"));
+                    .map_err(|e| format!("error converting supplied value for service: {}", e));
                 self
             }
         }
@@ -38798,7 +41390,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -38808,7 +41400,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -38865,7 +41457,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -38873,9 +41465,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_last_used<T>(mut self, value: T) -> Self
@@ -38884,7 +41476,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.time_last_used = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_last_used: {e}")
+                    format!("error converting supplied value for time_last_used: {}", e)
                 });
                 self
             }
@@ -38942,7 +41534,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -38952,7 +41544,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -39004,7 +41596,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn value<T>(mut self, value: T) -> Self
@@ -39014,7 +41606,7 @@ pub mod types {
             {
                 self.value = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for value: {e}"));
+                    .map_err(|e| format!("error converting supplied value for value: {}", e));
                 self
             }
         }
@@ -39066,7 +41658,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn value<T>(mut self, value: T) -> Self
@@ -39076,7 +41668,7 @@ pub mod types {
             {
                 self.value = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for value: {e}"));
+                    .map_err(|e| format!("error converting supplied value for value: {}", e));
                 self
             }
         }
@@ -39128,7 +41720,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn value<T>(mut self, value: T) -> Self
@@ -39138,7 +41730,7 @@ pub mod types {
             {
                 self.value = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for value: {e}"));
+                    .map_err(|e| format!("error converting supplied value for value: {}", e));
                 self
             }
         }
@@ -39190,7 +41782,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn value<T>(mut self, value: T) -> Self
@@ -39200,7 +41792,7 @@ pub mod types {
             {
                 self.value = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for value: {e}"));
+                    .map_err(|e| format!("error converting supplied value for value: {}", e));
                 self
             }
         }
@@ -39255,9 +41847,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.display_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for display_name: {e}"));
+                self.display_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for display_name: {}", e)
+                });
                 self
             }
             pub fn fleet_viewer<T>(mut self, value: T) -> Self
@@ -39265,9 +41857,9 @@ pub mod types {
                 T: ::std::convert::TryInto<bool>,
                 T::Error: ::std::fmt::Display,
             {
-                self.fleet_viewer = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for fleet_viewer: {e}"));
+                self.fleet_viewer = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for fleet_viewer: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -39277,7 +41869,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn silo_admin<T>(mut self, value: T) -> Self
@@ -39287,7 +41879,7 @@ pub mod types {
             {
                 self.silo_admin = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_admin: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_admin: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -39297,7 +41889,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
             pub fn silo_name<T>(mut self, value: T) -> Self
@@ -39307,7 +41899,7 @@ pub mod types {
             {
                 self.silo_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_name: {}", e));
                 self
             }
         }
@@ -39364,7 +41956,7 @@ pub mod types {
             {
                 self.private_key = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for private_key: {e}"));
+                    .map_err(|e| format!("error converting supplied value for private_key: {}", e));
                 self
             }
             pub fn public_cert<T>(mut self, value: T) -> Self
@@ -39374,7 +41966,7 @@ pub mod types {
             {
                 self.public_cert = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for public_cert: {e}"));
+                    .map_err(|e| format!("error converting supplied value for public_cert: {}", e));
                 self
             }
         }
@@ -39431,7 +42023,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -39439,9 +42031,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_expires<T>(mut self, value: T) -> Self
@@ -39451,9 +42043,9 @@ pub mod types {
                 >,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_expires = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_expires: {e}"));
+                self.time_expires = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_expires: {}", e)
+                });
                 self
             }
         }
@@ -39506,7 +42098,7 @@ pub mod types {
             {
                 self.client_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for client_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for client_id: {}", e));
                 self
             }
             pub fn device_code<T>(mut self, value: T) -> Self
@@ -39516,7 +42108,7 @@ pub mod types {
             {
                 self.device_code = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for device_code: {e}"));
+                    .map_err(|e| format!("error converting supplied value for device_code: {}", e));
                 self
             }
             pub fn grant_type<T>(mut self, value: T) -> Self
@@ -39526,7 +42118,7 @@ pub mod types {
             {
                 self.grant_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for grant_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for grant_type: {}", e));
                 self
             }
         }
@@ -39583,7 +42175,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -39593,7 +42185,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -39645,7 +42237,7 @@ pub mod types {
             {
                 self.client_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for client_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for client_id: {}", e));
                 self
             }
             pub fn ttl_seconds<T>(mut self, value: T) -> Self
@@ -39655,7 +42247,7 @@ pub mod types {
             {
                 self.ttl_seconds = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ttl_seconds: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ttl_seconds: {}", e));
                 self
             }
         }
@@ -39702,7 +42294,7 @@ pub mod types {
             {
                 self.user_code = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for user_code: {e}"));
+                    .map_err(|e| format!("error converting supplied value for user_code: {}", e));
                 self
             }
         }
@@ -39779,7 +42371,7 @@ pub mod types {
             {
                 self.block_size = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for block_size: {e}"));
+                    .map_err(|e| format!("error converting supplied value for block_size: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -39789,7 +42381,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn device_path<T>(mut self, value: T) -> Self
@@ -39799,7 +42391,7 @@ pub mod types {
             {
                 self.device_path = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for device_path: {e}"));
+                    .map_err(|e| format!("error converting supplied value for device_path: {}", e));
                 self
             }
             pub fn disk_type<T>(mut self, value: T) -> Self
@@ -39809,7 +42401,7 @@ pub mod types {
             {
                 self.disk_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for disk_type: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -39819,7 +42411,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn image_id<T>(mut self, value: T) -> Self
@@ -39829,7 +42421,7 @@ pub mod types {
             {
                 self.image_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for image_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for image_id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -39839,7 +42431,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -39849,7 +42441,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn size<T>(mut self, value: T) -> Self
@@ -39859,7 +42451,7 @@ pub mod types {
             {
                 self.size = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for size: {e}"));
+                    .map_err(|e| format!("error converting supplied value for size: {}", e));
                 self
             }
             pub fn snapshot_id<T>(mut self, value: T) -> Self
@@ -39869,7 +42461,7 @@ pub mod types {
             {
                 self.snapshot_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for snapshot_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for snapshot_id: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -39879,7 +42471,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -39887,9 +42479,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -39897,9 +42489,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -39972,7 +42564,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn disk_backend<T>(mut self, value: T) -> Self
@@ -39980,9 +42572,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::DiskBackend>,
                 T::Error: ::std::fmt::Display,
             {
-                self.disk_backend = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk_backend: {e}"));
+                self.disk_backend = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for disk_backend: {}", e)
+                });
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -39992,7 +42584,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn size<T>(mut self, value: T) -> Self
@@ -40002,7 +42594,7 @@ pub mod types {
             {
                 self.size = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for size: {e}"));
+                    .map_err(|e| format!("error converting supplied value for size: {}", e));
                 self
             }
         }
@@ -40053,7 +42645,7 @@ pub mod types {
             {
                 self.disk = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk: {e}"));
+                    .map_err(|e| format!("error converting supplied value for disk: {}", e));
                 self
             }
         }
@@ -40101,7 +42693,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -40111,7 +42703,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -40174,7 +42766,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn counts<T>(mut self, value: T) -> Self
@@ -40184,7 +42776,7 @@ pub mod types {
             {
                 self.counts = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for counts: {e}"));
+                    .map_err(|e| format!("error converting supplied value for counts: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -40194,7 +42786,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -40204,7 +42796,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -40214,7 +42806,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -40224,7 +42816,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -40234,7 +42826,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -40242,9 +42834,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -40253,7 +42845,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -40331,7 +42923,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn counts<T>(mut self, value: T) -> Self
@@ -40341,7 +42933,7 @@ pub mod types {
             {
                 self.counts = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for counts: {e}"));
+                    .map_err(|e| format!("error converting supplied value for counts: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -40351,7 +42943,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -40361,7 +42953,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -40371,7 +42963,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -40381,7 +42973,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -40391,7 +42983,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -40399,9 +42991,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -40410,7 +43002,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -40480,7 +43072,7 @@ pub mod types {
             {
                 self.ip_version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn pool<T>(mut self, value: T) -> Self
@@ -40490,7 +43082,7 @@ pub mod types {
             {
                 self.pool = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
                 self
             }
         }
@@ -40544,7 +43136,7 @@ pub mod types {
             {
                 self.error_code = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for error_code: {e}"));
+                    .map_err(|e| format!("error converting supplied value for error_code: {}", e));
                 self
             }
             pub fn message<T>(mut self, value: T) -> Self
@@ -40554,7 +43146,7 @@ pub mod types {
             {
                 self.message = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for message: {e}"));
+                    .map_err(|e| format!("error converting supplied value for message: {}", e));
                 self
             }
             pub fn request_id<T>(mut self, value: T) -> Self
@@ -40564,7 +43156,7 @@ pub mod types {
             {
                 self.request_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for request_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for request_id: {}", e));
                 self
             }
         }
@@ -40618,7 +43210,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -40628,7 +43220,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -40681,7 +43273,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn field_type<T>(mut self, value: T) -> Self
@@ -40691,7 +43283,7 @@ pub mod types {
             {
                 self.field_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for field_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for field_type: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -40701,7 +43293,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn source<T>(mut self, value: T) -> Self
@@ -40711,7 +43303,7 @@ pub mod types {
             {
                 self.source = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for source: {e}"));
+                    .map_err(|e| format!("error converting supplied value for source: {}", e));
                 self
             }
         }
@@ -40761,9 +43353,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.snapshot_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for snapshot_name: {e}"));
+                self.snapshot_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for snapshot_name: {}", e)
+                });
                 self
             }
         }
@@ -40810,7 +43402,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.role_assignments = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for role_assignments: {e}")
+                    format!(
+                        "error converting supplied value for role_assignments: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -40860,7 +43455,7 @@ pub mod types {
             {
                 self.identity_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for identity_id: {}", e));
                 self
             }
             pub fn identity_type<T>(mut self, value: T) -> Self
@@ -40868,9 +43463,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::IdentityType>,
                 T::Error: ::std::fmt::Display,
             {
-                self.identity_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_type: {e}"));
+                self.identity_type = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for identity_type: {}", e)
+                });
                 self
             }
             pub fn role_name<T>(mut self, value: T) -> Self
@@ -40880,7 +43475,7 @@ pub mod types {
             {
                 self.role_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for role_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for role_name: {}", e));
                 self
             }
         }
@@ -40952,7 +43547,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -40962,7 +43557,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn instance_id<T>(mut self, value: T) -> Self
@@ -40972,7 +43567,7 @@ pub mod types {
             {
                 self.instance_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for instance_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
                 self
             }
             pub fn ip<T>(mut self, value: T) -> Self
@@ -40982,7 +43577,7 @@ pub mod types {
             {
                 self.ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
@@ -40992,7 +43587,7 @@ pub mod types {
             {
                 self.ip_pool_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -41002,7 +43597,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -41012,7 +43607,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -41020,9 +43615,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -41030,9 +43625,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -41095,7 +43690,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn parent<T>(mut self, value: T) -> Self
@@ -41105,7 +43700,7 @@ pub mod types {
             {
                 self.parent = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for parent: {e}"));
+                    .map_err(|e| format!("error converting supplied value for parent: {}", e));
                 self
             }
         }
@@ -41169,7 +43764,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn ip<T>(mut self, value: T) -> Self
@@ -41179,7 +43774,7 @@ pub mod types {
             {
                 self.ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn ip_version<T>(mut self, value: T) -> Self
@@ -41189,7 +43784,7 @@ pub mod types {
             {
                 self.ip_version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -41199,7 +43794,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn pool<T>(mut self, value: T) -> Self
@@ -41209,7 +43804,7 @@ pub mod types {
             {
                 self.pool = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
                 self
             }
         }
@@ -41267,7 +43862,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -41277,7 +43872,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -41329,7 +43924,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -41339,7 +43934,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -41388,9 +43983,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.display_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for display_name: {e}"));
+                self.display_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for display_name: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -41400,7 +43995,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -41410,7 +44005,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
         }
@@ -41464,7 +44059,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -41474,7 +44069,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -41542,7 +44137,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -41552,7 +44147,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -41562,7 +44157,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -41572,7 +44167,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -41582,7 +44177,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -41592,7 +44187,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -41602,7 +44197,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -41610,9 +44205,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -41622,7 +44217,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -41631,7 +44226,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -41716,7 +44311,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -41726,7 +44321,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -41736,7 +44331,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -41746,7 +44341,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -41756,7 +44351,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -41766,7 +44361,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -41776,7 +44371,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -41784,9 +44379,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -41796,7 +44391,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -41805,7 +44400,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -41890,7 +44485,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -41900,7 +44495,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -41910,7 +44505,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -41920,7 +44515,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -41930,7 +44525,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -41940,7 +44535,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -41950,7 +44545,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -41958,9 +44553,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -41970,7 +44565,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -41979,7 +44574,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -42064,7 +44659,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -42074,7 +44669,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -42084,7 +44679,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -42094,7 +44689,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -42104,7 +44699,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -42114,7 +44709,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -42124,7 +44719,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -42132,9 +44727,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -42144,7 +44739,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -42153,7 +44748,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -42238,7 +44833,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -42248,7 +44843,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -42258,7 +44853,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -42268,7 +44863,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -42278,7 +44873,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -42288,7 +44883,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -42298,7 +44893,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -42306,9 +44901,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -42318,7 +44913,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -42327,7 +44922,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -42412,7 +45007,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -42422,7 +45017,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -42432,7 +45027,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -42442,7 +45037,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -42452,7 +45047,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -42462,7 +45057,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -42472,7 +45067,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -42480,9 +45075,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -42492,7 +45087,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -42501,7 +45096,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -42586,7 +45181,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -42596,7 +45191,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -42606,7 +45201,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -42616,7 +45211,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -42626,7 +45221,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -42636,7 +45231,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -42646,7 +45241,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -42654,9 +45249,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -42666,7 +45261,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -42675,7 +45270,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -42760,7 +45355,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -42770,7 +45365,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -42780,7 +45375,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -42790,7 +45385,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -42800,7 +45395,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -42810,7 +45405,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -42820,7 +45415,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -42828,9 +45423,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -42840,7 +45435,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -42849,7 +45444,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -42934,7 +45529,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -42944,7 +45539,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -42954,7 +45549,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -42964,7 +45559,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -42974,7 +45569,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -42984,7 +45579,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -42994,7 +45589,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -43002,9 +45597,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -43014,7 +45609,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -43023,7 +45618,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -43108,7 +45703,7 @@ pub mod types {
             {
                 self.bins = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bins: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
             pub fn max<T>(mut self, value: T) -> Self
@@ -43118,7 +45713,7 @@ pub mod types {
             {
                 self.max = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for max: {e}"));
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
                 self
             }
             pub fn min<T>(mut self, value: T) -> Self
@@ -43128,7 +45723,7 @@ pub mod types {
             {
                 self.min = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for min: {e}"));
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
                 self
             }
             pub fn n_samples<T>(mut self, value: T) -> Self
@@ -43138,7 +45733,7 @@ pub mod types {
             {
                 self.n_samples = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for n_samples: {e}"));
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
                 self
             }
             pub fn p50<T>(mut self, value: T) -> Self
@@ -43148,7 +45743,7 @@ pub mod types {
             {
                 self.p50 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p50: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
                 self
             }
             pub fn p90<T>(mut self, value: T) -> Self
@@ -43158,7 +45753,7 @@ pub mod types {
             {
                 self.p90 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p90: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
                 self
             }
             pub fn p99<T>(mut self, value: T) -> Self
@@ -43168,7 +45763,7 @@ pub mod types {
             {
                 self.p99 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p99: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
                 self
             }
             pub fn squared_mean<T>(mut self, value: T) -> Self
@@ -43176,9 +45771,9 @@ pub mod types {
                 T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.squared_mean = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for squared_mean: {e}"));
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -43188,7 +45783,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
             pub fn sum_of_samples<T>(mut self, value: T) -> Self
@@ -43197,7 +45792,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.sum_of_samples = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for sum_of_samples: {e}")
+                    format!("error converting supplied value for sum_of_samples: {}", e)
                 });
                 self
             }
@@ -43278,7 +45873,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -43288,7 +45883,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -43298,7 +45893,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn provider_type<T>(mut self, value: T) -> Self
@@ -43306,9 +45901,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::IdentityProviderType>,
                 T::Error: ::std::fmt::Display,
             {
-                self.provider_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for provider_type: {e}"));
+                self.provider_type = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for provider_type: {}", e)
+                });
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -43316,9 +45911,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -43326,9 +45921,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -43391,7 +45986,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -43401,7 +45996,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -43476,7 +46071,7 @@ pub mod types {
             {
                 self.block_size = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for block_size: {e}"));
+                    .map_err(|e| format!("error converting supplied value for block_size: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -43486,7 +46081,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn digest<T>(mut self, value: T) -> Self
@@ -43496,7 +46091,7 @@ pub mod types {
             {
                 self.digest = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for digest: {e}"));
+                    .map_err(|e| format!("error converting supplied value for digest: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -43506,7 +46101,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -43516,7 +46111,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn os<T>(mut self, value: T) -> Self
@@ -43526,7 +46121,7 @@ pub mod types {
             {
                 self.os = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for os: {e}"));
+                    .map_err(|e| format!("error converting supplied value for os: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -43536,7 +46131,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn size<T>(mut self, value: T) -> Self
@@ -43546,7 +46141,7 @@ pub mod types {
             {
                 self.size = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for size: {e}"));
+                    .map_err(|e| format!("error converting supplied value for size: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -43554,9 +46149,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -43564,9 +46159,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn version<T>(mut self, value: T) -> Self
@@ -43576,7 +46171,7 @@ pub mod types {
             {
                 self.version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
                 self
             }
         }
@@ -43649,7 +46244,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -43659,7 +46254,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn os<T>(mut self, value: T) -> Self
@@ -43669,7 +46264,7 @@ pub mod types {
             {
                 self.os = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for os: {e}"));
+                    .map_err(|e| format!("error converting supplied value for os: {}", e));
                 self
             }
             pub fn source<T>(mut self, value: T) -> Self
@@ -43679,7 +46274,7 @@ pub mod types {
             {
                 self.source = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for source: {e}"));
+                    .map_err(|e| format!("error converting supplied value for source: {}", e));
                 self
             }
             pub fn version<T>(mut self, value: T) -> Self
@@ -43689,7 +46284,7 @@ pub mod types {
             {
                 self.version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
                 self
             }
         }
@@ -43747,7 +46342,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -43757,7 +46352,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -43808,7 +46403,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.base64_encoded_data = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for base64_encoded_data: {e}")
+                    format!(
+                        "error converting supplied value for base64_encoded_data: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -43819,7 +46417,7 @@ pub mod types {
             {
                 self.offset = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for offset: {e}"));
+                    .map_err(|e| format!("error converting supplied value for offset: {}", e));
                 self
             }
         }
@@ -43926,7 +46524,8 @@ pub mod types {
             {
                 self.auto_restart_cooldown_expiration = value.try_into().map_err(|e| {
                     format!(
-                        "error converting supplied value for auto_restart_cooldown_expiration: {e}"
+                        "error converting supplied value for auto_restart_cooldown_expiration: {}",
+                        e
                     )
                 });
                 self
@@ -43937,7 +46536,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.auto_restart_enabled = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for auto_restart_enabled: {e}")
+                    format!(
+                        "error converting supplied value for auto_restart_enabled: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -43947,7 +46549,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.auto_restart_policy = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for auto_restart_policy: {e}")
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -43956,9 +46561,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.boot_disk_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for boot_disk_id: {e}"));
+                self.boot_disk_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for boot_disk_id: {}", e)
+                });
                 self
             }
             pub fn cpu_platform<T>(mut self, value: T) -> Self
@@ -43966,9 +46571,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::InstanceCpuPlatform>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.cpu_platform = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpu_platform: {e}"));
+                self.cpu_platform = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for cpu_platform: {}", e)
+                });
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -43978,7 +46583,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn hostname<T>(mut self, value: T) -> Self
@@ -43988,7 +46593,7 @@ pub mod types {
             {
                 self.hostname = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for hostname: {e}"));
+                    .map_err(|e| format!("error converting supplied value for hostname: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -43998,7 +46603,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -44008,7 +46613,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -44018,7 +46623,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn ncpus<T>(mut self, value: T) -> Self
@@ -44028,7 +46633,7 @@ pub mod types {
             {
                 self.ncpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ncpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ncpus: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -44038,7 +46643,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn run_state<T>(mut self, value: T) -> Self
@@ -44048,7 +46653,7 @@ pub mod types {
             {
                 self.run_state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for run_state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for run_state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -44056,9 +46661,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_last_auto_restarted<T>(mut self, value: T) -> Self
@@ -44069,7 +46674,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.time_last_auto_restarted = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_last_auto_restarted: {e}")
+                    format!(
+                        "error converting supplied value for time_last_auto_restarted: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -44078,9 +46686,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn time_run_state_updated<T>(mut self, value: T) -> Self
@@ -44089,7 +46697,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.time_run_state_updated = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_run_state_updated: {e}")
+                    format!(
+                        "error converting supplied value for time_run_state_updated: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -44219,7 +46830,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.anti_affinity_groups = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for anti_affinity_groups: {e}")
+                    format!(
+                        "error converting supplied value for anti_affinity_groups: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -44229,7 +46843,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.auto_restart_policy = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for auto_restart_policy: {e}")
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -44240,7 +46857,7 @@ pub mod types {
             {
                 self.boot_disk = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for boot_disk: {e}"));
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
                 self
             }
             pub fn cpu_platform<T>(mut self, value: T) -> Self
@@ -44248,9 +46865,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::InstanceCpuPlatform>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.cpu_platform = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpu_platform: {e}"));
+                self.cpu_platform = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for cpu_platform: {}", e)
+                });
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -44260,7 +46877,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn disks<T>(mut self, value: T) -> Self
@@ -44270,7 +46887,7 @@ pub mod types {
             {
                 self.disks = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for disks: {e}"));
+                    .map_err(|e| format!("error converting supplied value for disks: {}", e));
                 self
             }
             pub fn external_ips<T>(mut self, value: T) -> Self
@@ -44278,9 +46895,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::ExternalIpCreate>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.external_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for external_ips: {e}"));
+                self.external_ips = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for external_ips: {}", e)
+                });
                 self
             }
             pub fn hostname<T>(mut self, value: T) -> Self
@@ -44290,7 +46907,7 @@ pub mod types {
             {
                 self.hostname = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for hostname: {e}"));
+                    .map_err(|e| format!("error converting supplied value for hostname: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -44300,7 +46917,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn multicast_groups<T>(mut self, value: T) -> Self
@@ -44309,7 +46926,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.multicast_groups = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for multicast_groups: {e}")
+                    format!(
+                        "error converting supplied value for multicast_groups: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -44320,7 +46940,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn ncpus<T>(mut self, value: T) -> Self
@@ -44330,7 +46950,7 @@ pub mod types {
             {
                 self.ncpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ncpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ncpus: {}", e));
                 self
             }
             pub fn network_interfaces<T>(mut self, value: T) -> Self
@@ -44339,7 +46959,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.network_interfaces = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for network_interfaces: {e}")
+                    format!(
+                        "error converting supplied value for network_interfaces: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -44349,7 +46972,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.ssh_public_keys = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for ssh_public_keys: {e}")
+                    format!("error converting supplied value for ssh_public_keys: {}", e)
                 });
                 self
             }
@@ -44360,7 +46983,7 @@ pub mod types {
             {
                 self.start = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start: {}", e));
                 self
             }
             pub fn user_data<T>(mut self, value: T) -> Self
@@ -44370,7 +46993,7 @@ pub mod types {
             {
                 self.user_data = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for user_data: {e}"));
+                    .map_err(|e| format!("error converting supplied value for user_data: {}", e));
                 self
             }
         }
@@ -44474,7 +47097,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -44484,7 +47107,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn instance_id<T>(mut self, value: T) -> Self
@@ -44494,7 +47117,7 @@ pub mod types {
             {
                 self.instance_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for instance_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
                 self
             }
             pub fn ip<T>(mut self, value: T) -> Self
@@ -44504,7 +47127,7 @@ pub mod types {
             {
                 self.ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn mac<T>(mut self, value: T) -> Self
@@ -44514,7 +47137,7 @@ pub mod types {
             {
                 self.mac = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mac: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mac: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -44524,7 +47147,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn primary<T>(mut self, value: T) -> Self
@@ -44534,7 +47157,7 @@ pub mod types {
             {
                 self.primary = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for primary: {e}"));
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
                 self
             }
             pub fn subnet_id<T>(mut self, value: T) -> Self
@@ -44544,7 +47167,7 @@ pub mod types {
             {
                 self.subnet_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for subnet_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for subnet_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -44552,9 +47175,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -44562,9 +47185,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
@@ -44574,7 +47197,7 @@ pub mod types {
             {
                 self.transit_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
                 self
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
@@ -44584,7 +47207,7 @@ pub mod types {
             {
                 self.vpc_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
                 self
             }
         }
@@ -44665,7 +47288,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn ip<T>(mut self, value: T) -> Self
@@ -44675,7 +47298,7 @@ pub mod types {
             {
                 self.ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -44685,7 +47308,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn subnet_name<T>(mut self, value: T) -> Self
@@ -44695,7 +47318,7 @@ pub mod types {
             {
                 self.subnet_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for subnet_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for subnet_name: {}", e));
                 self
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
@@ -44705,7 +47328,7 @@ pub mod types {
             {
                 self.transit_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
                 self
             }
             pub fn vpc_name<T>(mut self, value: T) -> Self
@@ -44715,7 +47338,7 @@ pub mod types {
             {
                 self.vpc_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vpc_name: {}", e));
                 self
             }
         }
@@ -44782,7 +47405,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -44792,7 +47415,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -44853,7 +47476,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -44863,7 +47486,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn primary<T>(mut self, value: T) -> Self
@@ -44873,7 +47496,7 @@ pub mod types {
             {
                 self.primary = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for primary: {e}"));
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
                 self
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
@@ -44883,7 +47506,7 @@ pub mod types {
             {
                 self.transit_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
                 self
             }
         }
@@ -44943,7 +47566,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -44953,7 +47576,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -45002,7 +47625,7 @@ pub mod types {
             {
                 self.data = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                    .map_err(|e| format!("error converting supplied value for data: {}", e));
                 self
             }
             pub fn last_byte_offset<T>(mut self, value: T) -> Self
@@ -45011,7 +47634,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.last_byte_offset = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for last_byte_offset: {e}")
+                    format!(
+                        "error converting supplied value for last_byte_offset: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -45082,7 +47708,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.auto_restart_policy = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for auto_restart_policy: {e}")
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -45093,7 +47722,7 @@ pub mod types {
             {
                 self.boot_disk = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for boot_disk: {e}"));
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
                 self
             }
             pub fn cpu_platform<T>(mut self, value: T) -> Self
@@ -45101,9 +47730,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::InstanceCpuPlatform>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.cpu_platform = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpu_platform: {e}"));
+                self.cpu_platform = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for cpu_platform: {}", e)
+                });
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -45113,7 +47742,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn multicast_groups<T>(mut self, value: T) -> Self
@@ -45122,7 +47751,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.multicast_groups = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for multicast_groups: {e}")
+                    format!(
+                        "error converting supplied value for multicast_groups: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -45133,7 +47765,7 @@ pub mod types {
             {
                 self.ncpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ncpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ncpus: {}", e));
                 self
             }
         }
@@ -45204,7 +47836,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -45214,7 +47846,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -45224,7 +47856,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -45232,9 +47864,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -45242,9 +47874,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
@@ -45254,7 +47886,7 @@ pub mod types {
             {
                 self.vpc_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
                 self
             }
         }
@@ -45311,7 +47943,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -45321,7 +47953,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -45388,7 +48020,7 @@ pub mod types {
             {
                 self.address = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -45398,7 +48030,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -45408,7 +48040,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn internet_gateway_id<T>(mut self, value: T) -> Self
@@ -45417,7 +48049,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.internet_gateway_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for internet_gateway_id: {e}")
+                    format!(
+                        "error converting supplied value for internet_gateway_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -45428,7 +48063,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -45436,9 +48071,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -45446,9 +48081,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -45509,7 +48144,7 @@ pub mod types {
             {
                 self.address = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -45519,7 +48154,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -45529,7 +48164,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -45590,7 +48225,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -45600,7 +48235,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -45671,7 +48306,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -45681,7 +48316,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn internet_gateway_id<T>(mut self, value: T) -> Self
@@ -45690,7 +48325,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.internet_gateway_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for internet_gateway_id: {e}")
+                    format!(
+                        "error converting supplied value for internet_gateway_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -45701,7 +48339,7 @@ pub mod types {
             {
                 self.ip_pool_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -45711,7 +48349,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -45719,9 +48357,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -45729,9 +48367,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -45792,7 +48430,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn ip_pool<T>(mut self, value: T) -> Self
@@ -45802,7 +48440,7 @@ pub mod types {
             {
                 self.ip_pool = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -45812,7 +48450,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -45869,7 +48507,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -45879,7 +48517,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -45938,7 +48576,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -45948,7 +48586,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -46013,7 +48651,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -46023,7 +48661,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ip_version<T>(mut self, value: T) -> Self
@@ -46033,7 +48671,7 @@ pub mod types {
             {
                 self.ip_version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -46043,7 +48681,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn pool_type<T>(mut self, value: T) -> Self
@@ -46053,7 +48691,7 @@ pub mod types {
             {
                 self.pool_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -46061,9 +48699,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -46071,9 +48709,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -46136,7 +48774,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn ip_version<T>(mut self, value: T) -> Self
@@ -46146,7 +48784,7 @@ pub mod types {
             {
                 self.ip_version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -46156,7 +48794,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn pool_type<T>(mut self, value: T) -> Self
@@ -46166,7 +48804,7 @@ pub mod types {
             {
                 self.pool_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
                 self
             }
         }
@@ -46219,7 +48857,7 @@ pub mod types {
             {
                 self.is_default = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {e}"));
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
                 self
             }
             pub fn silo<T>(mut self, value: T) -> Self
@@ -46229,7 +48867,7 @@ pub mod types {
             {
                 self.silo = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
                 self
             }
         }
@@ -46285,7 +48923,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
@@ -46295,7 +48933,7 @@ pub mod types {
             {
                 self.ip_pool_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -46305,7 +48943,7 @@ pub mod types {
             {
                 self.range = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for range: {e}"));
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -46313,9 +48951,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
         }
@@ -46372,7 +49010,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -46382,7 +49020,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -46434,7 +49072,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -46444,7 +49082,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -46495,7 +49133,7 @@ pub mod types {
             {
                 self.ip_pool_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn is_default<T>(mut self, value: T) -> Self
@@ -46505,7 +49143,7 @@ pub mod types {
             {
                 self.is_default = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {e}"));
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -46515,7 +49153,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
         }
@@ -46572,7 +49210,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -46582,7 +49220,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -46629,7 +49267,7 @@ pub mod types {
             {
                 self.is_default = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {e}"));
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
                 self
             }
         }
@@ -46679,7 +49317,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -46689,7 +49327,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -46738,7 +49376,7 @@ pub mod types {
             {
                 self.capacity = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for capacity: {e}"));
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
                 self
             }
             pub fn remaining<T>(mut self, value: T) -> Self
@@ -46748,7 +49386,7 @@ pub mod types {
             {
                 self.remaining = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for remaining: {e}"));
+                    .map_err(|e| format!("error converting supplied value for remaining: {}", e));
                 self
             }
         }
@@ -46797,7 +49435,7 @@ pub mod types {
             {
                 self.first = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for first: {e}"));
+                    .map_err(|e| format!("error converting supplied value for first: {}", e));
                 self
             }
             pub fn last<T>(mut self, value: T) -> Self
@@ -46807,7 +49445,7 @@ pub mod types {
             {
                 self.last = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for last: {e}"));
+                    .map_err(|e| format!("error converting supplied value for last: {}", e));
                 self
             }
         }
@@ -46856,7 +49494,7 @@ pub mod types {
             {
                 self.first = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for first: {e}"));
+                    .map_err(|e| format!("error converting supplied value for first: {}", e));
                 self
             }
             pub fn last<T>(mut self, value: T) -> Self
@@ -46866,7 +49504,7 @@ pub mod types {
             {
                 self.last = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for last: {e}"));
+                    .map_err(|e| format!("error converting supplied value for last: {}", e));
                 self
             }
         }
@@ -46929,7 +49567,7 @@ pub mod types {
             {
                 self.autoneg = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for autoneg: {e}"));
+                    .map_err(|e| format!("error converting supplied value for autoneg: {}", e));
                 self
             }
             pub fn fec<T>(mut self, value: T) -> Self
@@ -46939,7 +49577,7 @@ pub mod types {
             {
                 self.fec = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for fec: {e}"));
+                    .map_err(|e| format!("error converting supplied value for fec: {}", e));
                 self
             }
             pub fn link_name<T>(mut self, value: T) -> Self
@@ -46949,7 +49587,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn lldp<T>(mut self, value: T) -> Self
@@ -46959,7 +49597,7 @@ pub mod types {
             {
                 self.lldp = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for lldp: {e}"));
+                    .map_err(|e| format!("error converting supplied value for lldp: {}", e));
                 self
             }
             pub fn mtu<T>(mut self, value: T) -> Self
@@ -46969,7 +49607,7 @@ pub mod types {
             {
                 self.mtu = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mtu: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mtu: {}", e));
                 self
             }
             pub fn speed<T>(mut self, value: T) -> Self
@@ -46979,7 +49617,7 @@ pub mod types {
             {
                 self.speed = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for speed: {e}"));
+                    .map_err(|e| format!("error converting supplied value for speed: {}", e));
                 self
             }
             pub fn tx_eq<T>(mut self, value: T) -> Self
@@ -46989,7 +49627,7 @@ pub mod types {
             {
                 self.tx_eq = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for tx_eq: {e}"));
+                    .map_err(|e| format!("error converting supplied value for tx_eq: {}", e));
                 self
             }
         }
@@ -47078,7 +49716,7 @@ pub mod types {
             {
                 self.chassis_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for chassis_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for chassis_id: {}", e));
                 self
             }
             pub fn enabled<T>(mut self, value: T) -> Self
@@ -47088,7 +49726,7 @@ pub mod types {
             {
                 self.enabled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for enabled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for enabled: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -47098,7 +49736,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn link_description<T>(mut self, value: T) -> Self
@@ -47107,7 +49745,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.link_description = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for link_description: {e}")
+                    format!(
+                        "error converting supplied value for link_description: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47118,7 +49759,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
@@ -47126,9 +49767,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.management_ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for management_ip: {e}"));
+                self.management_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for management_ip: {}", e)
+                });
                 self
             }
             pub fn system_description<T>(mut self, value: T) -> Self
@@ -47137,7 +49778,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.system_description = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_description: {e}")
+                    format!(
+                        "error converting supplied value for system_description: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47148,7 +49792,7 @@ pub mod types {
             {
                 self.system_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for system_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for system_name: {}", e));
                 self
             }
         }
@@ -47237,7 +49881,7 @@ pub mod types {
             {
                 self.chassis_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for chassis_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for chassis_id: {}", e));
                 self
             }
             pub fn enabled<T>(mut self, value: T) -> Self
@@ -47247,7 +49891,7 @@ pub mod types {
             {
                 self.enabled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for enabled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for enabled: {}", e));
                 self
             }
             pub fn link_description<T>(mut self, value: T) -> Self
@@ -47256,7 +49900,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.link_description = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for link_description: {e}")
+                    format!(
+                        "error converting supplied value for link_description: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47267,7 +49914,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
@@ -47275,9 +49922,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.management_ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for management_ip: {e}"));
+                self.management_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for management_ip: {}", e)
+                });
                 self
             }
             pub fn system_description<T>(mut self, value: T) -> Self
@@ -47286,7 +49933,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.system_description = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_description: {e}")
+                    format!(
+                        "error converting supplied value for system_description: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47297,7 +49947,7 @@ pub mod types {
             {
                 self.system_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for system_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for system_name: {}", e));
                 self
             }
         }
@@ -47388,7 +50038,7 @@ pub mod types {
             {
                 self.chassis_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for chassis_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for chassis_id: {}", e));
                 self
             }
             pub fn first_seen<T>(mut self, value: T) -> Self
@@ -47398,7 +50048,7 @@ pub mod types {
             {
                 self.first_seen = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for first_seen: {e}"));
+                    .map_err(|e| format!("error converting supplied value for first_seen: {}", e));
                 self
             }
             pub fn last_seen<T>(mut self, value: T) -> Self
@@ -47408,7 +50058,7 @@ pub mod types {
             {
                 self.last_seen = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for last_seen: {e}"));
+                    .map_err(|e| format!("error converting supplied value for last_seen: {}", e));
                 self
             }
             pub fn link_description<T>(mut self, value: T) -> Self
@@ -47417,7 +50067,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.link_description = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for link_description: {e}")
+                    format!(
+                        "error converting supplied value for link_description: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47428,7 +50081,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn local_port<T>(mut self, value: T) -> Self
@@ -47438,7 +50091,7 @@ pub mod types {
             {
                 self.local_port = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_port: {e}"));
+                    .map_err(|e| format!("error converting supplied value for local_port: {}", e));
                 self
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
@@ -47446,9 +50099,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::ManagementAddress>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.management_ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for management_ip: {e}"));
+                self.management_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for management_ip: {}", e)
+                });
                 self
             }
             pub fn system_description<T>(mut self, value: T) -> Self
@@ -47457,7 +50110,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.system_description = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_description: {e}")
+                    format!(
+                        "error converting supplied value for system_description: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47468,7 +50124,7 @@ pub mod types {
             {
                 self.system_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for system_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for system_name: {}", e));
                 self
             }
         }
@@ -47535,7 +50191,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -47545,7 +50201,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -47602,7 +50258,7 @@ pub mod types {
             {
                 self.address = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
                 self
             }
             pub fn address_lot_block_id<T>(mut self, value: T) -> Self
@@ -47611,7 +50267,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for address_lot_block_id: {e}")
+                    format!(
+                        "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -47622,7 +50281,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -47632,7 +50291,7 @@ pub mod types {
             {
                 self.rack_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
             pub fn switch_location<T>(mut self, value: T) -> Self
@@ -47641,7 +50300,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
+                    format!("error converting supplied value for switch_location: {}", e)
                 });
                 self
             }
@@ -47705,7 +50364,7 @@ pub mod types {
             {
                 self.address = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
                 self
             }
             pub fn address_lot<T>(mut self, value: T) -> Self
@@ -47715,7 +50374,7 @@ pub mod types {
             {
                 self.address_lot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address_lot: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
                 self
             }
             pub fn anycast<T>(mut self, value: T) -> Self
@@ -47725,7 +50384,7 @@ pub mod types {
             {
                 self.anycast = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for anycast: {e}"));
+                    .map_err(|e| format!("error converting supplied value for anycast: {}", e));
                 self
             }
             pub fn mask<T>(mut self, value: T) -> Self
@@ -47735,7 +50394,7 @@ pub mod types {
             {
                 self.mask = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mask: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mask: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -47745,7 +50404,7 @@ pub mod types {
             {
                 self.rack_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
             pub fn switch_location<T>(mut self, value: T) -> Self
@@ -47754,7 +50413,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
+                    format!("error converting supplied value for switch_location: {}", e)
                 });
                 self
             }
@@ -47818,7 +50477,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -47828,7 +50487,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -47882,7 +50541,7 @@ pub mod types {
             {
                 self.addr = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for addr: {e}"));
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
                 self
             }
             pub fn interface_num<T>(mut self, value: T) -> Self
@@ -47890,9 +50549,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::InterfaceNum>,
                 T::Error: ::std::fmt::Display,
             {
-                self.interface_num = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for interface_num: {e}"));
+                self.interface_num = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_num: {}", e)
+                });
                 self
             }
             pub fn oid<T>(mut self, value: T) -> Self
@@ -47902,7 +50561,7 @@ pub mod types {
             {
                 self.oid = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for oid: {e}"));
+                    .map_err(|e| format!("error converting supplied value for oid: {}", e));
                 self
             }
         }
@@ -47956,7 +50615,7 @@ pub mod types {
             {
                 self.datum = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for datum: {e}"));
+                    .map_err(|e| format!("error converting supplied value for datum: {}", e));
                 self
             }
             pub fn timestamp<T>(mut self, value: T) -> Self
@@ -47966,7 +50625,7 @@ pub mod types {
             {
                 self.timestamp = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for timestamp: {e}"));
+                    .map_err(|e| format!("error converting supplied value for timestamp: {}", e));
                 self
             }
         }
@@ -48019,7 +50678,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -48029,7 +50688,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -48081,7 +50740,7 @@ pub mod types {
             {
                 self.datum_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for datum_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -48093,7 +50752,7 @@ pub mod types {
             {
                 self.start_time = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_time: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
         }
@@ -48165,7 +50824,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -48175,7 +50834,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
@@ -48185,7 +50844,7 @@ pub mod types {
             {
                 self.ip_pool_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn multicast_ip<T>(mut self, value: T) -> Self
@@ -48193,9 +50852,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
-                self.multicast_ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for multicast_ip: {e}"));
+                self.multicast_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for multicast_ip: {}", e)
+                });
                 self
             }
             pub fn mvlan<T>(mut self, value: T) -> Self
@@ -48205,7 +50864,7 @@ pub mod types {
             {
                 self.mvlan = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mvlan: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -48215,7 +50874,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn source_ips<T>(mut self, value: T) -> Self
@@ -48225,7 +50884,7 @@ pub mod types {
             {
                 self.source_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for source_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -48235,7 +50894,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -48243,9 +50902,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -48253,9 +50912,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -48337,7 +50996,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn multicast_ip<T>(mut self, value: T) -> Self
@@ -48345,9 +51004,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.multicast_ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for multicast_ip: {e}"));
+                self.multicast_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for multicast_ip: {}", e)
+                });
                 self
             }
             pub fn mvlan<T>(mut self, value: T) -> Self
@@ -48357,7 +51016,7 @@ pub mod types {
             {
                 self.mvlan = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mvlan: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -48367,7 +51026,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn pool<T>(mut self, value: T) -> Self
@@ -48377,7 +51036,7 @@ pub mod types {
             {
                 self.pool = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
                 self
             }
             pub fn source_ips<T>(mut self, value: T) -> Self
@@ -48389,7 +51048,7 @@ pub mod types {
             {
                 self.source_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for source_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
                 self
             }
         }
@@ -48464,7 +51123,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -48474,7 +51133,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn instance_id<T>(mut self, value: T) -> Self
@@ -48484,7 +51143,7 @@ pub mod types {
             {
                 self.instance_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for instance_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
                 self
             }
             pub fn multicast_group_id<T>(mut self, value: T) -> Self
@@ -48493,7 +51152,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.multicast_group_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for multicast_group_id: {e}")
+                    format!(
+                        "error converting supplied value for multicast_group_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -48504,7 +51166,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -48514,7 +51176,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -48522,9 +51184,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -48532,9 +51194,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -48593,7 +51255,7 @@ pub mod types {
             {
                 self.instance = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for instance: {e}"));
+                    .map_err(|e| format!("error converting supplied value for instance: {}", e));
                 self
             }
         }
@@ -48646,7 +51308,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -48656,7 +51318,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -48715,7 +51377,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -48725,7 +51387,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -48784,7 +51446,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn mvlan<T>(mut self, value: T) -> Self
@@ -48794,7 +51456,7 @@ pub mod types {
             {
                 self.mvlan = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mvlan: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -48804,7 +51466,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn source_ips<T>(mut self, value: T) -> Self
@@ -48816,7 +51478,7 @@ pub mod types {
             {
                 self.source_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for source_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
                 self
             }
         }
@@ -48886,7 +51548,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ip<T>(mut self, value: T) -> Self
@@ -48896,7 +51558,7 @@ pub mod types {
             {
                 self.ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -48906,7 +51568,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn mac<T>(mut self, value: T) -> Self
@@ -48916,7 +51578,7 @@ pub mod types {
             {
                 self.mac = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mac: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mac: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -48926,7 +51588,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn primary<T>(mut self, value: T) -> Self
@@ -48936,7 +51598,7 @@ pub mod types {
             {
                 self.primary = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for primary: {e}"));
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
                 self
             }
             pub fn slot<T>(mut self, value: T) -> Self
@@ -48946,7 +51608,7 @@ pub mod types {
             {
                 self.slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for slot: {e}"));
+                    .map_err(|e| format!("error converting supplied value for slot: {}", e));
                 self
             }
             pub fn subnet<T>(mut self, value: T) -> Self
@@ -48956,7 +51618,7 @@ pub mod types {
             {
                 self.subnet = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for subnet: {e}"));
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
                 self
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
@@ -48966,7 +51628,7 @@ pub mod types {
             {
                 self.transit_ips = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {e}"));
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
                 self
             }
             pub fn vni<T>(mut self, value: T) -> Self
@@ -48976,7 +51638,7 @@ pub mod types {
             {
                 self.vni = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vni: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vni: {}", e));
                 self
             }
         }
@@ -49039,7 +51701,7 @@ pub mod types {
             {
                 self.tables = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for tables: {e}"));
+                    .map_err(|e| format!("error converting supplied value for tables: {}", e));
                 self
             }
         }
@@ -49087,7 +51749,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn timeseries<T>(mut self, value: T) -> Self
@@ -49097,7 +51759,7 @@ pub mod types {
             {
                 self.timeseries = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for timeseries: {e}"));
+                    .map_err(|e| format!("error converting supplied value for timeseries: {}", e));
                 self
             }
         }
@@ -49169,7 +51831,7 @@ pub mod types {
             {
                 self.form_factor = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for form_factor: {e}"));
+                    .map_err(|e| format!("error converting supplied value for form_factor: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -49179,7 +51841,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn model<T>(mut self, value: T) -> Self
@@ -49189,7 +51851,7 @@ pub mod types {
             {
                 self.model = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for model: {e}"));
+                    .map_err(|e| format!("error converting supplied value for model: {}", e));
                 self
             }
             pub fn policy<T>(mut self, value: T) -> Self
@@ -49199,7 +51861,7 @@ pub mod types {
             {
                 self.policy = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for policy: {e}"));
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn serial<T>(mut self, value: T) -> Self
@@ -49209,7 +51871,7 @@ pub mod types {
             {
                 self.serial = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for serial: {e}"));
+                    .map_err(|e| format!("error converting supplied value for serial: {}", e));
                 self
             }
             pub fn sled_id<T>(mut self, value: T) -> Self
@@ -49219,7 +51881,7 @@ pub mod types {
             {
                 self.sled_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for sled_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for sled_id: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -49229,7 +51891,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -49237,9 +51899,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -49247,9 +51909,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vendor<T>(mut self, value: T) -> Self
@@ -49259,7 +51921,7 @@ pub mod types {
             {
                 self.vendor = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vendor: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vendor: {}", e));
                 self
             }
         }
@@ -49328,7 +51990,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -49338,7 +52000,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -49385,7 +52047,7 @@ pub mod types {
             {
                 self.status = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
                 self
             }
         }
@@ -49442,7 +52104,7 @@ pub mod types {
             {
                 self.start_times = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for start_times: {e}"));
+                    .map_err(|e| format!("error converting supplied value for start_times: {}", e));
                 self
             }
             pub fn timestamps<T>(mut self, value: T) -> Self
@@ -49454,7 +52116,7 @@ pub mod types {
             {
                 self.timestamps = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for timestamps: {e}"));
+                    .map_err(|e| format!("error converting supplied value for timestamps: {}", e));
                 self
             }
             pub fn values<T>(mut self, value: T) -> Self
@@ -49464,7 +52126,7 @@ pub mod types {
             {
                 self.values = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for values: {e}"));
+                    .map_err(|e| format!("error converting supplied value for values: {}", e));
                 self
             }
         }
@@ -49529,7 +52191,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -49539,7 +52201,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -49549,7 +52211,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn sled<T>(mut self, value: T) -> Self
@@ -49559,7 +52221,7 @@ pub mod types {
             {
                 self.sled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for sled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -49567,9 +52229,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -49577,9 +52239,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -49643,7 +52305,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn ip_pool<T>(mut self, value: T) -> Self
@@ -49653,7 +52315,7 @@ pub mod types {
             {
                 self.ip_pool = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_pool: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -49663,7 +52325,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn sled<T>(mut self, value: T) -> Self
@@ -49673,7 +52335,7 @@ pub mod types {
             {
                 self.sled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for sled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
                 self
             }
         }
@@ -49730,7 +52392,7 @@ pub mod types {
             {
                 self.first_port = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for first_port: {e}"));
+                    .map_err(|e| format!("error converting supplied value for first_port: {}", e));
                 self
             }
             pub fn ip<T>(mut self, value: T) -> Self
@@ -49740,7 +52402,7 @@ pub mod types {
             {
                 self.ip = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -49750,7 +52412,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn last_port<T>(mut self, value: T) -> Self
@@ -49760,7 +52422,7 @@ pub mod types {
             {
                 self.last_port = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for last_port: {e}"));
+                    .map_err(|e| format!("error converting supplied value for last_port: {}", e));
                 self
             }
         }
@@ -49820,9 +52482,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::ProbeExternalIp>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.external_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for external_ips: {e}"));
+                self.external_ips = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for external_ips: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -49832,7 +52494,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn interface<T>(mut self, value: T) -> Self
@@ -49842,7 +52504,7 @@ pub mod types {
             {
                 self.interface = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for interface: {e}"));
+                    .map_err(|e| format!("error converting supplied value for interface: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -49852,7 +52514,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn sled<T>(mut self, value: T) -> Self
@@ -49862,7 +52524,7 @@ pub mod types {
             {
                 self.sled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for sled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
                 self
             }
         }
@@ -49920,7 +52582,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -49930,7 +52592,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -49991,7 +52653,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -50001,7 +52663,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -50011,7 +52673,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -50019,9 +52681,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -50029,9 +52691,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -50086,7 +52748,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -50096,7 +52758,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -50148,7 +52810,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -50158,7 +52820,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -50207,7 +52869,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.role_assignments = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for role_assignments: {e}")
+                    format!(
+                        "error converting supplied value for role_assignments: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -50257,7 +52922,7 @@ pub mod types {
             {
                 self.identity_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for identity_id: {}", e));
                 self
             }
             pub fn identity_type<T>(mut self, value: T) -> Self
@@ -50265,9 +52930,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::IdentityType>,
                 T::Error: ::std::fmt::Display,
             {
-                self.identity_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_type: {e}"));
+                self.identity_type = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for identity_type: {}", e)
+                });
                 self
             }
             pub fn role_name<T>(mut self, value: T) -> Self
@@ -50277,7 +52942,7 @@ pub mod types {
             {
                 self.role_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for role_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for role_name: {}", e));
                 self
             }
         }
@@ -50331,7 +52996,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -50341,7 +53006,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -50395,7 +53060,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.desired_marker_positions = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for desired_marker_positions: {e}")
+                    format!(
+                        "error converting supplied value for desired_marker_positions: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -50405,7 +53073,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.marker_heights = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for marker_heights: {e}")
+                    format!("error converting supplied value for marker_heights: {}", e)
                 });
                 self
             }
@@ -50415,7 +53083,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.marker_positions = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for marker_positions: {e}")
+                    format!(
+                        "error converting supplied value for marker_positions: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -50426,7 +53097,7 @@ pub mod types {
             {
                 self.p = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for p: {e}"));
+                    .map_err(|e| format!("error converting supplied value for p: {}", e));
                 self
             }
         }
@@ -50487,7 +53158,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -50495,9 +53166,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -50505,9 +53176,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -50559,7 +53230,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -50569,7 +53240,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -50622,7 +53293,7 @@ pub mod types {
             {
                 self.dst = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for dst: {e}"));
+                    .map_err(|e| format!("error converting supplied value for dst: {}", e));
                 self
             }
             pub fn gw<T>(mut self, value: T) -> Self
@@ -50632,7 +53303,7 @@ pub mod types {
             {
                 self.gw = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for gw: {e}"));
+                    .map_err(|e| format!("error converting supplied value for gw: {}", e));
                 self
             }
             pub fn rib_priority<T>(mut self, value: T) -> Self
@@ -50640,9 +53311,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<u8>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.rib_priority = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for rib_priority: {e}"));
+                self.rib_priority = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rib_priority: {}", e)
+                });
                 self
             }
             pub fn vid<T>(mut self, value: T) -> Self
@@ -50652,7 +53323,7 @@ pub mod types {
             {
                 self.vid = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vid: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vid: {}", e));
                 self
             }
         }
@@ -50705,7 +53376,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn routes<T>(mut self, value: T) -> Self
@@ -50715,7 +53386,7 @@ pub mod types {
             {
                 self.routes = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for routes: {e}"));
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
                 self
             }
         }
@@ -50784,7 +53455,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn destination<T>(mut self, value: T) -> Self
@@ -50794,7 +53465,7 @@ pub mod types {
             {
                 self.destination = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for destination: {e}"));
+                    .map_err(|e| format!("error converting supplied value for destination: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -50804,7 +53475,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -50814,7 +53485,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -50824,7 +53495,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn target<T>(mut self, value: T) -> Self
@@ -50834,7 +53505,7 @@ pub mod types {
             {
                 self.target = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for target: {e}"));
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -50842,9 +53513,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -50852,9 +53523,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vpc_router_id<T>(mut self, value: T) -> Self
@@ -50862,9 +53533,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
-                self.vpc_router_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_router_id: {e}"));
+                self.vpc_router_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for vpc_router_id: {}", e)
+                });
                 self
             }
         }
@@ -50931,7 +53602,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn destination<T>(mut self, value: T) -> Self
@@ -50941,7 +53612,7 @@ pub mod types {
             {
                 self.destination = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for destination: {e}"));
+                    .map_err(|e| format!("error converting supplied value for destination: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -50951,7 +53622,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn target<T>(mut self, value: T) -> Self
@@ -50961,7 +53632,7 @@ pub mod types {
             {
                 self.target = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for target: {e}"));
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
                 self
             }
         }
@@ -51018,7 +53689,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -51028,7 +53699,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -51084,7 +53755,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn destination<T>(mut self, value: T) -> Self
@@ -51094,7 +53765,7 @@ pub mod types {
             {
                 self.destination = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for destination: {e}"));
+                    .map_err(|e| format!("error converting supplied value for destination: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -51104,7 +53775,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn target<T>(mut self, value: T) -> Self
@@ -51114,7 +53785,7 @@ pub mod types {
             {
                 self.target = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for target: {e}"));
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
                 self
             }
         }
@@ -51202,7 +53873,7 @@ pub mod types {
             {
                 self.acs_url = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for acs_url: {e}"));
+                    .map_err(|e| format!("error converting supplied value for acs_url: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -51212,7 +53883,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn group_attribute_name<T>(mut self, value: T) -> Self
@@ -51221,7 +53892,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.group_attribute_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for group_attribute_name: {e}")
+                    format!(
+                        "error converting supplied value for group_attribute_name: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51232,7 +53906,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn idp_entity_id<T>(mut self, value: T) -> Self
@@ -51240,9 +53914,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.idp_entity_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for idp_entity_id: {e}"));
+                self.idp_entity_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for idp_entity_id: {}", e)
+                });
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -51252,7 +53926,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn public_cert<T>(mut self, value: T) -> Self
@@ -51262,7 +53936,7 @@ pub mod types {
             {
                 self.public_cert = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for public_cert: {e}"));
+                    .map_err(|e| format!("error converting supplied value for public_cert: {}", e));
                 self
             }
             pub fn slo_url<T>(mut self, value: T) -> Self
@@ -51272,7 +53946,7 @@ pub mod types {
             {
                 self.slo_url = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for slo_url: {e}"));
+                    .map_err(|e| format!("error converting supplied value for slo_url: {}", e));
                 self
             }
             pub fn sp_client_id<T>(mut self, value: T) -> Self
@@ -51280,9 +53954,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.sp_client_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for sp_client_id: {e}"));
+                self.sp_client_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sp_client_id: {}", e)
+                });
                 self
             }
             pub fn technical_contact_email<T>(mut self, value: T) -> Self
@@ -51291,7 +53965,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.technical_contact_email = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for technical_contact_email: {e}")
+                    format!(
+                        "error converting supplied value for technical_contact_email: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51300,9 +53977,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -51310,9 +53987,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -51409,7 +54086,7 @@ pub mod types {
             {
                 self.acs_url = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for acs_url: {e}"));
+                    .map_err(|e| format!("error converting supplied value for acs_url: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -51419,7 +54096,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn group_attribute_name<T>(mut self, value: T) -> Self
@@ -51428,7 +54105,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.group_attribute_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for group_attribute_name: {e}")
+                    format!(
+                        "error converting supplied value for group_attribute_name: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51437,9 +54117,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.idp_entity_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for idp_entity_id: {e}"));
+                self.idp_entity_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for idp_entity_id: {}", e)
+                });
                 self
             }
             pub fn idp_metadata_source<T>(mut self, value: T) -> Self
@@ -51448,7 +54128,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.idp_metadata_source = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for idp_metadata_source: {e}")
+                    format!(
+                        "error converting supplied value for idp_metadata_source: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51459,7 +54142,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn signing_keypair<T>(mut self, value: T) -> Self
@@ -51468,7 +54151,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.signing_keypair = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for signing_keypair: {e}")
+                    format!("error converting supplied value for signing_keypair: {}", e)
                 });
                 self
             }
@@ -51479,7 +54162,7 @@ pub mod types {
             {
                 self.slo_url = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for slo_url: {e}"));
+                    .map_err(|e| format!("error converting supplied value for slo_url: {}", e));
                 self
             }
             pub fn sp_client_id<T>(mut self, value: T) -> Self
@@ -51487,9 +54170,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.sp_client_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for sp_client_id: {e}"));
+                self.sp_client_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sp_client_id: {}", e)
+                });
                 self
             }
             pub fn technical_contact_email<T>(mut self, value: T) -> Self
@@ -51498,7 +54181,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.technical_contact_email = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for technical_contact_email: {e}")
+                    format!(
+                        "error converting supplied value for technical_contact_email: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51572,7 +54258,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -51580,9 +54266,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_expires<T>(mut self, value: T) -> Self
@@ -51592,9 +54278,9 @@ pub mod types {
                 >,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_expires = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_expires: {e}"));
+                self.time_expires = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_expires: {}", e)
+                });
                 self
             }
         }
@@ -51653,9 +54339,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.bearer_token = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for bearer_token: {e}"));
+                self.bearer_token = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for bearer_token: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -51665,7 +54351,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -51673,9 +54359,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_expires<T>(mut self, value: T) -> Self
@@ -51685,9 +54371,9 @@ pub mod types {
                 >,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_expires = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_expires: {e}"));
+                self.time_expires = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_expires: {}", e)
+                });
                 self
             }
         }
@@ -51738,7 +54424,7 @@ pub mod types {
             {
                 self.enabled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for enabled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for enabled: {}", e));
                 self
             }
         }
@@ -51785,7 +54471,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.system_version = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_version: {e}")
+                    format!("error converting supplied value for system_version: {}", e)
                 });
                 self
             }
@@ -51858,7 +54544,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.admin_group_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for admin_group_name: {e}")
+                    format!(
+                        "error converting supplied value for admin_group_name: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51869,7 +54558,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn discoverable<T>(mut self, value: T) -> Self
@@ -51877,9 +54566,9 @@ pub mod types {
                 T: ::std::convert::TryInto<bool>,
                 T::Error: ::std::fmt::Display,
             {
-                self.discoverable = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for discoverable: {e}"));
+                self.discoverable = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for discoverable: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -51889,7 +54578,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn identity_mode<T>(mut self, value: T) -> Self
@@ -51897,9 +54586,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::SiloIdentityMode>,
                 T::Error: ::std::fmt::Display,
             {
-                self.identity_mode = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_mode: {e}"));
+                self.identity_mode = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for identity_mode: {}", e)
+                });
                 self
             }
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
@@ -51910,7 +54599,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.mapped_fleet_roles = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for mapped_fleet_roles: {e}")
+                    format!(
+                        "error converting supplied value for mapped_fleet_roles: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -51921,7 +54613,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -51929,9 +54621,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -51939,9 +54631,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -52002,7 +54694,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.device_token_max_ttl_seconds = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for device_token_max_ttl_seconds: {e}")
+                    format!(
+                        "error converting supplied value for device_token_max_ttl_seconds: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -52013,7 +54708,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
         }
@@ -52064,7 +54759,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.device_token_max_ttl_seconds = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for device_token_max_ttl_seconds: {e}")
+                    format!(
+                        "error converting supplied value for device_token_max_ttl_seconds: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -52132,7 +54830,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.admin_group_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for admin_group_name: {e}")
+                    format!(
+                        "error converting supplied value for admin_group_name: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -52143,7 +54844,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn discoverable<T>(mut self, value: T) -> Self
@@ -52151,9 +54852,9 @@ pub mod types {
                 T: ::std::convert::TryInto<bool>,
                 T::Error: ::std::fmt::Display,
             {
-                self.discoverable = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for discoverable: {e}"));
+                self.discoverable = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for discoverable: {}", e)
+                });
                 self
             }
             pub fn identity_mode<T>(mut self, value: T) -> Self
@@ -52161,9 +54862,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::SiloIdentityMode>,
                 T::Error: ::std::fmt::Display,
             {
-                self.identity_mode = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_mode: {e}"));
+                self.identity_mode = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for identity_mode: {}", e)
+                });
                 self
             }
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
@@ -52174,7 +54875,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.mapped_fleet_roles = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for mapped_fleet_roles: {e}")
+                    format!(
+                        "error converting supplied value for mapped_fleet_roles: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -52185,7 +54889,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn quotas<T>(mut self, value: T) -> Self
@@ -52195,7 +54899,7 @@ pub mod types {
             {
                 self.quotas = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for quotas: {e}"));
+                    .map_err(|e| format!("error converting supplied value for quotas: {}", e));
                 self
             }
             pub fn tls_certificates<T>(mut self, value: T) -> Self
@@ -52204,7 +54908,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.tls_certificates = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for tls_certificates: {e}")
+                    format!(
+                        "error converting supplied value for tls_certificates: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -52284,7 +54991,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -52294,7 +55001,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ip_version<T>(mut self, value: T) -> Self
@@ -52304,7 +55011,7 @@ pub mod types {
             {
                 self.ip_version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn is_default<T>(mut self, value: T) -> Self
@@ -52314,7 +55021,7 @@ pub mod types {
             {
                 self.is_default = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {e}"));
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -52324,7 +55031,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn pool_type<T>(mut self, value: T) -> Self
@@ -52334,7 +55041,7 @@ pub mod types {
             {
                 self.pool_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -52342,9 +55049,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -52352,9 +55059,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -52418,7 +55125,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -52428,7 +55135,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -52481,7 +55188,7 @@ pub mod types {
             {
                 self.cpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -52491,7 +55198,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -52501,7 +55208,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
             pub fn storage<T>(mut self, value: T) -> Self
@@ -52511,7 +55218,7 @@ pub mod types {
             {
                 self.storage = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for storage: {e}"));
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
                 self
             }
         }
@@ -52566,7 +55273,7 @@ pub mod types {
             {
                 self.cpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -52576,7 +55283,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn storage<T>(mut self, value: T) -> Self
@@ -52586,7 +55293,7 @@ pub mod types {
             {
                 self.storage = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for storage: {e}"));
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
                 self
             }
         }
@@ -52640,7 +55347,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -52650,7 +55357,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -52707,7 +55414,7 @@ pub mod types {
             {
                 self.cpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -52717,7 +55424,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn storage<T>(mut self, value: T) -> Self
@@ -52727,7 +55434,7 @@ pub mod types {
             {
                 self.storage = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for storage: {e}"));
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
                 self
             }
         }
@@ -52781,7 +55488,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -52791,7 +55498,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -52840,7 +55547,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.role_assignments = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for role_assignments: {e}")
+                    format!(
+                        "error converting supplied value for role_assignments: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -52890,7 +55600,7 @@ pub mod types {
             {
                 self.identity_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for identity_id: {}", e));
                 self
             }
             pub fn identity_type<T>(mut self, value: T) -> Self
@@ -52898,9 +55608,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::IdentityType>,
                 T::Error: ::std::fmt::Display,
             {
-                self.identity_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_type: {e}"));
+                self.identity_type = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for identity_type: {}", e)
+                });
                 self
             }
             pub fn role_name<T>(mut self, value: T) -> Self
@@ -52910,7 +55620,7 @@ pub mod types {
             {
                 self.role_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for role_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for role_name: {}", e));
                 self
             }
         }
@@ -52965,7 +55675,7 @@ pub mod types {
             {
                 self.allocated = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for allocated: {e}"));
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
                 self
             }
             pub fn provisioned<T>(mut self, value: T) -> Self
@@ -52975,7 +55685,7 @@ pub mod types {
             {
                 self.provisioned = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for provisioned: {e}"));
+                    .map_err(|e| format!("error converting supplied value for provisioned: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -52985,7 +55695,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
             pub fn silo_name<T>(mut self, value: T) -> Self
@@ -52995,7 +55705,7 @@ pub mod types {
             {
                 self.silo_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_name: {}", e));
                 self
             }
         }
@@ -53054,7 +55764,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -53064,7 +55774,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -53137,7 +55847,7 @@ pub mod types {
             {
                 self.baseboard = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for baseboard: {e}"));
+                    .map_err(|e| format!("error converting supplied value for baseboard: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -53147,7 +55857,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn policy<T>(mut self, value: T) -> Self
@@ -53157,7 +55867,7 @@ pub mod types {
             {
                 self.policy = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for policy: {e}"));
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -53167,7 +55877,7 @@ pub mod types {
             {
                 self.rack_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -53177,7 +55887,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -53185,9 +55895,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -53195,9 +55905,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn usable_hardware_threads<T>(mut self, value: T) -> Self
@@ -53206,7 +55916,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.usable_hardware_threads = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for usable_hardware_threads: {e}")
+                    format!(
+                        "error converting supplied value for usable_hardware_threads: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -53216,7 +55929,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.usable_physical_ram = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for usable_physical_ram: {e}")
+                    format!(
+                        "error converting supplied value for usable_physical_ram: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -53276,7 +55992,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
         }
@@ -53343,7 +56059,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.active_sled_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for active_sled_id: {e}")
+                    format!("error converting supplied value for active_sled_id: {}", e)
                 });
                 self
             }
@@ -53354,7 +56070,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -53364,7 +56080,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn migration_id<T>(mut self, value: T) -> Self
@@ -53372,9 +56088,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.migration_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for migration_id: {e}"));
+                self.migration_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for migration_id: {}", e)
+                });
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -53384,7 +56100,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn ncpus<T>(mut self, value: T) -> Self
@@ -53394,7 +56110,7 @@ pub mod types {
             {
                 self.ncpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ncpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ncpus: {}", e));
                 self
             }
             pub fn project_name<T>(mut self, value: T) -> Self
@@ -53402,9 +56118,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
-                self.project_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_name: {e}"));
+                self.project_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for project_name: {}", e)
+                });
                 self
             }
             pub fn silo_name<T>(mut self, value: T) -> Self
@@ -53414,7 +56130,7 @@ pub mod types {
             {
                 self.silo_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_name: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -53424,7 +56140,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -53432,9 +56148,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -53442,9 +56158,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -53515,7 +56231,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -53525,7 +56241,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -53572,7 +56288,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
         }
@@ -53619,7 +56335,7 @@ pub mod types {
             {
                 self.new_state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for new_state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for new_state: {}", e));
                 self
             }
             pub fn old_state<T>(mut self, value: T) -> Self
@@ -53629,7 +56345,7 @@ pub mod types {
             {
                 self.old_state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for old_state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for old_state: {}", e));
                 self
             }
         }
@@ -53681,7 +56397,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -53691,7 +56407,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -53760,7 +56476,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn disk_id<T>(mut self, value: T) -> Self
@@ -53770,7 +56486,7 @@ pub mod types {
             {
                 self.disk_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for disk_id: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -53780,7 +56496,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -53790,7 +56506,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -53800,7 +56516,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn size<T>(mut self, value: T) -> Self
@@ -53810,7 +56526,7 @@ pub mod types {
             {
                 self.size = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for size: {e}"));
+                    .map_err(|e| format!("error converting supplied value for size: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -53820,7 +56536,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -53828,9 +56544,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -53838,9 +56554,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -53905,7 +56621,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn disk<T>(mut self, value: T) -> Self
@@ -53915,7 +56631,7 @@ pub mod types {
             {
                 self.disk = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk: {e}"));
+                    .map_err(|e| format!("error converting supplied value for disk: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -53925,7 +56641,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -53979,7 +56695,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -53989,7 +56705,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -54054,7 +56770,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -54064,7 +56780,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -54074,7 +56790,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn public_key<T>(mut self, value: T) -> Self
@@ -54084,7 +56800,7 @@ pub mod types {
             {
                 self.public_key = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for public_key: {e}"));
+                    .map_err(|e| format!("error converting supplied value for public_key: {}", e));
                 self
             }
             pub fn silo_user_id<T>(mut self, value: T) -> Self
@@ -54092,9 +56808,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
-                self.silo_user_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_user_id: {e}"));
+                self.silo_user_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for silo_user_id: {}", e)
+                });
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -54102,9 +56818,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -54112,9 +56828,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -54175,7 +56891,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -54185,7 +56901,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn public_key<T>(mut self, value: T) -> Self
@@ -54195,7 +56911,7 @@ pub mod types {
             {
                 self.public_key = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for public_key: {e}"));
+                    .map_err(|e| format!("error converting supplied value for public_key: {}", e));
                 self
             }
         }
@@ -54249,7 +56965,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -54259,7 +56975,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -54307,9 +57023,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.user_comment = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for user_comment: {e}"));
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
                 self
             }
         }
@@ -54376,7 +57092,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn reason_for_creation<T>(mut self, value: T) -> Self
@@ -54385,7 +57101,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.reason_for_creation = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for reason_for_creation: {e}")
+                    format!(
+                        "error converting supplied value for reason_for_creation: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -54395,7 +57114,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.reason_for_failure = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for reason_for_failure: {e}")
+                    format!(
+                        "error converting supplied value for reason_for_failure: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -54406,7 +57128,7 @@ pub mod types {
             {
                 self.state = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {e}"));
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -54414,9 +57136,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn user_comment<T>(mut self, value: T) -> Self
@@ -54424,9 +57146,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.user_comment = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for user_comment: {e}"));
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
                 self
             }
         }
@@ -54489,7 +57211,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -54499,7 +57221,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -54547,9 +57269,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.user_comment = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for user_comment: {e}"));
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
                 self
             }
         }
@@ -54608,7 +57330,7 @@ pub mod types {
             {
                 self.baseboard = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for baseboard: {e}"));
+                    .map_err(|e| format!("error converting supplied value for baseboard: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -54618,7 +57340,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -54628,7 +57350,7 @@ pub mod types {
             {
                 self.rack_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -54636,9 +57358,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -54646,9 +57368,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -54708,7 +57430,7 @@ pub mod types {
             {
                 self.history = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for history: {e}"));
+                    .map_err(|e| format!("error converting supplied value for history: {}", e));
                 self
             }
             pub fn switch<T>(mut self, value: T) -> Self
@@ -54718,7 +57440,7 @@ pub mod types {
             {
                 self.switch = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
                 self
             }
         }
@@ -54773,7 +57495,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
@@ -54782,7 +57504,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_name: {e}")
+                    format!("error converting supplied value for interface_name: {}", e)
                 });
                 self
             }
@@ -54793,7 +57515,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
@@ -54802,7 +57524,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -54813,7 +57538,7 @@ pub mod types {
             {
                 self.v6_enabled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for v6_enabled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for v6_enabled: {}", e));
                 self
             }
         }
@@ -54870,7 +57595,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn link_name<T>(mut self, value: T) -> Self
@@ -54880,7 +57605,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn v6_enabled<T>(mut self, value: T) -> Self
@@ -54890,7 +57615,7 @@ pub mod types {
             {
                 self.v6_enabled = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for v6_enabled: {e}"));
+                    .map_err(|e| format!("error converting supplied value for v6_enabled: {}", e));
                 self
             }
         }
@@ -54948,7 +57673,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn port_name<T>(mut self, value: T) -> Self
@@ -54958,7 +57683,7 @@ pub mod types {
             {
                 self.port_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for port_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for port_name: {}", e));
                 self
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
@@ -54967,7 +57692,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -54978,7 +57706,7 @@ pub mod types {
             {
                 self.rack_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
             pub fn switch_location<T>(mut self, value: T) -> Self
@@ -54987,7 +57715,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
+                    format!("error converting supplied value for switch_location: {}", e)
                 });
                 self
             }
@@ -55055,7 +57783,7 @@ pub mod types {
             {
                 self.address = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {e}"));
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
                 self
             }
             pub fn address_lot_block_id<T>(mut self, value: T) -> Self
@@ -55064,7 +57792,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for address_lot_block_id: {e}")
+                    format!(
+                        "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55074,7 +57805,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for address_lot_id: {e}")
+                    format!("error converting supplied value for address_lot_id: {}", e)
                 });
                 self
             }
@@ -55084,7 +57815,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for address_lot_name: {e}")
+                    format!(
+                        "error converting supplied value for address_lot_name: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55094,7 +57828,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_name: {e}")
+                    format!("error converting supplied value for interface_name: {}", e)
                 });
                 self
             }
@@ -55104,7 +57838,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55115,7 +57852,7 @@ pub mod types {
             {
                 self.vlan_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vlan_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
                 self
             }
         }
@@ -55170,9 +57907,9 @@ pub mod types {
                 T: ::std::convert::TryInto<super::NameOrId>,
                 T::Error: ::std::fmt::Display,
             {
-                self.port_settings = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for port_settings: {e}"));
+                self.port_settings = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for port_settings: {}", e)
+                });
                 self
             }
         }
@@ -55219,7 +57956,7 @@ pub mod types {
             {
                 self.geometry = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for geometry: {e}"));
+                    .map_err(|e| format!("error converting supplied value for geometry: {}", e));
                 self
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
@@ -55228,7 +57965,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55276,7 +58016,7 @@ pub mod types {
             {
                 self.geometry = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for geometry: {e}"));
+                    .map_err(|e| format!("error converting supplied value for geometry: {}", e));
                 self
             }
         }
@@ -55342,7 +58082,7 @@ pub mod types {
             {
                 self.autoneg = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for autoneg: {e}"));
+                    .map_err(|e| format!("error converting supplied value for autoneg: {}", e));
                 self
             }
             pub fn fec<T>(mut self, value: T) -> Self
@@ -55352,7 +58092,7 @@ pub mod types {
             {
                 self.fec = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for fec: {e}"));
+                    .map_err(|e| format!("error converting supplied value for fec: {}", e));
                 self
             }
             pub fn link_name<T>(mut self, value: T) -> Self
@@ -55362,7 +58102,7 @@ pub mod types {
             {
                 self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn lldp_link_config<T>(mut self, value: T) -> Self
@@ -55371,7 +58111,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.lldp_link_config = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for lldp_link_config: {e}")
+                    format!(
+                        "error converting supplied value for lldp_link_config: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55382,7 +58125,7 @@ pub mod types {
             {
                 self.mtu = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mtu: {e}"));
+                    .map_err(|e| format!("error converting supplied value for mtu: {}", e));
                 self
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
@@ -55391,7 +58134,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55402,7 +58148,7 @@ pub mod types {
             {
                 self.speed = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for speed: {e}"));
+                    .map_err(|e| format!("error converting supplied value for speed: {}", e));
                 self
             }
             pub fn tx_eq_config<T>(mut self, value: T) -> Self
@@ -55410,9 +58156,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::TxEqConfig2>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.tx_eq_config = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for tx_eq_config: {e}"));
+                self.tx_eq_config = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for tx_eq_config: {}", e)
+                });
                 self
             }
         }
@@ -55476,7 +58222,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -55486,7 +58232,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -55543,7 +58289,7 @@ pub mod types {
             {
                 self.dst = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for dst: {e}"));
+                    .map_err(|e| format!("error converting supplied value for dst: {}", e));
                 self
             }
             pub fn gw<T>(mut self, value: T) -> Self
@@ -55553,7 +58299,7 @@ pub mod types {
             {
                 self.gw = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for gw: {e}"));
+                    .map_err(|e| format!("error converting supplied value for gw: {}", e));
                 self
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
@@ -55562,7 +58308,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_name: {e}")
+                    format!("error converting supplied value for interface_name: {}", e)
                 });
                 self
             }
@@ -55572,7 +58318,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -55581,9 +58330,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<u8>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.rib_priority = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for rib_priority: {e}"));
+                self.rib_priority = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rib_priority: {}", e)
+                });
                 self
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
@@ -55593,7 +58342,7 @@ pub mod types {
             {
                 self.vlan_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vlan_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
                 self
             }
         }
@@ -55697,7 +58446,7 @@ pub mod types {
             {
                 self.addresses = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for addresses: {e}"));
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
                 self
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
@@ -55707,7 +58456,7 @@ pub mod types {
             {
                 self.bgp_peers = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bgp_peers: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bgp_peers: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -55717,7 +58466,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn groups<T>(mut self, value: T) -> Self
@@ -55727,7 +58476,7 @@ pub mod types {
             {
                 self.groups = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for groups: {e}"));
+                    .map_err(|e| format!("error converting supplied value for groups: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -55737,7 +58486,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn interfaces<T>(mut self, value: T) -> Self
@@ -55747,7 +58496,7 @@ pub mod types {
             {
                 self.interfaces = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for interfaces: {e}"));
+                    .map_err(|e| format!("error converting supplied value for interfaces: {}", e));
                 self
             }
             pub fn links<T>(mut self, value: T) -> Self
@@ -55757,7 +58506,7 @@ pub mod types {
             {
                 self.links = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for links: {e}"));
+                    .map_err(|e| format!("error converting supplied value for links: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -55767,7 +58516,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn port<T>(mut self, value: T) -> Self
@@ -55777,7 +58526,7 @@ pub mod types {
             {
                 self.port = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for port: {e}"));
+                    .map_err(|e| format!("error converting supplied value for port: {}", e));
                 self
             }
             pub fn routes<T>(mut self, value: T) -> Self
@@ -55787,7 +58536,7 @@ pub mod types {
             {
                 self.routes = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for routes: {e}"));
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -55795,9 +58544,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -55805,9 +58554,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vlan_interfaces<T>(mut self, value: T) -> Self
@@ -55816,7 +58565,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.vlan_interfaces = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for vlan_interfaces: {e}")
+                    format!("error converting supplied value for vlan_interfaces: {}", e)
                 });
                 self
             }
@@ -55912,7 +58661,7 @@ pub mod types {
             {
                 self.addresses = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for addresses: {e}"));
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
                 self
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
@@ -55922,7 +58671,7 @@ pub mod types {
             {
                 self.bgp_peers = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for bgp_peers: {e}"));
+                    .map_err(|e| format!("error converting supplied value for bgp_peers: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -55932,7 +58681,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn groups<T>(mut self, value: T) -> Self
@@ -55942,7 +58691,7 @@ pub mod types {
             {
                 self.groups = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for groups: {e}"));
+                    .map_err(|e| format!("error converting supplied value for groups: {}", e));
                 self
             }
             pub fn interfaces<T>(mut self, value: T) -> Self
@@ -55952,7 +58701,7 @@ pub mod types {
             {
                 self.interfaces = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for interfaces: {e}"));
+                    .map_err(|e| format!("error converting supplied value for interfaces: {}", e));
                 self
             }
             pub fn links<T>(mut self, value: T) -> Self
@@ -55962,7 +58711,7 @@ pub mod types {
             {
                 self.links = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for links: {e}"));
+                    .map_err(|e| format!("error converting supplied value for links: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -55972,7 +58721,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn port_config<T>(mut self, value: T) -> Self
@@ -55982,7 +58731,7 @@ pub mod types {
             {
                 self.port_config = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for port_config: {e}"));
+                    .map_err(|e| format!("error converting supplied value for port_config: {}", e));
                 self
             }
             pub fn routes<T>(mut self, value: T) -> Self
@@ -55992,7 +58741,7 @@ pub mod types {
             {
                 self.routes = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for routes: {e}"));
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
                 self
             }
         }
@@ -56056,7 +58805,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_group_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_group_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_group_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -56066,7 +58818,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for port_settings_id: {e}")
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -56128,7 +58883,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -56138,7 +58893,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -56148,7 +58903,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -56156,9 +58911,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -56166,9 +58921,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -56229,7 +58984,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -56239,7 +58994,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -56295,7 +59050,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -56305,7 +59060,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -56355,7 +59110,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_config_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_config_id: {e}")
+                    format!(
+                        "error converting supplied value for interface_config_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -56366,7 +59124,7 @@ pub mod types {
             {
                 self.vlan_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vlan_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
                 self
             }
         }
@@ -56417,7 +59175,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.time_requested = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_requested: {e}")
+                    format!("error converting supplied value for time_requested: {}", e)
                 });
                 self
             }
@@ -56428,7 +59186,7 @@ pub mod types {
             {
                 self.version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
                 self
             }
         }
@@ -56482,7 +59240,7 @@ pub mod types {
             {
                 self.fields = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for fields: {e}"));
+                    .map_err(|e| format!("error converting supplied value for fields: {}", e));
                 self
             }
             pub fn points<T>(mut self, value: T) -> Self
@@ -56492,7 +59250,7 @@ pub mod types {
             {
                 self.points = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for points: {e}"));
+                    .map_err(|e| format!("error converting supplied value for points: {}", e));
                 self
             }
         }
@@ -56541,7 +59299,7 @@ pub mod types {
             {
                 self.metric = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for metric: {e}"));
+                    .map_err(|e| format!("error converting supplied value for metric: {}", e));
                 self
             }
             pub fn target<T>(mut self, value: T) -> Self
@@ -56551,7 +59309,7 @@ pub mod types {
             {
                 self.target = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for target: {e}"));
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
                 self
             }
         }
@@ -56598,7 +59356,7 @@ pub mod types {
             {
                 self.query = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for query: {e}"));
+                    .map_err(|e| format!("error converting supplied value for query: {}", e));
                 self
             }
         }
@@ -56660,7 +59418,7 @@ pub mod types {
             {
                 self.authz_scope = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for authz_scope: {e}"));
+                    .map_err(|e| format!("error converting supplied value for authz_scope: {}", e));
                 self
             }
             pub fn created<T>(mut self, value: T) -> Self
@@ -56670,7 +59428,7 @@ pub mod types {
             {
                 self.created = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for created: {e}"));
+                    .map_err(|e| format!("error converting supplied value for created: {}", e));
                 self
             }
             pub fn datum_type<T>(mut self, value: T) -> Self
@@ -56680,7 +59438,7 @@ pub mod types {
             {
                 self.datum_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for datum_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -56690,7 +59448,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn field_schema<T>(mut self, value: T) -> Self
@@ -56698,9 +59456,9 @@ pub mod types {
                 T: ::std::convert::TryInto<Vec<super::FieldSchema>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.field_schema = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for field_schema: {e}"));
+                self.field_schema = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for field_schema: {}", e)
+                });
                 self
             }
             pub fn timeseries_name<T>(mut self, value: T) -> Self
@@ -56709,7 +59467,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.timeseries_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for timeseries_name: {e}")
+                    format!("error converting supplied value for timeseries_name: {}", e)
                 });
                 self
             }
@@ -56720,7 +59478,7 @@ pub mod types {
             {
                 self.units = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for units: {e}"));
+                    .map_err(|e| format!("error converting supplied value for units: {}", e));
                 self
             }
             pub fn version<T>(mut self, value: T) -> Self
@@ -56730,7 +59488,7 @@ pub mod types {
             {
                 self.version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
                 self
             }
         }
@@ -56797,7 +59555,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -56807,7 +59565,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -56864,7 +59622,7 @@ pub mod types {
             {
                 self.file_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for file_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for file_name: {}", e));
                 self
             }
             pub fn hash<T>(mut self, value: T) -> Self
@@ -56874,7 +59632,7 @@ pub mod types {
             {
                 self.hash = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for hash: {e}"));
+                    .map_err(|e| format!("error converting supplied value for hash: {}", e));
                 self
             }
             pub fn system_version<T>(mut self, value: T) -> Self
@@ -56883,7 +59641,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.system_version = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_version: {e}")
+                    format!("error converting supplied value for system_version: {}", e)
                 });
                 self
             }
@@ -56892,9 +59650,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
         }
@@ -56950,7 +59708,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -56960,7 +59718,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -57009,7 +59767,7 @@ pub mod types {
             {
                 self.repo = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for repo: {e}"));
+                    .map_err(|e| format!("error converting supplied value for repo: {}", e));
                 self
             }
             pub fn status<T>(mut self, value: T) -> Self
@@ -57019,7 +59777,7 @@ pub mod types {
             {
                 self.status = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
                 self
             }
         }
@@ -57074,7 +59832,7 @@ pub mod types {
             {
                 self.main = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for main: {e}"));
+                    .map_err(|e| format!("error converting supplied value for main: {}", e));
                 self
             }
             pub fn post1<T>(mut self, value: T) -> Self
@@ -57084,7 +59842,7 @@ pub mod types {
             {
                 self.post1 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for post1: {e}"));
+                    .map_err(|e| format!("error converting supplied value for post1: {}", e));
                 self
             }
             pub fn post2<T>(mut self, value: T) -> Self
@@ -57094,7 +59852,7 @@ pub mod types {
             {
                 self.post2 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for post2: {e}"));
+                    .map_err(|e| format!("error converting supplied value for post2: {}", e));
                 self
             }
             pub fn pre1<T>(mut self, value: T) -> Self
@@ -57104,7 +59862,7 @@ pub mod types {
             {
                 self.pre1 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pre1: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pre1: {}", e));
                 self
             }
             pub fn pre2<T>(mut self, value: T) -> Self
@@ -57114,7 +59872,7 @@ pub mod types {
             {
                 self.pre2 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pre2: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pre2: {}", e));
                 self
             }
         }
@@ -57175,7 +59933,7 @@ pub mod types {
             {
                 self.main = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for main: {e}"));
+                    .map_err(|e| format!("error converting supplied value for main: {}", e));
                 self
             }
             pub fn post1<T>(mut self, value: T) -> Self
@@ -57185,7 +59943,7 @@ pub mod types {
             {
                 self.post1 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for post1: {e}"));
+                    .map_err(|e| format!("error converting supplied value for post1: {}", e));
                 self
             }
             pub fn post2<T>(mut self, value: T) -> Self
@@ -57195,7 +59953,7 @@ pub mod types {
             {
                 self.post2 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for post2: {e}"));
+                    .map_err(|e| format!("error converting supplied value for post2: {}", e));
                 self
             }
             pub fn pre1<T>(mut self, value: T) -> Self
@@ -57205,7 +59963,7 @@ pub mod types {
             {
                 self.pre1 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pre1: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pre1: {}", e));
                 self
             }
             pub fn pre2<T>(mut self, value: T) -> Self
@@ -57215,7 +59973,7 @@ pub mod types {
             {
                 self.pre2 = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for pre2: {e}"));
+                    .map_err(|e| format!("error converting supplied value for pre2: {}", e));
                 self
             }
         }
@@ -57272,7 +60030,7 @@ pub mod types {
             {
                 self.baseboard = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for baseboard: {e}"));
+                    .map_err(|e| format!("error converting supplied value for baseboard: {}", e));
                 self
             }
             pub fn cubby<T>(mut self, value: T) -> Self
@@ -57282,7 +60040,7 @@ pub mod types {
             {
                 self.cubby = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cubby: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cubby: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -57292,7 +60050,7 @@ pub mod types {
             {
                 self.rack_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
         }
@@ -57343,7 +60101,7 @@ pub mod types {
             {
                 self.part = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for part: {e}"));
+                    .map_err(|e| format!("error converting supplied value for part: {}", e));
                 self
             }
             pub fn serial<T>(mut self, value: T) -> Self
@@ -57353,7 +60111,7 @@ pub mod types {
             {
                 self.serial = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for serial: {e}"));
+                    .map_err(|e| format!("error converting supplied value for serial: {}", e));
                 self
             }
         }
@@ -57408,7 +60166,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -57418,7 +60176,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -57484,7 +60242,8 @@ pub mod types {
             {
                 self.components_by_release_version = value.try_into().map_err(|e| {
                     format!(
-                        "error converting supplied value for components_by_release_version: {e}"
+                        "error converting supplied value for components_by_release_version: {}",
+                        e
                     )
                 });
                 self
@@ -57496,7 +60255,7 @@ pub mod types {
             {
                 self.suspended = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for suspended: {e}"));
+                    .map_err(|e| format!("error converting supplied value for suspended: {}", e));
                 self
             }
             pub fn target_release<T>(mut self, value: T) -> Self
@@ -57505,7 +60264,7 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.target_release = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for target_release: {e}")
+                    format!("error converting supplied value for target_release: {}", e)
                 });
                 self
             }
@@ -57515,7 +60274,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.time_last_step_planned = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_last_step_planned: {e}")
+                    format!(
+                        "error converting supplied value for time_last_step_planned: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -57574,7 +60336,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn root_role<T>(mut self, value: T) -> Self
@@ -57584,7 +60346,7 @@ pub mod types {
             {
                 self.root_role = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for root_role: {e}"));
+                    .map_err(|e| format!("error converting supplied value for root_role: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -57592,9 +60354,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
         }
@@ -57651,7 +60413,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -57661,7 +60423,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -57710,9 +60472,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.display_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for display_name: {e}"));
+                self.display_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for display_name: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -57722,7 +60484,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -57732,7 +60494,7 @@ pub mod types {
             {
                 self.silo_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
         }
@@ -57793,7 +60555,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -57803,7 +60565,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -57813,7 +60575,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -57821,9 +60583,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -57831,9 +60593,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -57892,7 +60654,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -57902,7 +60664,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -57951,7 +60713,7 @@ pub mod types {
             {
                 self.external_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for external_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for external_id: {}", e));
                 self
             }
             pub fn password<T>(mut self, value: T) -> Self
@@ -57961,7 +60723,7 @@ pub mod types {
             {
                 self.password = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for password: {e}"));
+                    .map_err(|e| format!("error converting supplied value for password: {}", e));
                 self
             }
         }
@@ -58013,7 +60775,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -58023,7 +60785,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -58072,7 +60834,7 @@ pub mod types {
             {
                 self.password = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for password: {e}"));
+                    .map_err(|e| format!("error converting supplied value for password: {}", e));
                 self
             }
             pub fn username<T>(mut self, value: T) -> Self
@@ -58082,7 +60844,7 @@ pub mod types {
             {
                 self.username = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for username: {e}"));
+                    .map_err(|e| format!("error converting supplied value for username: {}", e));
                 self
             }
         }
@@ -58131,7 +60893,7 @@ pub mod types {
             {
                 self.capacity = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for capacity: {e}"));
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
                 self
             }
             pub fn provisioned<T>(mut self, value: T) -> Self
@@ -58141,7 +60903,7 @@ pub mod types {
             {
                 self.provisioned = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for provisioned: {e}"));
+                    .map_err(|e| format!("error converting supplied value for provisioned: {}", e));
                 self
             }
         }
@@ -58190,7 +60952,7 @@ pub mod types {
             {
                 self.metric_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for metric_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for metric_type: {}", e));
                 self
             }
             pub fn values<T>(mut self, value: T) -> Self
@@ -58200,7 +60962,7 @@ pub mod types {
             {
                 self.values = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for values: {e}"));
+                    .map_err(|e| format!("error converting supplied value for values: {}", e));
                 self
             }
         }
@@ -58251,7 +61013,7 @@ pub mod types {
             {
                 self.cpus = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for cpus: {e}"));
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -58261,7 +61023,7 @@ pub mod types {
             {
                 self.memory = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
             pub fn storage<T>(mut self, value: T) -> Self
@@ -58271,7 +61033,7 @@ pub mod types {
             {
                 self.storage = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for storage: {e}"));
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
                 self
             }
         }
@@ -58342,7 +61104,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn dns_name<T>(mut self, value: T) -> Self
@@ -58352,7 +61114,7 @@ pub mod types {
             {
                 self.dns_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for dns_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for dns_name: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -58362,7 +61124,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ipv6_prefix<T>(mut self, value: T) -> Self
@@ -58372,7 +61134,7 @@ pub mod types {
             {
                 self.ipv6_prefix = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv6_prefix: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ipv6_prefix: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -58382,7 +61144,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn project_id<T>(mut self, value: T) -> Self
@@ -58392,7 +61154,7 @@ pub mod types {
             {
                 self.project_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for project_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
             pub fn system_router_id<T>(mut self, value: T) -> Self
@@ -58401,7 +61163,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.system_router_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_router_id: {e}")
+                    format!(
+                        "error converting supplied value for system_router_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -58410,9 +61175,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -58420,9 +61185,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -58488,7 +61253,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn dns_name<T>(mut self, value: T) -> Self
@@ -58498,7 +61263,7 @@ pub mod types {
             {
                 self.dns_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for dns_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for dns_name: {}", e));
                 self
             }
             pub fn ipv6_prefix<T>(mut self, value: T) -> Self
@@ -58508,7 +61273,7 @@ pub mod types {
             {
                 self.ipv6_prefix = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv6_prefix: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ipv6_prefix: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -58518,7 +61283,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -58574,7 +61339,7 @@ pub mod types {
             {
                 self.code = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for code: {e}"));
+                    .map_err(|e| format!("error converting supplied value for code: {}", e));
                 self
             }
             pub fn icmp_type<T>(mut self, value: T) -> Self
@@ -58584,7 +61349,7 @@ pub mod types {
             {
                 self.icmp_type = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for icmp_type: {e}"));
+                    .map_err(|e| format!("error converting supplied value for icmp_type: {}", e));
                 self
             }
         }
@@ -58663,7 +61428,7 @@ pub mod types {
             {
                 self.action = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for action: {e}"));
+                    .map_err(|e| format!("error converting supplied value for action: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -58673,7 +61438,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn direction<T>(mut self, value: T) -> Self
@@ -58683,7 +61448,7 @@ pub mod types {
             {
                 self.direction = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for direction: {e}"));
+                    .map_err(|e| format!("error converting supplied value for direction: {}", e));
                 self
             }
             pub fn filters<T>(mut self, value: T) -> Self
@@ -58693,7 +61458,7 @@ pub mod types {
             {
                 self.filters = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for filters: {e}"));
+                    .map_err(|e| format!("error converting supplied value for filters: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -58703,7 +61468,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -58713,7 +61478,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn priority<T>(mut self, value: T) -> Self
@@ -58723,7 +61488,7 @@ pub mod types {
             {
                 self.priority = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for priority: {e}"));
+                    .map_err(|e| format!("error converting supplied value for priority: {}", e));
                 self
             }
             pub fn status<T>(mut self, value: T) -> Self
@@ -58733,7 +61498,7 @@ pub mod types {
             {
                 self.status = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
                 self
             }
             pub fn targets<T>(mut self, value: T) -> Self
@@ -58743,7 +61508,7 @@ pub mod types {
             {
                 self.targets = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for targets: {e}"));
+                    .map_err(|e| format!("error converting supplied value for targets: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -58751,9 +61516,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -58761,9 +61526,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
@@ -58773,7 +61538,7 @@ pub mod types {
             {
                 self.vpc_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
                 self
             }
         }
@@ -58855,7 +61620,7 @@ pub mod types {
             {
                 self.hosts = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for hosts: {e}"));
+                    .map_err(|e| format!("error converting supplied value for hosts: {}", e));
                 self
             }
             pub fn ports<T>(mut self, value: T) -> Self
@@ -58867,7 +61632,7 @@ pub mod types {
             {
                 self.ports = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ports: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ports: {}", e));
                 self
             }
             pub fn protocols<T>(mut self, value: T) -> Self
@@ -58879,7 +61644,7 @@ pub mod types {
             {
                 self.protocols = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for protocols: {e}"));
+                    .map_err(|e| format!("error converting supplied value for protocols: {}", e));
                 self
             }
         }
@@ -58946,7 +61711,7 @@ pub mod types {
             {
                 self.action = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for action: {e}"));
+                    .map_err(|e| format!("error converting supplied value for action: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -58956,7 +61721,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn direction<T>(mut self, value: T) -> Self
@@ -58966,7 +61731,7 @@ pub mod types {
             {
                 self.direction = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for direction: {e}"));
+                    .map_err(|e| format!("error converting supplied value for direction: {}", e));
                 self
             }
             pub fn filters<T>(mut self, value: T) -> Self
@@ -58976,7 +61741,7 @@ pub mod types {
             {
                 self.filters = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for filters: {e}"));
+                    .map_err(|e| format!("error converting supplied value for filters: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -58986,7 +61751,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn priority<T>(mut self, value: T) -> Self
@@ -58996,7 +61761,7 @@ pub mod types {
             {
                 self.priority = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for priority: {e}"));
+                    .map_err(|e| format!("error converting supplied value for priority: {}", e));
                 self
             }
             pub fn status<T>(mut self, value: T) -> Self
@@ -59006,7 +61771,7 @@ pub mod types {
             {
                 self.status = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
                 self
             }
             pub fn targets<T>(mut self, value: T) -> Self
@@ -59016,7 +61781,7 @@ pub mod types {
             {
                 self.targets = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for targets: {e}"));
+                    .map_err(|e| format!("error converting supplied value for targets: {}", e));
                 self
             }
         }
@@ -59078,7 +61843,7 @@ pub mod types {
             {
                 self.rules = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rules: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rules: {}", e));
                 self
             }
         }
@@ -59126,7 +61891,7 @@ pub mod types {
             {
                 self.rules = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for rules: {e}"));
+                    .map_err(|e| format!("error converting supplied value for rules: {}", e));
                 self
             }
         }
@@ -59176,7 +61941,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -59186,7 +61951,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -59251,7 +62016,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -59261,7 +62026,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -59271,7 +62036,7 @@ pub mod types {
             {
                 self.kind = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {e}"));
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59281,7 +62046,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -59289,9 +62054,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -59299,9 +62064,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
@@ -59311,7 +62076,7 @@ pub mod types {
             {
                 self.vpc_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
                 self
             }
         }
@@ -59370,7 +62135,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59380,7 +62145,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -59432,7 +62197,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -59442,7 +62207,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -59494,7 +62259,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59504,7 +62269,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -59573,7 +62338,10 @@ pub mod types {
                 T::Error: ::std::fmt::Display,
             {
                 self.custom_router_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for custom_router_id: {e}")
+                    format!(
+                        "error converting supplied value for custom_router_id: {}",
+                        e
+                    )
                 });
                 self
             }
@@ -59584,7 +62352,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -59594,7 +62362,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn ipv4_block<T>(mut self, value: T) -> Self
@@ -59604,7 +62372,7 @@ pub mod types {
             {
                 self.ipv4_block = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv4_block: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ipv4_block: {}", e));
                 self
             }
             pub fn ipv6_block<T>(mut self, value: T) -> Self
@@ -59614,7 +62382,7 @@ pub mod types {
             {
                 self.ipv6_block = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv6_block: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ipv6_block: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59624,7 +62392,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -59632,9 +62400,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -59642,9 +62410,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
@@ -59654,7 +62422,7 @@ pub mod types {
             {
                 self.vpc_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
                 self
             }
         }
@@ -59725,9 +62493,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.custom_router = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for custom_router: {e}"));
+                self.custom_router = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for custom_router: {}", e)
+                });
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -59737,7 +62505,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn ipv4_block<T>(mut self, value: T) -> Self
@@ -59747,7 +62515,7 @@ pub mod types {
             {
                 self.ipv4_block = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv4_block: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ipv4_block: {}", e));
                 self
             }
             pub fn ipv6_block<T>(mut self, value: T) -> Self
@@ -59757,7 +62525,7 @@ pub mod types {
             {
                 self.ipv6_block = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv6_block: {e}"));
+                    .map_err(|e| format!("error converting supplied value for ipv6_block: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59767,7 +62535,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -59825,7 +62593,7 @@ pub mod types {
             {
                 self.items = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
                 self
             }
             pub fn next_page<T>(mut self, value: T) -> Self
@@ -59835,7 +62603,7 @@ pub mod types {
             {
                 self.next_page = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
                 self
             }
         }
@@ -59890,9 +62658,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.custom_router = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for custom_router: {e}"));
+                self.custom_router = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for custom_router: {}", e)
+                });
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -59902,7 +62670,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59912,7 +62680,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -59969,7 +62737,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn dns_name<T>(mut self, value: T) -> Self
@@ -59979,7 +62747,7 @@ pub mod types {
             {
                 self.dns_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for dns_name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for dns_name: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -59989,7 +62757,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -60052,7 +62820,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn endpoint<T>(mut self, value: T) -> Self
@@ -60062,7 +62830,7 @@ pub mod types {
             {
                 self.endpoint = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for endpoint: {e}"));
+                    .map_err(|e| format!("error converting supplied value for endpoint: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -60072,7 +62840,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn secrets<T>(mut self, value: T) -> Self
@@ -60082,7 +62850,7 @@ pub mod types {
             {
                 self.secrets = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for secrets: {e}"));
+                    .map_err(|e| format!("error converting supplied value for secrets: {}", e));
                 self
             }
             pub fn subscriptions<T>(mut self, value: T) -> Self
@@ -60090,9 +62858,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::AlertSubscription>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.subscriptions = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subscriptions: {e}"));
+                self.subscriptions = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscriptions: {}", e)
+                });
                 self
             }
         }
@@ -60158,7 +62926,7 @@ pub mod types {
             {
                 self.attempt = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for attempt: {e}"));
+                    .map_err(|e| format!("error converting supplied value for attempt: {}", e));
                 self
             }
             pub fn response<T>(mut self, value: T) -> Self
@@ -60168,7 +62936,7 @@ pub mod types {
             {
                 self.response = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for response: {e}"));
+                    .map_err(|e| format!("error converting supplied value for response: {}", e));
                 self
             }
             pub fn result<T>(mut self, value: T) -> Self
@@ -60178,7 +62946,7 @@ pub mod types {
             {
                 self.result = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for result: {e}"));
+                    .map_err(|e| format!("error converting supplied value for result: {}", e));
                 self
             }
             pub fn time_sent<T>(mut self, value: T) -> Self
@@ -60188,7 +62956,7 @@ pub mod types {
             {
                 self.time_sent = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_sent: {e}"));
+                    .map_err(|e| format!("error converting supplied value for time_sent: {}", e));
                 self
             }
         }
@@ -60241,7 +63009,7 @@ pub mod types {
             {
                 self.duration_ms = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for duration_ms: {e}"));
+                    .map_err(|e| format!("error converting supplied value for duration_ms: {}", e));
                 self
             }
             pub fn status<T>(mut self, value: T) -> Self
@@ -60251,7 +63019,7 @@ pub mod types {
             {
                 self.status = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
                 self
             }
         }
@@ -60322,7 +63090,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn endpoint<T>(mut self, value: T) -> Self
@@ -60332,7 +63100,7 @@ pub mod types {
             {
                 self.endpoint = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for endpoint: {e}"));
+                    .map_err(|e| format!("error converting supplied value for endpoint: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -60342,7 +63110,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -60352,7 +63120,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
             pub fn secrets<T>(mut self, value: T) -> Self
@@ -60362,7 +63130,7 @@ pub mod types {
             {
                 self.secrets = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for secrets: {e}"));
+                    .map_err(|e| format!("error converting supplied value for secrets: {}", e));
                 self
             }
             pub fn subscriptions<T>(mut self, value: T) -> Self
@@ -60370,9 +63138,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::std::vec::Vec<super::AlertSubscription>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.subscriptions = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subscriptions: {e}"));
+                self.subscriptions = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscriptions: {}", e)
+                });
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -60380,9 +63148,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
@@ -60390,9 +63158,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_modified = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
                 self
             }
         }
@@ -60461,7 +63229,7 @@ pub mod types {
             {
                 self.description = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn endpoint<T>(mut self, value: T) -> Self
@@ -60471,7 +63239,7 @@ pub mod types {
             {
                 self.endpoint = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for endpoint: {e}"));
+                    .map_err(|e| format!("error converting supplied value for endpoint: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -60481,7 +63249,7 @@ pub mod types {
             {
                 self.name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
         }
@@ -60535,7 +63303,7 @@ pub mod types {
             {
                 self.id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -60543,9 +63311,9 @@ pub mod types {
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
         }
@@ -60592,7 +63360,7 @@ pub mod types {
             {
                 self.secret = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for secret: {e}"));
+                    .map_err(|e| format!("error converting supplied value for secret: {}", e));
                 self
             }
         }
@@ -60638,7 +63406,7 @@ pub mod types {
             {
                 self.secrets = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for secrets: {e}"));
+                    .map_err(|e| format!("error converting supplied value for secrets: {}", e));
                 self
             }
         }
