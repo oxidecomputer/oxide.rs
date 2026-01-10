@@ -15371,14 +15371,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    "multicast_groups": {
-    ///      "description": "The multicast groups this instance should
-    /// join.\n\nThe instance will be automatically added as a member of the
-    /// specified multicast groups during creation, enabling it to send and
-    /// receive multicast traffic for those groups.",
+    ///      "description": "Multicast groups this instance should join at
+    /// creation.\n\nGroups can be specified by name, UUID, or IP address.
+    /// Non-existent groups are created automatically.",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/NameOrId"
+    ///        "$ref": "#/components/schemas/MulticastGroupJoinSpec"
     ///      }
     ///    },
     ///    "name": {
@@ -15510,13 +15509,12 @@ pub mod types {
         pub hostname: Hostname,
         /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
-        /// The multicast groups this instance should join.
+        /// Multicast groups this instance should join at creation.
         ///
-        /// The instance will be automatically added as a member of the
-        /// specified multicast groups during creation, enabling it to send and
-        /// receive multicast traffic for those groups.
+        /// Groups can be specified by name, UUID, or IP address. Non-existent
+        /// groups are created automatically.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub multicast_groups: ::std::vec::Vec<NameOrId>,
+        pub multicast_groups: ::std::vec::Vec<MulticastGroupJoinSpec>,
         pub name: Name,
         /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
@@ -15656,6 +15654,89 @@ pub mod types {
     impl ::std::convert::From<&Self> for InstanceDiskAttachment {
         fn from(value: &InstanceDiskAttachment) -> Self {
             value.clone()
+        }
+    }
+
+    /// Parameters for joining an instance to a multicast group.
+    ///
+    /// When joining by IP address, the pool containing the multicast IP is
+    /// auto-discovered from all linked multicast pools.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for joining an instance to a multicast
+    /// group.\n\nWhen joining by IP address, the pool containing the multicast
+    /// IP is auto-discovered from all linked multicast pools.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "ip_version": {
+    ///      "description": "IP version for pool selection when creating a group
+    /// by name. Required if both IPv4 and IPv6 default multicast pools are
+    /// linked.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/IpVersion"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "source_ips": {
+    ///      "description": "Source IPs for source-filtered multicast (SSM).
+    /// Optional for ASM groups, required for SSM groups (232.0.0.0/8,
+    /// ff3x::/32).",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "ip"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InstanceMulticastGroupJoin {
+        /// IP version for pool selection when creating a group by name.
+        /// Required if both IPv4 and IPv6 default multicast pools are linked.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ip_version: ::std::option::Option<IpVersion>,
+        /// Source IPs for source-filtered multicast (SSM). Optional for ASM
+        /// groups, required for SSM groups (232.0.0.0/8, ff3x::/32).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+    }
+
+    impl ::std::convert::From<&InstanceMulticastGroupJoin> for InstanceMulticastGroupJoin {
+        fn from(value: &InstanceMulticastGroupJoin) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for InstanceMulticastGroupJoin {
+        fn default() -> Self {
+            Self {
+                ip_version: Default::default(),
+                source_ips: Default::default(),
+            }
+        }
+    }
+
+    impl InstanceMulticastGroupJoin {
+        pub fn builder() -> builder::InstanceMulticastGroupJoin {
+            Default::default()
         }
     }
 
@@ -16620,15 +16701,19 @@ pub mod types {
     ///      "description": "Multicast groups this instance should join.\n\nWhen
     /// specified, this replaces the instance's current multicast group
     /// membership with the new set of groups. The instance will leave any
-    /// groups not listed here and join any new groups that are specified.\n\nIf
-    /// not provided (None), the instance's multicast group membership will not
-    /// be changed.",
+    /// groups not listed here and join any new groups that are
+    /// specified.\n\nEach entry can specify the group by name, UUID, or IP
+    /// address, along with optional source IP filtering for SSM
+    /// (Source-Specific Multicast). When a group doesn't exist, it will be
+    /// implicitly created using the default multicast pool (or you can specify
+    /// `ip_version` to disambiguate if needed).\n\nIf not provided, the
+    /// instance's multicast group membership will not be changed.",
     ///      "type": [
     ///        "array",
     ///        "null"
     ///      ],
     ///      "items": {
-    ///        "$ref": "#/components/schemas/NameOrId"
+    ///        "$ref": "#/components/schemas/MulticastGroupJoinSpec"
     ///      }
     ///    },
     ///    "ncpus": {
@@ -16690,10 +16775,16 @@ pub mod types {
         /// membership with the new set of groups. The instance will leave any
         /// groups not listed here and join any new groups that are specified.
         ///
-        /// If not provided (None), the instance's multicast group membership
-        /// will not be changed.
+        /// Each entry can specify the group by name, UUID, or IP address, along
+        /// with optional source IP filtering for SSM (Source-Specific
+        /// Multicast). When a group doesn't exist, it will be implicitly
+        /// created using the default multicast pool (or you can specify
+        /// `ip_version` to disambiguate if needed).
+        ///
+        /// If not provided, the instance's multicast group membership will not
+        /// be changed.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub multicast_groups: ::std::option::Option<::std::vec::Vec<NameOrId>>,
+        pub multicast_groups: ::std::option::Option<::std::vec::Vec<MulticastGroupJoinSpec>>,
         /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
     }
@@ -20538,8 +20629,11 @@ pub mod types {
     ///      ]
     ///    },
     ///    "source_ips": {
-    ///      "description": "Source IP addresses for Source-Specific Multicast
-    /// (SSM). Empty array means any source is allowed.",
+    ///      "description": "Union of all member source IP addresses (computed,
+    /// read-only).\n\nThis field shows the combined source IPs across all group
+    /// members. Individual members may subscribe to different sources; this
+    /// union reflects all sources that any member is subscribed to. Empty array
+    /// means no members have source filtering enabled.",
     ///      "type": "array",
     ///      "items": {
     ///        "type": "string",
@@ -20582,8 +20676,12 @@ pub mod types {
         pub mvlan: ::std::option::Option<u16>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// Source IP addresses for Source-Specific Multicast (SSM). Empty array
-        /// means any source is allowed.
+        /// Union of all member source IP addresses (computed, read-only).
+        ///
+        /// This field shows the combined source IPs across all group members.
+        /// Individual members may subscribe to different sources; this union
+        /// reflects all sources that any member is subscribed to. Empty array
+        /// means no members have source filtering enabled.
         pub source_ips: ::std::vec::Vec<::std::net::IpAddr>,
         /// Current state of the multicast group.
         pub state: ::std::string::String,
@@ -20605,49 +20703,102 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a multicast group.
+    /// Can be a UUID, a name, or an IP address
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Create-time parameters for a multicast group.",
+    ///  "title": "A multicast group identifier",
+    ///  "description": "Can be a UUID, a name, or an IP address",
+    ///  "type": "string"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct MulticastGroupIdentifier(pub ::std::string::String);
+    impl ::std::ops::Deref for MulticastGroupIdentifier {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<MulticastGroupIdentifier> for ::std::string::String {
+        fn from(value: MulticastGroupIdentifier) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&MulticastGroupIdentifier> for MulticastGroupIdentifier {
+        fn from(value: &MulticastGroupIdentifier) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::std::string::String> for MulticastGroupIdentifier {
+        fn from(value: ::std::string::String) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for MulticastGroupIdentifier {
+        type Err = ::std::convert::Infallible;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::fmt::Display for MulticastGroupIdentifier {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
+    /// Specification for joining a multicast group with optional source
+    /// filtering.
+    ///
+    /// Used in `InstanceCreate` and `InstanceUpdate` to specify multicast group
+    /// membership along with per-member source IP configuration.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Specification for joining a multicast group with
+    /// optional source filtering.\n\nUsed in `InstanceCreate` and
+    /// `InstanceUpdate` to specify multicast group membership along with
+    /// per-member source IP configuration.",
     ///  "type": "object",
     ///  "required": [
-    ///    "description",
-    ///    "name"
+    ///    "group"
     ///  ],
     ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
+    ///    "group": {
+    ///      "description": "The multicast group to join, specified by name,
+    /// UUID, or IP address.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/MulticastGroupIdentifier"
+    ///        }
+    ///      ]
     ///    },
-    ///    "multicast_ip": {
-    ///      "description": "The multicast IP address to allocate. If None, one
-    /// will be allocated from the default pool.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
-    ///    },
-    ///    "mvlan": {
-    ///      "description": "Multicast VLAN (MVLAN) for egress multicast traffic
-    /// to upstream networks. Tags packets leaving the rack to traverse
-    /// VLAN-segmented upstream networks.\n\nValid range: 2-4094 (VLAN IDs 0-1
-    /// are reserved by IEEE 802.1Q standard).",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "pool": {
-    ///      "description": "Name or ID of the IP pool to allocate from. If
-    /// None, uses the default multicast pool.",
+    ///    "ip_version": {
+    ///      "description": "IP version for pool selection when creating a group
+    /// by name. Required if both IPv4 and IPv6 default multicast pools are
+    /// linked.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -20655,17 +20806,16 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
+    ///              "$ref": "#/components/schemas/IpVersion"
     ///            }
     ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "source_ips": {
-    ///      "description": "Source IP addresses for Source-Specific Multicast
-    /// (SSM).\n\nNone uses default behavior (Any-Source Multicast). Empty list
-    /// explicitly allows any source (Any-Source Multicast). Non-empty list
-    /// restricts to specific sources (SSM).",
+    ///      "description": "Source IPs for source-filtered multicast (SSM).
+    /// Optional for ASM groups, required for SSM groups (232.0.0.0/8,
+    /// ff3x::/32).",
     ///      "type": [
     ///        "array",
     ///        "null"
@@ -20682,42 +20832,27 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct MulticastGroupCreate {
-        pub description: ::std::string::String,
-        /// The multicast IP address to allocate. If None, one will be allocated
-        /// from the default pool.
+    pub struct MulticastGroupJoinSpec {
+        /// The multicast group to join, specified by name, UUID, or IP address.
+        pub group: MulticastGroupIdentifier,
+        /// IP version for pool selection when creating a group by name.
+        /// Required if both IPv4 and IPv6 default multicast pools are linked.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub multicast_ip: ::std::option::Option<::std::net::IpAddr>,
-        /// Multicast VLAN (MVLAN) for egress multicast traffic to upstream
-        /// networks. Tags packets leaving the rack to traverse VLAN-segmented
-        /// upstream networks.
-        ///
-        /// Valid range: 2-4094 (VLAN IDs 0-1 are reserved by IEEE 802.1Q
-        /// standard).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub mvlan: ::std::option::Option<u16>,
-        pub name: Name,
-        /// Name or ID of the IP pool to allocate from. If None, uses the
-        /// default multicast pool.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub pool: ::std::option::Option<NameOrId>,
-        /// Source IP addresses for Source-Specific Multicast (SSM).
-        ///
-        /// None uses default behavior (Any-Source Multicast). Empty list
-        /// explicitly allows any source (Any-Source Multicast). Non-empty list
-        /// restricts to specific sources (SSM).
+        pub ip_version: ::std::option::Option<IpVersion>,
+        /// Source IPs for source-filtered multicast (SSM). Optional for ASM
+        /// groups, required for SSM groups (232.0.0.0/8, ff3x::/32).
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
     }
 
-    impl ::std::convert::From<&MulticastGroupCreate> for MulticastGroupCreate {
-        fn from(value: &MulticastGroupCreate) -> Self {
+    impl ::std::convert::From<&MulticastGroupJoinSpec> for MulticastGroupJoinSpec {
+        fn from(value: &MulticastGroupJoinSpec) -> Self {
             value.clone()
         }
     }
 
-    impl MulticastGroupCreate {
-        pub fn builder() -> builder::MulticastGroupCreate {
+    impl MulticastGroupJoinSpec {
+        pub fn builder() -> builder::MulticastGroupJoinSpec {
             Default::default()
         }
     }
@@ -20737,7 +20872,9 @@ pub mod types {
     ///    "id",
     ///    "instance_id",
     ///    "multicast_group_id",
+    ///    "multicast_ip",
     ///    "name",
+    ///    "source_ips",
     ///    "state",
     ///    "time_created",
     ///    "time_modified"
@@ -20765,6 +20902,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
+    ///    "multicast_ip": {
+    ///      "description": "The multicast IP address of the group this member
+    /// belongs to.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
     /// each resource",
@@ -20773,6 +20916,18 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
+    ///    },
+    ///    "source_ips": {
+    ///      "description": "Source IP addresses for this member's multicast
+    /// subscription.\n\n- **ASM**: Sources are optional. Empty array means any
+    /// source is allowed. Non-empty array enables source filtering
+    /// (IGMPv3/MLDv2). - **SSM**: Sources are required for SSM addresses
+    /// (232/8, ff3x::/32).",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "ip"
+    ///      }
     ///    },
     ///    "state": {
     ///      "description": "Current state of the multicast group membership.",
@@ -20804,8 +20959,17 @@ pub mod types {
         pub instance_id: ::uuid::Uuid,
         /// The ID of the multicast group this member belongs to.
         pub multicast_group_id: ::uuid::Uuid,
+        /// The multicast IP address of the group this member belongs to.
+        pub multicast_ip: ::std::net::IpAddr,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
+        /// Source IP addresses for this member's multicast subscription.
+        ///
+        /// - **ASM**: Sources are optional. Empty array means any source is
+        ///   allowed. Non-empty array enables source filtering (IGMPv3/MLDv2).
+        ///   - **SSM**: Sources are required for SSM addresses (232/8,
+        ///   ff3x::/32).
+        pub source_ips: ::std::vec::Vec<::std::net::IpAddr>,
         /// Current state of the multicast group membership.
         pub state: ::std::string::String,
         /// timestamp when this resource was created
@@ -20822,52 +20986,6 @@ pub mod types {
 
     impl MulticastGroupMember {
         pub fn builder() -> builder::MulticastGroupMember {
-            Default::default()
-        }
-    }
-
-    /// Parameters for adding an instance to a multicast group.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for adding an instance to a multicast
-    /// group.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "instance"
-    ///  ],
-    ///  "properties": {
-    ///    "instance": {
-    ///      "description": "Name or ID of the instance to add to the multicast
-    /// group",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct MulticastGroupMemberAdd {
-        /// Name or ID of the instance to add to the multicast group
-        pub instance: NameOrId,
-    }
-
-    impl ::std::convert::From<&MulticastGroupMemberAdd> for MulticastGroupMemberAdd {
-        fn from(value: &MulticastGroupMemberAdd) -> Self {
-            value.clone()
-        }
-    }
-
-    impl MulticastGroupMemberAdd {
-        pub fn builder() -> builder::MulticastGroupMemberAdd {
             Default::default()
         }
     }
@@ -20976,100 +21094,6 @@ pub mod types {
 
     impl MulticastGroupResultsPage {
         pub fn builder() -> builder::MulticastGroupResultsPage {
-            Default::default()
-        }
-    }
-
-    /// Update-time parameters for a multicast group.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Update-time parameters for a multicast group.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "mvlan": {
-    ///      "description": "Multicast VLAN (MVLAN) for egress multicast traffic
-    /// to upstream networks. Set to null to clear the MVLAN. Valid range:
-    /// 2-4094 when provided. Omit the field to leave mvlan unchanged.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "source_ips": {
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "ip"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct MulticastGroupUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub description: ::std::option::Option<::std::string::String>,
-        /// Multicast VLAN (MVLAN) for egress multicast traffic to upstream
-        /// networks. Set to null to clear the MVLAN. Valid range: 2-4094 when
-        /// provided. Omit the field to leave mvlan unchanged.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub mvlan: ::std::option::Option<u16>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub name: ::std::option::Option<Name>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
-    }
-
-    impl ::std::convert::From<&MulticastGroupUpdate> for MulticastGroupUpdate {
-        fn from(value: &MulticastGroupUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::default::Default for MulticastGroupUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                mvlan: Default::default(),
-                name: Default::default(),
-                source_ips: Default::default(),
-            }
-        }
-    }
-
-    impl MulticastGroupUpdate {
-        pub fn builder() -> builder::MulticastGroupUpdate {
             Default::default()
         }
     }
@@ -47724,8 +47748,10 @@ pub mod types {
             >,
             hostname: ::std::result::Result<super::Hostname, ::std::string::String>,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
-            multicast_groups:
-                ::std::result::Result<::std::vec::Vec<super::NameOrId>, ::std::string::String>,
+            multicast_groups: ::std::result::Result<
+                ::std::vec::Vec<super::MulticastGroupJoinSpec>,
+                ::std::string::String,
+            >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
             network_interfaces: ::std::result::Result<
@@ -47862,7 +47888,7 @@ pub mod types {
             }
             pub fn multicast_groups<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::NameOrId>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::MulticastGroupJoinSpec>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.multicast_groups = value.try_into().map_err(|e| {
@@ -47983,6 +48009,73 @@ pub mod types {
                     ssh_public_keys: Ok(value.ssh_public_keys),
                     start: Ok(value.start),
                     user_data: Ok(value.user_data),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceMulticastGroupJoin {
+            ip_version: ::std::result::Result<
+                ::std::option::Option<super::IpVersion>,
+                ::std::string::String,
+            >,
+            source_ips: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for InstanceMulticastGroupJoin {
+            fn default() -> Self {
+                Self {
+                    ip_version: Ok(Default::default()),
+                    source_ips: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InstanceMulticastGroupJoin {
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::IpVersion>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
+                self
+            }
+            pub fn source_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.source_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<InstanceMulticastGroupJoin> for super::InstanceMulticastGroupJoin {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InstanceMulticastGroupJoin,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip_version: value.ip_version?,
+                    source_ips: value.source_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::InstanceMulticastGroupJoin> for InstanceMulticastGroupJoin {
+            fn from(value: super::InstanceMulticastGroupJoin) -> Self {
+                Self {
+                    ip_version: Ok(value.ip_version),
+                    source_ips: Ok(value.source_ips),
                 }
             }
         }
@@ -48587,7 +48680,7 @@ pub mod types {
             >,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
             multicast_groups: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<super::NameOrId>>,
+                ::std::option::Option<::std::vec::Vec<super::MulticastGroupJoinSpec>>,
                 ::std::string::String,
             >,
             ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
@@ -48654,7 +48747,9 @@ pub mod types {
             }
             pub fn multicast_groups<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::NameOrId>>>,
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::MulticastGroupJoinSpec>>,
+                >,
                 T::Error: ::std::fmt::Display,
             {
                 self.multicast_groups = value.try_into().map_err(|e| {
@@ -51864,16 +51959,10 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct MulticastGroupCreate {
-            description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            multicast_ip: ::std::result::Result<
-                ::std::option::Option<::std::net::IpAddr>,
-                ::std::string::String,
-            >,
-            mvlan: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
-            name: ::std::result::Result<super::Name, ::std::string::String>,
-            pool: ::std::result::Result<
-                ::std::option::Option<super::NameOrId>,
+        pub struct MulticastGroupJoinSpec {
+            group: ::std::result::Result<super::MulticastGroupIdentifier, ::std::string::String>,
+            ip_version: ::std::result::Result<
+                ::std::option::Option<super::IpVersion>,
                 ::std::string::String,
             >,
             source_ips: ::std::result::Result<
@@ -51882,68 +51971,35 @@ pub mod types {
             >,
         }
 
-        impl ::std::default::Default for MulticastGroupCreate {
+        impl ::std::default::Default for MulticastGroupJoinSpec {
             fn default() -> Self {
                 Self {
-                    description: Err("no value supplied for description".to_string()),
-                    multicast_ip: Ok(Default::default()),
-                    mvlan: Ok(Default::default()),
-                    name: Err("no value supplied for name".to_string()),
-                    pool: Ok(Default::default()),
+                    group: Err("no value supplied for group".to_string()),
+                    ip_version: Ok(Default::default()),
                     source_ips: Ok(Default::default()),
                 }
             }
         }
 
-        impl MulticastGroupCreate {
-            pub fn description<T>(mut self, value: T) -> Self
+        impl MulticastGroupJoinSpec {
+            pub fn group<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::MulticastGroupIdentifier>,
                 T::Error: ::std::fmt::Display,
             {
-                self.description = value
+                self.group = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                    .map_err(|e| format!("error converting supplied value for group: {}", e));
                 self
             }
-            pub fn multicast_ip<T>(mut self, value: T) -> Self
+            pub fn ip_version<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::IpVersion>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.multicast_ip = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for multicast_ip: {}", e)
-                });
-                self
-            }
-            pub fn mvlan<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<u16>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.mvlan = value
+                self.ip_version = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::Name>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn pool<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pool = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn source_ips<T>(mut self, value: T) -> Self
@@ -51960,30 +52016,24 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::TryFrom<MulticastGroupCreate> for super::MulticastGroupCreate {
+        impl ::std::convert::TryFrom<MulticastGroupJoinSpec> for super::MulticastGroupJoinSpec {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: MulticastGroupCreate,
+                value: MulticastGroupJoinSpec,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    description: value.description?,
-                    multicast_ip: value.multicast_ip?,
-                    mvlan: value.mvlan?,
-                    name: value.name?,
-                    pool: value.pool?,
+                    group: value.group?,
+                    ip_version: value.ip_version?,
                     source_ips: value.source_ips?,
                 })
             }
         }
 
-        impl ::std::convert::From<super::MulticastGroupCreate> for MulticastGroupCreate {
-            fn from(value: super::MulticastGroupCreate) -> Self {
+        impl ::std::convert::From<super::MulticastGroupJoinSpec> for MulticastGroupJoinSpec {
+            fn from(value: super::MulticastGroupJoinSpec) -> Self {
                 Self {
-                    description: Ok(value.description),
-                    multicast_ip: Ok(value.multicast_ip),
-                    mvlan: Ok(value.mvlan),
-                    name: Ok(value.name),
-                    pool: Ok(value.pool),
+                    group: Ok(value.group),
+                    ip_version: Ok(value.ip_version),
                     source_ips: Ok(value.source_ips),
                 }
             }
@@ -51995,7 +52045,10 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             instance_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             multicast_group_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            multicast_ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
+            source_ips:
+                ::std::result::Result<::std::vec::Vec<::std::net::IpAddr>, ::std::string::String>,
             state: ::std::result::Result<::std::string::String, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
@@ -52014,7 +52067,9 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     instance_id: Err("no value supplied for instance_id".to_string()),
                     multicast_group_id: Err("no value supplied for multicast_group_id".to_string()),
+                    multicast_ip: Err("no value supplied for multicast_ip".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    source_ips: Err("no value supplied for source_ips".to_string()),
                     state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -52066,6 +52121,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn multicast_ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.multicast_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for multicast_ip: {}", e)
+                });
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -52074,6 +52139,16 @@ pub mod types {
                 self.name = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn source_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::net::IpAddr>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.source_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -52118,7 +52193,9 @@ pub mod types {
                     id: value.id?,
                     instance_id: value.instance_id?,
                     multicast_group_id: value.multicast_group_id?,
+                    multicast_ip: value.multicast_ip?,
                     name: value.name?,
+                    source_ips: value.source_ips?,
                     state: value.state?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -52133,55 +52210,12 @@ pub mod types {
                     id: Ok(value.id),
                     instance_id: Ok(value.instance_id),
                     multicast_group_id: Ok(value.multicast_group_id),
+                    multicast_ip: Ok(value.multicast_ip),
                     name: Ok(value.name),
+                    source_ips: Ok(value.source_ips),
                     state: Ok(value.state),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct MulticastGroupMemberAdd {
-            instance: ::std::result::Result<super::NameOrId, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for MulticastGroupMemberAdd {
-            fn default() -> Self {
-                Self {
-                    instance: Err("no value supplied for instance".to_string()),
-                }
-            }
-        }
-
-        impl MulticastGroupMemberAdd {
-            pub fn instance<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::NameOrId>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.instance = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for instance: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<MulticastGroupMemberAdd> for super::MulticastGroupMemberAdd {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: MulticastGroupMemberAdd,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    instance: value.instance?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::MulticastGroupMemberAdd> for MulticastGroupMemberAdd {
-            fn from(value: super::MulticastGroupMemberAdd) -> Self {
-                Self {
-                    instance: Ok(value.instance),
                 }
             }
         }
@@ -52316,101 +52350,6 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct MulticastGroupUpdate {
-            description: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
-                ::std::string::String,
-            >,
-            mvlan: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
-            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
-            source_ips: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for MulticastGroupUpdate {
-            fn default() -> Self {
-                Self {
-                    description: Ok(Default::default()),
-                    mvlan: Ok(Default::default()),
-                    name: Ok(Default::default()),
-                    source_ips: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl MulticastGroupUpdate {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn mvlan<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<u16>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.mvlan = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn source_ips<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.source_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<MulticastGroupUpdate> for super::MulticastGroupUpdate {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: MulticastGroupUpdate,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    description: value.description?,
-                    mvlan: value.mvlan?,
-                    name: value.name?,
-                    source_ips: value.source_ips?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::MulticastGroupUpdate> for MulticastGroupUpdate {
-            fn from(value: super::MulticastGroupUpdate) -> Self {
-                Self {
-                    description: Ok(value.description),
-                    mvlan: Ok(value.mvlan),
-                    name: Ok(value.name),
-                    source_ips: Ok(value.source_ips),
                 }
             }
         }
@@ -64765,7 +64704,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026010500.0.0
+/// Version: 2026010800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64806,7 +64745,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026010500.0.0"
+        "2026010800.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -65845,57 +65784,92 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList<'_>;
-    /// List multicast groups for instance
+    /// List multicast groups for an instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/multicast-groups`
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
     /// - `project`: Name or ID of the project
+    /// - `sort_by`
     /// ```ignore
     /// let response = client.instance_multicast_group_list()
     ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
     ///    .project(project)
+    ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
     /// ```
     fn instance_multicast_group_list(&self) -> builder::InstanceMulticastGroupList<'_>;
-    /// Join multicast group
+    /// Join a multicast group
     ///
     /// This is functionally equivalent to adding the instance via the group's
     /// member management endpoint or updating the instance's `multicast_groups`
     /// field. All approaches modify the same membership and trigger
     /// reconciliation.
     ///
+    /// Authorization: requires Modify on the instance identified in the URL
+    /// path (checked first) and Read on the multicast group. Checking instance
+    /// permission first prevents creating orphaned groups when the instance
+    /// check fails.
+    ///
+    /// Group Identification: Groups can be referenced by name, IP address, or
+    /// UUID. All three are fleet-wide unique identifiers: - By name: If group
+    /// doesn't exist, it's implicitly created with an auto-allocated IP from a
+    /// multicast pool linked to the caller's silo. Pool selection prefers the
+    /// default pool; if none, selects alphabetically. - By IP: If group doesn't
+    /// exist, it's implicitly created using that IP. The pool is determined by
+    /// which pool contains the IP. - By UUID: Group must already exist.
+    ///
+    /// Source IP filtering: - Duplicate IPs in the request are automatically
+    /// deduplicated. - Maximum of 64 source IPs allowed (per RFC 3376, IGMPv3).
+    /// - ASM: Sources are optional. Providing sources enables source filtering
+    /// via IGMPv3/MLDv2 even for ASM addresses. - SSM: Sources are required.
+    /// SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6) must have at
+    /// least one source specified.
+    ///
     /// Sends a `PUT` request to
     /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
-    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `multicast_group`: Name, ID, or IP address of the multicast group
     /// - `project`: Name or ID of the project
+    /// - `body`
     /// ```ignore
     /// let response = client.instance_multicast_group_join()
     ///    .instance(instance)
     ///    .multicast_group(multicast_group)
     ///    .project(project)
+    ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
     fn instance_multicast_group_join(&self) -> builder::InstanceMulticastGroupJoin<'_>;
-    /// Leave multicast group
+    /// Leave a multicast group
+    ///
+    /// The group can be specified by name, UUID, or multicast IP address. All
+    /// three are fleet-wide unique identifiers.
     ///
     /// This is functionally equivalent to removing the instance via the group's
     /// member management endpoint or updating the instance's `multicast_groups`
     /// field. All approaches modify the same membership and trigger
     /// reconciliation.
     ///
+    /// Authorization: requires Modify on the instance (checked first) and Read
+    /// on the multicast group.
+    ///
     /// Sends a `DELETE` request to
     /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
-    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `multicast_group`: Name, ID, or IP address of the multicast group
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.instance_multicast_group_leave()
@@ -65906,7 +65880,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_multicast_group_leave(&self) -> builder::InstanceMulticastGroupLeave<'_>;
-    /// List all multicast groups
+    /// List multicast groups
     ///
     /// Sends a `GET` request to `/v1/multicast-groups`
     ///
@@ -65924,27 +65898,15 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_list(&self) -> builder::MulticastGroupList<'_>;
-    /// Create a multicast group
-    ///
-    /// Multicast groups are fleet-scoped resources that can be joined by
-    /// instances across projects and silos. A single multicast IP serves all
-    /// group members regardless of project or silo boundaries.
-    ///
-    /// Sends a `POST` request to `/v1/multicast-groups`
-    ///
-    /// ```ignore
-    /// let response = client.multicast_group_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn multicast_group_create(&self) -> builder::MulticastGroupCreate<'_>;
     /// Fetch a multicast group
+    ///
+    /// The group can be specified by name, UUID, or multicast IP address.
+    /// (e.g., "224.1.2.3" or "ff38::1").
     ///
     /// Sends a `GET` request to `/v1/multicast-groups/{multicast_group}`
     ///
     /// Arguments:
-    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `multicast_group`: Name, ID, or IP address of the multicast group
     /// ```ignore
     /// let response = client.multicast_group_view()
     ///    .multicast_group(multicast_group)
@@ -65952,41 +65914,15 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_view(&self) -> builder::MulticastGroupView<'_>;
-    /// Update a multicast group
-    ///
-    /// Sends a `PUT` request to `/v1/multicast-groups/{multicast_group}`
-    ///
-    /// Arguments:
-    /// - `multicast_group`: Name or ID of the multicast group
-    /// - `body`
-    /// ```ignore
-    /// let response = client.multicast_group_update()
-    ///    .multicast_group(multicast_group)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn multicast_group_update(&self) -> builder::MulticastGroupUpdate<'_>;
-    /// Delete a multicast group
-    ///
-    /// Sends a `DELETE` request to `/v1/multicast-groups/{multicast_group}`
-    ///
-    /// Arguments:
-    /// - `multicast_group`: Name or ID of the multicast group
-    /// ```ignore
-    /// let response = client.multicast_group_delete()
-    ///    .multicast_group(multicast_group)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn multicast_group_delete(&self) -> builder::MulticastGroupDelete<'_>;
     /// List members of a multicast group
+    ///
+    /// The group can be specified by name, UUID, or multicast IP address.
     ///
     /// Sends a `GET` request to
     /// `/v1/multicast-groups/{multicast_group}/members`
     ///
     /// Arguments:
-    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `multicast_group`: Name, ID, or IP address of the multicast group
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
@@ -66001,67 +65937,6 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_>;
-    /// Add instance to a multicast group
-    ///
-    /// Functionally equivalent to updating the instance's `multicast_groups`
-    /// field. Both approaches modify the same underlying membership and trigger
-    /// the same reconciliation logic.
-    ///
-    /// Specify instance by name (requires `?project=<name>`) or UUID.
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/multicast-groups/{multicast_group}/members`
-    ///
-    /// Arguments:
-    /// - `multicast_group`: Name or ID of the multicast group
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.multicast_group_member_add()
-    ///    .multicast_group(multicast_group)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn multicast_group_member_add(&self) -> builder::MulticastGroupMemberAdd<'_>;
-    /// Remove instance from a multicast group
-    ///
-    /// Functionally equivalent to removing the group from the instance's
-    /// `multicast_groups` field. Both approaches modify the same underlying
-    /// membership and trigger reconciliation.
-    ///
-    /// Specify instance by name (requires `?project=<name>`) or UUID.
-    ///
-    /// Sends a `DELETE` request to
-    /// `/v1/multicast-groups/{multicast_group}/members/{instance}`
-    ///
-    /// Arguments:
-    /// - `multicast_group`: Name or ID of the multicast group
-    /// - `instance`: Name or ID of the instance
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.multicast_group_member_remove()
-    ///    .multicast_group(multicast_group)
-    ///    .instance(instance)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn multicast_group_member_remove(&self) -> builder::MulticastGroupMemberRemove<'_>;
-    /// Look up multicast group by IP address
-    ///
-    /// Sends a `GET` request to `/v1/system/multicast-groups/by-ip/{address}`
-    ///
-    /// Arguments:
-    /// - `address`: IP address of the multicast group
-    /// ```ignore
-    /// let response = client.lookup_multicast_group_by_ip()
-    ///    .address(address)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn lookup_multicast_group_by_ip(&self) -> builder::LookupMulticastGroupByIp<'_>;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -66198,36 +66073,12 @@ impl ClientExperimentalExt for Client {
         builder::MulticastGroupList::new(self)
     }
 
-    fn multicast_group_create(&self) -> builder::MulticastGroupCreate<'_> {
-        builder::MulticastGroupCreate::new(self)
-    }
-
     fn multicast_group_view(&self) -> builder::MulticastGroupView<'_> {
         builder::MulticastGroupView::new(self)
     }
 
-    fn multicast_group_update(&self) -> builder::MulticastGroupUpdate<'_> {
-        builder::MulticastGroupUpdate::new(self)
-    }
-
-    fn multicast_group_delete(&self) -> builder::MulticastGroupDelete<'_> {
-        builder::MulticastGroupDelete::new(self)
-    }
-
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_> {
         builder::MulticastGroupMemberList::new(self)
-    }
-
-    fn multicast_group_member_add(&self) -> builder::MulticastGroupMemberAdd<'_> {
-        builder::MulticastGroupMemberAdd::new(self)
-    }
-
-    fn multicast_group_member_remove(&self) -> builder::MulticastGroupMemberRemove<'_> {
-        builder::MulticastGroupMemberRemove::new(self)
-    }
-
-    fn lookup_multicast_group_by_ip(&self) -> builder::LookupMulticastGroupByIp<'_> {
-        builder::LookupMulticastGroupByIp::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery<'_> {
@@ -80839,7 +80690,10 @@ pub mod builder {
     pub struct InstanceMulticastGroupList<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
     impl<'a> InstanceMulticastGroupList<'a> {
@@ -80847,7 +80701,10 @@ pub mod builder {
             Self {
                 client: client,
                 instance: Err("instance was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
                 project: Ok(None),
+                sort_by: Ok(None),
             }
         }
 
@@ -80858,6 +80715,26 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -80872,6 +80749,17 @@ pub mod builder {
             self
         }
 
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
         /// Sends a `GET` request to `/v1/instances/{instance}/multicast-groups`
         pub async fn send(
             self,
@@ -80880,10 +80768,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
+                limit,
+                page_token,
                 project,
+                sort_by,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/multicast-groups",
                 client.baseurl,
@@ -80902,7 +80796,13 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
                 .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
@@ -80923,6 +80823,55 @@ pub mod builder {
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
+
+        /// Streams `GET` requests to
+        /// `/v1/instances/{instance}/multicast-groups`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::MulticastGroupMember, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
     }
 
     /// Builder for [`ClientExperimentalExt::instance_multicast_group_join`]
@@ -80932,8 +80881,9 @@ pub mod builder {
     pub struct InstanceMulticastGroupJoin<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        multicast_group: Result<types::NameOrId, String>,
+        multicast_group: Result<types::MulticastGroupIdentifier, String>,
         project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::InstanceMulticastGroupJoin, String>,
     }
 
     impl<'a> InstanceMulticastGroupJoin<'a> {
@@ -80943,6 +80893,7 @@ pub mod builder {
                 instance: Err("instance was not initialized".to_string()),
                 multicast_group: Err("multicast_group was not initialized".to_string()),
                 project: Ok(None),
+                body: Ok(::std::default::Default::default()),
             }
         }
 
@@ -80958,11 +80909,11 @@ pub mod builder {
 
         pub fn multicast_group<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NameOrId>,
+            V: std::convert::TryInto<types::MulticastGroupIdentifier>,
         {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self.multicast_group = value.try_into().map_err(|_| {
+                "conversion to `MulticastGroupIdentifier` for multicast_group failed".to_string()
+            });
             self
         }
 
@@ -80977,6 +80928,31 @@ pub mod builder {
             self
         }
 
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InstanceMulticastGroupJoin>,
+            <V as std::convert::TryInto<types::InstanceMulticastGroupJoin>>::Error:
+                std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `InstanceMulticastGroupJoin` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::InstanceMulticastGroupJoin,
+            ) -> types::builder::InstanceMulticastGroupJoin,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
         /// Sends a `PUT` request to
         /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
         pub async fn send(
@@ -80987,10 +80963,16 @@ pub mod builder {
                 instance,
                 multicast_group,
                 project,
+                body,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::InstanceMulticastGroupJoin::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/multicast-groups/{}",
                 client.baseurl,
@@ -81010,6 +80992,7 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
@@ -81040,7 +81023,7 @@ pub mod builder {
     pub struct InstanceMulticastGroupLeave<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        multicast_group: Result<types::NameOrId, String>,
+        multicast_group: Result<types::MulticastGroupIdentifier, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
@@ -81066,11 +81049,11 @@ pub mod builder {
 
         pub fn multicast_group<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NameOrId>,
+            V: std::convert::TryInto<types::MulticastGroupIdentifier>,
         {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self.multicast_group = value.try_into().map_err(|_| {
+                "conversion to `MulticastGroupIdentifier` for multicast_group failed".to_string()
+            });
             self
         }
 
@@ -84930,99 +84913,13 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::multicast_group_create`]
-    ///
-    /// [`ClientExperimentalExt::multicast_group_create`]: super::ClientExperimentalExt::multicast_group_create
-    #[derive(Debug, Clone)]
-    pub struct MulticastGroupCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::MulticastGroupCreate, String>,
-    }
-
-    impl<'a> MulticastGroupCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::MulticastGroupCreate>,
-            <V as std::convert::TryInto<types::MulticastGroupCreate>>::Error: std::fmt::Display,
-        {
-            self.body = value.try_into().map(From::from).map_err(|s| {
-                format!(
-                    "conversion to `MulticastGroupCreate` for body failed: {}",
-                    s
-                )
-            });
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::MulticastGroupCreate,
-            ) -> types::builder::MulticastGroupCreate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/multicast-groups`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(|v| types::MulticastGroupCreate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/multicast-groups", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "multicast_group_create",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     /// Builder for [`ClientExperimentalExt::multicast_group_view`]
     ///
     /// [`ClientExperimentalExt::multicast_group_view`]: super::ClientExperimentalExt::multicast_group_view
     #[derive(Debug, Clone)]
     pub struct MulticastGroupView<'a> {
         client: &'a super::Client,
-        multicast_group: Result<types::NameOrId, String>,
+        multicast_group: Result<types::MulticastGroupIdentifier, String>,
     }
 
     impl<'a> MulticastGroupView<'a> {
@@ -85035,11 +84932,11 @@ pub mod builder {
 
         pub fn multicast_group<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NameOrId>,
+            V: std::convert::TryInto<types::MulticastGroupIdentifier>,
         {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self.multicast_group = value.try_into().map_err(|_| {
+                "conversion to `MulticastGroupIdentifier` for multicast_group failed".to_string()
+            });
             self
         }
 
@@ -85092,194 +84989,13 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::multicast_group_update`]
-    ///
-    /// [`ClientExperimentalExt::multicast_group_update`]: super::ClientExperimentalExt::multicast_group_update
-    #[derive(Debug, Clone)]
-    pub struct MulticastGroupUpdate<'a> {
-        client: &'a super::Client,
-        multicast_group: Result<types::NameOrId, String>,
-        body: Result<types::builder::MulticastGroupUpdate, String>,
-    }
-
-    impl<'a> MulticastGroupUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                multicast_group: Err("multicast_group was not initialized".to_string()),
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn multicast_group<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::MulticastGroupUpdate>,
-            <V as std::convert::TryInto<types::MulticastGroupUpdate>>::Error: std::fmt::Display,
-        {
-            self.body = value.try_into().map(From::from).map_err(|s| {
-                format!(
-                    "conversion to `MulticastGroupUpdate` for body failed: {}",
-                    s
-                )
-            });
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::MulticastGroupUpdate,
-            ) -> types::builder::MulticastGroupUpdate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `PUT` request to `/v1/multicast-groups/{multicast_group}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
-            let Self {
-                client,
-                multicast_group,
-                body,
-            } = self;
-            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::MulticastGroupUpdate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/multicast-groups/{}",
-                client.baseurl,
-                encode_path(&multicast_group.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .put(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "multicast_group_update",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::multicast_group_delete`]
-    ///
-    /// [`ClientExperimentalExt::multicast_group_delete`]: super::ClientExperimentalExt::multicast_group_delete
-    #[derive(Debug, Clone)]
-    pub struct MulticastGroupDelete<'a> {
-        client: &'a super::Client,
-        multicast_group: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> MulticastGroupDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                multicast_group: Err("multicast_group was not initialized".to_string()),
-            }
-        }
-
-        pub fn multicast_group<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
-            self
-        }
-
-        /// Sends a `DELETE` request to `/v1/multicast-groups/{multicast_group}`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                multicast_group,
-            } = self;
-            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/multicast-groups/{}",
-                client.baseurl,
-                encode_path(&multicast_group.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .delete(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "multicast_group_delete",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     /// Builder for [`ClientExperimentalExt::multicast_group_member_list`]
     ///
     /// [`ClientExperimentalExt::multicast_group_member_list`]: super::ClientExperimentalExt::multicast_group_member_list
     #[derive(Debug, Clone)]
     pub struct MulticastGroupMemberList<'a> {
         client: &'a super::Client,
-        multicast_group: Result<types::NameOrId, String>,
+        multicast_group: Result<types::MulticastGroupIdentifier, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -85298,11 +85014,11 @@ pub mod builder {
 
         pub fn multicast_group<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NameOrId>,
+            V: std::convert::TryInto<types::MulticastGroupIdentifier>,
         {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self.multicast_group = value.try_into().map_err(|_| {
+                "conversion to `MulticastGroupIdentifier` for multicast_group failed".to_string()
+            });
             self
         }
 
@@ -85445,238 +85161,6 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::multicast_group_member_add`]
-    ///
-    /// [`ClientExperimentalExt::multicast_group_member_add`]: super::ClientExperimentalExt::multicast_group_member_add
-    #[derive(Debug, Clone)]
-    pub struct MulticastGroupMemberAdd<'a> {
-        client: &'a super::Client,
-        multicast_group: Result<types::NameOrId, String>,
-        project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::builder::MulticastGroupMemberAdd, String>,
-    }
-
-    impl<'a> MulticastGroupMemberAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                multicast_group: Err("multicast_group was not initialized".to_string()),
-                project: Ok(None),
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn multicast_group<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
-            self
-        }
-
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::MulticastGroupMemberAdd>,
-            <V as std::convert::TryInto<types::MulticastGroupMemberAdd>>::Error: std::fmt::Display,
-        {
-            self.body = value.try_into().map(From::from).map_err(|s| {
-                format!(
-                    "conversion to `MulticastGroupMemberAdd` for body failed: {}",
-                    s
-                )
-            });
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::MulticastGroupMemberAdd,
-            ) -> types::builder::MulticastGroupMemberAdd,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/multicast-groups/{multicast_group}/members`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::MulticastGroupMember>, Error<types::Error>> {
-            let Self {
-                client,
-                multicast_group,
-                project,
-                body,
-            } = self;
-            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| {
-                    types::MulticastGroupMemberAdd::try_from(v).map_err(|e| e.to_string())
-                })
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/multicast-groups/{}/members",
-                client.baseurl,
-                encode_path(&multicast_group.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .query(&progenitor_client::QueryParam::new("project", &project))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "multicast_group_member_add",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::multicast_group_member_remove`]
-    ///
-    /// [`ClientExperimentalExt::multicast_group_member_remove`]: super::ClientExperimentalExt::multicast_group_member_remove
-    #[derive(Debug, Clone)]
-    pub struct MulticastGroupMemberRemove<'a> {
-        client: &'a super::Client,
-        multicast_group: Result<types::NameOrId, String>,
-        instance: Result<types::NameOrId, String>,
-        project: Result<Option<types::NameOrId>, String>,
-    }
-
-    impl<'a> MulticastGroupMemberRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                multicast_group: Err("multicast_group was not initialized".to_string()),
-                instance: Err("instance was not initialized".to_string()),
-                project: Ok(None),
-            }
-        }
-
-        pub fn multicast_group<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.multicast_group = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
-            self
-        }
-
-        pub fn instance<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.instance = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        /// Sends a `DELETE` request to
-        /// `/v1/multicast-groups/{multicast_group}/members/{instance}`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                multicast_group,
-                instance,
-                project,
-            } = self;
-            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
-            let instance = instance.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/multicast-groups/{}/members/{}",
-                client.baseurl,
-                encode_path(&multicast_group.to_string()),
-                encode_path(&instance.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .delete(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("project", &project))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "multicast_group_member_remove",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
         }
     }
 
@@ -92946,80 +92430,6 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::lookup_multicast_group_by_ip`]
-    ///
-    /// [`ClientExperimentalExt::lookup_multicast_group_by_ip`]: super::ClientExperimentalExt::lookup_multicast_group_by_ip
-    #[derive(Debug, Clone)]
-    pub struct LookupMulticastGroupByIp<'a> {
-        client: &'a super::Client,
-        address: Result<::std::net::IpAddr, String>,
-    }
-
-    impl<'a> LookupMulticastGroupByIp<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                address: Err("address was not initialized".to_string()),
-            }
-        }
-
-        pub fn address<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::net::IpAddr>,
-        {
-            self.address = value.try_into().map_err(|_| {
-                "conversion to `:: std :: net :: IpAddr` for address failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/v1/system/multicast-groups/by-ip/{address}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
-            let Self { client, address } = self;
-            let address = address.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/multicast-groups/by-ip/{}",
-                client.baseurl,
-                encode_path(&address.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "lookup_multicast_group_by_ip",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
         }
     }
 
