@@ -158,13 +158,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::CurrentUserSshKeyDelete => Self::cli_current_user_ssh_key_delete(),
             CliCommand::SiloMetric => Self::cli_silo_metric(),
             CliCommand::MulticastGroupList => Self::cli_multicast_group_list(),
-            CliCommand::MulticastGroupCreate => Self::cli_multicast_group_create(),
             CliCommand::MulticastGroupView => Self::cli_multicast_group_view(),
-            CliCommand::MulticastGroupUpdate => Self::cli_multicast_group_update(),
-            CliCommand::MulticastGroupDelete => Self::cli_multicast_group_delete(),
             CliCommand::MulticastGroupMemberList => Self::cli_multicast_group_member_list(),
-            CliCommand::MulticastGroupMemberAdd => Self::cli_multicast_group_member_add(),
-            CliCommand::MulticastGroupMemberRemove => Self::cli_multicast_group_member_remove(),
             CliCommand::InstanceNetworkInterfaceList => Self::cli_instance_network_interface_list(),
             CliCommand::InstanceNetworkInterfaceCreate => {
                 Self::cli_instance_network_interface_create()
@@ -245,7 +240,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
             CliCommand::IpPoolServiceRangeRemove => Self::cli_ip_pool_service_range_remove(),
             CliCommand::SystemMetric => Self::cli_system_metric(),
-            CliCommand::LookupMulticastGroupByIp => Self::cli_lookup_multicast_group_by_ip(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
             CliCommand::NetworkingAddressLotView => Self::cli_networking_address_lot_view(),
@@ -539,12 +533,6 @@ impl<T: CliConfig> Cli<T> {
                     .long("description")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("ip-pool")
-                    .long("ip-pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false),
             )
             .arg(
                 ::clap::Arg::new("name")
@@ -2039,49 +2027,10 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
-                ::clap::Arg::new("ip")
-                    .long("ip")
-                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
-                    .required(false)
-                    .help(
-                        "An IP address to reserve for use as a floating IP. This field is \
-                         optional: when not set, an address will be automatically chosen from \
-                         `pool`. If set, then the IP must be available in the resolved `pool`.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("ip-version")
-                    .long("ip-version")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::IpVersion::V4.to_string(),
-                            types::IpVersion::V6.to_string(),
-                        ]),
-                        |s| types::IpVersion::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help(
-                        "IP version to use when allocating from the default pool. Only used when \
-                         both `ip` and `pool` are not specified. Required if multiple default \
-                         pools of different IP versions exist. Allocation fails if no pool of the \
-                         requested version is available.",
-                    ),
-            )
-            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("pool")
-                    .long("pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "The parent IP pool that a floating IP is pulled from. If unset, the \
-                         default pool is selected.",
-                    ),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -2993,34 +2942,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
-                ::clap::Arg::new("ip-version")
-                    .long("ip-version")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::IpVersion::V4.to_string(),
-                            types::IpVersion::V6.to_string(),
-                        ]),
-                        |s| types::IpVersion::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help(
-                        "IP version to use when allocating from the default pool. Only used when \
-                         `pool` is not specified. Required if multiple default pools of different \
-                         IP versions exist. Allocation fails if no pool of the requested version \
-                         is available.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("pool")
-                    .long("pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "Name or ID of the IP pool used to allocate an address. If unspecified, \
-                         the default IP pool will be used.",
-                    ),
-            )
-            .arg(
                 ::clap::Arg::new("project")
                     .long("project")
                     .value_parser(::clap::value_parser!(types::NameOrId))
@@ -3073,13 +2994,31 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
                 ::clap::Arg::new("project")
                     .long("project")
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("List multicast groups for instance")
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List multicast groups for an instance.")
     }
 
     pub fn cli_instance_multicast_group_join() -> ::clap::Command {
@@ -3092,11 +3031,27 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "IP version for pool selection when creating a group by name. Required if \
+                         both IPv4 and IPv6 default multicast pools are linked.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("multicast-group")
                     .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::MulticastGroupIdentifier))
                     .required(true)
-                    .help("Name or ID of the multicast group"),
+                    .help("Name, ID, or IP address of the multicast group"),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -3105,11 +3060,40 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Join multicast group.")
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Join a multicast group.")
             .long_about(
                 "This is functionally equivalent to adding the instance via the group's member \
                  management endpoint or updating the instance's `multicast_groups` field. All \
-                 approaches modify the same membership and trigger reconciliation.",
+                 approaches modify the same membership and trigger \
+                 reconciliation.\n\nAuthorization: requires Modify on the instance identified in \
+                 the URL path (checked first) and Read on the multicast group. Checking instance \
+                 permission first prevents creating orphaned groups when the instance check \
+                 fails.\n\nGroup Identification: Groups can be referenced by name, IP address, or \
+                 UUID. All three are fleet-wide unique identifiers: - By name: If group doesn't \
+                 exist, it's implicitly created with an auto-allocated IP from a multicast pool \
+                 linked to the caller's silo. Pool selection prefers the default pool; if none, \
+                 selects alphabetically. - By IP: If group doesn't exist, it's implicitly created \
+                 using that IP. The pool is determined by which pool contains the IP. - By UUID: \
+                 Group must already exist.\n\nSource IP filtering: - Duplicate IPs in the request \
+                 are automatically deduplicated. - Maximum of 64 source IPs allowed (per RFC \
+                 3376, IGMPv3). - ASM: Sources are optional. Providing sources enables source \
+                 filtering via IGMPv3/MLDv2 even for ASM addresses. - SSM: Sources are required. \
+                 SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6) must have at least one \
+                 source specified.",
             )
     }
 
@@ -3125,9 +3109,9 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("multicast-group")
                     .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::MulticastGroupIdentifier))
                     .required(true)
-                    .help("Name or ID of the multicast group"),
+                    .help("Name, ID, or IP address of the multicast group"),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -3136,11 +3120,14 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Leave multicast group.")
+            .about("Leave a multicast group.")
             .long_about(
-                "This is functionally equivalent to removing the instance via the group's member \
-                 management endpoint or updating the instance's `multicast_groups` field. All \
-                 approaches modify the same membership and trigger reconciliation.",
+                "The group can be specified by name, UUID, or multicast IP address. All three are \
+                 fleet-wide unique identifiers.\n\nThis is functionally equivalent to removing \
+                 the instance via the group's member management endpoint or updating the \
+                 instance's `multicast_groups` field. All approaches modify the same membership \
+                 and trigger reconciliation.\n\nAuthorization: requires Modify on the instance \
+                 (checked first) and Read on the multicast group.",
             )
     }
 
@@ -4121,75 +4108,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List all multicast groups.")
-    }
-
-    pub fn cli_multicast_group_create() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("multicast-ip")
-                    .long("multicast-ip")
-                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
-                    .required(false)
-                    .help(
-                        "The multicast IP address to allocate. If None, one will be allocated \
-                         from the default pool.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("mvlan")
-                    .long("mvlan")
-                    .value_parser(::clap::value_parser!(u16))
-                    .required(false)
-                    .help(
-                        "Multicast VLAN (MVLAN) for egress multicast traffic to upstream \
-                         networks. Tags packets leaving the rack to traverse VLAN-segmented \
-                         upstream networks.\n\nValid range: 2-4094 (VLAN IDs 0-1 are reserved by \
-                         IEEE 802.1Q standard).",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("name")
-                    .long("name")
-                    .value_parser(::clap::value_parser!(types::Name))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("pool")
-                    .long("pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "Name or ID of the IP pool to allocate from. If None, uses the default \
-                         multicast pool.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Create a multicast group.")
-            .long_about(
-                "Multicast groups are fleet-scoped resources that can be joined by instances \
-                 across projects and silos. A single multicast IP serves all group members \
-                 regardless of project or silo boundaries.",
-            )
+            .about("List multicast groups.")
     }
 
     pub fn cli_multicast_group_view() -> ::clap::Command {
@@ -4197,72 +4116,15 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("multicast-group")
                     .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::MulticastGroupIdentifier))
                     .required(true)
-                    .help("Name or ID of the multicast group"),
+                    .help("Name, ID, or IP address of the multicast group"),
             )
             .about("Fetch a multicast group.")
-    }
-
-    pub fn cli_multicast_group_update() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(false),
+            .long_about(
+                "The group can be specified by name, UUID, or multicast IP address. (e.g., \
+                 \"224.1.2.3\" or \"ff38::1\").",
             )
-            .arg(
-                ::clap::Arg::new("multicast-group")
-                    .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the multicast group"),
-            )
-            .arg(
-                ::clap::Arg::new("mvlan")
-                    .long("mvlan")
-                    .value_parser(::clap::value_parser!(u16))
-                    .required(false)
-                    .help(
-                        "Multicast VLAN (MVLAN) for egress multicast traffic to upstream \
-                         networks. Set to null to clear the MVLAN. Valid range: 2-4094 when \
-                         provided. Omit the field to leave mvlan unchanged.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("name")
-                    .long("name")
-                    .value_parser(::clap::value_parser!(types::Name))
-                    .required(false),
-            )
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Update a multicast group.")
-    }
-
-    pub fn cli_multicast_group_delete() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("multicast-group")
-                    .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the multicast group"),
-            )
-            .about("Delete a multicast group.")
     }
 
     pub fn cli_multicast_group_member_list() -> ::clap::Command {
@@ -4277,9 +4139,9 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("multicast-group")
                     .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::MulticastGroupIdentifier))
                     .required(true)
-                    .help("Name or ID of the multicast group"),
+                    .help("Name, ID, or IP address of the multicast group"),
             )
             .arg(
                 ::clap::Arg::new("sort-by")
@@ -4293,84 +4155,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .about("List members of a multicast group.")
-    }
-
-    pub fn cli_multicast_group_member_add() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("instance")
-                    .long("instance")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required_unless_present("json-body")
-                    .help("Name or ID of the instance to add to the multicast group"),
-            )
-            .arg(
-                ::clap::Arg::new("multicast-group")
-                    .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the multicast group"),
-            )
-            .arg(
-                ::clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
-            )
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Add instance to a multicast group.")
-            .long_about(
-                "Functionally equivalent to updating the instance's `multicast_groups` field. \
-                 Both approaches modify the same underlying membership and trigger the same \
-                 reconciliation logic.\n\nSpecify instance by name (requires `?project=<name>`) \
-                 or UUID.",
-            )
-    }
-
-    pub fn cli_multicast_group_member_remove() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("instance")
-                    .long("instance")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the instance"),
-            )
-            .arg(
-                ::clap::Arg::new("multicast-group")
-                    .long("multicast-group")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the multicast group"),
-            )
-            .arg(
-                ::clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
-            )
-            .about("Remove instance from a multicast group.")
-            .long_about(
-                "Functionally equivalent to removing the group from the instance's \
-                 `multicast_groups` field. Both approaches modify the same underlying membership \
-                 and trigger reconciliation.\n\nSpecify instance by name (requires \
-                 `?project=<name>`) or UUID.",
-            )
+            .long_about("The group can be specified by name, UUID, or multicast IP address.")
     }
 
     pub fn cli_instance_network_interface_list() -> ::clap::Command {
@@ -4429,16 +4214,6 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
-            )
-            .arg(
-                ::clap::Arg::new("ip")
-                    .long("ip")
-                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
-                    .required(false)
-                    .help(
-                        "The IP address for the interface. One will be auto-assigned if not \
-                         provided.",
-                    ),
             )
             .arg(
                 ::clap::Arg::new("name")
@@ -6289,18 +6064,6 @@ impl<T: CliConfig> Cli<T> {
             .long_about(
                 "View CPU, memory, or storage utilization metrics at the fleet or silo level.",
             )
-    }
-
-    pub fn cli_lookup_multicast_group_by_ip() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("address")
-                    .long("address")
-                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
-                    .required(true)
-                    .help("IP address of the multicast group"),
-            )
-            .about("Look up multicast group by IP address.")
     }
 
     pub fn cli_networking_address_lot_list() -> ::clap::Command {
@@ -9243,18 +9006,9 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SiloMetric => self.execute_silo_metric(matches).await,
             CliCommand::MulticastGroupList => self.execute_multicast_group_list(matches).await,
-            CliCommand::MulticastGroupCreate => self.execute_multicast_group_create(matches).await,
             CliCommand::MulticastGroupView => self.execute_multicast_group_view(matches).await,
-            CliCommand::MulticastGroupUpdate => self.execute_multicast_group_update(matches).await,
-            CliCommand::MulticastGroupDelete => self.execute_multicast_group_delete(matches).await,
             CliCommand::MulticastGroupMemberList => {
                 self.execute_multicast_group_member_list(matches).await
-            }
-            CliCommand::MulticastGroupMemberAdd => {
-                self.execute_multicast_group_member_add(matches).await
-            }
-            CliCommand::MulticastGroupMemberRemove => {
-                self.execute_multicast_group_member_remove(matches).await
             }
             CliCommand::InstanceNetworkInterfaceList => {
                 self.execute_instance_network_interface_list(matches).await
@@ -9372,9 +9126,6 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_ip_pool_service_range_remove(matches).await
             }
             CliCommand::SystemMetric => self.execute_system_metric(matches).await,
-            CliCommand::LookupMulticastGroupByIp => {
-                self.execute_lookup_multicast_group_by_ip(matches).await
-            }
             CliCommand::NetworkingAddressLotList => {
                 self.execute_networking_address_lot_list(matches).await
             }
@@ -9713,10 +9464,6 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.probe_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("ip-pool") {
-            request = request.body_map(|body| body.ip_pool(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -11608,20 +11355,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<::std::net::IpAddr>("ip") {
-            request = request.body_map(|body| body.ip(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
-            request = request.body_map(|body| body.ip_version(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
-            request = request.body_map(|body| body.pool(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -12534,14 +12269,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
-            request = request.body_map(|body| body.ip_version(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
-            request = request.body_map(|body| body.pool(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -12606,21 +12333,42 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
         self.config
             .execute_instance_multicast_group_list(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
+        self.config
+            .list_start::<types::MulticastGroupMemberResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::MulticastGroupMemberResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -12634,12 +12382,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.body_map(|body| body.ip_version(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::MulticastGroupIdentifier>("multicast-group") {
             request = request.multicast_group(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InstanceMulticastGroupJoin>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
         }
 
         self.config
@@ -12666,7 +12426,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+        if let Some(value) = matches.get_one::<types::MulticastGroupIdentifier>("multicast-group") {
             request = request.multicast_group(value.clone());
         }
 
@@ -13796,60 +13556,12 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_multicast_group_create(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.multicast_group_create();
-        if let Some(value) = matches.get_one::<::std::string::String>("description") {
-            request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<::std::net::IpAddr>("multicast-ip") {
-            request = request.body_map(|body| body.multicast_ip(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u16>("mvlan") {
-            request = request.body_map(|body| body.mvlan(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("name") {
-            request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
-            request = request.body_map(|body| body.pool(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::MulticastGroupCreate>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_multicast_group_create(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
     pub async fn execute_multicast_group_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.multicast_group_view();
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+        if let Some(value) = matches.get_one::<types::MulticastGroupIdentifier>("multicast-group") {
             request = request.multicast_group(value.clone());
         }
 
@@ -13868,74 +13580,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_multicast_group_update(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.multicast_group_update();
-        if let Some(value) = matches.get_one::<::std::string::String>("description") {
-            request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
-            request = request.multicast_group(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<u16>("mvlan") {
-            request = request.body_map(|body| body.mvlan(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("name") {
-            request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::MulticastGroupUpdate>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_multicast_group_update(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_multicast_group_delete(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.multicast_group_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
-            request = request.multicast_group(value.clone());
-        }
-
-        self.config
-            .execute_multicast_group_delete(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
     pub async fn execute_multicast_group_member_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -13945,7 +13589,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+        if let Some(value) = matches.get_one::<types::MulticastGroupIdentifier>("multicast-group") {
             request = request.multicast_group(value.clone());
         }
 
@@ -13977,78 +13621,6 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
-            }
-        }
-    }
-
-    pub async fn execute_multicast_group_member_add(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.multicast_group_member_add();
-        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
-            request = request.body_map(|body| body.instance(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
-            request = request.multicast_group(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::MulticastGroupMemberAdd>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_multicast_group_member_add(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_multicast_group_member_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.multicast_group_member_remove();
-        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
-            request = request.instance(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
-            request = request.multicast_group(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
-        self.config
-            .execute_multicast_group_member_remove(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -14113,10 +13685,6 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::net::IpAddr>("ip") {
-            request = request.body_map(|body| body.ip(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -16274,30 +15842,6 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
-            }
-        }
-    }
-
-    pub async fn execute_lookup_multicast_group_by_ip(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.lookup_multicast_group_by_ip();
-        if let Some(value) = matches.get_one::<::std::net::IpAddr>("address") {
-            request = request.address(value.clone());
-        }
-
-        self.config
-            .execute_lookup_multicast_group_by_ip(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -20563,14 +20107,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_multicast_group_create(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::MulticastGroupCreate,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_multicast_group_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -20579,42 +20115,10 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_multicast_group_update(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::MulticastGroupUpdate,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_multicast_group_delete(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::MulticastGroupDelete,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_multicast_group_member_list(
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::MulticastGroupMemberList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_multicast_group_member_add(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::MulticastGroupMemberAdd,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_multicast_group_member_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::MulticastGroupMemberRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -21127,14 +20631,6 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::SystemMetric,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_lookup_multicast_group_by_ip(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::LookupMulticastGroupByIp,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -22046,13 +21542,8 @@ pub enum CliCommand {
     CurrentUserSshKeyDelete,
     SiloMetric,
     MulticastGroupList,
-    MulticastGroupCreate,
     MulticastGroupView,
-    MulticastGroupUpdate,
-    MulticastGroupDelete,
     MulticastGroupMemberList,
-    MulticastGroupMemberAdd,
-    MulticastGroupMemberRemove,
     InstanceNetworkInterfaceList,
     InstanceNetworkInterfaceCreate,
     InstanceNetworkInterfaceView,
@@ -22117,7 +21608,6 @@ pub enum CliCommand {
     IpPoolServiceRangeAdd,
     IpPoolServiceRangeRemove,
     SystemMetric,
-    LookupMulticastGroupByIp,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
     NetworkingAddressLotView,
@@ -22341,13 +21831,8 @@ impl CliCommand {
             CliCommand::CurrentUserSshKeyDelete,
             CliCommand::SiloMetric,
             CliCommand::MulticastGroupList,
-            CliCommand::MulticastGroupCreate,
             CliCommand::MulticastGroupView,
-            CliCommand::MulticastGroupUpdate,
-            CliCommand::MulticastGroupDelete,
             CliCommand::MulticastGroupMemberList,
-            CliCommand::MulticastGroupMemberAdd,
-            CliCommand::MulticastGroupMemberRemove,
             CliCommand::InstanceNetworkInterfaceList,
             CliCommand::InstanceNetworkInterfaceCreate,
             CliCommand::InstanceNetworkInterfaceView,
@@ -22412,7 +21897,6 @@ impl CliCommand {
             CliCommand::IpPoolServiceRangeAdd,
             CliCommand::IpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
-            CliCommand::LookupMulticastGroupByIp,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotView,

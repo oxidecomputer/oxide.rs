@@ -3320,10 +3320,6 @@
                   "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "ip",
-                  "help": "The IP address for the interface. One will be auto-assigned if not provided."
-                },
-                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
