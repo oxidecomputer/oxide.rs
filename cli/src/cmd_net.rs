@@ -1574,7 +1574,7 @@ impl CmdPortStatus {
         for p in ports {
             let status = c
                 .networking_switch_port_status()
-                .port(&p.port_name)
+                .port(p.port_name.clone())
                 .rack_id(p.rack_id)
                 .switch_location(sw)
                 .send()

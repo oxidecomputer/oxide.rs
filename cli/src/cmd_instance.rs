@@ -254,16 +254,16 @@ pub struct CmdInstanceFromImage {
 impl crate::AuthenticatedCmd for CmdInstanceFromImage {
     async fn run(&self, client: &Client) -> Result<()> {
         // Validate the image and get its ID (if specified by name).
-        let mut image_request = client.image_view().image(&self.image);
+        let mut image_request = client.image_view().image(self.image.clone());
         // We only need the project if the image is specified by name.
         if let NameOrId::Name(_) = &self.image {
-            image_request = image_request.project(&self.project);
+            image_request = image_request.project(self.project.clone());
         };
         let image_view = image_request.send().await?;
 
         let instance = client
             .instance_create()
-            .project(&self.project)
+            .project(self.project.clone())
             .body_map(|body| {
                 body.name(self.name.clone())
                     .description(self.description.clone())
