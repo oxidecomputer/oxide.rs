@@ -744,16 +744,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProbeView => Some("experimental system probe view"),
 
         CliCommand::MulticastGroupList => Some("experimental multicast-group list"),
-        CliCommand::MulticastGroupCreate => Some("experimental multicast-group create"),
         CliCommand::MulticastGroupView => Some("experimental multicast-group view"),
-        CliCommand::MulticastGroupDelete => Some("experimental multicast-group delete"),
-        CliCommand::MulticastGroupUpdate => Some("experimental multicast-group update"),
         CliCommand::MulticastGroupMemberList => Some("experimental multicast-group member list"),
-        CliCommand::MulticastGroupMemberAdd => Some("experimental multicast-group member add"),
-        CliCommand::MulticastGroupMemberRemove => {
-            Some("experimental multicast-group member remove")
-        }
-        CliCommand::LookupMulticastGroupByIp => Some("experimental multicast-group lookup-by-ip"),
 
         // Metrics-related subcommands
         CliCommand::TimeseriesQuery => Some("experimental timeseries query"),

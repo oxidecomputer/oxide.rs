@@ -1708,16 +1708,32 @@
               "subcommands": [
                 {
                   "name": "join",
-                  "about": "Join multicast group.",
-                  "long_about": "This is functionally equivalent to adding the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.",
+                  "about": "Join a multicast group.",
+                  "long_about": "This is functionally equivalent to adding the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.\n\nAuthorization: requires Modify on the instance identified in the URL path (checked first) and Read on the multicast group. Checking instance permission first prevents creating orphaned groups when the instance check fails.\n\nGroup Identification: Groups can be referenced by name, IP address, or UUID. All three are fleet-wide unique identifiers: - By name: If group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. Pool selection prefers the default pool; if none, selects alphabetically. - By IP: If group doesn't exist, it's implicitly created using that IP. The pool is determined by which pool contains the IP. - By UUID: Group must already exist.\n\nSource IP filtering: - Duplicate IPs in the request are automatically deduplicated. - Maximum of 64 source IPs allowed (per RFC 3376, IGMPv3). - ASM: Sources are optional. Providing sources enables source filtering via IGMPv3/MLDv2 even for ASM addresses. - SSM: Sources are required. SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6) must have at least one source specified.",
                   "args": [
                     {
                       "long": "instance",
                       "help": "Name or ID of the instance"
                     },
                     {
+                      "long": "ip-version",
+                      "values": [
+                        "v4",
+                        "v6"
+                      ],
+                      "help": "IP version for pool selection when creating a group by name. Required if both IPv4 and IPv6 default multicast pools are linked."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
                       "long": "multicast-group",
-                      "help": "Name or ID of the multicast group"
+                      "help": "Name, ID, or IP address of the multicast group"
                     },
                     {
                       "long": "profile",
@@ -1732,8 +1748,8 @@
                 },
                 {
                   "name": "leave",
-                  "about": "Leave multicast group.",
-                  "long_about": "This is functionally equivalent to removing the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.",
+                  "about": "Leave a multicast group.",
+                  "long_about": "The group can be specified by name, UUID, or multicast IP address. All three are fleet-wide unique identifiers.\n\nThis is functionally equivalent to removing the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.\n\nAuthorization: requires Modify on the instance (checked first) and Read on the multicast group.",
                   "args": [
                     {
                       "long": "instance",
@@ -1741,7 +1757,7 @@
                     },
                     {
                       "long": "multicast-group",
-                      "help": "Name or ID of the multicast group"
+                      "help": "Name, ID, or IP address of the multicast group"
                     },
                     {
                       "long": "profile",
@@ -1756,11 +1772,15 @@
                 },
                 {
                   "name": "list",
-                  "about": "List multicast groups for instance",
+                  "about": "List multicast groups for an instance.",
                   "args": [
                     {
                       "long": "instance",
                       "help": "Name or ID of the instance"
+                    },
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
                     },
                     {
                       "long": "profile",
@@ -1770,6 +1790,12 @@
                     {
                       "long": "project",
                       "help": "Name or ID of the project"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
                     }
                   ]
                 }
@@ -1788,61 +1814,8 @@
           ],
           "subcommands": [
             {
-              "name": "create",
-              "about": "Create a multicast group.",
-              "long_about": "Multicast groups are fleet-scoped resources that can be joined by instances across projects and silos. A single multicast IP serves all group members regardless of project or silo boundaries.",
-              "args": [
-                {
-                  "long": "description"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "multicast-ip",
-                  "help": "The multicast IP address to allocate. If None, one will be allocated from the default pool."
-                },
-                {
-                  "long": "mvlan",
-                  "help": "Multicast VLAN (MVLAN) for egress multicast traffic to upstream networks. Tags packets leaving the rack to traverse VLAN-segmented upstream networks.\n\nValid range: 2-4094 (VLAN IDs 0-1 are reserved by IEEE 802.1Q standard)."
-                },
-                {
-                  "long": "name"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool to allocate from. If None, uses the default multicast pool."
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
-              "name": "delete",
-              "about": "Delete a multicast group.",
-              "args": [
-                {
-                  "long": "multicast-group",
-                  "help": "Name or ID of the multicast group"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
               "name": "list",
-              "about": "List all multicast groups.",
+              "about": "List multicast groups.",
               "args": [
                 {
                   "long": "limit",
@@ -1864,21 +1837,6 @@
               ]
             },
             {
-              "name": "lookup-by-ip",
-              "about": "Look up multicast group by IP address.",
-              "args": [
-                {
-                  "long": "address",
-                  "help": "IP address of the multicast group"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
               "name": "member",
               "args": [
                 {
@@ -1889,40 +1847,9 @@
               ],
               "subcommands": [
                 {
-                  "name": "add",
-                  "about": "Add instance to a multicast group.",
-                  "long_about": "Functionally equivalent to updating the instance's `multicast_groups` field. Both approaches modify the same underlying membership and trigger the same reconciliation logic.\n\nSpecify instance by name (requires `?project=<name>`) or UUID.",
-                  "args": [
-                    {
-                      "long": "instance",
-                      "help": "Name or ID of the instance to add to the multicast group"
-                    },
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "multicast-group",
-                      "help": "Name or ID of the multicast group"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    },
-                    {
-                      "long": "project",
-                      "help": "Name or ID of the project"
-                    }
-                  ]
-                },
-                {
                   "name": "list",
                   "about": "List members of a multicast group.",
+                  "long_about": "The group can be specified by name, UUID, or multicast IP address.",
                   "args": [
                     {
                       "long": "limit",
@@ -1930,7 +1857,7 @@
                     },
                     {
                       "long": "multicast-group",
-                      "help": "Name or ID of the multicast group"
+                      "help": "Name, ID, or IP address of the multicast group"
                     },
                     {
                       "long": "profile",
@@ -1944,73 +1871,17 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "name": "remove",
-                  "about": "Remove instance from a multicast group.",
-                  "long_about": "Functionally equivalent to removing the group from the instance's `multicast_groups` field. Both approaches modify the same underlying membership and trigger reconciliation.\n\nSpecify instance by name (requires `?project=<name>`) or UUID.",
-                  "args": [
-                    {
-                      "long": "instance",
-                      "help": "Name or ID of the instance"
-                    },
-                    {
-                      "long": "multicast-group",
-                      "help": "Name or ID of the multicast group"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    },
-                    {
-                      "long": "project",
-                      "help": "Name or ID of the project"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "update",
-              "about": "Update a multicast group.",
-              "args": [
-                {
-                  "long": "description"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "multicast-group",
-                  "help": "Name or ID of the multicast group"
-                },
-                {
-                  "long": "mvlan",
-                  "help": "Multicast VLAN (MVLAN) for egress multicast traffic to upstream networks. Set to null to clear the MVLAN. Valid range: 2-4094 when provided. Omit the field to leave mvlan unchanged."
-                },
-                {
-                  "long": "name"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
                 }
               ]
             },
             {
               "name": "view",
               "about": "Fetch a multicast group.",
+              "long_about": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
               "args": [
                 {
                   "long": "multicast-group",
-                  "help": "Name or ID of the multicast group"
+                  "help": "Name, ID, or IP address of the multicast group"
                 },
                 {
                   "long": "profile",
@@ -2047,9 +1918,6 @@
                   "args": [
                     {
                       "long": "description"
-                    },
-                    {
-                      "long": "ip-pool"
                     },
                     {
                       "long": "json-body",
@@ -2327,18 +2195,6 @@
               "long": "description"
             },
             {
-              "long": "ip",
-              "help": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`."
-            },
-            {
-              "long": "ip-version",
-              "values": [
-                "v4",
-                "v6"
-              ],
-              "help": "IP version to use when allocating from the default pool. Only used when both `ip` and `pool` are not specified. Required if multiple default pools of different IP versions exist. Allocation fails if no pool of the requested version is available."
-            },
-            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },
@@ -2348,10 +2204,6 @@
             },
             {
               "long": "name"
-            },
-            {
-              "long": "pool",
-              "help": "The parent IP pool that a floating IP is pulled from. If unset, the default pool is selected."
             },
             {
               "long": "profile",
@@ -3154,24 +3006,12 @@
                   "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "ip-version",
-                  "values": [
-                    "v4",
-                    "v6"
-                  ],
-                  "help": "IP version to use when allocating from the default pool. Only used when `pool` is not specified. Required if multiple default pools of different IP versions exist. Allocation fails if no pool of the requested version is available."
-                },
-                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
                 {
                   "long": "json-body-template",
                   "help": "XXX"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool used to allocate an address. If unspecified, the default IP pool will be used."
                 },
                 {
                   "long": "profile",
@@ -3318,10 +3158,6 @@
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
-                },
-                {
-                  "long": "ip",
-                  "help": "The IP address for the interface. One will be auto-assigned if not provided."
                 },
                 {
                   "long": "json-body",

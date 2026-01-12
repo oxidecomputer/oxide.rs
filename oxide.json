@@ -7,7 +7,7 @@
       "url": "https://oxide.computer",
       "email": "api@oxide.computer"
     },
-    "version": "2026010100.0.0"
+    "version": "2026010800.0.0"
   },
   "paths": {
     "/device/auth": {
@@ -4283,15 +4283,42 @@
         "tags": [
           "experimental"
         ],
-        "summary": "List multicast groups for instance",
+        "summary": "List multicast groups for an instance.",
         "operationId": "instance_multicast_group_list",
         "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Maximum number of items returned by a single call",
+            "schema": {
+              "nullable": true,
+              "type": "integer",
+              "format": "uint32",
+              "minimum": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "description": "Token returned by previous call to retrieve the subsequent page",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
           {
             "in": "query",
             "name": "project",
             "description": "Name or ID of the project",
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "schema": {
+              "$ref": "#/components/schemas/IdSortMode"
             }
           },
           {
@@ -4321,6 +4348,9 @@
           "5XX": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "x-dropshot-pagination": {
+          "required": []
         }
       }
     },
@@ -4329,8 +4359,8 @@
         "tags": [
           "experimental"
         ],
-        "summary": "Join multicast group.",
-        "description": "This is functionally equivalent to adding the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.",
+        "summary": "Join a multicast group.",
+        "description": "This is functionally equivalent to adding the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.\n\nAuthorization: requires Modify on the instance identified in the URL path (checked first) and Read on the multicast group. Checking instance permission first prevents creating orphaned groups when the instance check fails.\n\nGroup Identification: Groups can be referenced by name, IP address, or UUID. All three are fleet-wide unique identifiers: - By name: If group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. Pool selection prefers the default pool; if none, selects alphabetically. - By IP: If group doesn't exist, it's implicitly created using that IP. The pool is determined by which pool contains the IP. - By UUID: Group must already exist.\n\nSource IP filtering: - Duplicate IPs in the request are automatically deduplicated. - Maximum of 64 source IPs allowed (per RFC 3376, IGMPv3). - ASM: Sources are optional. Providing sources enables source filtering via IGMPv3/MLDv2 even for ASM addresses. - SSM: Sources are required. SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6) must have at least one source specified.",
         "operationId": "instance_multicast_group_join",
         "parameters": [
           {
@@ -4345,10 +4375,10 @@
           {
             "in": "path",
             "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
+            "description": "Name, ID, or IP address of the multicast group",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/NameOrId"
+              "$ref": "#/components/schemas/MulticastGroupIdentifier"
             }
           },
           {
@@ -4360,6 +4390,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstanceMulticastGroupJoin"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "successful creation",
@@ -4383,8 +4423,8 @@
         "tags": [
           "experimental"
         ],
-        "summary": "Leave multicast group.",
-        "description": "This is functionally equivalent to removing the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.",
+        "summary": "Leave a multicast group.",
+        "description": "The group can be specified by name, UUID, or multicast IP address. All three are fleet-wide unique identifiers.\n\nThis is functionally equivalent to removing the instance via the group's member management endpoint or updating the instance's `multicast_groups` field. All approaches modify the same membership and trigger reconciliation.\n\nAuthorization: requires Modify on the instance (checked first) and Read on the multicast group.",
         "operationId": "instance_multicast_group_leave",
         "parameters": [
           {
@@ -4399,10 +4439,10 @@
           {
             "in": "path",
             "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
+            "description": "Name, ID, or IP address of the multicast group",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/NameOrId"
+              "$ref": "#/components/schemas/MulticastGroupIdentifier"
             }
           },
           {
@@ -6033,7 +6073,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "List all multicast groups.",
+        "summary": "List multicast groups.",
         "operationId": "multicast_group_list",
         "parameters": [
           {
@@ -6085,42 +6125,6 @@
         "x-dropshot-pagination": {
           "required": []
         }
-      },
-      "post": {
-        "tags": [
-          "experimental"
-        ],
-        "summary": "Create a multicast group.",
-        "description": "Multicast groups are fleet-scoped resources that can be joined by instances across projects and silos. A single multicast IP serves all group members regardless of project or silo boundaries.",
-        "operationId": "multicast_group_create",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MulticastGroupCreate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "successful creation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MulticastGroup"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
-        }
       }
     },
     "/v1/multicast-groups/{multicast_group}": {
@@ -6129,15 +6133,16 @@
           "experimental"
         ],
         "summary": "Fetch a multicast group.",
+        "description": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
         "operationId": "multicast_group_view",
         "parameters": [
           {
             "in": "path",
             "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
+            "description": "Name, ID, or IP address of the multicast group",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/NameOrId"
+              "$ref": "#/components/schemas/MulticastGroupIdentifier"
             }
           }
         ],
@@ -6151,81 +6156,6 @@
                 }
               }
             }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "experimental"
-        ],
-        "summary": "Update a multicast group.",
-        "operationId": "multicast_group_update",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MulticastGroupUpdate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MulticastGroup"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "experimental"
-        ],
-        "summary": "Delete a multicast group.",
-        "operationId": "multicast_group_delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "successful deletion"
           },
           "4XX": {
             "$ref": "#/components/responses/Error"
@@ -6242,15 +6172,16 @@
           "experimental"
         ],
         "summary": "List members of a multicast group.",
+        "description": "The group can be specified by name, UUID, or multicast IP address.",
         "operationId": "multicast_group_member_list",
         "parameters": [
           {
             "in": "path",
             "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
+            "description": "Name, ID, or IP address of the multicast group",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/NameOrId"
+              "$ref": "#/components/schemas/MulticastGroupIdentifier"
             }
           },
           {
@@ -6301,110 +6232,6 @@
         },
         "x-dropshot-pagination": {
           "required": []
-        }
-      },
-      "post": {
-        "tags": [
-          "experimental"
-        ],
-        "summary": "Add instance to a multicast group.",
-        "description": "Functionally equivalent to updating the instance's `multicast_groups` field. Both approaches modify the same underlying membership and trigger the same reconciliation logic.\n\nSpecify instance by name (requires `?project=<name>`) or UUID.",
-        "operationId": "multicast_group_member_add",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          },
-          {
-            "in": "query",
-            "name": "project",
-            "description": "Name or ID of the project",
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MulticastGroupMemberAdd"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "successful creation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MulticastGroupMember"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
-        }
-      }
-    },
-    "/v1/multicast-groups/{multicast_group}/members/{instance}": {
-      "delete": {
-        "tags": [
-          "experimental"
-        ],
-        "summary": "Remove instance from a multicast group.",
-        "description": "Functionally equivalent to removing the group from the instance's `multicast_groups` field. Both approaches modify the same underlying membership and trigger reconciliation.\n\nSpecify instance by name (requires `?project=<name>`) or UUID.",
-        "operationId": "multicast_group_member_remove",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance",
-            "description": "Name or ID of the instance",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          },
-          {
-            "in": "path",
-            "name": "multicast_group",
-            "description": "Name or ID of the multicast group",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          },
-          {
-            "in": "query",
-            "name": "project",
-            "description": "Name or ID of the project",
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "successful deletion"
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
         }
       }
     },
@@ -9619,45 +9446,6 @@
             "end_time",
             "start_time"
           ]
-        }
-      }
-    },
-    "/v1/system/multicast-groups/by-ip/{address}": {
-      "get": {
-        "tags": [
-          "experimental"
-        ],
-        "summary": "Look up multicast group by IP address.",
-        "operationId": "lookup_multicast_group_by_ip",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "address",
-            "description": "IP address of the multicast group",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "ip"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MulticastGroup"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
         }
       }
     },
@@ -14521,6 +14309,68 @@
           "lot"
         ]
       },
+      "AddressSelector": {
+        "description": "Specify how to allocate a floating IP address.",
+        "oneOf": [
+          {
+            "description": "Reserve a specific IP address.",
+            "type": "object",
+            "properties": {
+              "ip": {
+                "description": "The IP address to reserve. Must be available in the pool.",
+                "type": "string",
+                "format": "ip"
+              },
+              "pool": {
+                "nullable": true,
+                "description": "The pool containing this address. If not specified, the default pool for the address's IP version is used.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NameOrId"
+                  }
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "explicit"
+                ]
+              }
+            },
+            "required": [
+              "ip",
+              "type"
+            ]
+          },
+          {
+            "description": "Automatically allocate an IP address from a specified pool.",
+            "type": "object",
+            "properties": {
+              "pool_selector": {
+                "description": "Pool selection.\n\nIf omitted, this field uses the silo's default pool. If the silo has default pools for both IPv4 and IPv6, the request will fail unless `ip_version` is specified in the pool selector.",
+                "default": {
+                  "ip_version": null,
+                  "type": "auto"
+                },
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PoolSelector"
+                  }
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "auto"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        ]
+      },
       "AffinityGroup": {
         "description": "View of an Affinity Group",
         "type": "object",
@@ -18947,22 +18797,15 @@
         "description": "Parameters for creating an ephemeral IP address for an instance.",
         "type": "object",
         "properties": {
-          "ip_version": {
-            "nullable": true,
-            "description": "IP version to use when allocating from the default pool. Only used when `pool` is not specified. Required if multiple default pools of different IP versions exist. Allocation fails if no pool of the requested version is available.",
-            "default": null,
+          "pool_selector": {
+            "description": "Pool to allocate from.",
+            "default": {
+              "ip_version": null,
+              "type": "auto"
+            },
             "allOf": [
               {
-                "$ref": "#/components/schemas/IpVersion"
-              }
-            ]
-          },
-          "pool": {
-            "nullable": true,
-            "description": "Name or ID of the IP pool used to allocate an address. If unspecified, the default IP pool will be used.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrId"
+                "$ref": "#/components/schemas/PoolSelector"
               }
             ]
           }
@@ -19131,24 +18974,18 @@
         "description": "Parameters for creating an external IP address for instances.",
         "oneOf": [
           {
-            "description": "An IP address providing both inbound and outbound access. The address is automatically assigned from the provided IP pool or the default IP pool if not specified.",
+            "description": "An IP address providing both inbound and outbound access. The address is automatically assigned from a pool.",
             "type": "object",
             "properties": {
-              "ip_version": {
-                "nullable": true,
-                "description": "IP version to use when allocating from the default pool. Only used when `pool` is not specified. Required if multiple default pools of different IP versions exist. Allocation fails if no pool of the requested version is available.",
-                "default": null,
+              "pool_selector": {
+                "description": "Pool to allocate from.",
+                "default": {
+                  "ip_version": null,
+                  "type": "auto"
+                },
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/IpVersion"
-                  }
-                ]
-              },
-              "pool": {
-                "nullable": true,
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NameOrId"
+                    "$ref": "#/components/schemas/PoolSelector"
                   }
                 ]
               },
@@ -19656,36 +19493,26 @@
         "description": "Parameters for creating a new floating IP address for instances.",
         "type": "object",
         "properties": {
+          "address_selector": {
+            "description": "IP address allocation method.",
+            "default": {
+              "pool_selector": {
+                "ip_version": null,
+                "type": "auto"
+              },
+              "type": "auto"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressSelector"
+              }
+            ]
+          },
           "description": {
             "type": "string"
           },
-          "ip": {
-            "nullable": true,
-            "description": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`.",
-            "type": "string",
-            "format": "ip"
-          },
-          "ip_version": {
-            "nullable": true,
-            "description": "IP version to use when allocating from the default pool. Only used when both `ip` and `pool` are not specified. Required if multiple default pools of different IP versions exist. Allocation fails if no pool of the requested version is available.",
-            "default": null,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IpVersion"
-              }
-            ]
-          },
           "name": {
             "$ref": "#/components/schemas/Name"
-          },
-          "pool": {
-            "nullable": true,
-            "description": "The parent IP pool that a floating IP is pulled from. If unset, the default pool is selected.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrId"
-              }
-            ]
           }
         },
         "required": [
@@ -21201,11 +21028,11 @@
             ]
           },
           "multicast_groups": {
-            "description": "The multicast groups this instance should join.\n\nThe instance will be automatically added as a member of the specified multicast groups during creation, enabling it to send and receive multicast traffic for those groups.",
+            "description": "Multicast groups this instance should join at creation.\n\nGroups can be specified by name, UUID, or IP address. Non-existent groups are created automatically.",
             "default": [],
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NameOrId"
+              "$ref": "#/components/schemas/MulticastGroupJoinSpec"
             }
           },
           "name": {
@@ -21222,7 +21049,7 @@
           "network_interfaces": {
             "description": "The network interfaces to be created for this instance.",
             "default": {
-              "type": "default"
+              "type": "default_dual_stack"
             },
             "allOf": [
               {
@@ -21328,6 +21155,32 @@
           }
         ]
       },
+      "InstanceMulticastGroupJoin": {
+        "description": "Parameters for joining an instance to a multicast group.\n\nWhen joining by IP address, the pool containing the multicast IP is auto-discovered from all linked multicast pools.",
+        "type": "object",
+        "properties": {
+          "ip_version": {
+            "nullable": true,
+            "description": "IP version for pool selection when creating a group by name. Required if both IPv4 and IPv6 default multicast pools are linked.",
+            "default": null,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IpVersion"
+              }
+            ]
+          },
+          "source_ips": {
+            "nullable": true,
+            "description": "Source IPs for source-filtered multicast (SSM). Optional for ASM groups, required for SSM groups (232.0.0.0/8, ff3x::/32).",
+            "default": null,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "ip"
+            }
+          }
+        }
+      },
       "InstanceNetworkInterface": {
         "description": "An `InstanceNetworkInterface` represents a virtual network interface device attached to an instance.",
         "type": "object",
@@ -21346,10 +21199,13 @@
             "type": "string",
             "format": "uuid"
           },
-          "ip": {
-            "description": "The IP address assigned to this interface.",
-            "type": "string",
-            "format": "ip"
+          "ip_stack": {
+            "description": "The VPC-private IP stack for this interface.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrivateIpStack"
+              }
+            ]
           },
           "mac": {
             "description": "The MAC address assigned to this interface.",
@@ -21386,14 +21242,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "transit_ips": {
-            "description": "A set of additional networks that this interface may send and receive traffic on.",
-            "default": [],
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IpNet"
-            }
-          },
           "vpc_id": {
             "description": "The VPC to which the interface belongs.",
             "type": "string",
@@ -21404,7 +21252,7 @@
           "description",
           "id",
           "instance_id",
-          "ip",
+          "ip_stack",
           "mac",
           "name",
           "primary",
@@ -21440,13 +21288,43 @@
             ]
           },
           {
-            "description": "The default networking configuration for an instance is to create a single primary interface with an automatically-assigned IP address. The IP will be pulled from the Project's default VPC / VPC Subnet.",
+            "description": "Create a single primary interface with an automatically-assigned IPv4 address.\n\nThe IP will be pulled from the Project's default VPC / VPC Subnet.",
             "type": "object",
             "properties": {
               "type": {
                 "type": "string",
                 "enum": [
-                  "default"
+                  "default_ipv4"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "description": "Create a single primary interface with an automatically-assigned IPv6 address.\n\nThe IP will be pulled from the Project's default VPC / VPC Subnet.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "default_ipv6"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "description": "Create a single primary interface with automatically-assigned IPv4 and IPv6 addresses.\n\nThe IPs will be pulled from the Project's default VPC / VPC Subnet.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "default_dual_stack"
                 ]
               }
             },
@@ -21478,11 +21356,30 @@
           "description": {
             "type": "string"
           },
-          "ip": {
-            "nullable": true,
-            "description": "The IP address for the interface. One will be auto-assigned if not provided.",
-            "type": "string",
-            "format": "ip"
+          "ip_config": {
+            "description": "The IP stack configuration for this interface.\n\nIf not provided, a default configuration will be used, which creates a dual-stack IPv4 / IPv6 interface.",
+            "default": {
+              "type": "dual_stack",
+              "value": {
+                "v4": {
+                  "ip": {
+                    "type": "auto"
+                  },
+                  "transit_ips": []
+                },
+                "v6": {
+                  "ip": {
+                    "type": "auto"
+                  },
+                  "transit_ips": []
+                }
+              }
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrivateIpStackCreate"
+              }
+            ]
           },
           "name": {
             "$ref": "#/components/schemas/Name"
@@ -21494,14 +21391,6 @@
                 "$ref": "#/components/schemas/Name"
               }
             ]
-          },
-          "transit_ips": {
-            "description": "A set of additional networks that this interface may send and receive traffic on.",
-            "default": [],
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IpNet"
-            }
           },
           "vpc_name": {
             "description": "The VPC in which to create the interface.",
@@ -21562,7 +21451,7 @@
             "type": "boolean"
           },
           "transit_ips": {
-            "description": "A set of additional networks that this interface may send and receive traffic on.",
+            "description": "A set of additional networks that this interface may send and receive traffic on",
             "default": [],
             "type": "array",
             "items": {
@@ -21733,11 +21622,11 @@
           },
           "multicast_groups": {
             "nullable": true,
-            "description": "Multicast groups this instance should join.\n\nWhen specified, this replaces the instance's current multicast group membership with the new set of groups. The instance will leave any groups not listed here and join any new groups that are specified.\n\nIf not provided (None), the instance's multicast group membership will not be changed.",
+            "description": "Multicast groups this instance should join.\n\nWhen specified, this replaces the instance's current multicast group membership with the new set of groups. The instance will leave any groups not listed here and join any new groups that are specified.\n\nEach entry can specify the group by name, UUID, or IP address, along with optional source IP filtering for SSM (Source-Specific Multicast). When a group doesn't exist, it will be implicitly created using the default multicast pool (or you can specify `ip_version` to disambiguate if needed).\n\nIf not provided, the instance's multicast group membership will not be changed.",
             "default": null,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NameOrId"
+              "$ref": "#/components/schemas/MulticastGroupJoinSpec"
             }
           },
           "ncpus": {
@@ -22415,6 +22304,46 @@
           "v6"
         ]
       },
+      "Ipv4Assignment": {
+        "description": "How a VPC-private IP address is assigned to a network interface.",
+        "oneOf": [
+          {
+            "description": "Automatically assign an IP address from the VPC Subnet.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "auto"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "description": "Explicitly assign a specific address, if available.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "format": "ipv4"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          }
+        ]
+      },
       "Ipv4Net": {
         "example": "192.168.1.0/24",
         "title": "An IPv4 subnet",
@@ -22443,6 +22372,46 @@
         "required": [
           "first",
           "last"
+        ]
+      },
+      "Ipv6Assignment": {
+        "description": "How a VPC-private IP address is assigned to a network interface.",
+        "oneOf": [
+          {
+            "description": "Automatically assign an IP address from the VPC Subnet.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "auto"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "description": "Explicitly assign a specific address, if available.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "format": "ipv6"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          }
         ]
       },
       "Ipv6Net": {
@@ -23079,7 +23048,7 @@
             ]
           },
           "source_ips": {
-            "description": "Source IP addresses for Source-Specific Multicast (SSM). Empty array means any source is allowed.",
+            "description": "Union of all member source IP addresses (computed, read-only).\n\nThis field shows the combined source IPs across all group members. Individual members may subscribe to different sources; this union reflects all sources that any member is subscribed to. Empty array means no members have source filtering enabled.",
             "type": "array",
             "items": {
               "type": "string",
@@ -23113,44 +23082,36 @@
           "time_modified"
         ]
       },
-      "MulticastGroupCreate": {
-        "description": "Create-time parameters for a multicast group.",
+      "MulticastGroupIdentifier": {
+        "title": "A multicast group identifier",
+        "description": "Can be a UUID, a name, or an IP address",
+        "type": "string"
+      },
+      "MulticastGroupJoinSpec": {
+        "description": "Specification for joining a multicast group with optional source filtering.\n\nUsed in `InstanceCreate` and `InstanceUpdate` to specify multicast group membership along with per-member source IP configuration.",
         "type": "object",
         "properties": {
-          "description": {
-            "type": "string"
+          "group": {
+            "description": "The multicast group to join, specified by name, UUID, or IP address.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MulticastGroupIdentifier"
+              }
+            ]
           },
-          "multicast_ip": {
+          "ip_version": {
             "nullable": true,
-            "description": "The multicast IP address to allocate. If None, one will be allocated from the default pool.",
-            "default": null,
-            "type": "string",
-            "format": "ip"
-          },
-          "mvlan": {
-            "nullable": true,
-            "description": "Multicast VLAN (MVLAN) for egress multicast traffic to upstream networks. Tags packets leaving the rack to traverse VLAN-segmented upstream networks.\n\nValid range: 2-4094 (VLAN IDs 0-1 are reserved by IEEE 802.1Q standard).",
-            "default": null,
-            "type": "integer",
-            "format": "uint16",
-            "minimum": 0
-          },
-          "name": {
-            "$ref": "#/components/schemas/Name"
-          },
-          "pool": {
-            "nullable": true,
-            "description": "Name or ID of the IP pool to allocate from. If None, uses the default multicast pool.",
+            "description": "IP version for pool selection when creating a group by name. Required if both IPv4 and IPv6 default multicast pools are linked.",
             "default": null,
             "allOf": [
               {
-                "$ref": "#/components/schemas/NameOrId"
+                "$ref": "#/components/schemas/IpVersion"
               }
             ]
           },
           "source_ips": {
             "nullable": true,
-            "description": "Source IP addresses for Source-Specific Multicast (SSM).\n\nNone uses default behavior (Any-Source Multicast). Empty list explicitly allows any source (Any-Source Multicast). Non-empty list restricts to specific sources (SSM).",
+            "description": "Source IPs for source-filtered multicast (SSM). Optional for ASM groups, required for SSM groups (232.0.0.0/8, ff3x::/32).",
             "default": null,
             "type": "array",
             "items": {
@@ -23160,8 +23121,7 @@
           }
         },
         "required": [
-          "description",
-          "name"
+          "group"
         ]
       },
       "MulticastGroupMember": {
@@ -23187,6 +23147,11 @@
             "type": "string",
             "format": "uuid"
           },
+          "multicast_ip": {
+            "description": "The multicast IP address of the group this member belongs to.",
+            "type": "string",
+            "format": "ip"
+          },
           "name": {
             "description": "unique, mutable, user-controlled identifier for each resource",
             "allOf": [
@@ -23194,6 +23159,14 @@
                 "$ref": "#/components/schemas/Name"
               }
             ]
+          },
+          "source_ips": {
+            "description": "Source IP addresses for this member's multicast subscription.\n\n- **ASM**: Sources are optional. Empty array means any source is allowed. Non-empty array enables source filtering (IGMPv3/MLDv2). - **SSM**: Sources are required for SSM addresses (232/8, ff3x::/32).",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "ip"
+            }
           },
           "state": {
             "description": "Current state of the multicast group membership.",
@@ -23215,27 +23188,12 @@
           "id",
           "instance_id",
           "multicast_group_id",
+          "multicast_ip",
           "name",
+          "source_ips",
           "state",
           "time_created",
           "time_modified"
-        ]
-      },
-      "MulticastGroupMemberAdd": {
-        "description": "Parameters for adding an instance to a multicast group.",
-        "type": "object",
-        "properties": {
-          "instance": {
-            "description": "Name or ID of the instance to add to the multicast group",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrId"
-              }
-            ]
-          }
-        },
-        "required": [
-          "instance"
         ]
       },
       "MulticastGroupMemberResultsPage": {
@@ -23279,39 +23237,6 @@
         "required": [
           "items"
         ]
-      },
-      "MulticastGroupUpdate": {
-        "description": "Update-time parameters for a multicast group.",
-        "type": "object",
-        "properties": {
-          "description": {
-            "nullable": true,
-            "type": "string"
-          },
-          "mvlan": {
-            "nullable": true,
-            "description": "Multicast VLAN (MVLAN) for egress multicast traffic to upstream networks. Set to null to clear the MVLAN. Valid range: 2-4094 when provided. Omit the field to leave mvlan unchanged.",
-            "type": "integer",
-            "format": "uint16",
-            "minimum": 0
-          },
-          "name": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Name"
-              }
-            ]
-          },
-          "source_ips": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "ip"
-            }
-          }
-        }
       },
       "Name": {
         "title": "A name unique within the parent collection",
@@ -23384,9 +23309,8 @@
             "type": "string",
             "format": "uuid"
           },
-          "ip": {
-            "type": "string",
-            "format": "ip"
+          "ip_config": {
+            "$ref": "#/components/schemas/PrivateIpConfig"
           },
           "kind": {
             "$ref": "#/components/schemas/NetworkInterfaceKind"
@@ -23405,29 +23329,18 @@
             "format": "uint8",
             "minimum": 0
           },
-          "subnet": {
-            "$ref": "#/components/schemas/IpNet"
-          },
-          "transit_ips": {
-            "default": [],
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IpNet"
-            }
-          },
           "vni": {
             "$ref": "#/components/schemas/Vni"
           }
         },
         "required": [
           "id",
-          "ip",
+          "ip_config",
           "kind",
           "mac",
           "name",
           "primary",
           "slot",
-          "subnet",
           "vni"
         ]
       },
@@ -23741,6 +23654,448 @@
           "values"
         ]
       },
+      "PoolSelector": {
+        "description": "Specify which IP pool to allocate from.",
+        "oneOf": [
+          {
+            "description": "Use the specified pool by name or ID.",
+            "type": "object",
+            "properties": {
+              "pool": {
+                "description": "The pool to allocate from.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NameOrId"
+                  }
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "explicit"
+                ]
+              }
+            },
+            "required": [
+              "pool",
+              "type"
+            ]
+          },
+          {
+            "description": "Use the default pool for the silo.",
+            "type": "object",
+            "properties": {
+              "ip_version": {
+                "nullable": true,
+                "description": "IP version to use when multiple default pools exist. Required if both IPv4 and IPv6 default pools are configured.",
+                "default": null,
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/IpVersion"
+                  }
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "auto"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        ]
+      },
+      "PrivateIpConfig": {
+        "description": "VPC-private IP address configuration for a network interface.",
+        "oneOf": [
+          {
+            "description": "The interface has only an IPv4 configuration.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "v4"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/PrivateIpv4Config"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          },
+          {
+            "description": "The interface has only an IPv6 configuration.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "v6"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/PrivateIpv6Config"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          },
+          {
+            "description": "The interface is dual-stack.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "dual_stack"
+                ]
+              },
+              "value": {
+                "type": "object",
+                "properties": {
+                  "v4": {
+                    "description": "The interface's IPv4 configuration.",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/PrivateIpv4Config"
+                      }
+                    ]
+                  },
+                  "v6": {
+                    "description": "The interface's IPv6 configuration.",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/PrivateIpv6Config"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "v4",
+                  "v6"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          }
+        ]
+      },
+      "PrivateIpStack": {
+        "description": "The VPC-private IP stack for a network interface.",
+        "oneOf": [
+          {
+            "description": "The interface has only an IPv4 stack.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "v4"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/PrivateIpv4Stack"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          },
+          {
+            "description": "The interface has only an IPv6 stack.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "v6"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/PrivateIpv6Stack"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          },
+          {
+            "description": "The interface is dual-stack IPv4 and IPv6.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "dual_stack"
+                ]
+              },
+              "value": {
+                "type": "object",
+                "properties": {
+                  "v4": {
+                    "$ref": "#/components/schemas/PrivateIpv4Stack"
+                  },
+                  "v6": {
+                    "$ref": "#/components/schemas/PrivateIpv6Stack"
+                  }
+                },
+                "required": [
+                  "v4",
+                  "v6"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          }
+        ]
+      },
+      "PrivateIpStackCreate": {
+        "description": "Create parameters for a network interface's IP stack.",
+        "oneOf": [
+          {
+            "description": "The interface has only an IPv4 stack.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "v4"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/PrivateIpv4StackCreate"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          },
+          {
+            "description": "The interface has only an IPv6 stack.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "v6"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/PrivateIpv6StackCreate"
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          },
+          {
+            "description": "The interface has both an IPv4 and IPv6 stack.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "dual_stack"
+                ]
+              },
+              "value": {
+                "type": "object",
+                "properties": {
+                  "v4": {
+                    "$ref": "#/components/schemas/PrivateIpv4StackCreate"
+                  },
+                  "v6": {
+                    "$ref": "#/components/schemas/PrivateIpv6StackCreate"
+                  }
+                },
+                "required": [
+                  "v4",
+                  "v6"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "value"
+            ]
+          }
+        ]
+      },
+      "PrivateIpv4Config": {
+        "description": "VPC-private IPv4 configuration for a network interface.",
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "VPC-private IP address.",
+            "type": "string",
+            "format": "ipv4"
+          },
+          "subnet": {
+            "description": "The IP subnet.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Ipv4Net"
+              }
+            ]
+          },
+          "transit_ips": {
+            "description": "Additional networks on which the interface can send / receive traffic.",
+            "default": [],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ipv4Net"
+            }
+          }
+        },
+        "required": [
+          "ip",
+          "subnet"
+        ]
+      },
+      "PrivateIpv4Stack": {
+        "description": "The VPC-private IPv4 stack for a network interface",
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The VPC-private IPv4 address for the interface.",
+            "type": "string",
+            "format": "ipv4"
+          },
+          "transit_ips": {
+            "description": "A set of additional IPv4 networks that this interface may send and receive traffic on.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ipv4Net"
+            }
+          }
+        },
+        "required": [
+          "ip",
+          "transit_ips"
+        ]
+      },
+      "PrivateIpv4StackCreate": {
+        "description": "Configuration for a network interface's IPv4 addressing.",
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The VPC-private address to assign to the interface.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Ipv4Assignment"
+              }
+            ]
+          },
+          "transit_ips": {
+            "description": "Additional IP networks the interface can send / receive on.",
+            "default": [],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ipv4Net"
+            }
+          }
+        },
+        "required": [
+          "ip"
+        ]
+      },
+      "PrivateIpv6Config": {
+        "description": "VPC-private IPv6 configuration for a network interface.",
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "VPC-private IP address.",
+            "type": "string",
+            "format": "ipv6"
+          },
+          "subnet": {
+            "description": "The IP subnet.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Ipv6Net"
+              }
+            ]
+          },
+          "transit_ips": {
+            "description": "Additional networks on which the interface can send / receive traffic.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ipv6Net"
+            }
+          }
+        },
+        "required": [
+          "ip",
+          "subnet",
+          "transit_ips"
+        ]
+      },
+      "PrivateIpv6Stack": {
+        "description": "The VPC-private IPv6 stack for a network interface",
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The VPC-private IPv6 address for the interface.",
+            "type": "string",
+            "format": "ipv6"
+          },
+          "transit_ips": {
+            "description": "A set of additional IPv6 networks that this interface may send and receive traffic on.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ipv6Net"
+            }
+          }
+        },
+        "required": [
+          "ip",
+          "transit_ips"
+        ]
+      },
+      "PrivateIpv6StackCreate": {
+        "description": "Configuration for a network interface's IPv6 addressing.",
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The VPC-private address to assign to the interface.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Ipv6Assignment"
+              }
+            ]
+          },
+          "transit_ips": {
+            "description": "Additional IP networks the interface can send / receive on.",
+            "default": [],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ipv6Net"
+            }
+          }
+        },
+        "required": [
+          "ip"
+        ]
+      },
       "Probe": {
         "description": "Identity-related metadata that's included in nearly all public API objects",
         "type": "object",
@@ -23793,16 +24148,20 @@
           "description": {
             "type": "string"
           },
-          "ip_pool": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NameOrId"
-              }
-            ]
-          },
           "name": {
             "$ref": "#/components/schemas/Name"
+          },
+          "pool_selector": {
+            "description": "Pool to allocate from.",
+            "default": {
+              "ip_version": null,
+              "type": "auto"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PoolSelector"
+              }
+            ]
           },
           "sled": {
             "type": "string",

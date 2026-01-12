@@ -25,7 +25,7 @@
   "name": "name",
   "ncpus": 4,
   "network_interfaces": {
-    "type": "default"
+    "type": "default_dual_stack"
   },
   "start": true,
   "user_data": ""
