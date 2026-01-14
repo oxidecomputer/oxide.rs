@@ -64704,7 +64704,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026011100.0.0
+/// Version: 2026011300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64745,7 +64745,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026011100.0.0"
+        "2026011300.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -65211,7 +65211,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_list(&self) -> builder::DiskList<'_>;
-    /// Create a disk
+    /// Create disk
     ///
     /// Sends a `POST` request to `/v1/disks`
     ///
@@ -65456,7 +65456,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_create(&self) -> builder::SupportBundleCreate<'_>;
-    /// View a support bundle
+    /// View support bundle
     ///
     /// Sends a `GET` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}`
@@ -65806,7 +65806,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_multicast_group_list(&self) -> builder::InstanceMulticastGroupList<'_>;
-    /// Join a multicast group by name, IP address, or UUID
+    /// Join multicast group by name, IP address, or UUID
     ///
     /// Groups can be referenced by name, IP address, or UUID. If the group
     /// doesn't exist, it's implicitly created with an auto-allocated IP from a
@@ -65835,7 +65835,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_multicast_group_join(&self) -> builder::InstanceMulticastGroupJoin<'_>;
-    /// Leave a multicast group by name, IP address, or UUID
+    /// Leave multicast group by name, IP address, or UUID
     ///
     /// Sends a `DELETE` request to
     /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
@@ -65871,7 +65871,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_list(&self) -> builder::MulticastGroupList<'_>;
-    /// Fetch a multicast group
+    /// Fetch multicast group
     ///
     /// The group can be specified by name, UUID, or multicast IP address.
     /// (e.g., "224.1.2.3" or "ff38::1").
@@ -65887,7 +65887,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_view(&self) -> builder::MulticastGroupView<'_>;
-    /// List members of a multicast group
+    /// List members of multicast group
     ///
     /// The group can be specified by name, UUID, or multicast IP address.
     ///
@@ -66563,7 +66563,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach<'_>;
-    /// Reboot an instance
+    /// Reboot instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
     ///
@@ -67072,7 +67072,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_view(&self) -> builder::ProjectView<'_>;
-    /// Update a project
+    /// Update project
     ///
     /// Sends a `PUT` request to `/v1/projects/{project}`
     ///
@@ -67971,7 +67971,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn physical_disk_list(&self) -> builder::PhysicalDiskList<'_>;
-    /// Get a physical disk
+    /// Get physical disk
     ///
     /// Sends a `GET` request to `/v1/system/hardware/disks/{disk_id}`
     ///
@@ -68415,7 +68415,7 @@ pub trait ClientSystemIpPoolsExt {
     ///    .await;
     /// ```
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList<'_>;
-    /// Add range to IP pool
+    /// Add range to an IP pool
     ///
     /// IPv6 ranges are not allowed yet for unicast pools.
     ///
@@ -68916,7 +68916,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate<'_>;
-    /// Disable a BFD session
+    /// Disable BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
     ///
@@ -68927,7 +68927,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable<'_>;
-    /// Enable a BFD session
+    /// Enable BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-enable`
     ///
@@ -69601,7 +69601,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_list(&self) -> builder::SiloList<'_>;
-    /// Create a silo
+    /// Create silo
     ///
     /// Sends a `POST` request to `/v1/system/silos`
     ///
@@ -69627,7 +69627,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_view(&self) -> builder::SiloView<'_>;
-    /// Delete a silo
+    /// Delete silo
     ///
     /// Delete a silo by name or ID.
     ///
@@ -70840,7 +70840,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_view(&self) -> builder::VpcView<'_>;
-    /// Update a VPC
+    /// Update VPC
     ///
     /// Sends a `PUT` request to `/v1/vpcs/{vpc}`
     ///

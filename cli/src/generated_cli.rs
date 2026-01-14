@@ -667,7 +667,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the support bundle"),
             )
-            .about("View a support bundle")
+            .about("View support bundle")
     }
 
     pub fn cli_support_bundle_update() -> ::clap::Command {
@@ -1815,7 +1815,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a disk")
+            .about("Create disk")
     }
 
     pub fn cli_disk_view() -> ::clap::Command {
@@ -3018,7 +3018,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List multicast groups for an instance.")
+            .about("List multicast groups for an instance")
     }
 
     pub fn cli_instance_multicast_group_join() -> ::clap::Command {
@@ -3074,7 +3074,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Join a multicast group by name, IP address, or UUID.")
+            .about("Join multicast group by name, IP address, or UUID")
             .long_about(
                 "Groups can be referenced by name, IP address, or UUID. If the group doesn't \
                  exist, it's implicitly created with an auto-allocated IP from a multicast pool \
@@ -3108,7 +3108,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Leave a multicast group by name, IP address, or UUID.")
+            .about("Leave multicast group by name, IP address, or UUID")
     }
 
     pub fn cli_instance_reboot() -> ::clap::Command {
@@ -3127,7 +3127,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Reboot an instance")
+            .about("Reboot instance")
     }
 
     pub fn cli_instance_serial_console() -> ::clap::Command {
@@ -4088,7 +4088,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List multicast groups.")
+            .about("List multicast groups")
     }
 
     pub fn cli_multicast_group_view() -> ::clap::Command {
@@ -4100,7 +4100,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name, ID, or IP address of the multicast group"),
             )
-            .about("Fetch a multicast group.")
+            .about("Fetch multicast group")
             .long_about(
                 "The group can be specified by name, UUID, or multicast IP address. (e.g., \
                  \"224.1.2.3\" or \"ff38::1\").",
@@ -4134,7 +4134,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List members of a multicast group.")
+            .about("List members of multicast group")
             .long_about("The group can be specified by name, UUID, or multicast IP address.")
     }
 
@@ -4508,7 +4508,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a project")
+            .about("Update project")
     }
 
     pub fn cli_project_delete() -> ::clap::Command {
@@ -4764,7 +4764,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the physical disk"),
             )
-            .about("Get a physical disk")
+            .about("Get physical disk")
     }
 
     pub fn cli_networking_switch_port_lldp_neighbors() -> ::clap::Command {
@@ -5726,7 +5726,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add range to IP pool.")
+            .about("Add range to an IP pool")
             .long_about(
                 "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all \
                  ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast \
@@ -6222,7 +6222,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Disable a BFD session")
+            .about("Disable BFD session")
     }
 
     pub fn cli_networking_bfd_enable() -> ::clap::Command {
@@ -6299,7 +6299,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Enable a BFD session")
+            .about("Enable BFD session")
     }
 
     pub fn cli_networking_bfd_status() -> ::clap::Command {
@@ -6980,7 +6980,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a silo")
+            .about("Create silo")
     }
 
     pub fn cli_silo_view() -> ::clap::Command {
@@ -7005,7 +7005,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Delete a silo")
+            .about("Delete silo")
             .long_about("Delete a silo by name or ID.")
     }
 
@@ -8593,7 +8593,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a VPC")
+            .about("Update VPC")
     }
 
     pub fn cli_vpc_delete() -> ::clap::Command {

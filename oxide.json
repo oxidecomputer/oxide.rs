@@ -7,7 +7,7 @@
       "url": "https://oxide.computer",
       "email": "api@oxide.computer"
     },
-    "version": "2026011100.0.0"
+    "version": "2026011300.0.0"
   },
   "paths": {
     "/device/auth": {
@@ -400,7 +400,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "View a support bundle",
+        "summary": "View support bundle",
         "operationId": "support_bundle_view",
         "parameters": [
           {
@@ -2496,7 +2496,7 @@
         "tags": [
           "disks"
         ],
-        "summary": "Create a disk",
+        "summary": "Create disk",
         "operationId": "disk_create",
         "parameters": [
           {
@@ -4283,7 +4283,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "List multicast groups for an instance.",
+        "summary": "List multicast groups for an instance",
         "operationId": "instance_multicast_group_list",
         "parameters": [
           {
@@ -4359,7 +4359,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "Join a multicast group by name, IP address, or UUID.",
+        "summary": "Join multicast group by name, IP address, or UUID",
         "description": "Groups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.\n\nSource IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
         "operationId": "instance_multicast_group_join",
         "parameters": [
@@ -4423,7 +4423,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "Leave a multicast group by name, IP address, or UUID.",
+        "summary": "Leave multicast group by name, IP address, or UUID",
         "operationId": "instance_multicast_group_leave",
         "parameters": [
           {
@@ -4471,7 +4471,7 @@
         "tags": [
           "instances"
         ],
-        "summary": "Reboot an instance",
+        "summary": "Reboot instance",
         "operationId": "instance_reboot",
         "parameters": [
           {
@@ -6072,7 +6072,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "List multicast groups.",
+        "summary": "List multicast groups",
         "operationId": "multicast_group_list",
         "parameters": [
           {
@@ -6131,7 +6131,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "Fetch a multicast group.",
+        "summary": "Fetch multicast group",
         "description": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
         "operationId": "multicast_group_view",
         "parameters": [
@@ -6170,7 +6170,7 @@
         "tags": [
           "experimental"
         ],
-        "summary": "List members of a multicast group.",
+        "summary": "List members of multicast group",
         "description": "The group can be specified by name, UUID, or multicast IP address.",
         "operationId": "multicast_group_member_list",
         "parameters": [
@@ -6752,7 +6752,7 @@
         "tags": [
           "projects"
         ],
-        "summary": "Update a project",
+        "summary": "Update project",
         "operationId": "project_update",
         "parameters": [
           {
@@ -7252,7 +7252,7 @@
         "tags": [
           "system/hardware"
         ],
-        "summary": "Get a physical disk",
+        "summary": "Get physical disk",
         "operationId": "physical_disk_view",
         "parameters": [
           {
@@ -8871,7 +8871,7 @@
         "tags": [
           "system/ip-pools"
         ],
-        "summary": "Add range to IP pool.",
+        "summary": "Add range to an IP pool",
         "description": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
         "operationId": "ip_pool_range_add",
         "parameters": [
@@ -9744,7 +9744,7 @@
         "tags": [
           "system/networking"
         ],
-        "summary": "Disable a BFD session",
+        "summary": "Disable BFD session",
         "operationId": "networking_bfd_disable",
         "requestBody": {
           "content": {
@@ -9774,7 +9774,7 @@
         "tags": [
           "system/networking"
         ],
-        "summary": "Enable a BFD session",
+        "summary": "Enable BFD session",
         "operationId": "networking_bfd_enable",
         "requestBody": {
           "content": {
@@ -10997,7 +10997,7 @@
         "tags": [
           "system/silos"
         ],
-        "summary": "Create a silo",
+        "summary": "Create silo",
         "operationId": "silo_create",
         "requestBody": {
           "content": {
@@ -11071,7 +11071,7 @@
         "tags": [
           "system/silos"
         ],
-        "summary": "Delete a silo",
+        "summary": "Delete silo",
         "description": "Delete a silo by name or ID.",
         "operationId": "silo_delete",
         "parameters": [
@@ -13725,7 +13725,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "Update a VPC",
+        "summary": "Update VPC",
         "operationId": "vpc_update",
         "parameters": [
           {
