@@ -3104,6 +3104,16 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "credential_id": {
+    ///      "description": "ID of the credential used for authentication. Null
+    /// for unauthenticated requests. The value of `auth_method` indicates what
+    /// kind of credential it is (access token, session, or SCIM token).",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
     ///    "id": {
     ///      "description": "Unique identifier for the audit log entry",
     ///      "type": "string",
@@ -3168,6 +3178,11 @@ pub mod types {
         /// SCIM token). Null for unauthenticated requests like login attempts.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub auth_method: ::std::option::Option<AuthMethod>,
+        /// ID of the credential used for authentication. Null for
+        /// unauthenticated requests. The value of `auth_method` indicates what
+        /// kind of credential it is (access token, session, or SCIM token).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub credential_id: ::std::option::Option<::uuid::Uuid>,
         /// Unique identifier for the audit log entry
         pub id: ::uuid::Uuid,
         /// API endpoint ID, e.g., `project_create`
@@ -39790,6 +39805,8 @@ pub mod types {
                 ::std::option::Option<super::AuthMethod>,
                 ::std::string::String,
             >,
+            credential_id:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             operation_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             request_id: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -39815,6 +39832,7 @@ pub mod types {
                 Self {
                     actor: Err("no value supplied for actor".to_string()),
                     auth_method: Ok(Default::default()),
+                    credential_id: Ok(Default::default()),
                     id: Err("no value supplied for id".to_string()),
                     operation_id: Err("no value supplied for operation_id".to_string()),
                     request_id: Err("no value supplied for request_id".to_string()),
@@ -39847,6 +39865,16 @@ pub mod types {
                 self.auth_method = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for auth_method: {}", e));
+                self
+            }
+            pub fn credential_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.credential_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for credential_id: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -39949,6 +39977,7 @@ pub mod types {
                 Ok(Self {
                     actor: value.actor?,
                     auth_method: value.auth_method?,
+                    credential_id: value.credential_id?,
                     id: value.id?,
                     operation_id: value.operation_id?,
                     request_id: value.request_id?,
@@ -39967,6 +39996,7 @@ pub mod types {
                 Self {
                     actor: Ok(value.actor),
                     auth_method: Ok(value.auth_method),
+                    credential_id: Ok(value.credential_id),
                     id: Ok(value.id),
                     operation_id: Ok(value.operation_id),
                     request_id: Ok(value.request_id),
@@ -64825,7 +64855,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026011500.0.0
+/// Version: 2026011501.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64866,7 +64896,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026011500.0.0"
+        "2026011501.0.0"
     }
 
     fn baseurl(&self) -> &str {

@@ -7,7 +7,7 @@
       "url": "https://oxide.computer",
       "email": "api@oxide.computer"
     },
-    "version": "2026011500.0.0"
+    "version": "2026011501.0.0"
   },
   "paths": {
     "/device/auth": {
@@ -15246,6 +15246,12 @@
                 "$ref": "#/components/schemas/AuthMethod"
               }
             ]
+          },
+          "credential_id": {
+            "nullable": true,
+            "description": "ID of the credential used for authentication. Null for unauthenticated requests. The value of `auth_method` indicates what kind of credential it is (access token, session, or SCIM token).",
+            "type": "string",
+            "format": "uuid"
           },
           "id": {
             "description": "Unique identifier for the audit log entry",
