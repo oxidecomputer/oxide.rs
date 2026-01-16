@@ -12,7 +12,7 @@ resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1.0.100"
-assert_cmd = "2.1.1"
+assert_cmd = "2.1.2"
 async-trait = "0.1.89"
 base64 = "0.22.1"
 built = { version = "0.8.0", features = ["git2"] }
