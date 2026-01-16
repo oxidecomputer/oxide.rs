@@ -3088,10 +3088,20 @@ pub mod types {
     ///      "$ref": "#/components/schemas/AuditLogEntryActor"
     ///    },
     ///    "auth_method": {
-    ///      "description": "How the user authenticated the request. Possible values are \"session_cookie\" and \"access_token\". Optional because it will not be defined on unauthenticated requests like login attempts.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
+    ///      "description": "How the user authenticated the request (access
+    /// token, session, or SCIM token). Null for unauthenticated requests like
+    /// login attempts.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/AuthMethod"
+    ///            }
+    ///          ]
+    ///        }
     ///      ]
     ///    },
     ///    "id": {
@@ -3154,11 +3164,10 @@ pub mod types {
     )]
     pub struct AuditLogEntry {
         pub actor: AuditLogEntryActor,
-        /// How the user authenticated the request. Possible values are
-        /// "session_cookie" and "access_token". Optional because it will not be
-        /// defined on unauthenticated requests like login attempts.
+        /// How the user authenticated the request (access token, session, or
+        /// SCIM token). Null for unauthenticated requests like login attempts.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub auth_method: ::std::option::Option<::std::string::String>,
+        pub auth_method: ::std::option::Option<AuthMethod>,
         /// Unique identifier for the audit log entry
         pub id: ::uuid::Uuid,
         /// API endpoint ID, e.g., `project_create`
@@ -3471,6 +3480,118 @@ pub mod types {
     impl AuditLogEntryResultsPage {
         pub fn builder() -> builder::AuditLogEntryResultsPage {
             Default::default()
+        }
+    }
+
+    /// Authentication method used for a request
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Authentication method used for a request",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Console session cookie",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "session_cookie"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Device access token (OAuth 2.0 device authorization
+    /// flow)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "access_token"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "SCIM client bearer token",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "scim_token"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum AuthMethod {
+        /// Console session cookie
+        #[serde(rename = "session_cookie")]
+        SessionCookie,
+        /// Device access token (OAuth 2.0 device authorization flow)
+        #[serde(rename = "access_token")]
+        AccessToken,
+        /// SCIM client bearer token
+        #[serde(rename = "scim_token")]
+        ScimToken,
+    }
+
+    impl ::std::convert::From<&Self> for AuthMethod {
+        fn from(value: &AuthMethod) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for AuthMethod {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::SessionCookie => f.write_str("session_cookie"),
+                Self::AccessToken => f.write_str("access_token"),
+                Self::ScimToken => f.write_str("scim_token"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for AuthMethod {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "session_cookie" => Ok(Self::SessionCookie),
+                "access_token" => Ok(Self::AccessToken),
+                "scim_token" => Ok(Self::ScimToken),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AuthMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for AuthMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for AuthMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -39666,7 +39787,7 @@ pub mod types {
         pub struct AuditLogEntry {
             actor: ::std::result::Result<super::AuditLogEntryActor, ::std::string::String>,
             auth_method: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
+                ::std::option::Option<super::AuthMethod>,
                 ::std::string::String,
             >,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -39720,7 +39841,7 @@ pub mod types {
             }
             pub fn auth_method<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::AuthMethod>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.auth_method = value
@@ -64704,7 +64825,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026011300.0.0
+/// Version: 2026011500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64745,7 +64866,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026011300.0.0"
+        "2026011500.0.0"
     }
 
     fn baseurl(&self) -> &str {
