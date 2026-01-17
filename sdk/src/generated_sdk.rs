@@ -104,6 +104,121 @@ pub mod types {
         }
     }
 
+    /// Specify how to allocate a floating IP address.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Specify how to allocate a floating IP address.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Reserve a specific IP address.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "ip",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "ip": {
+    ///          "description": "The IP address to reserve. Must be available in
+    /// the pool.",
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "pool": {
+    ///          "description": "The pool containing this address. If not
+    /// specified, the default pool for the address's IP version is used.",
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/NameOrId"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Automatically allocate an IP address from a
+    /// specified pool.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "pool_selector": {
+    ///          "description": "Pool selection.\n\nIf omitted, this field uses
+    /// the silo's default pool. If the silo has default pools for both IPv4 and
+    /// IPv6, the request will fail unless `ip_version` is specified in the pool
+    /// selector.",
+    ///          "default": {
+    ///            "ip_version": null,
+    ///            "type": "auto"
+    ///          },
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PoolSelector"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "auto"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type")]
+    pub enum AddressAllocator {
+        /// Reserve a specific IP address.
+        #[serde(rename = "explicit")]
+        Explicit {
+            /// The IP address to reserve. Must be available in the pool.
+            ip: ::std::net::IpAddr,
+            /// The pool containing this address. If not specified, the default
+            /// pool for the address's IP version is used.
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            pool: ::std::option::Option<NameOrId>,
+        },
+        /// Automatically allocate an IP address from a specified pool.
+        #[serde(rename = "auto")]
+        Auto {
+            /// Pool selection.
+            ///
+            /// If omitted, this field uses the silo's default pool. If the silo
+            /// has default pools for both IPv4 and IPv6, the request will fail
+            /// unless `ip_version` is specified in the pool selector.
+            #[serde(default = "defaults::address_allocator_auto_pool_selector")]
+            pool_selector: PoolSelector,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for AddressAllocator {
+        fn from(value: &AddressAllocator) -> Self {
+            value.clone()
+        }
+    }
+
     /// A set of addresses associated with a port configuration.
     ///
     /// <details><summary>JSON schema</summary>
@@ -746,121 +861,6 @@ pub mod types {
     impl AddressLotViewResponse {
         pub fn builder() -> builder::AddressLotViewResponse {
             Default::default()
-        }
-    }
-
-    /// Specify how to allocate a floating IP address.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Specify how to allocate a floating IP address.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Reserve a specific IP address.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "ip",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "ip": {
-    ///          "description": "The IP address to reserve. Must be available in
-    /// the pool.",
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        },
-    ///        "pool": {
-    ///          "description": "The pool containing this address. If not
-    /// specified, the default pool for the address's IP version is used.",
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/NameOrId"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Automatically allocate an IP address from a
-    /// specified pool.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "pool_selector": {
-    ///          "description": "Pool selection.\n\nIf omitted, this field uses
-    /// the silo's default pool. If the silo has default pools for both IPv4 and
-    /// IPv6, the request will fail unless `ip_version` is specified in the pool
-    /// selector.",
-    ///          "default": {
-    ///            "ip_version": null,
-    ///            "type": "auto"
-    ///          },
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/PoolSelector"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "auto"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(tag = "type")]
-    pub enum AddressSelector {
-        /// Reserve a specific IP address.
-        #[serde(rename = "explicit")]
-        Explicit {
-            /// The IP address to reserve. Must be available in the pool.
-            ip: ::std::net::IpAddr,
-            /// The pool containing this address. If not specified, the default
-            /// pool for the address's IP version is used.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-            pool: ::std::option::Option<NameOrId>,
-        },
-        /// Automatically allocate an IP address from a specified pool.
-        #[serde(rename = "auto")]
-        Auto {
-            /// Pool selection.
-            ///
-            /// If omitted, this field uses the silo's default pool. If the silo
-            /// has default pools for both IPv4 and IPv6, the request will fail
-            /// unless `ip_version` is specified in the pool selector.
-            #[serde(default = "defaults::address_selector_auto_pool_selector")]
-            pool_selector: PoolSelector,
-        },
-    }
-
-    impl ::std::convert::From<&Self> for AddressSelector {
-        fn from(value: &AddressSelector) -> Self {
-            value.clone()
         }
     }
 
@@ -3088,11 +3088,31 @@ pub mod types {
     ///      "$ref": "#/components/schemas/AuditLogEntryActor"
     ///    },
     ///    "auth_method": {
-    ///      "description": "How the user authenticated the request. Possible values are \"session_cookie\" and \"access_token\". Optional because it will not be defined on unauthenticated requests like login attempts.",
+    ///      "description": "How the user authenticated the request (access
+    /// token, session, or SCIM token). Null for unauthenticated requests like
+    /// login attempts.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/AuthMethod"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "credential_id": {
+    ///      "description": "ID of the credential used for authentication. Null
+    /// for unauthenticated requests. The value of `auth_method` indicates what
+    /// kind of credential it is (access token, session, or SCIM token).",
     ///      "type": [
     ///        "string",
     ///        "null"
-    ///      ]
+    ///      ],
+    ///      "format": "uuid"
     ///    },
     ///    "id": {
     ///      "description": "Unique identifier for the audit log entry",
@@ -3154,11 +3174,15 @@ pub mod types {
     )]
     pub struct AuditLogEntry {
         pub actor: AuditLogEntryActor,
-        /// How the user authenticated the request. Possible values are
-        /// "session_cookie" and "access_token". Optional because it will not be
-        /// defined on unauthenticated requests like login attempts.
+        /// How the user authenticated the request (access token, session, or
+        /// SCIM token). Null for unauthenticated requests like login attempts.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub auth_method: ::std::option::Option<::std::string::String>,
+        pub auth_method: ::std::option::Option<AuthMethod>,
+        /// ID of the credential used for authentication. Null for
+        /// unauthenticated requests. The value of `auth_method` indicates what
+        /// kind of credential it is (access token, session, or SCIM token).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub credential_id: ::std::option::Option<::uuid::Uuid>,
         /// Unique identifier for the audit log entry
         pub id: ::uuid::Uuid,
         /// API endpoint ID, e.g., `project_create`
@@ -3471,6 +3495,118 @@ pub mod types {
     impl AuditLogEntryResultsPage {
         pub fn builder() -> builder::AuditLogEntryResultsPage {
             Default::default()
+        }
+    }
+
+    /// Authentication method used for a request
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Authentication method used for a request",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Console session cookie",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "session_cookie"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Device access token (OAuth 2.0 device authorization
+    /// flow)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "access_token"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "SCIM client bearer token",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "scim_token"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum AuthMethod {
+        /// Console session cookie
+        #[serde(rename = "session_cookie")]
+        SessionCookie,
+        /// Device access token (OAuth 2.0 device authorization flow)
+        #[serde(rename = "access_token")]
+        AccessToken,
+        /// SCIM client bearer token
+        #[serde(rename = "scim_token")]
+        ScimToken,
+    }
+
+    impl ::std::convert::From<&Self> for AuthMethod {
+        fn from(value: &AuthMethod) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for AuthMethod {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::SessionCookie => f.write_str("session_cookie"),
+                Self::AccessToken => f.write_str("access_token"),
+                Self::ScimToken => f.write_str("scim_token"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for AuthMethod {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "session_cookie" => Ok(Self::SessionCookie),
+                "access_token" => Ok(Self::AccessToken),
+                "scim_token" => Ok(Self::ScimToken),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AuthMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for AuthMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for AuthMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -11743,7 +11879,7 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
-    ///    "address_selector": {
+    ///    "address_allocator": {
     ///      "description": "IP address allocation method.",
     ///      "default": {
     ///        "pool_selector": {
@@ -11754,7 +11890,7 @@ pub mod types {
     ///      },
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/AddressSelector"
+    ///          "$ref": "#/components/schemas/AddressAllocator"
     ///        }
     ///      ]
     ///    },
@@ -11773,8 +11909,8 @@ pub mod types {
     )]
     pub struct FloatingIpCreate {
         /// IP address allocation method.
-        #[serde(default = "defaults::floating_ip_create_address_selector")]
-        pub address_selector: AddressSelector,
+        #[serde(default = "defaults::floating_ip_create_address_allocator")]
+        pub address_allocator: AddressAllocator,
         pub description: ::std::string::String,
         pub name: Name,
     }
@@ -39666,9 +39802,11 @@ pub mod types {
         pub struct AuditLogEntry {
             actor: ::std::result::Result<super::AuditLogEntryActor, ::std::string::String>,
             auth_method: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
+                ::std::option::Option<super::AuthMethod>,
                 ::std::string::String,
             >,
+            credential_id:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             operation_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             request_id: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -39694,6 +39832,7 @@ pub mod types {
                 Self {
                     actor: Err("no value supplied for actor".to_string()),
                     auth_method: Ok(Default::default()),
+                    credential_id: Ok(Default::default()),
                     id: Err("no value supplied for id".to_string()),
                     operation_id: Err("no value supplied for operation_id".to_string()),
                     request_id: Err("no value supplied for request_id".to_string()),
@@ -39720,12 +39859,22 @@ pub mod types {
             }
             pub fn auth_method<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::AuthMethod>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.auth_method = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for auth_method: {}", e));
+                self
+            }
+            pub fn credential_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.credential_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for credential_id: {}", e)
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -39828,6 +39977,7 @@ pub mod types {
                 Ok(Self {
                     actor: value.actor?,
                     auth_method: value.auth_method?,
+                    credential_id: value.credential_id?,
                     id: value.id?,
                     operation_id: value.operation_id?,
                     request_id: value.request_id?,
@@ -39846,6 +39996,7 @@ pub mod types {
                 Self {
                     actor: Ok(value.actor),
                     auth_method: Ok(value.auth_method),
+                    credential_id: Ok(value.credential_id),
                     id: Ok(value.id),
                     operation_id: Ok(value.operation_id),
                     request_id: Ok(value.request_id),
@@ -44726,7 +44877,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
-            address_selector: ::std::result::Result<super::AddressSelector, ::std::string::String>,
+            address_allocator:
+                ::std::result::Result<super::AddressAllocator, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
         }
@@ -44734,7 +44886,7 @@ pub mod types {
         impl ::std::default::Default for FloatingIpCreate {
             fn default() -> Self {
                 Self {
-                    address_selector: Ok(super::defaults::floating_ip_create_address_selector()),
+                    address_allocator: Ok(super::defaults::floating_ip_create_address_allocator()),
                     description: Err("no value supplied for description".to_string()),
                     name: Err("no value supplied for name".to_string()),
                 }
@@ -44742,14 +44894,14 @@ pub mod types {
         }
 
         impl FloatingIpCreate {
-            pub fn address_selector<T>(mut self, value: T) -> Self
+            pub fn address_allocator<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::AddressSelector>,
+                T: ::std::convert::TryInto<super::AddressAllocator>,
                 T::Error: ::std::fmt::Display,
             {
-                self.address_selector = value.try_into().map_err(|e| {
+                self.address_allocator = value.try_into().map_err(|e| {
                     format!(
-                        "error converting supplied value for address_selector: {}",
+                        "error converting supplied value for address_allocator: {}",
                         e
                     )
                 });
@@ -44783,7 +44935,7 @@ pub mod types {
                 value: FloatingIpCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    address_selector: value.address_selector?,
+                    address_allocator: value.address_allocator?,
                     description: value.description?,
                     name: value.name?,
                 })
@@ -44793,7 +44945,7 @@ pub mod types {
         impl ::std::convert::From<super::FloatingIpCreate> for FloatingIpCreate {
             fn from(value: super::FloatingIpCreate) -> Self {
                 Self {
-                    address_selector: Ok(value.address_selector),
+                    address_allocator: Ok(value.address_allocator),
                     description: Ok(value.description),
                     name: Ok(value.name),
                 }
@@ -64639,7 +64791,7 @@ pub mod types {
             V
         }
 
-        pub(super) fn address_selector_auto_pool_selector() -> super::PoolSelector {
+        pub(super) fn address_allocator_auto_pool_selector() -> super::PoolSelector {
             super::PoolSelector::Auto {
                 ip_version: ::std::option::Option::None,
             }
@@ -64657,8 +64809,8 @@ pub mod types {
             }
         }
 
-        pub(super) fn floating_ip_create_address_selector() -> super::AddressSelector {
-            super::AddressSelector::Auto {
+        pub(super) fn floating_ip_create_address_allocator() -> super::AddressAllocator {
+            super::AddressAllocator::Auto {
                 pool_selector: super::PoolSelector::Auto {
                     ip_version: ::std::option::Option::None,
                 },
@@ -64704,7 +64856,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026011100.0.0
+/// Version: 2026011600.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64745,7 +64897,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026011100.0.0"
+        "2026011600.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -65211,7 +65363,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_list(&self) -> builder::DiskList<'_>;
-    /// Create a disk
+    /// Create disk
     ///
     /// Sends a `POST` request to `/v1/disks`
     ///
@@ -65456,7 +65608,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_create(&self) -> builder::SupportBundleCreate<'_>;
-    /// View a support bundle
+    /// View support bundle
     ///
     /// Sends a `GET` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}`
@@ -65806,7 +65958,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_multicast_group_list(&self) -> builder::InstanceMulticastGroupList<'_>;
-    /// Join a multicast group by name, IP address, or UUID
+    /// Join multicast group by name, IP address, or UUID
     ///
     /// Groups can be referenced by name, IP address, or UUID. If the group
     /// doesn't exist, it's implicitly created with an auto-allocated IP from a
@@ -65835,7 +65987,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_multicast_group_join(&self) -> builder::InstanceMulticastGroupJoin<'_>;
-    /// Leave a multicast group by name, IP address, or UUID
+    /// Leave multicast group by name, IP address, or UUID
     ///
     /// Sends a `DELETE` request to
     /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
@@ -65871,7 +66023,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_list(&self) -> builder::MulticastGroupList<'_>;
-    /// Fetch a multicast group
+    /// Fetch multicast group
     ///
     /// The group can be specified by name, UUID, or multicast IP address.
     /// (e.g., "224.1.2.3" or "ff38::1").
@@ -65887,7 +66039,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_view(&self) -> builder::MulticastGroupView<'_>;
-    /// List members of a multicast group
+    /// List members of multicast group
     ///
     /// The group can be specified by name, UUID, or multicast IP address.
     ///
@@ -66563,7 +66715,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach<'_>;
-    /// Reboot an instance
+    /// Reboot instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
     ///
@@ -67072,7 +67224,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_view(&self) -> builder::ProjectView<'_>;
-    /// Update a project
+    /// Update project
     ///
     /// Sends a `PUT` request to `/v1/projects/{project}`
     ///
@@ -67971,7 +68123,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn physical_disk_list(&self) -> builder::PhysicalDiskList<'_>;
-    /// Get a physical disk
+    /// Get physical disk
     ///
     /// Sends a `GET` request to `/v1/system/hardware/disks/{disk_id}`
     ///
@@ -68415,7 +68567,7 @@ pub trait ClientSystemIpPoolsExt {
     ///    .await;
     /// ```
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList<'_>;
-    /// Add range to IP pool
+    /// Add range to an IP pool
     ///
     /// IPv6 ranges are not allowed yet for unicast pools.
     ///
@@ -68916,7 +69068,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate<'_>;
-    /// Disable a BFD session
+    /// Disable BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
     ///
@@ -68927,7 +69079,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable<'_>;
-    /// Enable a BFD session
+    /// Enable BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-enable`
     ///
@@ -69601,7 +69753,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_list(&self) -> builder::SiloList<'_>;
-    /// Create a silo
+    /// Create silo
     ///
     /// Sends a `POST` request to `/v1/system/silos`
     ///
@@ -69627,7 +69779,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_view(&self) -> builder::SiloView<'_>;
-    /// Delete a silo
+    /// Delete silo
     ///
     /// Delete a silo by name or ID.
     ///
@@ -70840,7 +70992,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_view(&self) -> builder::VpcView<'_>;
-    /// Update a VPC
+    /// Update VPC
     ///
     /// Sends a `PUT` request to `/v1/vpcs/{vpc}`
     ///

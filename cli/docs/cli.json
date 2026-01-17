@@ -791,7 +791,7 @@
         },
         {
           "name": "view",
-          "about": "View a support bundle",
+          "about": "View support bundle",
           "args": [
             {
               "long": "bundle-id",
@@ -1143,7 +1143,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a disk",
+          "about": "Create disk",
           "args": [
             {
               "long": "description"
@@ -1708,7 +1708,7 @@
               "subcommands": [
                 {
                   "name": "join",
-                  "about": "Join a multicast group by name, IP address, or UUID.",
+                  "about": "Join multicast group by name, IP address, or UUID",
                   "long_about": "Groups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.\n\nSource IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
                   "args": [
                     {
@@ -1748,7 +1748,7 @@
                 },
                 {
                   "name": "leave",
-                  "about": "Leave a multicast group by name, IP address, or UUID.",
+                  "about": "Leave multicast group by name, IP address, or UUID",
                   "args": [
                     {
                       "long": "instance",
@@ -1771,7 +1771,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List multicast groups for an instance.",
+                  "about": "List multicast groups for an instance",
                   "args": [
                     {
                       "long": "instance",
@@ -1814,7 +1814,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List multicast groups.",
+              "about": "List multicast groups",
               "args": [
                 {
                   "long": "limit",
@@ -1847,7 +1847,7 @@
               "subcommands": [
                 {
                   "name": "list",
-                  "about": "List members of a multicast group.",
+                  "about": "List members of multicast group",
                   "long_about": "The group can be specified by name, UUID, or multicast IP address.",
                   "args": [
                     {
@@ -1875,7 +1875,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a multicast group.",
+              "about": "Fetch multicast group",
               "long_about": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
               "args": [
                 {
@@ -3421,7 +3421,7 @@
         },
         {
           "name": "reboot",
-          "about": "Reboot an instance",
+          "about": "Reboot instance",
           "args": [
             {
               "long": "instance",
@@ -4119,7 +4119,7 @@
           "subcommands": [
             {
               "name": "add",
-              "about": "Add range to IP pool.",
+              "about": "Add range to an IP pool",
               "long_about": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
               "args": [
                 {
@@ -4714,7 +4714,7 @@
         },
         {
           "name": "update",
-          "about": "Update a project",
+          "about": "Update project",
           "args": [
             {
               "long": "description"
@@ -4864,7 +4864,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a silo",
+          "about": "Create silo",
           "args": [
             {
               "long": "admin-group-name",
@@ -4908,7 +4908,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a silo",
+          "about": "Delete silo",
           "long_about": "Delete a silo by name or ID.",
           "args": [
             {
@@ -5647,7 +5647,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Get a physical disk",
+                  "about": "Get physical disk",
                   "args": [
                     {
                       "long": "disk-id",
@@ -6414,7 +6414,7 @@
               "subcommands": [
                 {
                   "name": "disable",
-                  "about": "Disable a BFD session",
+                  "about": "Disable BFD session",
                   "args": [
                     {
                       "long": "json-body",
@@ -6441,7 +6441,7 @@
                 },
                 {
                   "name": "enable",
-                  "about": "Enable a BFD session",
+                  "about": "Enable BFD session",
                   "args": [
                     {
                       "long": "detection-threshold",
@@ -9105,7 +9105,7 @@
         },
         {
           "name": "update",
-          "about": "Update a VPC",
+          "about": "Update VPC",
           "args": [
             {
               "long": "description"
