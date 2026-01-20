@@ -565,7 +565,7 @@ fn test_disk_write_import_fail() {
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
     let output = concat!(
-        r#"(?m)\AError while uploading the disk image:\n "#,
+        r#"(?m)\AErrors? while uploading the disk image:\n "#,
         r#"\* Error Response: status: 503 Service Unavailable;.*$"#
     );
 
