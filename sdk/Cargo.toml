@@ -12,7 +12,7 @@ base64 = { workspace = true }
 chrono = { workspace = true }
 dirs = { workspace = true }
 futures = { workspace = true }
-progenitor-client = { workspace = true }
+progenitor-client = { workspace = true, features = ["cli"] }
 rand = { workspace = true }
 regress = { workspace = true }
 reqwest = { workspace = true, features = ["native-tls-vendored"] }

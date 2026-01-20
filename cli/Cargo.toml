@@ -41,6 +41,7 @@ open = { workspace = true }
 oxide = { workspace = true, features = ["clap", "extras"] }
 oxnet = { workspace = true }
 predicates = { workspace = true }
+progenitor-client = { workspace = true, features = ["cli"] }
 ratatui = { workspace = true }
 reqwest = { workspace = true, features = ["native-tls-vendored"] }
 schemars = { workspace = true }
