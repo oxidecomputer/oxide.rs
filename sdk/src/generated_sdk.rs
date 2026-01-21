@@ -10717,6 +10717,474 @@ pub mod types {
         }
     }
 
+    /// An external subnet allocated from a subnet pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An external subnet allocated from a subnet pool",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "name",
+    ///    "project_id",
+    ///    "subnet",
+    ///    "subnet_pool_id",
+    ///    "subnet_pool_member_id",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "instance_id": {
+    ///      "description": "The instance this subnet is attached to, if any",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "project_id": {
+    ///      "description": "The project this subnet belongs to",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "subnet": {
+    ///      "description": "The allocated subnet CIDR",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "subnet_pool_id": {
+    ///      "description": "The subnet pool this was allocated from",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "subnet_pool_member_id": {
+    ///      "description": "The subnet pool member this subnet corresponds to",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ExternalSubnet {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// The instance this subnet is attached to, if any
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub instance_id: ::std::option::Option<::uuid::Uuid>,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// The project this subnet belongs to
+        pub project_id: ::uuid::Uuid,
+        /// The allocated subnet CIDR
+        pub subnet: IpNet,
+        /// The subnet pool this was allocated from
+        pub subnet_pool_id: ::uuid::Uuid,
+        /// The subnet pool member this subnet corresponds to
+        pub subnet_pool_member_id: ::uuid::Uuid,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&ExternalSubnet> for ExternalSubnet {
+        fn from(value: &ExternalSubnet) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ExternalSubnet {
+        pub fn builder() -> builder::ExternalSubnet {
+            Default::default()
+        }
+    }
+
+    /// Specify how to allocate an external subnet.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Specify how to allocate an external subnet.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Reserve a specific subnet.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "subnet",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "pool": {
+    ///          "description": "The pool containing this subnet. If not
+    /// specified, the default subnet pool for the subnet's IP version is
+    /// used.",
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/NameOrId"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        },
+    ///        "subnet": {
+    ///          "description": "The subnet CIDR to reserve. Must be available
+    /// in the pool.",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/IpNet"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Automatically allocate a subnet with the specified
+    /// prefix length.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "prefix_len",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "pool_selector": {
+    ///          "description": "Pool selection.\n\nIf omitted, this field uses
+    /// the silo's default pool. If the silo has default pools for both IPv4 and
+    /// IPv6, the request will fail unless `ip_version` is specified in the pool
+    /// selector.",
+    ///          "default": {
+    ///            "ip_version": null,
+    ///            "type": "auto"
+    ///          },
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PoolSelector"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "prefix_len": {
+    ///          "description": "The prefix length for the allocated subnet
+    /// (e.g., 24 for a /24).",
+    ///          "type": "integer",
+    ///          "format": "uint8",
+    ///          "minimum": 0.0
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "auto"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type")]
+    pub enum ExternalSubnetAllocator {
+        /// Reserve a specific subnet.
+        #[serde(rename = "explicit")]
+        Explicit {
+            /// The pool containing this subnet. If not specified, the default
+            /// subnet pool for the subnet's IP version is used.
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            pool: ::std::option::Option<NameOrId>,
+            /// The subnet CIDR to reserve. Must be available in the pool.
+            subnet: IpNet,
+        },
+        /// Automatically allocate a subnet with the specified prefix length.
+        #[serde(rename = "auto")]
+        Auto {
+            /// Pool selection.
+            ///
+            /// If omitted, this field uses the silo's default pool. If the silo
+            /// has default pools for both IPv4 and IPv6, the request will fail
+            /// unless `ip_version` is specified in the pool selector.
+            #[serde(default = "defaults::external_subnet_allocator_auto_pool_selector")]
+            pool_selector: PoolSelector,
+            /// The prefix length for the allocated subnet (e.g., 24 for a /24).
+            prefix_len: u8,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for ExternalSubnetAllocator {
+        fn from(value: &ExternalSubnetAllocator) -> Self {
+            value.clone()
+        }
+    }
+
+    /// Attach an external subnet to an instance
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Attach an external subnet to an instance",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "instance"
+    ///  ],
+    ///  "properties": {
+    ///    "instance": {
+    ///      "description": "Name or ID of the instance to attach to",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ExternalSubnetAttach {
+        /// Name or ID of the instance to attach to
+        pub instance: NameOrId,
+    }
+
+    impl ::std::convert::From<&ExternalSubnetAttach> for ExternalSubnetAttach {
+        fn from(value: &ExternalSubnetAttach) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ExternalSubnetAttach {
+        pub fn builder() -> builder::ExternalSubnetAttach {
+            Default::default()
+        }
+    }
+
+    /// Create an external subnet
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create an external subnet",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocator",
+    ///    "description",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "allocator": {
+    ///      "description": "Subnet allocation method.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ExternalSubnetAllocator"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ExternalSubnetCreate {
+        /// Subnet allocation method.
+        pub allocator: ExternalSubnetAllocator,
+        pub description: ::std::string::String,
+        pub name: Name,
+    }
+
+    impl ::std::convert::From<&ExternalSubnetCreate> for ExternalSubnetCreate {
+        fn from(value: &ExternalSubnetCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ExternalSubnetCreate {
+        pub fn builder() -> builder::ExternalSubnetCreate {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ExternalSubnet"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ExternalSubnetResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<ExternalSubnet>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&ExternalSubnetResultsPage> for ExternalSubnetResultsPage {
+        fn from(value: &ExternalSubnetResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ExternalSubnetResultsPage {
+        pub fn builder() -> builder::ExternalSubnetResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Update an external subnet
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Update an external subnet",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ExternalSubnetUpdate {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&ExternalSubnetUpdate> for ExternalSubnetUpdate {
+        fn from(value: &ExternalSubnetUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for ExternalSubnetUpdate {
+        fn default() -> Self {
+            Self {
+                description: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    impl ExternalSubnetUpdate {
+        pub fn builder() -> builder::ExternalSubnetUpdate {
+            Default::default()
+        }
+    }
+
     /// Describes the scope of affinity for the purposes of co-location.
     ///
     /// <details><summary>JSON schema</summary>
@@ -22844,13 +23312,14 @@ pub mod types {
         }
     }
 
-    /// Specify which IP pool to allocate from.
+    /// Specify which IP or external subnet pool to allocate from.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Specify which IP pool to allocate from.",
+    ///  "description": "Specify which IP or external subnet pool to allocate
+    /// from.",
     ///  "oneOf": [
     ///    {
     ///      "description": "Use the specified pool by name or ID.",
@@ -28887,6 +29356,855 @@ pub mod types {
 
     impl SshKeyResultsPage {
         pub fn builder() -> builder::SshKeyResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A pool of subnets for external subnet allocation
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A pool of subnets for external subnet allocation",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "ip_version",
+    ///    "name",
+    ///    "pool_type",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip_version": {
+    ///      "description": "The IP version for this pool",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpVersion"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "pool_type": {
+    ///      "description": "Type of subnet pool (unicast or multicast)",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpPoolType"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPool {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// The IP version for this pool
+        pub ip_version: IpVersion,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// Type of subnet pool (unicast or multicast)
+        pub pool_type: IpPoolType,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&SubnetPool> for SubnetPool {
+        fn from(value: &SubnetPool) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPool {
+        pub fn builder() -> builder::SubnetPool {
+            Default::default()
+        }
+    }
+
+    /// Create a subnet pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create a subnet pool",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "ip_version",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip_version": {
+    ///      "description": "The IP version for this pool (IPv4 or IPv6). All
+    /// subnets in the pool must match this version.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpVersion"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "pool_type": {
+    ///      "description": "Type of subnet pool (defaults to Unicast)",
+    ///      "default": "unicast",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpPoolType"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolCreate {
+        pub description: ::std::string::String,
+        /// The IP version for this pool (IPv4 or IPv6). All subnets in the pool
+        /// must match this version.
+        pub ip_version: IpVersion,
+        pub name: Name,
+        /// Type of subnet pool (defaults to Unicast)
+        #[serde(default = "defaults::subnet_pool_create_pool_type")]
+        pub pool_type: IpPoolType,
+    }
+
+    impl ::std::convert::From<&SubnetPoolCreate> for SubnetPoolCreate {
+        fn from(value: &SubnetPoolCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolCreate {
+        pub fn builder() -> builder::SubnetPoolCreate {
+            Default::default()
+        }
+    }
+
+    /// Link a subnet pool to a silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Link a subnet pool to a silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "is_default",
+    ///    "silo"
+    ///  ],
+    ///  "properties": {
+    ///    "is_default": {
+    ///      "description": "Whether this is the default subnet pool for the
+    /// silo. When true, external subnet allocations that don't specify a pool
+    /// use this one.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "silo": {
+    ///      "description": "The silo to link",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolLinkSilo {
+        /// Whether this is the default subnet pool for the silo. When true,
+        /// external subnet allocations that don't specify a pool use this one.
+        pub is_default: bool,
+        /// The silo to link
+        pub silo: NameOrId,
+    }
+
+    impl ::std::convert::From<&SubnetPoolLinkSilo> for SubnetPoolLinkSilo {
+        fn from(value: &SubnetPoolLinkSilo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolLinkSilo {
+        pub fn builder() -> builder::SubnetPoolLinkSilo {
+            Default::default()
+        }
+    }
+
+    /// A member (subnet) within a subnet pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A member (subnet) within a subnet pool",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "max_prefix_length",
+    ///    "min_prefix_length",
+    ///    "name",
+    ///    "subnet",
+    ///    "subnet_pool_id",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "max_prefix_length": {
+    ///      "description": "Maximum prefix length for allocations from this
+    /// subnet; a larger prefix means smaller allocations are allowed (e.g. a
+    /// /24 prefix yields smaller subnet allocations than a /16 prefix).",
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "min_prefix_length": {
+    ///      "description": "Minimum prefix length for allocations from this
+    /// subnet; a smaller prefix means larger allocations are allowed (e.g. a
+    /// /16 prefix yields larger subnet allocations than a /24 prefix).",
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "subnet": {
+    ///      "description": "The subnet CIDR",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "subnet_pool_id": {
+    ///      "description": "ID of the parent subnet pool",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolMember {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// Maximum prefix length for allocations from this subnet; a larger
+        /// prefix means smaller allocations are allowed (e.g. a /24 prefix
+        /// yields smaller subnet allocations than a /16 prefix).
+        pub max_prefix_length: u8,
+        /// Minimum prefix length for allocations from this subnet; a smaller
+        /// prefix means larger allocations are allowed (e.g. a /16 prefix
+        /// yields larger subnet allocations than a /24 prefix).
+        pub min_prefix_length: u8,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// The subnet CIDR
+        pub subnet: IpNet,
+        /// ID of the parent subnet pool
+        pub subnet_pool_id: ::uuid::Uuid,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&SubnetPoolMember> for SubnetPoolMember {
+        fn from(value: &SubnetPoolMember) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolMember {
+        pub fn builder() -> builder::SubnetPoolMember {
+            Default::default()
+        }
+    }
+
+    /// Add a member (subnet) to a subnet pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Add a member (subnet) to a subnet pool",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name",
+    ///    "subnet"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "max_prefix_length": {
+    ///      "description": "Maximum prefix length for allocations from this
+    /// subnet; a larger prefix means smaller allocations are allowed (e.g. a
+    /// /24 prefix yields smaller subnet allocations than a /16
+    /// prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not
+    /// specified is 32 for IPv4 and 128 for IPv6.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "min_prefix_length": {
+    ///      "description": "Minimum prefix length for allocations from this
+    /// subnet; a smaller prefix means larger allocations are allowed (e.g. a
+    /// /16 prefix yields larger subnet allocations than a /24 prefix).\n\nValid
+    /// values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is equal
+    /// to the subnet's prefix length.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "subnet": {
+    ///      "description": "The subnet to add to the pool",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolMemberAdd {
+        pub description: ::std::string::String,
+        /// Maximum prefix length for allocations from this subnet; a larger
+        /// prefix means smaller allocations are allowed (e.g. a /24 prefix
+        /// yields smaller subnet allocations than a /16 prefix).
+        ///
+        /// Valid values: 0-32 for IPv4, 0-128 for IPv6. Default if not
+        /// specified is 32 for IPv4 and 128 for IPv6.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_prefix_length: ::std::option::Option<u8>,
+        /// Minimum prefix length for allocations from this subnet; a smaller
+        /// prefix means larger allocations are allowed (e.g. a /16 prefix
+        /// yields larger subnet allocations than a /24 prefix).
+        ///
+        /// Valid values: 0-32 for IPv4, 0-128 for IPv6. Default if not
+        /// specified is equal to the subnet's prefix length.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub min_prefix_length: ::std::option::Option<u8>,
+        pub name: Name,
+        /// The subnet to add to the pool
+        pub subnet: IpNet,
+    }
+
+    impl ::std::convert::From<&SubnetPoolMemberAdd> for SubnetPoolMemberAdd {
+        fn from(value: &SubnetPoolMemberAdd) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolMemberAdd {
+        pub fn builder() -> builder::SubnetPoolMemberAdd {
+            Default::default()
+        }
+    }
+
+    /// Remove a subnet from a pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Remove a subnet from a pool",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "subnet"
+    ///  ],
+    ///  "properties": {
+    ///    "subnet": {
+    ///      "description": "The subnet to remove from the pool. Must match an
+    /// existing entry exactly.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolMemberRemove {
+        /// The subnet to remove from the pool. Must match an existing entry
+        /// exactly.
+        pub subnet: IpNet,
+    }
+
+    impl ::std::convert::From<&SubnetPoolMemberRemove> for SubnetPoolMemberRemove {
+        fn from(value: &SubnetPoolMemberRemove) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolMemberRemove {
+        pub fn builder() -> builder::SubnetPoolMemberRemove {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SubnetPoolMember"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolMemberResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<SubnetPoolMember>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SubnetPoolMemberResultsPage> for SubnetPoolMemberResultsPage {
+        fn from(value: &SubnetPoolMemberResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolMemberResultsPage {
+        pub fn builder() -> builder::SubnetPoolMemberResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SubnetPool"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<SubnetPool>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SubnetPoolResultsPage> for SubnetPoolResultsPage {
+        fn from(value: &SubnetPoolResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolResultsPage {
+        pub fn builder() -> builder::SubnetPoolResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A link between a subnet pool and a silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A link between a subnet pool and a silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "is_default",
+    ///    "silo_id",
+    ///    "subnet_pool_id"
+    ///  ],
+    ///  "properties": {
+    ///    "is_default": {
+    ///      "type": "boolean"
+    ///    },
+    ///    "silo_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "subnet_pool_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolSiloLink {
+        pub is_default: bool,
+        pub silo_id: ::uuid::Uuid,
+        pub subnet_pool_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&SubnetPoolSiloLink> for SubnetPoolSiloLink {
+        fn from(value: &SubnetPoolSiloLink) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolSiloLink {
+        pub fn builder() -> builder::SubnetPoolSiloLink {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SubnetPoolSiloLink"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolSiloLinkResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<SubnetPoolSiloLink>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SubnetPoolSiloLinkResultsPage> for SubnetPoolSiloLinkResultsPage {
+        fn from(value: &SubnetPoolSiloLinkResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolSiloLinkResultsPage {
+        pub fn builder() -> builder::SubnetPoolSiloLinkResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Update a subnet pool's silo link
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Update a subnet pool's silo link",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "is_default"
+    ///  ],
+    ///  "properties": {
+    ///    "is_default": {
+    ///      "description": "Whether this is the default subnet pool for the
+    /// silo",
+    ///      "type": "boolean"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolSiloUpdate {
+        /// Whether this is the default subnet pool for the silo
+        pub is_default: bool,
+    }
+
+    impl ::std::convert::From<&SubnetPoolSiloUpdate> for SubnetPoolSiloUpdate {
+        fn from(value: &SubnetPoolSiloUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolSiloUpdate {
+        pub fn builder() -> builder::SubnetPoolSiloUpdate {
+            Default::default()
+        }
+    }
+
+    /// Update a subnet pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Update a subnet pool",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolUpdate {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&SubnetPoolUpdate> for SubnetPoolUpdate {
+        fn from(value: &SubnetPoolUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for SubnetPoolUpdate {
+        fn default() -> Self {
+            Self {
+                description: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    impl SubnetPoolUpdate {
+        pub fn builder() -> builder::SubnetPoolUpdate {
+            Default::default()
+        }
+    }
+
+    /// Utilization information for a subnet pool
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Utilization information for a subnet pool",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocated",
+    ///    "capacity"
+    ///  ],
+    ///  "properties": {
+    ///    "allocated": {
+    ///      "description": "Number of addresses allocated from this pool",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
+    ///    "capacity": {
+    ///      "description": "Total capacity of this pool in addresses",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SubnetPoolUtilization {
+        pub allocated: f64,
+        pub capacity: f64,
+    }
+
+    impl ::std::convert::From<&SubnetPoolUtilization> for SubnetPoolUtilization {
+        fn from(value: &SubnetPoolUtilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SubnetPoolUtilization {
+        pub fn builder() -> builder::SubnetPoolUtilization {
             Default::default()
         }
     }
@@ -44396,6 +45714,434 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct ExternalSubnet {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            instance_id:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
+            subnet_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            subnet_pool_member_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ExternalSubnet {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    instance_id: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    project_id: Err("no value supplied for project_id".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                    subnet_pool_id: Err("no value supplied for subnet_pool_id".to_string()),
+                    subnet_pool_member_id: Err(
+                        "no value supplied for subnet_pool_member_id".to_string()
+                    ),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl ExternalSubnet {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn instance_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.instance_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn project_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.project_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpNet>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+            pub fn subnet_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet_pool_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subnet_pool_id: {}", e)
+                });
+                self
+            }
+            pub fn subnet_pool_member_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet_pool_member_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for subnet_pool_member_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ExternalSubnet> for super::ExternalSubnet {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ExternalSubnet,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    instance_id: value.instance_id?,
+                    name: value.name?,
+                    project_id: value.project_id?,
+                    subnet: value.subnet?,
+                    subnet_pool_id: value.subnet_pool_id?,
+                    subnet_pool_member_id: value.subnet_pool_member_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ExternalSubnet> for ExternalSubnet {
+            fn from(value: super::ExternalSubnet) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    instance_id: Ok(value.instance_id),
+                    name: Ok(value.name),
+                    project_id: Ok(value.project_id),
+                    subnet: Ok(value.subnet),
+                    subnet_pool_id: Ok(value.subnet_pool_id),
+                    subnet_pool_member_id: Ok(value.subnet_pool_member_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ExternalSubnetAttach {
+            instance: ::std::result::Result<super::NameOrId, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for ExternalSubnetAttach {
+            fn default() -> Self {
+                Self {
+                    instance: Err("no value supplied for instance".to_string()),
+                }
+            }
+        }
+
+        impl ExternalSubnetAttach {
+            pub fn instance<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NameOrId>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.instance = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for instance: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ExternalSubnetAttach> for super::ExternalSubnetAttach {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ExternalSubnetAttach,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    instance: value.instance?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ExternalSubnetAttach> for ExternalSubnetAttach {
+            fn from(value: super::ExternalSubnetAttach) -> Self {
+                Self {
+                    instance: Ok(value.instance),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ExternalSubnetCreate {
+            allocator: ::std::result::Result<super::ExternalSubnetAllocator, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for ExternalSubnetCreate {
+            fn default() -> Self {
+                Self {
+                    allocator: Err("no value supplied for allocator".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl ExternalSubnetCreate {
+            pub fn allocator<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::ExternalSubnetAllocator>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.allocator = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocator: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ExternalSubnetCreate> for super::ExternalSubnetCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ExternalSubnetCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allocator: value.allocator?,
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ExternalSubnetCreate> for ExternalSubnetCreate {
+            fn from(value: super::ExternalSubnetCreate) -> Self {
+                Self {
+                    allocator: Ok(value.allocator),
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ExternalSubnetResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::ExternalSubnet>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ExternalSubnetResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ExternalSubnetResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::ExternalSubnet>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ExternalSubnetResultsPage> for super::ExternalSubnetResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ExternalSubnetResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ExternalSubnetResultsPage> for ExternalSubnetResultsPage {
+            fn from(value: super::ExternalSubnetResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ExternalSubnetUpdate {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for ExternalSubnetUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ExternalSubnetUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ExternalSubnetUpdate> for super::ExternalSubnetUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ExternalSubnetUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ExternalSubnetUpdate> for ExternalSubnetUpdate {
+            fn from(value: super::ExternalSubnetUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct FieldSchema {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             field_type: ::std::result::Result<super::FieldType, ::std::string::String>,
@@ -58356,6 +60102,1043 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SubnetPool {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SubnetPool {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    ip_version: Err("no value supplied for ip_version".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    pool_type: Err("no value supplied for pool_type".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPool {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn pool_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pool_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPool> for super::SubnetPool {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPool,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    ip_version: value.ip_version?,
+                    name: value.name?,
+                    pool_type: value.pool_type?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPool> for SubnetPool {
+            fn from(value: super::SubnetPool) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    ip_version: Ok(value.ip_version),
+                    name: Ok(value.name),
+                    pool_type: Ok(value.pool_type),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolCreate {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    ip_version: Err("no value supplied for ip_version".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    pool_type: Ok(super::defaults::subnet_pool_create_pool_type()),
+                }
+            }
+        }
+
+        impl SubnetPoolCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn pool_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pool_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolCreate> for super::SubnetPoolCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    ip_version: value.ip_version?,
+                    name: value.name?,
+                    pool_type: value.pool_type?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolCreate> for SubnetPoolCreate {
+            fn from(value: super::SubnetPoolCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ip_version: Ok(value.ip_version),
+                    name: Ok(value.name),
+                    pool_type: Ok(value.pool_type),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolLinkSilo {
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            silo: ::std::result::Result<super::NameOrId, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolLinkSilo {
+            fn default() -> Self {
+                Self {
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    silo: Err("no value supplied for silo".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolLinkSilo {
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+            pub fn silo<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NameOrId>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.silo = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolLinkSilo> for super::SubnetPoolLinkSilo {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolLinkSilo,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    is_default: value.is_default?,
+                    silo: value.silo?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolLinkSilo> for SubnetPoolLinkSilo {
+            fn from(value: super::SubnetPoolLinkSilo) -> Self {
+                Self {
+                    is_default: Ok(value.is_default),
+                    silo: Ok(value.silo),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolMember {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            max_prefix_length: ::std::result::Result<u8, ::std::string::String>,
+            min_prefix_length: ::std::result::Result<u8, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
+            subnet_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SubnetPoolMember {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    max_prefix_length: Err("no value supplied for max_prefix_length".to_string()),
+                    min_prefix_length: Err("no value supplied for min_prefix_length".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                    subnet_pool_id: Err("no value supplied for subnet_pool_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolMember {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn max_prefix_length<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u8>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_prefix_length = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for max_prefix_length: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn min_prefix_length<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u8>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.min_prefix_length = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for min_prefix_length: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpNet>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+            pub fn subnet_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet_pool_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subnet_pool_id: {}", e)
+                });
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolMember> for super::SubnetPoolMember {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolMember,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    max_prefix_length: value.max_prefix_length?,
+                    min_prefix_length: value.min_prefix_length?,
+                    name: value.name?,
+                    subnet: value.subnet?,
+                    subnet_pool_id: value.subnet_pool_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolMember> for SubnetPoolMember {
+            fn from(value: super::SubnetPoolMember) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    max_prefix_length: Ok(value.max_prefix_length),
+                    min_prefix_length: Ok(value.min_prefix_length),
+                    name: Ok(value.name),
+                    subnet: Ok(value.subnet),
+                    subnet_pool_id: Ok(value.subnet_pool_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolMemberAdd {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            max_prefix_length:
+                ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
+            min_prefix_length:
+                ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolMemberAdd {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    max_prefix_length: Ok(Default::default()),
+                    min_prefix_length: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolMemberAdd {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn max_prefix_length<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u8>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_prefix_length = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for max_prefix_length: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn min_prefix_length<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u8>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.min_prefix_length = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for min_prefix_length: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpNet>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolMemberAdd> for super::SubnetPoolMemberAdd {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolMemberAdd,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    max_prefix_length: value.max_prefix_length?,
+                    min_prefix_length: value.min_prefix_length?,
+                    name: value.name?,
+                    subnet: value.subnet?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolMemberAdd> for SubnetPoolMemberAdd {
+            fn from(value: super::SubnetPoolMemberAdd) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    max_prefix_length: Ok(value.max_prefix_length),
+                    min_prefix_length: Ok(value.min_prefix_length),
+                    name: Ok(value.name),
+                    subnet: Ok(value.subnet),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolMemberRemove {
+            subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolMemberRemove {
+            fn default() -> Self {
+                Self {
+                    subnet: Err("no value supplied for subnet".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolMemberRemove {
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpNet>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolMemberRemove> for super::SubnetPoolMemberRemove {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolMemberRemove,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    subnet: value.subnet?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolMemberRemove> for SubnetPoolMemberRemove {
+            fn from(value: super::SubnetPoolMemberRemove) -> Self {
+                Self {
+                    subnet: Ok(value.subnet),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolMemberResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SubnetPoolMember>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SubnetPoolMemberResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SubnetPoolMemberResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SubnetPoolMember>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolMemberResultsPage> for super::SubnetPoolMemberResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolMemberResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolMemberResultsPage> for SubnetPoolMemberResultsPage {
+            fn from(value: super::SubnetPoolMemberResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolResultsPage {
+            items: ::std::result::Result<::std::vec::Vec<super::SubnetPool>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SubnetPoolResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SubnetPoolResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SubnetPool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolResultsPage> for super::SubnetPoolResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolResultsPage> for SubnetPoolResultsPage {
+            fn from(value: super::SubnetPoolResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolSiloLink {
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            subnet_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolSiloLink {
+            fn default() -> Self {
+                Self {
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    silo_id: Err("no value supplied for silo_id".to_string()),
+                    subnet_pool_id: Err("no value supplied for subnet_pool_id".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolSiloLink {
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
+                self
+            }
+            pub fn subnet_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet_pool_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subnet_pool_id: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolSiloLink> for super::SubnetPoolSiloLink {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolSiloLink,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    is_default: value.is_default?,
+                    silo_id: value.silo_id?,
+                    subnet_pool_id: value.subnet_pool_id?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolSiloLink> for SubnetPoolSiloLink {
+            fn from(value: super::SubnetPoolSiloLink) -> Self {
+                Self {
+                    is_default: Ok(value.is_default),
+                    silo_id: Ok(value.silo_id),
+                    subnet_pool_id: Ok(value.subnet_pool_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolSiloLinkResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SubnetPoolSiloLink>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SubnetPoolSiloLinkResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SubnetPoolSiloLinkResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SubnetPoolSiloLink>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolSiloLinkResultsPage>
+            for super::SubnetPoolSiloLinkResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolSiloLinkResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolSiloLinkResultsPage> for SubnetPoolSiloLinkResultsPage {
+            fn from(value: super::SubnetPoolSiloLinkResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolSiloUpdate {
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolSiloUpdate {
+            fn default() -> Self {
+                Self {
+                    is_default: Err("no value supplied for is_default".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolSiloUpdate {
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolSiloUpdate> for super::SubnetPoolSiloUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolSiloUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    is_default: value.is_default?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolSiloUpdate> for SubnetPoolSiloUpdate {
+            fn from(value: super::SubnetPoolSiloUpdate) -> Self {
+                Self {
+                    is_default: Ok(value.is_default),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolUpdate {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SubnetPoolUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolUpdate> for super::SubnetPoolUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolUpdate> for SubnetPoolUpdate {
+            fn from(value: super::SubnetPoolUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetPoolUtilization {
+            allocated: ::std::result::Result<f64, ::std::string::String>,
+            capacity: ::std::result::Result<f64, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SubnetPoolUtilization {
+            fn default() -> Self {
+                Self {
+                    allocated: Err("no value supplied for allocated".to_string()),
+                    capacity: Err("no value supplied for capacity".to_string()),
+                }
+            }
+        }
+
+        impl SubnetPoolUtilization {
+            pub fn allocated<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<f64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.allocated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
+                self
+            }
+            pub fn capacity<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<f64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.capacity = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SubnetPoolUtilization> for super::SubnetPoolUtilization {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SubnetPoolUtilization,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allocated: value.allocated?,
+                    capacity: value.capacity?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetPoolUtilization> for SubnetPoolUtilization {
+            fn from(value: super::SubnetPoolUtilization) -> Self {
+                Self {
+                    allocated: Ok(value.allocated),
+                    capacity: Ok(value.capacity),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SupportBundleCreate {
             user_comment: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
@@ -64809,6 +67592,12 @@ pub mod types {
             }
         }
 
+        pub(super) fn external_subnet_allocator_auto_pool_selector() -> super::PoolSelector {
+            super::PoolSelector::Auto {
+                ip_version: ::std::option::Option::None,
+            }
+        }
+
         pub(super) fn floating_ip_create_address_allocator() -> super::AddressAllocator {
             super::AddressAllocator::Auto {
                 pool_selector: super::PoolSelector::Auto {
@@ -64848,6 +67637,10 @@ pub mod types {
                 ip_version: ::std::option::Option::None,
             }
         }
+
+        pub(super) fn subnet_pool_create_pool_type() -> super::IpPoolType {
+            super::IpPoolType::Unicast
+        }
     }
 }
 
@@ -64856,7 +67649,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026011600.0.0
+/// Version: 2026011601.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64897,7 +67690,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026011600.0.0"
+        "2026011601.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66208,6 +69001,163 @@ impl ClientExperimentalExt for Client {
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery<'_> {
         builder::TimeseriesQuery::new(self)
+    }
+}
+
+/// External subnets that can be attached to instances.
+pub trait ClientExternalSubnetsExt {
+    /// List external subnets in a project
+    ///
+    /// Sends a `GET` request to `/v1/external-subnets`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.external_subnet_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_list(&self) -> builder::ExternalSubnetList<'_>;
+    /// Create an external subnet
+    ///
+    /// Sends a `POST` request to `/v1/external-subnets`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.external_subnet_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_create(&self) -> builder::ExternalSubnetCreate<'_>;
+    /// Fetch an external subnet
+    ///
+    /// Sends a `GET` request to `/v1/external-subnets/{external_subnet}`
+    ///
+    /// Arguments:
+    /// - `external_subnet`: Name or ID of the external subnet
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.external_subnet_view()
+    ///    .external_subnet(external_subnet)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_view(&self) -> builder::ExternalSubnetView<'_>;
+    /// Update an external subnet
+    ///
+    /// Sends a `PUT` request to `/v1/external-subnets/{external_subnet}`
+    ///
+    /// Arguments:
+    /// - `external_subnet`: Name or ID of the external subnet
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.external_subnet_update()
+    ///    .external_subnet(external_subnet)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_update(&self) -> builder::ExternalSubnetUpdate<'_>;
+    /// Delete an external subnet
+    ///
+    /// Sends a `DELETE` request to `/v1/external-subnets/{external_subnet}`
+    ///
+    /// Arguments:
+    /// - `external_subnet`: Name or ID of the external subnet
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.external_subnet_delete()
+    ///    .external_subnet(external_subnet)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_delete(&self) -> builder::ExternalSubnetDelete<'_>;
+    /// Attach an external subnet to an instance
+    ///
+    /// Begins an asynchronous attach operation. Returns the subnet with
+    /// `instance_id` set to the target instance. The attach completes
+    /// asynchronously; poll the subnet to check completion.
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/external-subnets/{external_subnet}/attach`
+    ///
+    /// Arguments:
+    /// - `external_subnet`: Name or ID of the external subnet
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.external_subnet_attach()
+    ///    .external_subnet(external_subnet)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_attach(&self) -> builder::ExternalSubnetAttach<'_>;
+    /// Detach an external subnet from an instance
+    ///
+    /// Begins an asynchronous detach operation. Returns the subnet with
+    /// `instance_id` cleared. The detach completes asynchronously.
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/external-subnets/{external_subnet}/detach`
+    ///
+    /// Arguments:
+    /// - `external_subnet`: Name or ID of the external subnet
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.external_subnet_detach()
+    ///    .external_subnet(external_subnet)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn external_subnet_detach(&self) -> builder::ExternalSubnetDetach<'_>;
+}
+
+impl ClientExternalSubnetsExt for Client {
+    fn external_subnet_list(&self) -> builder::ExternalSubnetList<'_> {
+        builder::ExternalSubnetList::new(self)
+    }
+
+    fn external_subnet_create(&self) -> builder::ExternalSubnetCreate<'_> {
+        builder::ExternalSubnetCreate::new(self)
+    }
+
+    fn external_subnet_view(&self) -> builder::ExternalSubnetView<'_> {
+        builder::ExternalSubnetView::new(self)
+    }
+
+    fn external_subnet_update(&self) -> builder::ExternalSubnetUpdate<'_> {
+        builder::ExternalSubnetUpdate::new(self)
+    }
+
+    fn external_subnet_delete(&self) -> builder::ExternalSubnetDelete<'_> {
+        builder::ExternalSubnetDelete::new(self)
+    }
+
+    fn external_subnet_attach(&self) -> builder::ExternalSubnetAttach<'_> {
+        builder::ExternalSubnetAttach::new(self)
+    }
+
+    fn external_subnet_detach(&self) -> builder::ExternalSubnetDetach<'_> {
+        builder::ExternalSubnetDetach::new(self)
     }
 }
 
@@ -70098,6 +73048,268 @@ pub trait ClientSystemStatusExt {
 impl ClientSystemStatusExt for Client {
     fn ping(&self) -> builder::Ping<'_> {
         builder::Ping::new(self)
+    }
+}
+
+/// Subnet pools are collections of IP subnets that can be assigned to silos.
+/// When a pool is linked to a silo, users in that silo can allocate external
+/// subnets from the pool.
+pub trait ClientSystemSubnetPoolsExt {
+    /// List subnet pools
+    ///
+    /// Sends a `GET` request to `/v1/system/subnet-pools`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.subnet_pool_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_list(&self) -> builder::SubnetPoolList<'_>;
+    /// Create a subnet pool
+    ///
+    /// Sends a `POST` request to `/v1/system/subnet-pools`
+    ///
+    /// ```ignore
+    /// let response = client.subnet_pool_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_create(&self) -> builder::SubnetPoolCreate<'_>;
+    /// Fetch a subnet pool
+    ///
+    /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// ```ignore
+    /// let response = client.subnet_pool_view()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_view(&self) -> builder::SubnetPoolView<'_>;
+    /// Update a subnet pool
+    ///
+    /// Sends a `PUT` request to `/v1/system/subnet-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `body`
+    /// ```ignore
+    /// let response = client.subnet_pool_update()
+    ///    .pool(pool)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_update(&self) -> builder::SubnetPoolUpdate<'_>;
+    /// Delete a subnet pool
+    ///
+    /// Sends a `DELETE` request to `/v1/system/subnet-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// ```ignore
+    /// let response = client.subnet_pool_delete()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_delete(&self) -> builder::SubnetPoolDelete<'_>;
+    /// List members in a subnet pool
+    ///
+    /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/members`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.subnet_pool_member_list()
+    ///    .pool(pool)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_member_list(&self) -> builder::SubnetPoolMemberList<'_>;
+    /// Add a member to a subnet pool
+    ///
+    /// Sends a `POST` request to `/v1/system/subnet-pools/{pool}/members/add`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `body`
+    /// ```ignore
+    /// let response = client.subnet_pool_member_add()
+    ///    .pool(pool)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_member_add(&self) -> builder::SubnetPoolMemberAdd<'_>;
+    /// Remove a member from a subnet pool
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/subnet-pools/{pool}/members/remove`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `body`
+    /// ```ignore
+    /// let response = client.subnet_pool_member_remove()
+    ///    .pool(pool)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_member_remove(&self) -> builder::SubnetPoolMemberRemove<'_>;
+    /// List silos linked to a subnet pool
+    ///
+    /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/silos`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.subnet_pool_silo_list()
+    ///    .pool(pool)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_silo_list(&self) -> builder::SubnetPoolSiloList<'_>;
+    /// Link a subnet pool to a silo
+    ///
+    /// Sends a `POST` request to `/v1/system/subnet-pools/{pool}/silos`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `body`
+    /// ```ignore
+    /// let response = client.subnet_pool_silo_link()
+    ///    .pool(pool)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_silo_link(&self) -> builder::SubnetPoolSiloLink<'_>;
+    /// Update a subnet pool's link to a silo
+    ///
+    /// Sends a `PUT` request to `/v1/system/subnet-pools/{pool}/silos/{silo}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
+    /// ```ignore
+    /// let response = client.subnet_pool_silo_update()
+    ///    .pool(pool)
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_silo_update(&self) -> builder::SubnetPoolSiloUpdate<'_>;
+    /// Unlink a subnet pool from a silo
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/subnet-pools/{pool}/silos/{silo}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.subnet_pool_silo_unlink()
+    ///    .pool(pool)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_silo_unlink(&self) -> builder::SubnetPoolSiloUnlink<'_>;
+    /// Fetch subnet pool utilization
+    ///
+    /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/utilization`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// ```ignore
+    /// let response = client.subnet_pool_utilization_view()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_utilization_view(&self) -> builder::SubnetPoolUtilizationView<'_>;
+}
+
+impl ClientSystemSubnetPoolsExt for Client {
+    fn subnet_pool_list(&self) -> builder::SubnetPoolList<'_> {
+        builder::SubnetPoolList::new(self)
+    }
+
+    fn subnet_pool_create(&self) -> builder::SubnetPoolCreate<'_> {
+        builder::SubnetPoolCreate::new(self)
+    }
+
+    fn subnet_pool_view(&self) -> builder::SubnetPoolView<'_> {
+        builder::SubnetPoolView::new(self)
+    }
+
+    fn subnet_pool_update(&self) -> builder::SubnetPoolUpdate<'_> {
+        builder::SubnetPoolUpdate::new(self)
+    }
+
+    fn subnet_pool_delete(&self) -> builder::SubnetPoolDelete<'_> {
+        builder::SubnetPoolDelete::new(self)
+    }
+
+    fn subnet_pool_member_list(&self) -> builder::SubnetPoolMemberList<'_> {
+        builder::SubnetPoolMemberList::new(self)
+    }
+
+    fn subnet_pool_member_add(&self) -> builder::SubnetPoolMemberAdd<'_> {
+        builder::SubnetPoolMemberAdd::new(self)
+    }
+
+    fn subnet_pool_member_remove(&self) -> builder::SubnetPoolMemberRemove<'_> {
+        builder::SubnetPoolMemberRemove::new(self)
+    }
+
+    fn subnet_pool_silo_list(&self) -> builder::SubnetPoolSiloList<'_> {
+        builder::SubnetPoolSiloList::new(self)
+    }
+
+    fn subnet_pool_silo_link(&self) -> builder::SubnetPoolSiloLink<'_> {
+        builder::SubnetPoolSiloLink::new(self)
+    }
+
+    fn subnet_pool_silo_update(&self) -> builder::SubnetPoolSiloUpdate<'_> {
+        builder::SubnetPoolSiloUpdate::new(self)
+    }
+
+    fn subnet_pool_silo_unlink(&self) -> builder::SubnetPoolSiloUnlink<'_> {
+        builder::SubnetPoolSiloUnlink::new(self)
+    }
+
+    fn subnet_pool_utilization_view(&self) -> builder::SubnetPoolUtilizationView<'_> {
+        builder::SubnetPoolUtilizationView::new(self)
     }
 }
 
@@ -77497,6 +80709,802 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_list`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_list`]: super::ClientExternalSubnetsExt::external_subnet_list
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> ExternalSubnetList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/external-subnets`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnetResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/external-subnets", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/external-subnets`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::ExternalSubnet, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_create`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_create`]: super::ClientExternalSubnetsExt::external_subnet_create
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetCreate<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::ExternalSubnetCreate, String>,
+    }
+
+    impl<'a> ExternalSubnetCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ExternalSubnetCreate>,
+            <V as std::convert::TryInto<types::ExternalSubnetCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `ExternalSubnetCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ExternalSubnetCreate,
+            ) -> types::builder::ExternalSubnetCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/external-subnets`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnet>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::ExternalSubnetCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/external-subnets", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_view`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_view`]: super::ClientExternalSubnetsExt::external_subnet_view
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetView<'a> {
+        client: &'a super::Client,
+        external_subnet: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ExternalSubnetView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                external_subnet: Err("external_subnet was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn external_subnet<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.external_subnet = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for external_subnet failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/external-subnets/{external_subnet}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnet>, Error<types::Error>> {
+            let Self {
+                client,
+                external_subnet,
+                project,
+            } = self;
+            let external_subnet = external_subnet.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/external-subnets/{}",
+                client.baseurl,
+                encode_path(&external_subnet.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_update`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_update`]: super::ClientExternalSubnetsExt::external_subnet_update
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetUpdate<'a> {
+        client: &'a super::Client,
+        external_subnet: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::ExternalSubnetUpdate, String>,
+    }
+
+    impl<'a> ExternalSubnetUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                external_subnet: Err("external_subnet was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn external_subnet<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.external_subnet = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for external_subnet failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ExternalSubnetUpdate>,
+            <V as std::convert::TryInto<types::ExternalSubnetUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `ExternalSubnetUpdate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ExternalSubnetUpdate,
+            ) -> types::builder::ExternalSubnetUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/external-subnets/{external_subnet}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnet>, Error<types::Error>> {
+            let Self {
+                client,
+                external_subnet,
+                project,
+                body,
+            } = self;
+            let external_subnet = external_subnet.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::ExternalSubnetUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/external-subnets/{}",
+                client.baseurl,
+                encode_path(&external_subnet.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_delete`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_delete`]: super::ClientExternalSubnetsExt::external_subnet_delete
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetDelete<'a> {
+        client: &'a super::Client,
+        external_subnet: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ExternalSubnetDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                external_subnet: Err("external_subnet was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn external_subnet<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.external_subnet = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for external_subnet failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/external-subnets/{external_subnet}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                external_subnet,
+                project,
+            } = self;
+            let external_subnet = external_subnet.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/external-subnets/{}",
+                client.baseurl,
+                encode_path(&external_subnet.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_attach`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_attach`]: super::ClientExternalSubnetsExt::external_subnet_attach
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetAttach<'a> {
+        client: &'a super::Client,
+        external_subnet: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::ExternalSubnetAttach, String>,
+    }
+
+    impl<'a> ExternalSubnetAttach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                external_subnet: Err("external_subnet was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn external_subnet<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.external_subnet = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for external_subnet failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ExternalSubnetAttach>,
+            <V as std::convert::TryInto<types::ExternalSubnetAttach>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `ExternalSubnetAttach` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ExternalSubnetAttach,
+            ) -> types::builder::ExternalSubnetAttach,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/external-subnets/{external_subnet}/attach`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnet>, Error<types::Error>> {
+            let Self {
+                client,
+                external_subnet,
+                project,
+                body,
+            } = self;
+            let external_subnet = external_subnet.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::ExternalSubnetAttach::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/external-subnets/{}/attach",
+                client.baseurl,
+                encode_path(&external_subnet.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_attach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExternalSubnetsExt::external_subnet_detach`]
+    ///
+    /// [`ClientExternalSubnetsExt::external_subnet_detach`]: super::ClientExternalSubnetsExt::external_subnet_detach
+    #[derive(Debug, Clone)]
+    pub struct ExternalSubnetDetach<'a> {
+        client: &'a super::Client,
+        external_subnet: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ExternalSubnetDetach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                external_subnet: Err("external_subnet was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn external_subnet<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.external_subnet = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for external_subnet failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/external-subnets/{external_subnet}/detach`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnet>, Error<types::Error>> {
+            let Self {
+                client,
+                external_subnet,
+                project,
+            } = self;
+            let external_subnet = external_subnet.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/external-subnets/{}/detach",
+                client.baseurl,
+                encode_path(&external_subnet.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "external_subnet_detach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -96807,6 +100815,1415 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_list`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_list`]: super::ClientSystemSubnetPoolsExt::subnet_pool_list
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SubnetPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/subnet-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/subnet-pools", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/subnet-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SubnetPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_create`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_create`]: super::ClientSystemSubnetPoolsExt::subnet_pool_create
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SubnetPoolCreate, String>,
+    }
+
+    impl<'a> SubnetPoolCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SubnetPoolCreate>,
+            <V as std::convert::TryInto<types::SubnetPoolCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SubnetPoolCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SubnetPoolCreate,
+            ) -> types::builder::SubnetPoolCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/subnet-pools`
+        pub async fn send(self) -> Result<ResponseValue<types::SubnetPool>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SubnetPoolCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/subnet-pools", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_view`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_view`]: super::ClientSystemSubnetPoolsExt::subnet_pool_view
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolView<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SubnetPoolView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}`
+        pub async fn send(self) -> Result<ResponseValue<types::SubnetPool>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_update`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_update`]: super::ClientSystemSubnetPoolsExt::subnet_pool_update
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolUpdate<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::builder::SubnetPoolUpdate, String>,
+    }
+
+    impl<'a> SubnetPoolUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SubnetPoolUpdate>,
+            <V as std::convert::TryInto<types::SubnetPoolUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SubnetPoolUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SubnetPoolUpdate,
+            ) -> types::builder::SubnetPoolUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/subnet-pools/{pool}`
+        pub async fn send(self) -> Result<ResponseValue<types::SubnetPool>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SubnetPoolUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_delete`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_delete`]: super::ClientSystemSubnetPoolsExt::subnet_pool_delete
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolDelete<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SubnetPoolDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/subnet-pools/{pool}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_member_list`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_member_list`]: super::ClientSystemSubnetPoolsExt::subnet_pool_member_list
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolMemberList<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SubnetPoolMemberList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/members`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolMemberResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                pool,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/members",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_member_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/subnet-pools/{pool}/members`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SubnetPoolMember, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_member_add`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_member_add`]: super::ClientSystemSubnetPoolsExt::subnet_pool_member_add
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolMemberAdd<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::builder::SubnetPoolMemberAdd, String>,
+    }
+
+    impl<'a> SubnetPoolMemberAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SubnetPoolMemberAdd>,
+            <V as std::convert::TryInto<types::SubnetPoolMemberAdd>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SubnetPoolMemberAdd` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SubnetPoolMemberAdd,
+            ) -> types::builder::SubnetPoolMemberAdd,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/subnet-pools/{pool}/members/add`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolMember>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SubnetPoolMemberAdd::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/members/add",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_member_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_member_remove`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_member_remove`]: super::ClientSystemSubnetPoolsExt::subnet_pool_member_remove
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolMemberRemove<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::builder::SubnetPoolMemberRemove, String>,
+    }
+
+    impl<'a> SubnetPoolMemberRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SubnetPoolMemberRemove>,
+            <V as std::convert::TryInto<types::SubnetPoolMemberRemove>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `SubnetPoolMemberRemove` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SubnetPoolMemberRemove,
+            ) -> types::builder::SubnetPoolMemberRemove,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/subnet-pools/{pool}/members/remove`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SubnetPoolMemberRemove::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/members/remove",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_member_remove",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_list`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_list`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_list
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolSiloList<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SubnetPoolSiloList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/silos`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolSiloLinkResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                pool,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/silos",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_silo_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/subnet-pools/{pool}/silos`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SubnetPoolSiloLink, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_link`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_link`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_link
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolSiloLink<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::builder::SubnetPoolLinkSilo, String>,
+    }
+
+    impl<'a> SubnetPoolSiloLink<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SubnetPoolLinkSilo>,
+            <V as std::convert::TryInto<types::SubnetPoolLinkSilo>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SubnetPoolLinkSilo` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SubnetPoolLinkSilo,
+            ) -> types::builder::SubnetPoolLinkSilo,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/subnet-pools/{pool}/silos`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolSiloLink>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SubnetPoolLinkSilo::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/silos",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_silo_link",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_update`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_update`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_update
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolSiloUpdate<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::builder::SubnetPoolSiloUpdate, String>,
+    }
+
+    impl<'a> SubnetPoolSiloUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SubnetPoolSiloUpdate>,
+            <V as std::convert::TryInto<types::SubnetPoolSiloUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `SubnetPoolSiloUpdate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SubnetPoolSiloUpdate,
+            ) -> types::builder::SubnetPoolSiloUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/v1/system/subnet-pools/{pool}/silos/{silo}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolSiloLink>, Error<types::Error>> {
+            let Self {
+                client,
+                pool,
+                silo,
+                body,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SubnetPoolSiloUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/silos/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+                encode_path(&silo.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_silo_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_unlink`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_unlink`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_unlink
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolSiloUnlink<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SubnetPoolSiloUnlink<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/subnet-pools/{pool}/silos/{silo}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, pool, silo } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/silos/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+                encode_path(&silo.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_silo_unlink",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_utilization_view`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::subnet_pool_utilization_view`]: super::ClientSystemSubnetPoolsExt::subnet_pool_utilization_view
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolUtilizationView<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SubnetPoolUtilizationView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/subnet-pools/{pool}/utilization`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SubnetPoolUtilization>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/subnet-pools/{}/utilization",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_utilization_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemMetricsExt::system_timeseries_query`]
     ///
     /// [`ClientSystemMetricsExt::system_timeseries_query`]: super::ClientSystemMetricsExt::system_timeseries_query
@@ -102826,6 +108243,7 @@ pub mod prelude {
     pub use super::ClientCurrentUserExt;
     pub use super::ClientDisksExt;
     pub use super::ClientExperimentalExt;
+    pub use super::ClientExternalSubnetsExt;
     pub use super::ClientFloatingIpsExt;
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;
@@ -102843,6 +108261,7 @@ pub mod prelude {
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
+    pub use super::ClientSystemSubnetPoolsExt;
     pub use super::ClientSystemUpdateExt;
     pub use super::ClientTokensExt;
     pub use super::ClientVpcsExt;

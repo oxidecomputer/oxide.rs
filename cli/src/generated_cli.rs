@@ -87,6 +87,13 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::DiskBulkWriteImportStart => Self::cli_disk_bulk_write_import_start(),
             CliCommand::DiskBulkWriteImportStop => Self::cli_disk_bulk_write_import_stop(),
             CliCommand::DiskFinalizeImport => Self::cli_disk_finalize_import(),
+            CliCommand::ExternalSubnetList => Self::cli_external_subnet_list(),
+            CliCommand::ExternalSubnetCreate => Self::cli_external_subnet_create(),
+            CliCommand::ExternalSubnetView => Self::cli_external_subnet_view(),
+            CliCommand::ExternalSubnetUpdate => Self::cli_external_subnet_update(),
+            CliCommand::ExternalSubnetDelete => Self::cli_external_subnet_delete(),
+            CliCommand::ExternalSubnetAttach => Self::cli_external_subnet_attach(),
+            CliCommand::ExternalSubnetDetach => Self::cli_external_subnet_detach(),
             CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
             CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
@@ -312,6 +319,19 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
+            CliCommand::SubnetPoolList => Self::cli_subnet_pool_list(),
+            CliCommand::SubnetPoolCreate => Self::cli_subnet_pool_create(),
+            CliCommand::SubnetPoolView => Self::cli_subnet_pool_view(),
+            CliCommand::SubnetPoolUpdate => Self::cli_subnet_pool_update(),
+            CliCommand::SubnetPoolDelete => Self::cli_subnet_pool_delete(),
+            CliCommand::SubnetPoolMemberList => Self::cli_subnet_pool_member_list(),
+            CliCommand::SubnetPoolMemberAdd => Self::cli_subnet_pool_member_add(),
+            CliCommand::SubnetPoolMemberRemove => Self::cli_subnet_pool_member_remove(),
+            CliCommand::SubnetPoolSiloList => Self::cli_subnet_pool_silo_list(),
+            CliCommand::SubnetPoolSiloLink => Self::cli_subnet_pool_silo_link(),
+            CliCommand::SubnetPoolSiloUpdate => Self::cli_subnet_pool_silo_update(),
+            CliCommand::SubnetPoolSiloUnlink => Self::cli_subnet_pool_silo_unlink(),
+            CliCommand::SubnetPoolUtilizationView => Self::cli_subnet_pool_utilization_view(),
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
             CliCommand::SystemUpdateRepositoryList => Self::cli_system_update_repository_list(),
@@ -1984,6 +2004,227 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Confirm disk block import completion")
+    }
+
+    pub fn cli_external_subnet_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List external subnets in a project")
+    }
+
+    pub fn cli_external_subnet_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create an external subnet")
+    }
+
+    pub fn cli_external_subnet_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("external-subnet")
+                    .long("external-subnet")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the external subnet"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch an external subnet")
+    }
+
+    pub fn cli_external_subnet_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("external-subnet")
+                    .long("external-subnet")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the external subnet"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update an external subnet")
+    }
+
+    pub fn cli_external_subnet_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("external-subnet")
+                    .long("external-subnet")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the external subnet"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Delete an external subnet")
+    }
+
+    pub fn cli_external_subnet_attach() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("external-subnet")
+                    .long("external-subnet")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the external subnet"),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("Name or ID of the instance to attach to"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Attach an external subnet to an instance")
+            .long_about(
+                "Begins an asynchronous attach operation. Returns the subnet with `instance_id` \
+                 set to the target instance. The attach completes asynchronously; poll the subnet \
+                 to check completion.",
+            )
+    }
+
+    pub fn cli_external_subnet_detach() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("external-subnet")
+                    .long("external-subnet")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the external subnet"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Detach an external subnet from an instance")
+            .long_about(
+                "Begins an asynchronous detach operation. Returns the subnet with `instance_id` \
+                 cleared. The detach completes asynchronously.",
+            )
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {
@@ -7146,6 +7387,434 @@ impl<T: CliConfig> Cli<T> {
             .long_about("If a quota value is not specified, it will remain unchanged.")
     }
 
+    pub fn cli_subnet_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List subnet pools")
+    }
+
+    pub fn cli_subnet_pool_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The IP version for this pool (IPv4 or IPv6). All subnets in the pool \
+                         must match this version.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("pool-type")
+                    .long("pool-type")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolType::Unicast.to_string(),
+                            types::IpPoolType::Multicast.to_string(),
+                        ]),
+                        |s| types::IpPoolType::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("Type of subnet pool (defaults to Unicast)"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .about("Fetch a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .about("Delete a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_member_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List members in a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_member_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("max-prefix-length")
+                    .long("max-prefix-length")
+                    .value_parser(::clap::value_parser!(u8))
+                    .required(false)
+                    .help(
+                        "Maximum prefix length for allocations from this subnet; a larger prefix \
+                         means smaller allocations are allowed (e.g. a /24 prefix yields smaller \
+                         subnet allocations than a /16 prefix).\n\nValid values: 0-32 for IPv4, \
+                         0-128 for IPv6. Default if not specified is 32 for IPv4 and 128 for IPv6.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("min-prefix-length")
+                    .long("min-prefix-length")
+                    .value_parser(::clap::value_parser!(u8))
+                    .required(false)
+                    .help(
+                        "Minimum prefix length for allocations from this subnet; a smaller prefix \
+                         means larger allocations are allowed (e.g. a /16 prefix yields larger \
+                         subnet allocations than a /24 prefix).\n\nValid values: 0-32 for IPv4, \
+                         0-128 for IPv6. Default if not specified is equal to the subnet's prefix \
+                         length.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("subnet")
+                    .long("subnet")
+                    .value_parser(::clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The subnet to add to the pool"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add a member to a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_member_remove() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("subnet")
+                    .long("subnet")
+                    .value_parser(::clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The subnet to remove from the pool. Must match an existing entry exactly.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove a member from a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_silo_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List silos linked to a subnet pool")
+    }
+
+    pub fn cli_subnet_pool_silo_link() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("is-default")
+                    .long("is-default")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "Whether this is the default subnet pool for the silo. When true, \
+                         external subnet allocations that don't specify a pool use this one.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("The silo to link"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Link a subnet pool to a silo")
+    }
+
+    pub fn cli_subnet_pool_silo_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("is-default")
+                    .long("is-default")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help("Whether this is the default subnet pool for the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update a subnet pool's link to a silo")
+    }
+
+    pub fn cli_subnet_pool_silo_unlink() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .about("Unlink a subnet pool from a silo")
+    }
+
+    pub fn cli_subnet_pool_utilization_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .about("Fetch subnet pool utilization")
+    }
+
     pub fn cli_system_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -8872,6 +9541,13 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_disk_bulk_write_import_stop(matches).await
             }
             CliCommand::DiskFinalizeImport => self.execute_disk_finalize_import(matches).await,
+            CliCommand::ExternalSubnetList => self.execute_external_subnet_list(matches).await,
+            CliCommand::ExternalSubnetCreate => self.execute_external_subnet_create(matches).await,
+            CliCommand::ExternalSubnetView => self.execute_external_subnet_view(matches).await,
+            CliCommand::ExternalSubnetUpdate => self.execute_external_subnet_update(matches).await,
+            CliCommand::ExternalSubnetDelete => self.execute_external_subnet_delete(matches).await,
+            CliCommand::ExternalSubnetAttach => self.execute_external_subnet_attach(matches).await,
+            CliCommand::ExternalSubnetDetach => self.execute_external_subnet_detach(matches).await,
             CliCommand::FloatingIpList => self.execute_floating_ip_list(matches).await,
             CliCommand::FloatingIpCreate => self.execute_floating_ip_create(matches).await,
             CliCommand::FloatingIpView => self.execute_floating_ip_view(matches).await,
@@ -9214,6 +9890,23 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloPolicyUpdate => self.execute_silo_policy_update(matches).await,
             CliCommand::SiloQuotasView => self.execute_silo_quotas_view(matches).await,
             CliCommand::SiloQuotasUpdate => self.execute_silo_quotas_update(matches).await,
+            CliCommand::SubnetPoolList => self.execute_subnet_pool_list(matches).await,
+            CliCommand::SubnetPoolCreate => self.execute_subnet_pool_create(matches).await,
+            CliCommand::SubnetPoolView => self.execute_subnet_pool_view(matches).await,
+            CliCommand::SubnetPoolUpdate => self.execute_subnet_pool_update(matches).await,
+            CliCommand::SubnetPoolDelete => self.execute_subnet_pool_delete(matches).await,
+            CliCommand::SubnetPoolMemberList => self.execute_subnet_pool_member_list(matches).await,
+            CliCommand::SubnetPoolMemberAdd => self.execute_subnet_pool_member_add(matches).await,
+            CliCommand::SubnetPoolMemberRemove => {
+                self.execute_subnet_pool_member_remove(matches).await
+            }
+            CliCommand::SubnetPoolSiloList => self.execute_subnet_pool_silo_list(matches).await,
+            CliCommand::SubnetPoolSiloLink => self.execute_subnet_pool_silo_link(matches).await,
+            CliCommand::SubnetPoolSiloUpdate => self.execute_subnet_pool_silo_update(matches).await,
+            CliCommand::SubnetPoolSiloUnlink => self.execute_subnet_pool_silo_unlink(matches).await,
+            CliCommand::SubnetPoolUtilizationView => {
+                self.execute_subnet_pool_utilization_view(matches).await
+            }
             CliCommand::SystemTimeseriesQuery => {
                 self.execute_system_timeseries_query(matches).await
             }
@@ -11273,6 +11966,258 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_external_subnet_list(matches, &mut request)?;
+        self.config.list_start::<types::ExternalSubnetResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::ExternalSubnetResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ExternalSubnetCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_external_subnet_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("external-subnet") {
+            request = request.external_subnet(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_external_subnet_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_update();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("external-subnet") {
+            request = request.external_subnet(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ExternalSubnetUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_external_subnet_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("external-subnet") {
+            request = request.external_subnet(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_external_subnet_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_attach(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_attach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("external-subnet") {
+            request = request.external_subnet(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.body_map(|body| body.instance(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ExternalSubnetAttach>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_external_subnet_attach(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_external_subnet_detach(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.external_subnet_detach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("external-subnet") {
+            request = request.external_subnet(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_external_subnet_detach(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -17258,6 +18203,488 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_subnet_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_list(matches, &mut request)?;
+        self.config.list_start::<types::SubnetPoolResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SubnetPoolResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.body_map(|body| body.ip_version(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
+            request = request.body_map(|body| body.pool_type(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SubnetPoolCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_subnet_pool_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_update();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SubnetPoolUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_subnet_pool_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_member_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_member_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::SubnetPoolMemberResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SubnetPoolMemberResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_member_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_member_add();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u8>("max-prefix-length") {
+            request = request.body_map(|body| body.max_prefix_length(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u8>("min-prefix-length") {
+            request = request.body_map(|body| body.min_prefix_length(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("subnet") {
+            request = request.body_map(|body| body.subnet(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SubnetPoolMemberAdd>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_subnet_pool_member_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_member_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_member_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("subnet") {
+            request = request.body_map(|body| body.subnet(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SubnetPoolMemberRemove>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_subnet_pool_member_remove(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_silo_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_silo_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_silo_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::SubnetPoolSiloLinkResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SubnetPoolSiloLinkResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_silo_link(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_silo_link();
+        if let Some(value) = matches.get_one::<bool>("is-default") {
+            request = request.body_map(|body| body.is_default(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.body_map(|body| body.silo(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SubnetPoolLinkSilo>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_subnet_pool_silo_link(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_silo_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_silo_update();
+        if let Some(value) = matches.get_one::<bool>("is-default") {
+            request = request.body_map(|body| body.is_default(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SubnetPoolSiloUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_subnet_pool_silo_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_silo_unlink(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_silo_unlink();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_silo_unlink(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_utilization_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_utilization_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_utilization_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_system_timeseries_query(
         &self,
         matches: &::clap::ArgMatches,
@@ -19599,6 +21026,62 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_external_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_external_subnet_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_external_subnet_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_external_subnet_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_external_subnet_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_external_subnet_attach(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetAttach,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_external_subnet_detach(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExternalSubnetDetach,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_floating_ip_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20983,6 +22466,110 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_subnet_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolMemberList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_member_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolMemberAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_member_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolMemberRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_silo_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolSiloList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_silo_link(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolSiloLink,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_silo_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolSiloUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_silo_unlink(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolSiloUnlink,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_utilization_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolUtilizationView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_system_timeseries_query(
         &self,
         matches: &::clap::ArgMatches,
@@ -21461,6 +23048,13 @@ pub enum CliCommand {
     DiskBulkWriteImportStart,
     DiskBulkWriteImportStop,
     DiskFinalizeImport,
+    ExternalSubnetList,
+    ExternalSubnetCreate,
+    ExternalSubnetView,
+    ExternalSubnetUpdate,
+    ExternalSubnetDelete,
+    ExternalSubnetAttach,
+    ExternalSubnetDetach,
     FloatingIpList,
     FloatingIpCreate,
     FloatingIpView,
@@ -21634,6 +23228,19 @@ pub enum CliCommand {
     SiloPolicyUpdate,
     SiloQuotasView,
     SiloQuotasUpdate,
+    SubnetPoolList,
+    SubnetPoolCreate,
+    SubnetPoolView,
+    SubnetPoolUpdate,
+    SubnetPoolDelete,
+    SubnetPoolMemberList,
+    SubnetPoolMemberAdd,
+    SubnetPoolMemberRemove,
+    SubnetPoolSiloList,
+    SubnetPoolSiloLink,
+    SubnetPoolSiloUpdate,
+    SubnetPoolSiloUnlink,
+    SubnetPoolUtilizationView,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
     SystemUpdateRepositoryList,
@@ -21750,6 +23357,13 @@ impl CliCommand {
             CliCommand::DiskBulkWriteImportStart,
             CliCommand::DiskBulkWriteImportStop,
             CliCommand::DiskFinalizeImport,
+            CliCommand::ExternalSubnetList,
+            CliCommand::ExternalSubnetCreate,
+            CliCommand::ExternalSubnetView,
+            CliCommand::ExternalSubnetUpdate,
+            CliCommand::ExternalSubnetDelete,
+            CliCommand::ExternalSubnetAttach,
+            CliCommand::ExternalSubnetDetach,
             CliCommand::FloatingIpList,
             CliCommand::FloatingIpCreate,
             CliCommand::FloatingIpView,
@@ -21923,6 +23537,19 @@ impl CliCommand {
             CliCommand::SiloPolicyUpdate,
             CliCommand::SiloQuotasView,
             CliCommand::SiloQuotasUpdate,
+            CliCommand::SubnetPoolList,
+            CliCommand::SubnetPoolCreate,
+            CliCommand::SubnetPoolView,
+            CliCommand::SubnetPoolUpdate,
+            CliCommand::SubnetPoolDelete,
+            CliCommand::SubnetPoolMemberList,
+            CliCommand::SubnetPoolMemberAdd,
+            CliCommand::SubnetPoolMemberRemove,
+            CliCommand::SubnetPoolSiloList,
+            CliCommand::SubnetPoolSiloLink,
+            CliCommand::SubnetPoolSiloUpdate,
+            CliCommand::SubnetPoolSiloUnlink,
+            CliCommand::SubnetPoolUtilizationView,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
             CliCommand::SystemUpdateRepositoryList,
