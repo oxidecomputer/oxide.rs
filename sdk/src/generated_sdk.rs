@@ -113,7 +113,8 @@ pub mod types {
     ///  "description": "Specify how to allocate a floating IP address.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Reserve a specific IP address.",
+    ///      "description": "Reserve a specific IP address. The pool is inferred
+    /// from the address since IP pools cannot have overlapping ranges.",
     ///      "type": "object",
     ///      "required": [
     ///        "ip",
@@ -121,26 +122,9 @@ pub mod types {
     ///      ],
     ///      "properties": {
     ///        "ip": {
-    ///          "description": "The IP address to reserve. Must be available in
-    /// the pool.",
+    ///          "description": "The IP address to reserve.",
     ///          "type": "string",
     ///          "format": "ip"
-    ///        },
-    ///        "pool": {
-    ///          "description": "The pool containing this address. If not
-    /// specified, the default pool for the address's IP version is used.",
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/NameOrId"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -151,18 +135,16 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Automatically allocate an IP address from a
-    /// specified pool.",
+    ///      "description": "Automatically allocate an IP address from a pool.",
     ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
     ///      "properties": {
     ///        "pool_selector": {
-    ///          "description": "Pool selection.\n\nIf omitted, this field uses
-    /// the silo's default pool. If the silo has default pools for both IPv4 and
-    /// IPv6, the request will fail unless `ip_version` is specified in the pool
-    /// selector.",
+    ///          "description": "Pool selection.\n\nIf omitted, the silo's
+    /// default pool is used. If the silo has default pools for both IPv4 and
+    /// IPv6, the request will fail unless `ip_version` is specified.",
     ///          "default": {
     ///            "ip_version": null,
     ///            "type": "auto"
@@ -190,24 +172,21 @@ pub mod types {
     )]
     #[serde(tag = "type")]
     pub enum AddressAllocator {
-        /// Reserve a specific IP address.
+        /// Reserve a specific IP address. The pool is inferred from the address
+        /// since IP pools cannot have overlapping ranges.
         #[serde(rename = "explicit")]
         Explicit {
-            /// The IP address to reserve. Must be available in the pool.
+            /// The IP address to reserve.
             ip: ::std::net::IpAddr,
-            /// The pool containing this address. If not specified, the default
-            /// pool for the address's IP version is used.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-            pool: ::std::option::Option<NameOrId>,
         },
-        /// Automatically allocate an IP address from a specified pool.
+        /// Automatically allocate an IP address from a pool.
         #[serde(rename = "auto")]
         Auto {
             /// Pool selection.
             ///
-            /// If omitted, this field uses the silo's default pool. If the silo
-            /// has default pools for both IPv4 and IPv6, the request will fail
-            /// unless `ip_version` is specified in the pool selector.
+            /// If omitted, the silo's default pool is used. If the silo has
+            /// default pools for both IPv4 and IPv6, the request will fail
+            /// unless `ip_version` is specified.
             #[serde(default = "defaults::address_allocator_auto_pool_selector")]
             pool_selector: PoolSelector,
         },
@@ -68286,7 +68265,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026012100.0.0
+/// Version: 2026012200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68327,7 +68306,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026012100.0.0"
+        "2026012200.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -69860,7 +69839,10 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_list(&self) -> builder::FloatingIpList<'_>;
-    /// Create floating IP
+    /// Create a floating IP
+    ///
+    /// A specific IP address can be reserved, or an IP can be auto-allocated
+    /// from a specific pool or the silo's default pool.
     ///
     /// Sends a `POST` request to `/v1/floating-ips`
     ///

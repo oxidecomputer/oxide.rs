@@ -2296,7 +2296,11 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create floating IP")
+            .about("Create a floating IP")
+            .long_about(
+                "A specific IP address can be reserved, or an IP can be auto-allocated from a \
+                 specific pool or the silo's default pool.",
+            )
     }
 
     pub fn cli_floating_ip_view() -> ::clap::Command {
