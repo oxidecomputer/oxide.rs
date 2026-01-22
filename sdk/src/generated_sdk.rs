@@ -3798,6 +3798,59 @@ pub mod types {
         }
     }
 
+    /// A representation of a Baseboard ID as used in the inventory subsystem.
+    ///
+    /// This type is essentially the same as a `Baseboard` except it doesn't
+    /// have a revision or HW type (Gimlet, PC, Unknown).
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A representation of a Baseboard ID as used in the
+    /// inventory subsystem.\n\nThis type is essentially the same as a
+    /// `Baseboard` except it doesn't have a revision or HW type (Gimlet, PC,
+    /// Unknown).",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "part_number",
+    ///    "serial_number"
+    ///  ],
+    ///  "properties": {
+    ///    "part_number": {
+    ///      "description": "Oxide Part Number",
+    ///      "type": "string"
+    ///    },
+    ///    "serial_number": {
+    ///      "description": "Serial number (unique for a given part number)",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct BaseboardId {
+        /// Oxide Part Number
+        pub part_number: ::std::string::String,
+        /// Serial number (unique for a given part number)
+        pub serial_number: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&BaseboardId> for BaseboardId {
+        fn from(value: &BaseboardId) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BaseboardId {
+        pub fn builder() -> builder::BaseboardId {
+            Default::default()
+        }
+    }
+
     /// BFD connection mode.
     ///
     /// <details><summary>JSON schema</summary>
@@ -25136,6 +25189,322 @@ pub mod types {
         }
     }
 
+    /// `RackMembershipAddSledsRequest`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "sled_ids"
+    ///  ],
+    ///  "properties": {
+    ///    "sled_ids": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BaseboardId"
+    ///      },
+    ///      "uniqueItems": true
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct RackMembershipAddSledsRequest {
+        pub sled_ids: Vec<BaseboardId>,
+    }
+
+    impl ::std::convert::From<&RackMembershipAddSledsRequest> for RackMembershipAddSledsRequest {
+        fn from(value: &RackMembershipAddSledsRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RackMembershipAddSledsRequest {
+        pub fn builder() -> builder::RackMembershipAddSledsRequest {
+            Default::default()
+        }
+    }
+
+    /// `RackMembershipChangeState`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "in_progress",
+    ///    "committed",
+    ///    "aborted"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum RackMembershipChangeState {
+        #[serde(rename = "in_progress")]
+        InProgress,
+        #[serde(rename = "committed")]
+        Committed,
+        #[serde(rename = "aborted")]
+        Aborted,
+    }
+
+    impl ::std::convert::From<&Self> for RackMembershipChangeState {
+        fn from(value: &RackMembershipChangeState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for RackMembershipChangeState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::InProgress => f.write_str("in_progress"),
+                Self::Committed => f.write_str("committed"),
+                Self::Aborted => f.write_str("aborted"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for RackMembershipChangeState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "in_progress" => Ok(Self::InProgress),
+                "committed" => Ok(Self::Committed),
+                "aborted" => Ok(Self::Aborted),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for RackMembershipChangeState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for RackMembershipChangeState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for RackMembershipChangeState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// Status of the rack membership uniquely identified by the (rack_id,
+    /// version) pair
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Status of the rack membership uniquely identified by
+    /// the (rack_id, version) pair",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "members",
+    ///    "rack_id",
+    ///    "state",
+    ///    "time_created",
+    ///    "unacknowledged_members",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "members": {
+    ///      "description": "All members of the rack for this version",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BaseboardId"
+    ///      },
+    ///      "uniqueItems": true
+    ///    },
+    ///    "rack_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "state": {
+    ///      "$ref": "#/components/schemas/RackMembershipChangeState"
+    ///    },
+    ///    "time_aborted": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_committed": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "unacknowledged_members": {
+    ///      "description": "All members that have not yet confirmed this
+    /// membership version",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BaseboardId"
+    ///      },
+    ///      "uniqueItems": true
+    ///    },
+    ///    "version": {
+    ///      "description": "Version that uniquely identifies the rack
+    /// membership at a given point in time",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RackMembershipVersion"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct RackMembershipStatus {
+        /// All members of the rack for this version
+        pub members: Vec<BaseboardId>,
+        pub rack_id: ::uuid::Uuid,
+        pub state: RackMembershipChangeState,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_aborted: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_committed: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// All members that have not yet confirmed this membership version
+        pub unacknowledged_members: Vec<BaseboardId>,
+        /// Version that uniquely identifies the rack membership at a given
+        /// point in time
+        pub version: RackMembershipVersion,
+    }
+
+    impl ::std::convert::From<&RackMembershipStatus> for RackMembershipStatus {
+        fn from(value: &RackMembershipStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RackMembershipStatus {
+        pub fn builder() -> builder::RackMembershipStatus {
+            Default::default()
+        }
+    }
+
+    /// A unique, monotonically increasing number representing the set of active
+    /// sleds in a rack at a given point in time.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A unique, monotonically increasing number representing
+    /// the set of active sleds in a rack at a given point in time.",
+    ///  "type": "integer",
+    ///  "format": "uint64",
+    ///  "minimum": 0.0
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct RackMembershipVersion(pub u64);
+    impl ::std::ops::Deref for RackMembershipVersion {
+        type Target = u64;
+        fn deref(&self) -> &u64 {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<RackMembershipVersion> for u64 {
+        fn from(value: RackMembershipVersion) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&RackMembershipVersion> for RackMembershipVersion {
+        fn from(value: &RackMembershipVersion) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<u64> for RackMembershipVersion {
+        fn from(value: u64) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for RackMembershipVersion {
+        type Err = <u64 as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for RackMembershipVersion {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for RackMembershipVersion {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for RackMembershipVersion {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for RackMembershipVersion {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -41465,6 +41834,65 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BaseboardId {
+            part_number: ::std::result::Result<::std::string::String, ::std::string::String>,
+            serial_number: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for BaseboardId {
+            fn default() -> Self {
+                Self {
+                    part_number: Err("no value supplied for part_number".to_string()),
+                    serial_number: Err("no value supplied for serial_number".to_string()),
+                }
+            }
+        }
+
+        impl BaseboardId {
+            pub fn part_number<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.part_number = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for part_number: {}", e));
+                self
+            }
+            pub fn serial_number<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.serial_number = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for serial_number: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<BaseboardId> for super::BaseboardId {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BaseboardId,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    part_number: value.part_number?,
+                    serial_number: value.serial_number?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::BaseboardId> for BaseboardId {
+            fn from(value: super::BaseboardId) -> Self {
+                Self {
+                    part_number: Ok(value.part_number),
+                    serial_number: Ok(value.serial_number),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BfdSessionDisable {
             remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             switch: ::std::result::Result<super::Name, ::std::string::String>,
@@ -56305,6 +56733,215 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct RackMembershipAddSledsRequest {
+            sled_ids: ::std::result::Result<Vec<super::BaseboardId>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for RackMembershipAddSledsRequest {
+            fn default() -> Self {
+                Self {
+                    sled_ids: Err("no value supplied for sled_ids".to_string()),
+                }
+            }
+        }
+
+        impl RackMembershipAddSledsRequest {
+            pub fn sled_ids<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<Vec<super::BaseboardId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sled_ids = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled_ids: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<RackMembershipAddSledsRequest>
+            for super::RackMembershipAddSledsRequest
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RackMembershipAddSledsRequest,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    sled_ids: value.sled_ids?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::RackMembershipAddSledsRequest> for RackMembershipAddSledsRequest {
+            fn from(value: super::RackMembershipAddSledsRequest) -> Self {
+                Self {
+                    sled_ids: Ok(value.sled_ids),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RackMembershipStatus {
+            members: ::std::result::Result<Vec<super::BaseboardId>, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            state: ::std::result::Result<super::RackMembershipChangeState, ::std::string::String>,
+            time_aborted: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            time_committed: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            unacknowledged_members:
+                ::std::result::Result<Vec<super::BaseboardId>, ::std::string::String>,
+            version: ::std::result::Result<super::RackMembershipVersion, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for RackMembershipStatus {
+            fn default() -> Self {
+                Self {
+                    members: Err("no value supplied for members".to_string()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    time_aborted: Ok(Default::default()),
+                    time_committed: Ok(Default::default()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    unacknowledged_members: Err(
+                        "no value supplied for unacknowledged_members".to_string()
+                    ),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+
+        impl RackMembershipStatus {
+            pub fn members<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<Vec<super::BaseboardId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.members = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for members: {}", e));
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::RackMembershipChangeState>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn time_aborted<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_aborted = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_aborted: {}", e)
+                });
+                self
+            }
+            pub fn time_committed<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_committed = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_committed: {}", e)
+                });
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn unacknowledged_members<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<Vec<super::BaseboardId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.unacknowledged_members = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for unacknowledged_members: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::RackMembershipVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<RackMembershipStatus> for super::RackMembershipStatus {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RackMembershipStatus,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    members: value.members?,
+                    rack_id: value.rack_id?,
+                    state: value.state?,
+                    time_aborted: value.time_aborted?,
+                    time_committed: value.time_committed?,
+                    time_created: value.time_created?,
+                    unacknowledged_members: value.unacknowledged_members?,
+                    version: value.version?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::RackMembershipStatus> for RackMembershipStatus {
+            fn from(value: super::RackMembershipStatus) -> Self {
+                Self {
+                    members: Ok(value.members),
+                    rack_id: Ok(value.rack_id),
+                    state: Ok(value.state),
+                    time_aborted: Ok(value.time_aborted),
+                    time_committed: Ok(value.time_committed),
+                    time_created: Ok(value.time_created),
+                    unacknowledged_members: Ok(value.unacknowledged_members),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct RackResultsPage {
             items: ::std::result::Result<::std::vec::Vec<super::Rack>, ::std::string::String>,
             next_page: ::std::result::Result<
@@ -67649,7 +68286,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026011601.0.0
+/// Version: 2026012100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -67690,7 +68327,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026011601.0.0"
+        "2026012100.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -68855,6 +69492,38 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_>;
+    /// Retrieve the rack cluster membership status
+    ///
+    /// Returns the status for the most recent change, or a specific version if
+    /// one is specified.
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/hardware/racks/{rack_id}/membership`
+    ///
+    /// ```ignore
+    /// let response = client.rack_membership_status()
+    ///    .rack_id(rack_id)
+    ///    .version(version)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_>;
+    /// Add new sleds to rack membership
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/hardware/racks/{rack_id}/membership/add`
+    ///
+    /// Arguments:
+    /// - `rack_id`: ID of the rack
+    /// - `body`
+    /// ```ignore
+    /// let response = client.rack_membership_add_sleds()
+    ///    .rack_id(rack_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn rack_membership_add_sleds(&self) -> builder::RackMembershipAddSleds<'_>;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -68997,6 +69666,14 @@ impl ClientExperimentalExt for Client {
 
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_> {
         builder::MulticastGroupMemberList::new(self)
+    }
+
+    fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_> {
+        builder::RackMembershipStatus::new(self)
+    }
+
+    fn rack_membership_add_sleds(&self) -> builder::RackMembershipAddSleds<'_> {
+        builder::RackMembershipAddSleds::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery<'_> {
@@ -92083,6 +92760,209 @@ pub mod builder {
                 .build()?;
             let info = OperationInfo {
                 operation_id: "rack_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::rack_membership_status`]
+    ///
+    /// [`ClientExperimentalExt::rack_membership_status`]: super::ClientExperimentalExt::rack_membership_status
+    #[derive(Debug, Clone)]
+    pub struct RackMembershipStatus<'a> {
+        client: &'a super::Client,
+        rack_id: Result<::uuid::Uuid, String>,
+        version: Result<Option<types::RackMembershipVersion>, String>,
+    }
+
+    impl<'a> RackMembershipStatus<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                rack_id: Err("rack_id was not initialized".to_string()),
+                version: Ok(None),
+            }
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn version<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::RackMembershipVersion>,
+        {
+            self.version = value.try_into().map(Some).map_err(|_| {
+                "conversion to `RackMembershipVersion` for version failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/hardware/racks/{rack_id}/membership`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::RackMembershipStatus>, Error<types::Error>> {
+            let Self {
+                client,
+                rack_id,
+                version,
+            } = self;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let version = version.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/racks/{}/membership",
+                client.baseurl,
+                encode_path(&rack_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("version", &version))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "rack_membership_status",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::rack_membership_add_sleds`]
+    ///
+    /// [`ClientExperimentalExt::rack_membership_add_sleds`]: super::ClientExperimentalExt::rack_membership_add_sleds
+    #[derive(Debug, Clone)]
+    pub struct RackMembershipAddSleds<'a> {
+        client: &'a super::Client,
+        rack_id: Result<::uuid::Uuid, String>,
+        body: Result<types::builder::RackMembershipAddSledsRequest, String>,
+    }
+
+    impl<'a> RackMembershipAddSleds<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                rack_id: Err("rack_id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::RackMembershipAddSledsRequest>,
+            <V as std::convert::TryInto<types::RackMembershipAddSledsRequest>>::Error:
+                std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `RackMembershipAddSledsRequest` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::RackMembershipAddSledsRequest,
+            ) -> types::builder::RackMembershipAddSledsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/hardware/racks/{rack_id}/membership/add`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::RackMembershipStatus>, Error<types::Error>> {
+            let Self {
+                client,
+                rack_id,
+                body,
+            } = self;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::RackMembershipAddSledsRequest::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/racks/{}/membership/add",
+                client.baseurl,
+                encode_path(&rack_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "rack_membership_add_sleds",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;

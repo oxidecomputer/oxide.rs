@@ -11763,6 +11763,145 @@ pub mod operations {
         }
     }
 
+    pub struct RackMembershipStatusWhen(::httpmock::When);
+    impl RackMembershipStatusWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/racks/[^/]*/membership$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn rack_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/racks/{}/membership$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn version<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::RackMembershipVersion>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("version", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("version"))
+            }
+        }
+    }
+
+    pub struct RackMembershipStatusThen(::httpmock::Then);
+    impl RackMembershipStatusThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RackMembershipStatus) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct RackMembershipAddSledsWhen(::httpmock::When);
+    impl RackMembershipAddSledsWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/hardware/racks/[^/]*/membership/add$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn rack_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/racks/{}/membership/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::RackMembershipAddSledsRequest) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct RackMembershipAddSledsThen(::httpmock::Then);
+    impl RackMembershipAddSledsThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RackMembershipStatus) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SledListWhen(::httpmock::When);
     impl SledListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -23104,6 +23243,12 @@ pub trait MockServerExt {
     fn rack_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::RackViewWhen, operations::RackViewThen);
+    fn rack_membership_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipStatusWhen, operations::RackMembershipStatusThen);
+    fn rack_membership_add_sleds<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipAddSledsWhen, operations::RackMembershipAddSledsThen);
     fn sled_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SledListWhen, operations::SledListThen);
@@ -25635,6 +25780,30 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::RackViewWhen::new(when),
                 operations::RackViewThen::new(then),
+            )
+        })
+    }
+
+    fn rack_membership_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipStatusWhen, operations::RackMembershipStatusThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackMembershipStatusWhen::new(when),
+                operations::RackMembershipStatusThen::new(then),
+            )
+        })
+    }
+
+    fn rack_membership_add_sleds<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipAddSledsWhen, operations::RackMembershipAddSledsThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackMembershipAddSledsWhen::new(when),
+                operations::RackMembershipAddSledsThen::new(then),
             )
         })
     }

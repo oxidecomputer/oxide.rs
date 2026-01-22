@@ -200,6 +200,8 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
+            CliCommand::RackMembershipStatus => Self::cli_rack_membership_status(),
+            CliCommand::RackMembershipAddSleds => Self::cli_rack_membership_add_sleds(),
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledAdd => Self::cli_sled_add(),
             CliCommand::SledView => Self::cli_sled_view(),
@@ -5087,6 +5089,53 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch rack")
     }
 
+    pub fn cli_rack_membership_status() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("version")
+                    .long("version")
+                    .value_parser(::clap::value_parser!(types::RackMembershipVersion))
+                    .required(false),
+            )
+            .about("Retrieve the rack cluster membership status")
+            .long_about(
+                "Returns the status for the most recent change, or a specific version if one is \
+                 specified.",
+            )
+    }
+
+    pub fn cli_rack_membership_add_sleds() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the rack"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add new sleds to rack membership")
+    }
+
     pub fn cli_sled_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -9707,6 +9756,10 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::RackList => self.execute_rack_list(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
+            CliCommand::RackMembershipStatus => self.execute_rack_membership_status(matches).await,
+            CliCommand::RackMembershipAddSleds => {
+                self.execute_rack_membership_add_sleds(matches).await
+            }
             CliCommand::SledList => self.execute_sled_list(matches).await,
             CliCommand::SledAdd => self.execute_sled_add(matches).await,
             CliCommand::SledView => self.execute_sled_view(matches).await,
@@ -15363,6 +15416,67 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config.execute_rack_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_rack_membership_status(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.rack_membership_status();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::RackMembershipVersion>("version") {
+            request = request.version(value.clone());
+        }
+
+        self.config
+            .execute_rack_membership_status(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_rack_membership_add_sleds(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.rack_membership_add_sleds();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value =
+                serde_json::from_str::<types::RackMembershipAddSledsRequest>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_rack_membership_add_sleds(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -21786,6 +21900,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_rack_membership_status(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::RackMembershipStatus,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_rack_membership_add_sleds(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::RackMembershipAddSleds,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_sled_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23143,6 +23273,8 @@ pub enum CliCommand {
     NetworkingSwitchPortLldpNeighbors,
     RackList,
     RackView,
+    RackMembershipStatus,
+    RackMembershipAddSleds,
     SledList,
     SledAdd,
     SledView,
@@ -23452,6 +23584,8 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortLldpNeighbors,
             CliCommand::RackList,
             CliCommand::RackView,
+            CliCommand::RackMembershipStatus,
+            CliCommand::RackMembershipAddSleds,
             CliCommand::SledList,
             CliCommand::SledAdd,
             CliCommand::SledView,
