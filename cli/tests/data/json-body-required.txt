@@ -1,3 +1,4 @@
+oxide external-subnet create
 oxide image create
 oxide policy update
 oxide project policy update
@@ -10,6 +11,7 @@ oxide vpc router route update
 oxide alert receiver webhook create
 oxide disk create
 oxide system policy update
+oxide system hardware rack membership add
 oxide system networking address-lot create
 oxide system networking switch-port-settings create
 oxide system networking bgp announce-set update
