@@ -7496,19 +7496,6 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
-                ::clap::Arg::new("pool-type")
-                    .long("pool-type")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::IpPoolType::Unicast.to_string(),
-                            types::IpPoolType::Multicast.to_string(),
-                        ]),
-                        |s| types::IpPoolType::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help("Type of subnet pool (defaults to Unicast)"),
-            )
-            .arg(
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
@@ -7622,12 +7609,6 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_subnet_pool_member_add() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
                 ::clap::Arg::new("max-prefix-length")
                     .long("max-prefix-length")
                     .value_parser(::clap::value_parser!(u8))
@@ -7651,12 +7632,6 @@ impl<T: CliConfig> Cli<T> {
                          0-128 for IPv6. Default if not specified is equal to the subnet's prefix \
                          length.",
                     ),
-            )
-            .arg(
-                ::clap::Arg::new("name")
-                    .long("name")
-                    .value_parser(::clap::value_parser!(types::Name))
-                    .required_unless_present("json-body"),
             )
             .arg(
                 ::clap::Arg::new("pool")
@@ -18378,10 +18353,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
-            request = request.body_map(|body| body.pool_type(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18543,20 +18514,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.subnet_pool_member_add();
-        if let Some(value) = matches.get_one::<::std::string::String>("description") {
-            request = request.body_map(|body| body.description(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<u8>("max-prefix-length") {
             request = request.body_map(|body| body.max_prefix_length(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<u8>("min-prefix-length") {
             request = request.body_map(|body| body.min_prefix_length(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("name") {
-            request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {

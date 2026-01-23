@@ -5823,14 +5823,6 @@
               "long": "name"
             },
             {
-              "long": "pool-type",
-              "values": [
-                "unicast",
-                "multicast"
-              ],
-              "help": "Type of subnet pool (defaults to Unicast)"
-            },
-            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5890,9 +5882,6 @@
               "about": "Add a member to a subnet pool",
               "args": [
                 {
-                  "long": "description"
-                },
-                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
@@ -5907,9 +5896,6 @@
                 {
                   "long": "min-prefix-length",
                   "help": "Minimum prefix length for allocations from this subnet; a smaller prefix means larger allocations are allowed (e.g. a /16 prefix yields larger subnet allocations than a /24 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is equal to the subnet's prefix length."
-                },
-                {
-                  "long": "name"
                 },
                 {
                   "long": "pool",

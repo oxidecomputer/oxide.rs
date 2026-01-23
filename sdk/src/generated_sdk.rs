@@ -10888,23 +10888,6 @@ pub mod types {
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "pool": {
-    ///          "description": "The pool containing this subnet. If not
-    /// specified, the default subnet pool for the subnet's IP version is
-    /// used.",
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/NameOrId"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
-    ///        },
     ///        "subnet": {
     ///          "description": "The subnet CIDR to reserve. Must be available
     /// in the pool.",
@@ -10973,10 +10956,6 @@ pub mod types {
         /// Reserve a specific subnet.
         #[serde(rename = "explicit")]
         Explicit {
-            /// The pool containing this subnet. If not specified, the default
-            /// subnet pool for the subnet's IP version is used.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-            pool: ::std::option::Option<NameOrId>,
             /// The subnet CIDR to reserve. Must be available in the pool.
             subnet: IpNet,
         },
@@ -29835,15 +29814,6 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "pool_type": {
-    ///      "description": "Type of subnet pool (defaults to Unicast)",
-    ///      "default": "unicast",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolType"
-    ///        }
-    ///      ]
     ///    }
     ///  }
     /// }
@@ -29858,9 +29828,6 @@ pub mod types {
         /// must match this version.
         pub ip_version: IpVersion,
         pub name: Name,
-        /// Type of subnet pool (defaults to Unicast)
-        #[serde(default = "defaults::subnet_pool_create_pool_type")]
-        pub pool_type: IpPoolType,
     }
 
     impl ::std::convert::From<&SubnetPoolCreate> for SubnetPoolCreate {
@@ -30060,14 +30027,9 @@ pub mod types {
     ///  "description": "Add a member (subnet) to a subnet pool",
     ///  "type": "object",
     ///  "required": [
-    ///    "description",
-    ///    "name",
     ///    "subnet"
     ///  ],
     ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
     ///    "max_prefix_length": {
     ///      "description": "Maximum prefix length for allocations from this
     /// subnet; a larger prefix means smaller allocations are allowed (e.g. a
@@ -30094,9 +30056,6 @@ pub mod types {
     ///      "format": "uint8",
     ///      "minimum": 0.0
     ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
     ///    "subnet": {
     ///      "description": "The subnet to add to the pool",
     ///      "allOf": [
@@ -30113,7 +30072,6 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SubnetPoolMemberAdd {
-        pub description: ::std::string::String,
         /// Maximum prefix length for allocations from this subnet; a larger
         /// prefix means smaller allocations are allowed (e.g. a /24 prefix
         /// yields smaller subnet allocations than a /16 prefix).
@@ -30130,7 +30088,6 @@ pub mod types {
         /// specified is equal to the subnet's prefix length.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub min_prefix_length: ::std::option::Option<u8>,
-        pub name: Name,
         /// The subnet to add to the pool
         pub subnet: IpNet,
     }
@@ -60857,7 +60814,6 @@ pub mod types {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
         }
 
         impl ::std::default::Default for SubnetPoolCreate {
@@ -60866,7 +60822,6 @@ pub mod types {
                     description: Err("no value supplied for description".to_string()),
                     ip_version: Err("no value supplied for ip_version".to_string()),
                     name: Err("no value supplied for name".to_string()),
-                    pool_type: Ok(super::defaults::subnet_pool_create_pool_type()),
                 }
             }
         }
@@ -60902,16 +60857,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
-            pub fn pool_type<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IpPoolType>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pool_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
-                self
-            }
         }
 
         impl ::std::convert::TryFrom<SubnetPoolCreate> for super::SubnetPoolCreate {
@@ -60923,7 +60868,6 @@ pub mod types {
                     description: value.description?,
                     ip_version: value.ip_version?,
                     name: value.name?,
-                    pool_type: value.pool_type?,
                 })
             }
         }
@@ -60934,7 +60878,6 @@ pub mod types {
                     description: Ok(value.description),
                     ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
-                    pool_type: Ok(value.pool_type),
                 }
             }
         }
@@ -61169,38 +61112,24 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SubnetPoolMemberAdd {
-            description: ::std::result::Result<::std::string::String, ::std::string::String>,
             max_prefix_length:
                 ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
             min_prefix_length:
                 ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
-            name: ::std::result::Result<super::Name, ::std::string::String>,
             subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
         }
 
         impl ::std::default::Default for SubnetPoolMemberAdd {
             fn default() -> Self {
                 Self {
-                    description: Err("no value supplied for description".to_string()),
                     max_prefix_length: Ok(Default::default()),
                     min_prefix_length: Ok(Default::default()),
-                    name: Err("no value supplied for name".to_string()),
                     subnet: Err("no value supplied for subnet".to_string()),
                 }
             }
         }
 
         impl SubnetPoolMemberAdd {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
             pub fn max_prefix_length<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<u8>>,
@@ -61227,16 +61156,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::Name>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
             pub fn subnet<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::IpNet>,
@@ -61255,10 +61174,8 @@ pub mod types {
                 value: SubnetPoolMemberAdd,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    description: value.description?,
                     max_prefix_length: value.max_prefix_length?,
                     min_prefix_length: value.min_prefix_length?,
-                    name: value.name?,
                     subnet: value.subnet?,
                 })
             }
@@ -61267,10 +61184,8 @@ pub mod types {
         impl ::std::convert::From<super::SubnetPoolMemberAdd> for SubnetPoolMemberAdd {
             fn from(value: super::SubnetPoolMemberAdd) -> Self {
                 Self {
-                    description: Ok(value.description),
                     max_prefix_length: Ok(value.max_prefix_length),
                     min_prefix_length: Ok(value.min_prefix_length),
-                    name: Ok(value.name),
                     subnet: Ok(value.subnet),
                 }
             }
@@ -68253,10 +68168,6 @@ pub mod types {
                 ip_version: ::std::option::Option::None,
             }
         }
-
-        pub(super) fn subnet_pool_create_pool_type() -> super::IpPoolType {
-            super::IpPoolType::Unicast
-        }
     }
 }
 
@@ -68265,7 +68176,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026012200.0.0
+/// Version: 2026012201.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68306,7 +68217,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026012200.0.0"
+        "2026012201.0.0"
     }
 
     fn baseurl(&self) -> &str {
