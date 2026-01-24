@@ -3222,6 +3222,23 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The IP version of the ephemeral IP to detach.\n\nRequired when the \
+                         instance has both IPv4 and IPv6 ephemeral IPs. If only one ephemeral IP \
+                         is attached, this field may be omitted.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("project")
                     .long("project")
                     .value_parser(::clap::value_parser!(types::NameOrId))
@@ -3229,6 +3246,10 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Detach and deallocate ephemeral IP from instance")
+            .long_about(
+                "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query \
+                 parameter must be specified to identify which IP to detach.",
+            )
     }
 
     pub fn cli_instance_multicast_group_list() -> ::clap::Command {
@@ -13260,6 +13281,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.instance_ephemeral_ip_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.ip_version(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {

@@ -6913,6 +6913,17 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
+        pub fn ip_version<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IpVersion>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("ip_version", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("ip_version"))
+            }
+        }
+
         pub fn project<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a types::NameOrId>>,
