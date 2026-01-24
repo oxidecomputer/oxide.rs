@@ -68176,7 +68176,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026012201.0.0
+/// Version: 2026012300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68217,7 +68217,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026012201.0.0"
+        "2026012300.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -70221,15 +70221,23 @@ pub trait ClientInstancesExt {
     fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach<'_>;
     /// Detach and deallocate ephemeral IP from instance
     ///
+    /// When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version`
+    /// query parameter must be specified to identify which IP to detach.
+    ///
     /// Sends a `DELETE` request to
     /// `/v1/instances/{instance}/external-ips/ephemeral`
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
+    /// - `ip_version`: The IP version of the ephemeral IP to detach.
+    ///
+    /// Required when the instance has both IPv4 and IPv6 ephemeral IPs. If only
+    /// one ephemeral IP is attached, this field may be omitted.
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.instance_ephemeral_ip_detach()
     ///    .instance(instance)
+    ///    .ip_version(ip_version)
     ///    .project(project)
     ///    .send()
     ///    .await;
@@ -85302,6 +85310,7 @@ pub mod builder {
     pub struct InstanceEphemeralIpDetach<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
+        ip_version: Result<Option<types::IpVersion>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
@@ -85310,6 +85319,7 @@ pub mod builder {
             Self {
                 client: client,
                 instance: Err("instance was not initialized".to_string()),
+                ip_version: Ok(None),
                 project: Ok(None),
             }
         }
@@ -85321,6 +85331,17 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn ip_version<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpVersion>,
+        {
+            self.ip_version = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpVersion` for ip_version failed".to_string());
             self
         }
 
@@ -85341,9 +85362,11 @@ pub mod builder {
             let Self {
                 client,
                 instance,
+                ip_version,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
+            let ip_version = ip_version.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/external-ips/ephemeral",
@@ -85363,6 +85386,10 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new(
+                    "ip_version",
+                    &ip_version,
+                ))
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
