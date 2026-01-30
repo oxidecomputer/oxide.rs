@@ -5937,14 +5937,6 @@
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "name_ascending",
-                    "name_descending",
-                    "id_ascending"
-                  ]
                 }
               ]
             },

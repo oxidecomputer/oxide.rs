@@ -18131,17 +18131,6 @@ pub mod operations {
                 Self(self.0.query_param_missing("page_token"))
             }
         }
-
-        pub fn sort_by<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::NameOrIdSortMode>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("sort_by", value.to_string()))
-            } else {
-                Self(self.0.query_param_missing("sort_by"))
-            }
-        }
     }
 
     pub struct SubnetPoolMemberListThen(::httpmock::Then);

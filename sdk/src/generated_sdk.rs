@@ -29700,7 +29700,6 @@ pub mod types {
     ///    "id",
     ///    "ip_version",
     ///    "name",
-    ///    "pool_type",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -29732,14 +29731,6 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
-    ///    "pool_type": {
-    ///      "description": "Type of subnet pool (unicast or multicast)",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolType"
-    ///        }
-    ///      ]
-    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -29766,8 +29757,6 @@ pub mod types {
         pub ip_version: IpVersion,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// Type of subnet pool (unicast or multicast)
-        pub pool_type: IpPoolType,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -29905,24 +29894,16 @@ pub mod types {
     ///  "description": "A member (subnet) within a subnet pool",
     ///  "type": "object",
     ///  "required": [
-    ///    "description",
     ///    "id",
     ///    "max_prefix_length",
     ///    "min_prefix_length",
-    ///    "name",
     ///    "subnet",
     ///    "subnet_pool_id",
-    ///    "time_created",
-    ///    "time_modified"
+    ///    "time_created"
     ///  ],
     ///  "properties": {
-    ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",
+    ///      "description": "ID of the pool member",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
@@ -29942,15 +29923,6 @@ pub mod types {
     ///      "format": "uint8",
     ///      "minimum": 0.0
     ///    },
-    ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
     ///    "subnet": {
     ///      "description": "The subnet CIDR",
     ///      "allOf": [
@@ -29965,12 +29937,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Time the pool member was created.",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -29982,9 +29949,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SubnetPoolMember {
-        /// human-readable free-form text about a resource
-        pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// ID of the pool member
         pub id: ::uuid::Uuid,
         /// Maximum prefix length for allocations from this subnet; a larger
         /// prefix means smaller allocations are allowed (e.g. a /24 prefix
@@ -29994,16 +29959,12 @@ pub mod types {
         /// prefix means larger allocations are allowed (e.g. a /16 prefix
         /// yields larger subnet allocations than a /24 prefix).
         pub min_prefix_length: u8,
-        /// unique, mutable, user-controlled identifier for each resource
-        pub name: Name,
         /// The subnet CIDR
         pub subnet: IpNet,
         /// ID of the parent subnet pool
         pub subnet_pool_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Time the pool member was created.
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
-        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SubnetPoolMember> for SubnetPoolMember {
@@ -60680,7 +60641,6 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -60698,7 +60658,6 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     ip_version: Err("no value supplied for ip_version".to_string()),
                     name: Err("no value supplied for name".to_string()),
-                    pool_type: Err("no value supplied for pool_type".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -60746,16 +60705,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
-            pub fn pool_type<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IpPoolType>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pool_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
-                self
-            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -60788,7 +60737,6 @@ pub mod types {
                     id: value.id?,
                     ip_version: value.ip_version?,
                     name: value.name?,
-                    pool_type: value.pool_type?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -60802,7 +60750,6 @@ pub mod types {
                     id: Ok(value.id),
                     ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
-                    pool_type: Ok(value.pool_type),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -60943,18 +60890,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SubnetPoolMember {
-            description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             max_prefix_length: ::std::result::Result<u8, ::std::string::String>,
             min_prefix_length: ::std::result::Result<u8, ::std::string::String>,
-            name: ::std::result::Result<super::Name, ::std::string::String>,
             subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
             subnet_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             time_created: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            time_modified: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
@@ -60963,30 +60904,17 @@ pub mod types {
         impl ::std::default::Default for SubnetPoolMember {
             fn default() -> Self {
                 Self {
-                    description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     max_prefix_length: Err("no value supplied for max_prefix_length".to_string()),
                     min_prefix_length: Err("no value supplied for min_prefix_length".to_string()),
-                    name: Err("no value supplied for name".to_string()),
                     subnet: Err("no value supplied for subnet".to_string()),
                     subnet_pool_id: Err("no value supplied for subnet_pool_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
 
         impl SubnetPoolMember {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
             pub fn id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::uuid::Uuid>,
@@ -61023,16 +60951,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::Name>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
             pub fn subnet<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::IpNet>,
@@ -61063,16 +60981,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
         }
 
         impl ::std::convert::TryFrom<SubnetPoolMember> for super::SubnetPoolMember {
@@ -61081,15 +60989,12 @@ pub mod types {
                 value: SubnetPoolMember,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    description: value.description?,
                     id: value.id?,
                     max_prefix_length: value.max_prefix_length?,
                     min_prefix_length: value.min_prefix_length?,
-                    name: value.name?,
                     subnet: value.subnet?,
                     subnet_pool_id: value.subnet_pool_id?,
                     time_created: value.time_created?,
-                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -61097,15 +61002,12 @@ pub mod types {
         impl ::std::convert::From<super::SubnetPoolMember> for SubnetPoolMember {
             fn from(value: super::SubnetPoolMember) -> Self {
                 Self {
-                    description: Ok(value.description),
                     id: Ok(value.id),
                     max_prefix_length: Ok(value.max_prefix_length),
                     min_prefix_length: Ok(value.min_prefix_length),
-                    name: Ok(value.name),
                     subnet: Ok(value.subnet),
                     subnet_pool_id: Ok(value.subnet_pool_id),
                     time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -68176,7 +68078,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026012300.0.0
+/// Version: 2026012800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68217,7 +68119,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026012300.0.0"
+        "2026012800.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -73712,13 +73614,11 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    /// - `sort_by`
     /// ```ignore
     /// let response = client.subnet_pool_member_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
     /// ```
@@ -102100,7 +102000,6 @@ pub mod builder {
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
     impl<'a> SubnetPoolMemberList<'a> {
@@ -102110,7 +102009,6 @@ pub mod builder {
                 pool: Err("pool was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
-                sort_by: Ok(None),
             }
         }
 
@@ -102144,17 +102042,6 @@ pub mod builder {
             self
         }
 
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
         /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/members`
         pub async fn send(
             self,
@@ -102165,12 +102052,10 @@ pub mod builder {
                 pool,
                 limit,
                 page_token,
-                sort_by,
             } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/subnet-pools/{}/members",
                 client.baseurl,
@@ -102194,7 +102079,6 @@ pub mod builder {
                     "page_token",
                     &page_token,
                 ))
-                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
@@ -102226,7 +102110,6 @@ pub mod builder {
             use ::futures::TryStreamExt;
             let next = Self {
                 page_token: Ok(None),
-                sort_by: Ok(None),
                 ..self.clone()
             };
             self.send()

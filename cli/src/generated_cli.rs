@@ -7611,19 +7611,6 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the subnet pool"),
             )
-            .arg(
-                ::clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode::NameAscending.to_string(),
-                            types::NameOrIdSortMode::NameDescending.to_string(),
-                            types::NameOrIdSortMode::IdAscending.to_string(),
-                        ]),
-                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
             .about("List members in a subnet pool")
     }
 
@@ -18500,10 +18487,6 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
         }
 
         self.config
