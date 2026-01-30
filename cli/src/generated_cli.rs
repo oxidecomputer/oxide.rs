@@ -124,6 +124,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceExternalIpList => Self::cli_instance_external_ip_list(),
             CliCommand::InstanceEphemeralIpAttach => Self::cli_instance_ephemeral_ip_attach(),
             CliCommand::InstanceEphemeralIpDetach => Self::cli_instance_ephemeral_ip_detach(),
+            CliCommand::InstanceExternalSubnetList => Self::cli_instance_external_subnet_list(),
             CliCommand::InstanceMulticastGroupList => Self::cli_instance_multicast_group_list(),
             CliCommand::InstanceMulticastGroupJoin => Self::cli_instance_multicast_group_join(),
             CliCommand::InstanceMulticastGroupLeave => Self::cli_instance_multicast_group_leave(),
@@ -3250,6 +3251,25 @@ impl<T: CliConfig> Cli<T> {
                 "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query \
                  parameter must be specified to identify which IP to detach.",
             )
+    }
+
+    pub fn cli_instance_external_subnet_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("List external subnets attached to instance")
     }
 
     pub fn cli_instance_multicast_group_list() -> ::clap::Command {
@@ -9623,6 +9643,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceEphemeralIpDetach => {
                 self.execute_instance_ephemeral_ip_detach(matches).await
             }
+            CliCommand::InstanceExternalSubnetList => {
+                self.execute_instance_external_subnet_list(matches).await
+            }
             CliCommand::InstanceMulticastGroupList => {
                 self.execute_instance_multicast_group_list(matches).await
             }
@@ -13284,6 +13307,34 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_external_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_external_subnet_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_instance_external_subnet_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -21395,6 +21446,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_external_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceExternalSubnetList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_instance_multicast_group_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23188,6 +23247,7 @@ pub enum CliCommand {
     InstanceExternalIpList,
     InstanceEphemeralIpAttach,
     InstanceEphemeralIpDetach,
+    InstanceExternalSubnetList,
     InstanceMulticastGroupList,
     InstanceMulticastGroupJoin,
     InstanceMulticastGroupLeave,
@@ -23499,6 +23559,7 @@ impl CliCommand {
             CliCommand::InstanceExternalIpList,
             CliCommand::InstanceEphemeralIpAttach,
             CliCommand::InstanceEphemeralIpDetach,
+            CliCommand::InstanceExternalSubnetList,
             CliCommand::InstanceMulticastGroupList,
             CliCommand::InstanceMulticastGroupJoin,
             CliCommand::InstanceMulticastGroupLeave,
