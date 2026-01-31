@@ -3265,6 +3265,37 @@
           ]
         },
         {
+          "name": "external-subnet",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List external subnets attached to instance",
+              "args": [
+                {
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "from-image",
           "about": "Launch an instance from a disk image.",
           "args": [

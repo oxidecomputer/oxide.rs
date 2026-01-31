@@ -650,6 +650,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceNetworkInterfaceView => Some("instance nic view"),
         CliCommand::InstanceNetworkInterfaceUpdate => Some("instance nic update"),
         CliCommand::InstanceNetworkInterfaceDelete => Some("instance nic delete"),
+        CliCommand::InstanceExternalSubnetList => Some("instance external-subnet list"),
         CliCommand::InstanceMulticastGroupList => {
             Some("experimental instance multicast-group list")
         }
