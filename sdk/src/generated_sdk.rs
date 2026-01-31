@@ -9239,6 +9239,7 @@ pub mod types {
     ///    "id",
     ///    "name",
     ///    "project_id",
+    ///    "read_only",
     ///    "size",
     ///    "state",
     ///    "time_created",
@@ -9284,6 +9285,10 @@ pub mod types {
     ///    "project_id": {
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "read_only": {
+    ///      "description": "Whether or not this disk is read-only.",
+    ///      "type": "boolean"
     ///    },
     ///    "size": {
     ///      "$ref": "#/components/schemas/ByteCount"
@@ -9331,6 +9336,8 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: ::uuid::Uuid,
+        /// Whether or not this disk is read-only.
+        pub read_only: bool,
         pub size: ByteCount,
         /// ID of snapshot from which disk was created, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -9625,10 +9632,16 @@ pub mod types {
     ///      "description": "Create a disk from a disk snapshot",
     ///      "type": "object",
     ///      "required": [
+    ///        "read_only",
     ///        "snapshot_id",
     ///        "type"
     ///      ],
     ///      "properties": {
+    ///        "read_only": {
+    ///          "description": "If `true`, the disk created from this snapshot
+    /// will be read-only.",
+    ///          "type": "boolean"
+    ///        },
     ///        "snapshot_id": {
     ///          "type": "string",
     ///          "format": "uuid"
@@ -9646,12 +9659,18 @@ pub mod types {
     ///      "type": "object",
     ///      "required": [
     ///        "image_id",
+    ///        "read_only",
     ///        "type"
     ///      ],
     ///      "properties": {
     ///        "image_id": {
     ///          "type": "string",
     ///          "format": "uuid"
+    ///        },
+    ///        "read_only": {
+    ///          "description": "If `true`, the disk created from this image
+    /// will be read-only.",
+    ///          "type": "boolean"
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -9699,10 +9718,19 @@ pub mod types {
         },
         /// Create a disk from a disk snapshot
         #[serde(rename = "snapshot")]
-        Snapshot { snapshot_id: ::uuid::Uuid },
+        Snapshot {
+            /// If `true`, the disk created from this snapshot will be
+            /// read-only.
+            read_only: bool,
+            snapshot_id: ::uuid::Uuid,
+        },
         /// Create a disk from an image
         #[serde(rename = "image")]
-        Image { image_id: ::uuid::Uuid },
+        Image {
+            image_id: ::uuid::Uuid,
+            /// If `true`, the disk created from this image will be read-only.
+            read_only: bool,
+        },
         /// Create a blank disk that will accept bulk writes or pull blocks from
         /// an external source.
         #[serde(rename = "importing_blocks")]
@@ -45141,6 +45169,7 @@ pub mod types {
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            read_only: ::std::result::Result<bool, ::std::string::String>,
             size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             snapshot_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
@@ -45166,6 +45195,7 @@ pub mod types {
                     image_id: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     project_id: Err("no value supplied for project_id".to_string()),
+                    read_only: Err("no value supplied for read_only".to_string()),
                     size: Err("no value supplied for size".to_string()),
                     snapshot_id: Ok(Default::default()),
                     state: Err("no value supplied for state".to_string()),
@@ -45256,6 +45286,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
+            pub fn read_only<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.read_only = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for read_only: {}", e));
+                self
+            }
             pub fn size<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::ByteCount>,
@@ -45320,6 +45360,7 @@ pub mod types {
                     image_id: value.image_id?,
                     name: value.name?,
                     project_id: value.project_id?,
+                    read_only: value.read_only?,
                     size: value.size?,
                     snapshot_id: value.snapshot_id?,
                     state: value.state?,
@@ -45340,6 +45381,7 @@ pub mod types {
                     image_id: Ok(value.image_id),
                     name: Ok(value.name),
                     project_id: Ok(value.project_id),
+                    read_only: Ok(value.read_only),
                     size: Ok(value.size),
                     snapshot_id: Ok(value.snapshot_id),
                     state: Ok(value.state),
@@ -68078,7 +68120,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026013000.0.0
+/// Version: 2026013001.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68119,7 +68161,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026013000.0.0"
+        "2026013001.0.0"
     }
 
     fn baseurl(&self) -> &str {
