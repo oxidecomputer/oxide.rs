@@ -9632,7 +9632,6 @@ pub mod types {
     ///      "description": "Create a disk from a disk snapshot",
     ///      "type": "object",
     ///      "required": [
-    ///        "read_only",
     ///        "snapshot_id",
     ///        "type"
     ///      ],
@@ -9640,6 +9639,7 @@ pub mod types {
     ///        "read_only": {
     ///          "description": "If `true`, the disk created from this snapshot
     /// will be read-only.",
+    ///          "default": false,
     ///          "type": "boolean"
     ///        },
     ///        "snapshot_id": {
@@ -9659,7 +9659,6 @@ pub mod types {
     ///      "type": "object",
     ///      "required": [
     ///        "image_id",
-    ///        "read_only",
     ///        "type"
     ///      ],
     ///      "properties": {
@@ -9670,6 +9669,7 @@ pub mod types {
     ///        "read_only": {
     ///          "description": "If `true`, the disk created from this image
     /// will be read-only.",
+    ///          "default": false,
     ///          "type": "boolean"
     ///        },
     ///        "type": {
@@ -9721,6 +9721,7 @@ pub mod types {
         Snapshot {
             /// If `true`, the disk created from this snapshot will be
             /// read-only.
+            #[serde(default)]
             read_only: bool,
             snapshot_id: ::uuid::Uuid,
         },
@@ -9729,6 +9730,7 @@ pub mod types {
         Image {
             image_id: ::uuid::Uuid,
             /// If `true`, the disk created from this image will be read-only.
+            #[serde(default)]
             read_only: bool,
         },
         /// Create a blank disk that will accept bulk writes or pull blocks from
@@ -68120,7 +68122,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026013001.0.0
+/// Version: 2026013100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68161,7 +68163,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026013001.0.0"
+        "2026013100.0.0"
     }
 
     fn baseurl(&self) -> &str {

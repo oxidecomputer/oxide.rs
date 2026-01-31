@@ -7,7 +7,7 @@
       "url": "https://oxide.computer",
       "email": "api@oxide.computer"
     },
-    "version": "2026013001.0.0"
+    "version": "2026013100.0.0"
   },
   "paths": {
     "/device/auth": {
@@ -19571,6 +19571,7 @@
             "properties": {
               "read_only": {
                 "description": "If `true`, the disk created from this snapshot will be read-only.",
+                "default": false,
                 "type": "boolean"
               },
               "snapshot_id": {
@@ -19585,7 +19586,6 @@
               }
             },
             "required": [
-              "read_only",
               "snapshot_id",
               "type"
             ]
@@ -19600,6 +19600,7 @@
               },
               "read_only": {
                 "description": "If `true`, the disk created from this image will be read-only.",
+                "default": false,
                 "type": "boolean"
               },
               "type": {
@@ -19611,7 +19612,6 @@
             },
             "required": [
               "image_id",
-              "read_only",
               "type"
             ]
           },
