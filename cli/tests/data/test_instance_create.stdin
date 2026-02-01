@@ -8,8 +8,7 @@
         "type": "distributed",
         "disk_source": {
           "type": "image",
-          "image_id": "42e56270-889a-e74d-fa7c-849b22449cd6",
-          "read_only": false
+          "image_id": "42e56270-889a-e74d-fa7c-849b22449cd6"
         }
       },
       "name": "boot",
