@@ -124,6 +124,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceExternalIpList => Self::cli_instance_external_ip_list(),
             CliCommand::InstanceEphemeralIpAttach => Self::cli_instance_ephemeral_ip_attach(),
             CliCommand::InstanceEphemeralIpDetach => Self::cli_instance_ephemeral_ip_detach(),
+            CliCommand::InstanceExternalSubnetList => Self::cli_instance_external_subnet_list(),
             CliCommand::InstanceMulticastGroupList => Self::cli_instance_multicast_group_list(),
             CliCommand::InstanceMulticastGroupJoin => Self::cli_instance_multicast_group_join(),
             CliCommand::InstanceMulticastGroupLeave => Self::cli_instance_multicast_group_leave(),
@@ -3222,6 +3223,23 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The IP version of the ephemeral IP to detach.\n\nRequired when the \
+                         instance has both IPv4 and IPv6 ephemeral IPs. If only one ephemeral IP \
+                         is attached, this field may be omitted.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("project")
                     .long("project")
                     .value_parser(::clap::value_parser!(types::NameOrId))
@@ -3229,6 +3247,29 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Detach and deallocate ephemeral IP from instance")
+            .long_about(
+                "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query \
+                 parameter must be specified to identify which IP to detach.",
+            )
+    }
+
+    pub fn cli_instance_external_subnet_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("List external subnets attached to instance")
     }
 
     pub fn cli_instance_multicast_group_list() -> ::clap::Command {
@@ -7590,19 +7631,6 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the subnet pool"),
             )
-            .arg(
-                ::clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode::NameAscending.to_string(),
-                            types::NameOrIdSortMode::NameDescending.to_string(),
-                            types::NameOrIdSortMode::IdAscending.to_string(),
-                        ]),
-                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
             .about("List members in a subnet pool")
     }
 
@@ -9614,6 +9642,9 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::InstanceEphemeralIpDetach => {
                 self.execute_instance_ephemeral_ip_detach(matches).await
+            }
+            CliCommand::InstanceExternalSubnetList => {
+                self.execute_instance_external_subnet_list(matches).await
             }
             CliCommand::InstanceMulticastGroupList => {
                 self.execute_instance_multicast_group_list(matches).await
@@ -13262,6 +13293,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.ip_version(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -13272,6 +13307,34 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_external_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_external_subnet_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_instance_external_subnet_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -18477,10 +18540,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.pool(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
         self.config
             .execute_subnet_pool_member_list(matches, &mut request)?;
         self.config
@@ -21387,6 +21446,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_external_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceExternalSubnetList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_instance_multicast_group_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23180,6 +23247,7 @@ pub enum CliCommand {
     InstanceExternalIpList,
     InstanceEphemeralIpAttach,
     InstanceEphemeralIpDetach,
+    InstanceExternalSubnetList,
     InstanceMulticastGroupList,
     InstanceMulticastGroupJoin,
     InstanceMulticastGroupLeave,
@@ -23491,6 +23559,7 @@ impl CliCommand {
             CliCommand::InstanceExternalIpList,
             CliCommand::InstanceEphemeralIpAttach,
             CliCommand::InstanceEphemeralIpDetach,
+            CliCommand::InstanceExternalSubnetList,
             CliCommand::InstanceMulticastGroupList,
             CliCommand::InstanceMulticastGroupJoin,
             CliCommand::InstanceMulticastGroupLeave,

@@ -9239,6 +9239,7 @@ pub mod types {
     ///    "id",
     ///    "name",
     ///    "project_id",
+    ///    "read_only",
     ///    "size",
     ///    "state",
     ///    "time_created",
@@ -9284,6 +9285,10 @@ pub mod types {
     ///    "project_id": {
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "read_only": {
+    ///      "description": "Whether or not this disk is read-only.",
+    ///      "type": "boolean"
     ///    },
     ///    "size": {
     ///      "$ref": "#/components/schemas/ByteCount"
@@ -9331,6 +9336,8 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: ::uuid::Uuid,
+        /// Whether or not this disk is read-only.
+        pub read_only: bool,
         pub size: ByteCount,
         /// ID of snapshot from which disk was created, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -9629,6 +9636,12 @@ pub mod types {
     ///        "type"
     ///      ],
     ///      "properties": {
+    ///        "read_only": {
+    ///          "description": "If `true`, the disk created from this snapshot
+    /// will be read-only.",
+    ///          "default": false,
+    ///          "type": "boolean"
+    ///        },
     ///        "snapshot_id": {
     ///          "type": "string",
     ///          "format": "uuid"
@@ -9652,6 +9665,12 @@ pub mod types {
     ///        "image_id": {
     ///          "type": "string",
     ///          "format": "uuid"
+    ///        },
+    ///        "read_only": {
+    ///          "description": "If `true`, the disk created from this image
+    /// will be read-only.",
+    ///          "default": false,
+    ///          "type": "boolean"
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -9699,10 +9718,21 @@ pub mod types {
         },
         /// Create a disk from a disk snapshot
         #[serde(rename = "snapshot")]
-        Snapshot { snapshot_id: ::uuid::Uuid },
+        Snapshot {
+            /// If `true`, the disk created from this snapshot will be
+            /// read-only.
+            #[serde(default)]
+            read_only: bool,
+            snapshot_id: ::uuid::Uuid,
+        },
         /// Create a disk from an image
         #[serde(rename = "image")]
-        Image { image_id: ::uuid::Uuid },
+        Image {
+            image_id: ::uuid::Uuid,
+            /// If `true`, the disk created from this image will be read-only.
+            #[serde(default)]
+            read_only: bool,
+        },
         /// Create a blank disk that will accept bulk writes or pull blocks from
         /// an external source.
         #[serde(rename = "importing_blocks")]
@@ -29700,7 +29730,6 @@ pub mod types {
     ///    "id",
     ///    "ip_version",
     ///    "name",
-    ///    "pool_type",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -29732,14 +29761,6 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
-    ///    "pool_type": {
-    ///      "description": "Type of subnet pool (unicast or multicast)",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolType"
-    ///        }
-    ///      ]
-    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -29766,8 +29787,6 @@ pub mod types {
         pub ip_version: IpVersion,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// Type of subnet pool (unicast or multicast)
-        pub pool_type: IpPoolType,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -29905,24 +29924,16 @@ pub mod types {
     ///  "description": "A member (subnet) within a subnet pool",
     ///  "type": "object",
     ///  "required": [
-    ///    "description",
     ///    "id",
     ///    "max_prefix_length",
     ///    "min_prefix_length",
-    ///    "name",
     ///    "subnet",
     ///    "subnet_pool_id",
-    ///    "time_created",
-    ///    "time_modified"
+    ///    "time_created"
     ///  ],
     ///  "properties": {
-    ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",
+    ///      "description": "ID of the pool member",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
@@ -29942,15 +29953,6 @@ pub mod types {
     ///      "format": "uint8",
     ///      "minimum": 0.0
     ///    },
-    ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
     ///    "subnet": {
     ///      "description": "The subnet CIDR",
     ///      "allOf": [
@@ -29965,12 +29967,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Time the pool member was created.",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -29982,9 +29979,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SubnetPoolMember {
-        /// human-readable free-form text about a resource
-        pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// ID of the pool member
         pub id: ::uuid::Uuid,
         /// Maximum prefix length for allocations from this subnet; a larger
         /// prefix means smaller allocations are allowed (e.g. a /24 prefix
@@ -29994,16 +29989,12 @@ pub mod types {
         /// prefix means larger allocations are allowed (e.g. a /16 prefix
         /// yields larger subnet allocations than a /24 prefix).
         pub min_prefix_length: u8,
-        /// unique, mutable, user-controlled identifier for each resource
-        pub name: Name,
         /// The subnet CIDR
         pub subnet: IpNet,
         /// ID of the parent subnet pool
         pub subnet_pool_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Time the pool member was created.
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
-        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SubnetPoolMember> for SubnetPoolMember {
@@ -45180,6 +45171,7 @@ pub mod types {
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            read_only: ::std::result::Result<bool, ::std::string::String>,
             size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             snapshot_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
@@ -45205,6 +45197,7 @@ pub mod types {
                     image_id: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     project_id: Err("no value supplied for project_id".to_string()),
+                    read_only: Err("no value supplied for read_only".to_string()),
                     size: Err("no value supplied for size".to_string()),
                     snapshot_id: Ok(Default::default()),
                     state: Err("no value supplied for state".to_string()),
@@ -45295,6 +45288,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for project_id: {}", e));
                 self
             }
+            pub fn read_only<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.read_only = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for read_only: {}", e));
+                self
+            }
             pub fn size<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::ByteCount>,
@@ -45359,6 +45362,7 @@ pub mod types {
                     image_id: value.image_id?,
                     name: value.name?,
                     project_id: value.project_id?,
+                    read_only: value.read_only?,
                     size: value.size?,
                     snapshot_id: value.snapshot_id?,
                     state: value.state?,
@@ -45379,6 +45383,7 @@ pub mod types {
                     image_id: Ok(value.image_id),
                     name: Ok(value.name),
                     project_id: Ok(value.project_id),
+                    read_only: Ok(value.read_only),
                     size: Ok(value.size),
                     snapshot_id: Ok(value.snapshot_id),
                     state: Ok(value.state),
@@ -60680,7 +60685,6 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -60698,7 +60702,6 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     ip_version: Err("no value supplied for ip_version".to_string()),
                     name: Err("no value supplied for name".to_string()),
-                    pool_type: Err("no value supplied for pool_type".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -60746,16 +60749,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
-            pub fn pool_type<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IpPoolType>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pool_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
-                self
-            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -60788,7 +60781,6 @@ pub mod types {
                     id: value.id?,
                     ip_version: value.ip_version?,
                     name: value.name?,
-                    pool_type: value.pool_type?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -60802,7 +60794,6 @@ pub mod types {
                     id: Ok(value.id),
                     ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
-                    pool_type: Ok(value.pool_type),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -60943,18 +60934,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SubnetPoolMember {
-            description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             max_prefix_length: ::std::result::Result<u8, ::std::string::String>,
             min_prefix_length: ::std::result::Result<u8, ::std::string::String>,
-            name: ::std::result::Result<super::Name, ::std::string::String>,
             subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
             subnet_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             time_created: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            time_modified: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
@@ -60963,30 +60948,17 @@ pub mod types {
         impl ::std::default::Default for SubnetPoolMember {
             fn default() -> Self {
                 Self {
-                    description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     max_prefix_length: Err("no value supplied for max_prefix_length".to_string()),
                     min_prefix_length: Err("no value supplied for min_prefix_length".to_string()),
-                    name: Err("no value supplied for name".to_string()),
                     subnet: Err("no value supplied for subnet".to_string()),
                     subnet_pool_id: Err("no value supplied for subnet_pool_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
 
         impl SubnetPoolMember {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
             pub fn id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::uuid::Uuid>,
@@ -61023,16 +60995,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::Name>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
             pub fn subnet<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::IpNet>,
@@ -61063,16 +61025,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
         }
 
         impl ::std::convert::TryFrom<SubnetPoolMember> for super::SubnetPoolMember {
@@ -61081,15 +61033,12 @@ pub mod types {
                 value: SubnetPoolMember,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    description: value.description?,
                     id: value.id?,
                     max_prefix_length: value.max_prefix_length?,
                     min_prefix_length: value.min_prefix_length?,
-                    name: value.name?,
                     subnet: value.subnet?,
                     subnet_pool_id: value.subnet_pool_id?,
                     time_created: value.time_created?,
-                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -61097,15 +61046,12 @@ pub mod types {
         impl ::std::convert::From<super::SubnetPoolMember> for SubnetPoolMember {
             fn from(value: super::SubnetPoolMember) -> Self {
                 Self {
-                    description: Ok(value.description),
                     id: Ok(value.id),
                     max_prefix_length: Ok(value.max_prefix_length),
                     min_prefix_length: Ok(value.min_prefix_length),
-                    name: Ok(value.name),
                     subnet: Ok(value.subnet),
                     subnet_pool_id: Ok(value.subnet_pool_id),
                     time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -68176,7 +68122,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026012201.0.0
+/// Version: 2026013100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -68217,7 +68163,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026012201.0.0"
+        "2026013100.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -70221,20 +70167,43 @@ pub trait ClientInstancesExt {
     fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach<'_>;
     /// Detach and deallocate ephemeral IP from instance
     ///
+    /// When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version`
+    /// query parameter must be specified to identify which IP to detach.
+    ///
     /// Sends a `DELETE` request to
     /// `/v1/instances/{instance}/external-ips/ephemeral`
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
+    /// - `ip_version`: The IP version of the ephemeral IP to detach.
+    ///
+    /// Required when the instance has both IPv4 and IPv6 ephemeral IPs. If only
+    /// one ephemeral IP is attached, this field may be omitted.
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.instance_ephemeral_ip_detach()
     ///    .instance(instance)
+    ///    .ip_version(ip_version)
     ///    .project(project)
     ///    .send()
     ///    .await;
     /// ```
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach<'_>;
+    /// List external subnets attached to instance
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/external-subnets`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_external_subnet_list()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_external_subnet_list(&self) -> builder::InstanceExternalSubnetList<'_>;
     /// Reboot instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
@@ -70508,6 +70477,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach<'_> {
         builder::InstanceEphemeralIpDetach::new(self)
+    }
+
+    fn instance_external_subnet_list(&self) -> builder::InstanceExternalSubnetList<'_> {
+        builder::InstanceExternalSubnetList::new(self)
     }
 
     fn instance_reboot(&self) -> builder::InstanceReboot<'_> {
@@ -73704,13 +73677,11 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    /// - `sort_by`
     /// ```ignore
     /// let response = client.subnet_pool_member_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
     /// ```
@@ -85302,10 +85273,120 @@ pub mod builder {
     pub struct InstanceEphemeralIpDetach<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
+        ip_version: Result<Option<types::IpVersion>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
     impl<'a> InstanceEphemeralIpDetach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                ip_version: Ok(None),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn ip_version<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpVersion>,
+        {
+            self.ip_version = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpVersion` for ip_version failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/instances/{instance}/external-ips/ephemeral`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                ip_version,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let ip_version = ip_version.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/external-ips/ephemeral",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "ip_version",
+                    &ip_version,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "instance_ephemeral_ip_detach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_external_subnet_list`]
+    ///
+    /// [`ClientInstancesExt::instance_external_subnet_list`]: super::ClientInstancesExt::instance_external_subnet_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceExternalSubnetList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceExternalSubnetList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -85335,9 +85416,10 @@ pub mod builder {
             self
         }
 
-        /// Sends a `DELETE` request to
-        /// `/v1/instances/{instance}/external-ips/ephemeral`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+        /// Sends a `GET` request to `/v1/instances/{instance}/external-subnets`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalSubnetResultsPage>, Error<types::Error>> {
             let Self {
                 client,
                 instance,
@@ -85346,7 +85428,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/instances/{}/external-ips/ephemeral",
+                "{}/v1/instances/{}/external-subnets",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
@@ -85358,7 +85440,7 @@ pub mod builder {
             #[allow(unused_mut)]
             let mut request = client
                 .client
-                .delete(url)
+                .get(url)
                 .header(
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
@@ -85367,14 +85449,14 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "instance_ephemeral_ip_detach",
+                operation_id: "instance_external_subnet_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
             client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -102073,7 +102155,6 @@ pub mod builder {
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
     impl<'a> SubnetPoolMemberList<'a> {
@@ -102083,7 +102164,6 @@ pub mod builder {
                 pool: Err("pool was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
-                sort_by: Ok(None),
             }
         }
 
@@ -102117,17 +102197,6 @@ pub mod builder {
             self
         }
 
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
         /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/members`
         pub async fn send(
             self,
@@ -102138,12 +102207,10 @@ pub mod builder {
                 pool,
                 limit,
                 page_token,
-                sort_by,
             } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/subnet-pools/{}/members",
                 client.baseurl,
@@ -102167,7 +102234,6 @@ pub mod builder {
                     "page_token",
                     &page_token,
                 ))
-                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
@@ -102199,7 +102265,6 @@ pub mod builder {
             use ::futures::TryStreamExt;
             let next = Self {
                 page_token: Ok(None),
-                sort_by: Ok(None),
                 ..self.clone()
             };
             self.send()

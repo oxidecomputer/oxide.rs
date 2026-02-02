@@ -3218,10 +3218,19 @@
             {
               "name": "detach-ephemeral",
               "about": "Detach and deallocate ephemeral IP from instance",
+              "long_about": "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.",
               "args": [
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "ip-version",
+                  "values": [
+                    "v4",
+                    "v6"
+                  ],
+                  "help": "The IP version of the ephemeral IP to detach.\n\nRequired when the instance has both IPv4 and IPv6 ephemeral IPs. If only one ephemeral IP is attached, this field may be omitted."
                 },
                 {
                   "long": "profile",
@@ -3237,6 +3246,37 @@
             {
               "name": "list",
               "about": "List external IP addresses",
+              "args": [
+                {
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "external-subnet",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List external subnets attached to instance",
               "args": [
                 {
                   "long": "instance",
@@ -5928,14 +5968,6 @@
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "name_ascending",
-                    "name_descending",
-                    "id_ascending"
-                  ]
                 }
               ]
             },
