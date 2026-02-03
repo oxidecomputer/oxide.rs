@@ -692,6 +692,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::RackView => Some("system hardware rack view"),
         CliCommand::RackMembershipAddSleds => Some("system hardware rack membership add"),
         CliCommand::RackMembershipStatus => Some("system hardware rack membership status"),
+        CliCommand::RackMembershipAbort => Some("system hardware rack membership abort"),
         CliCommand::SledList => Some("system hardware sled list"),
         CliCommand::SledListUninitialized => Some("system hardware sled list-uninitialized"),
         CliCommand::SledView => Some("system hardware sled view"),
