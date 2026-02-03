@@ -30,6 +30,7 @@ env_logger = "0.11.8"
 expectorate = { version = "1.2.0", features = ["predicates"] }
 flume = "0.12.0"
 futures = "0.3.31"
+http = "1.4.0"
 httpmock = "0.8.2"
 humantime = "2.3.0"
 indicatif = "0.18.3"
@@ -78,7 +79,9 @@ uuid = { version = "1.19.0", features = ["serde", "v4"] }
 inherits = "release"
 lto = "thin"
 
-#[patch."https://github.com/oxidecomputer/progenitor"]
-#progenitor = { path = "../progenitor/progenitor" }
+[patch."https://github.com/oxidecomputer/progenitor"]
+progenitor = { path = "../progenitor/progenitor" }
+[patch."crates-io"]
+progenitor-client = { path = "../progenitor/progenitor-client" }
 #[patch."https://github.com/oxidecomputer/typify"]
 #typify = { path = "../typify/typify" }

@@ -2592,6 +2592,7 @@ dependencies = [
  "env_logger",
  "expectorate",
  "futures",
+ "http 1.4.0",
  "httpmock",
  "humantime",
  "indicatif",
@@ -2921,7 +2922,6 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.11.2"
-source = "git+https://github.com/oxidecomputer/progenitor#1ac68a70e7029826423c6903a96f4745614f8494"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2929,13 +2929,11 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.11.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71a0beb939758f229cbae70a4889c7c76a4ac0e90f0b1e7ae9b4636a927d1018"
 dependencies = [
  "bytes",
  "futures-core",
  "percent-encoding",
- "reqwest 0.12.28",
+ "reqwest 0.13.1",
  "serde",
  "serde_json",
  "serde_urlencoded",
@@ -2944,7 +2942,6 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.11.2"
-source = "git+https://github.com/oxidecomputer/progenitor#1ac68a70e7029826423c6903a96f4745614f8494"
 dependencies = [
  "heck",
  "http 1.4.0",
@@ -3291,7 +3288,6 @@ dependencies = [
  "base64",
  "bytes",
  "futures-core",
- "futures-util",
  "http 1.4.0",
  "http-body",
  "http-body-util",
@@ -3311,14 +3307,12 @@ dependencies = [
  "sync_wrapper",
  "tokio",
  "tokio-rustls 0.26.2",
- "tokio-util",
  "tower",
  "tower-http",
  "tower-service",
  "url",
  "wasm-bindgen",
  "wasm-bindgen-futures",
- "wasm-streams",
  "web-sys",
  "webpki-roots",
 ]
@@ -3333,6 +3327,7 @@ dependencies = [
  "bytes",
  "encoding_rs",
  "futures-core",
+ "futures-util",
  "h2",
  "http 1.4.0",
  "http-body",
@@ -3351,16 +3346,21 @@ dependencies = [
  "rustls 0.23.27",
  "rustls-pki-types",
  "rustls-platform-verifier",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
  "sync_wrapper",
  "tokio",
  "tokio-native-tls",
  "tokio-rustls 0.26.2",
+ "tokio-util",
  "tower",
  "tower-http",
  "tower-service",
  "url",
  "wasm-bindgen",
  "wasm-bindgen-futures",
+ "wasm-streams",
  "web-sys",
 ]
 
