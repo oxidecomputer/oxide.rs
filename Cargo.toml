@@ -38,7 +38,7 @@ libc = "0.2.180"
 log = "0.4.29"
 md5 = "0.8.0"
 newline-converter = "0.3.0"
-oauth2 = "5.0.0"
+oauth2 = { version = "5.0.0", default-features = false }
 open = "5.3.3"
 oxide = { path = "sdk", version = "0.14.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.14.0" }

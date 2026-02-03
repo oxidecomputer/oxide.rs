@@ -56,6 +56,8 @@ impl RunnableCmd for CmdAuth {
     }
 }
 
+// Integrate reqwest with oauth2 until oauth2 is updated to support reqwest
+// 0.13.
 struct ReqwestClient<'a>(&'a reqwest::Client);
 
 impl<'a, 'c> oauth2::AsyncHttpClient<'c> for ReqwestClient<'a> {
