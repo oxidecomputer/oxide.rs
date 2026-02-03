@@ -202,6 +202,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::RackMembershipStatus => Self::cli_rack_membership_status(),
+            CliCommand::RackMembershipAbort => Self::cli_rack_membership_abort(),
             CliCommand::RackMembershipAddSleds => Self::cli_rack_membership_add_sleds(),
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledAdd => Self::cli_sled_add(),
@@ -5155,6 +5156,25 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
+    pub fn cli_rack_membership_abort() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the rack"),
+            )
+            .about("Abort the latest rack membership change")
+            .long_about(
+                "This operation is synchronous. Upon returning from the API call, a success \
+                 response indicates that the prior membership change was aborted. An error \
+                 response indicates that there is no active membership change in progress \
+                 (previous changes have completed) or that the current membership change could \
+                 not be aborted.",
+            )
+    }
+
     pub fn cli_rack_membership_add_sleds() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -9767,6 +9787,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::RackList => self.execute_rack_list(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
             CliCommand::RackMembershipStatus => self.execute_rack_membership_status(matches).await,
+            CliCommand::RackMembershipAbort => self.execute_rack_membership_abort(matches).await,
             CliCommand::RackMembershipAddSleds => {
                 self.execute_rack_membership_add_sleds(matches).await
             }
@@ -15486,6 +15507,30 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_rack_membership_status(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_rack_membership_abort(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.rack_membership_abort();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        self.config
+            .execute_rack_membership_abort(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -21942,6 +21987,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_rack_membership_abort(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::RackMembershipAbort,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_rack_membership_add_sleds(
         &self,
         matches: &::clap::ArgMatches,
@@ -23309,6 +23362,7 @@ pub enum CliCommand {
     RackList,
     RackView,
     RackMembershipStatus,
+    RackMembershipAbort,
     RackMembershipAddSleds,
     SledList,
     SledAdd,
@@ -23621,6 +23675,7 @@ impl CliCommand {
             CliCommand::RackList,
             CliCommand::RackView,
             CliCommand::RackMembershipStatus,
+            CliCommand::RackMembershipAbort,
             CliCommand::RackMembershipAddSleds,
             CliCommand::SledList,
             CliCommand::SledAdd,
