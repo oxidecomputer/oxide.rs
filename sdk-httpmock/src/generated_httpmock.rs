@@ -4242,6 +4242,537 @@ pub mod operations {
         }
     }
 
+    pub struct ExternalSubnetListWhen(::httpmock::When);
+    impl ExternalSubnetListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/external-subnets$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct ExternalSubnetListThen(::httpmock::Then);
+    impl ExternalSubnetListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ExternalSubnetResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExternalSubnetCreateWhen(::httpmock::When);
+    impl ExternalSubnetCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/external-subnets$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::ExternalSubnetCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ExternalSubnetCreateThen(::httpmock::Then);
+    impl ExternalSubnetCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::ExternalSubnet) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExternalSubnetViewWhen(::httpmock::When);
+    impl ExternalSubnetViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/external-subnets/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn external_subnet(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/external-subnets/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ExternalSubnetViewThen(::httpmock::Then);
+    impl ExternalSubnetViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ExternalSubnet) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExternalSubnetUpdateWhen(::httpmock::When);
+    impl ExternalSubnetUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/external-subnets/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn external_subnet(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/external-subnets/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn body(self, value: &types::ExternalSubnetUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ExternalSubnetUpdateThen(::httpmock::Then);
+    impl ExternalSubnetUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ExternalSubnet) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExternalSubnetDeleteWhen(::httpmock::When);
+    impl ExternalSubnetDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/external-subnets/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn external_subnet(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/external-subnets/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ExternalSubnetDeleteThen(::httpmock::Then);
+    impl ExternalSubnetDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExternalSubnetAttachWhen(::httpmock::When);
+    impl ExternalSubnetAttachWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/external-subnets/[^/]*/attach$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn external_subnet(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/external-subnets/{}/attach$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn body(self, value: &types::ExternalSubnetAttach) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ExternalSubnetAttachThen(::httpmock::Then);
+    impl ExternalSubnetAttachThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::ExternalSubnet) -> Self {
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExternalSubnetDetachWhen(::httpmock::When);
+    impl ExternalSubnetDetachWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/external-subnets/[^/]*/detach$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn external_subnet(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/external-subnets/{}/detach$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ExternalSubnetDetachThen(::httpmock::Then);
+    impl ExternalSubnetDetachThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::ExternalSubnet) -> Self {
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct FloatingIpListWhen(::httpmock::When);
     impl FloatingIpListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -6382,6 +6913,17 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
+        pub fn ip_version<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IpVersion>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("ip_version", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("ip_version"))
+            }
+        }
+
         pub fn project<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a types::NameOrId>>,
@@ -6406,6 +6948,81 @@ pub mod operations {
 
         pub fn no_content(self) -> Self {
             Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InstanceExternalSubnetListWhen(::httpmock::When);
+    impl InstanceExternalSubnetListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/instances/[^/]*/external-subnets$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/external-subnets$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct InstanceExternalSubnetListThen(::httpmock::Then);
+    impl InstanceExternalSubnetListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ExternalSubnetResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -11203,6 +11820,145 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Rack) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct RackMembershipStatusWhen(::httpmock::When);
+    impl RackMembershipStatusWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/racks/[^/]*/membership$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn rack_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/racks/{}/membership$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn version<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::RackMembershipVersion>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("version", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("version"))
+            }
+        }
+    }
+
+    pub struct RackMembershipStatusThen(::httpmock::Then);
+    impl RackMembershipStatusThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RackMembershipStatus) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct RackMembershipAddSledsWhen(::httpmock::When);
+    impl RackMembershipAddSledsWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/hardware/racks/[^/]*/membership/add$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn rack_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/racks/{}/membership/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::RackMembershipAddSledsRequest) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct RackMembershipAddSledsThen(::httpmock::Then);
+    impl RackMembershipAddSledsThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RackMembershipStatus) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -17079,6 +17835,914 @@ pub mod operations {
         }
     }
 
+    pub struct SubnetPoolListWhen(::httpmock::When);
+    impl SubnetPoolListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/subnet-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct SubnetPoolListThen(::httpmock::Then);
+    impl SubnetPoolListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPoolResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolCreateWhen(::httpmock::When);
+    impl SubnetPoolCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/subnet-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SubnetPoolCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SubnetPoolCreateThen(::httpmock::Then);
+    impl SubnetPoolCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SubnetPool) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolViewWhen(::httpmock::When);
+    impl SubnetPoolViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/subnet-pools/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/subnet-pools/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SubnetPoolViewThen(::httpmock::Then);
+    impl SubnetPoolViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPool) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolUpdateWhen(::httpmock::When);
+    impl SubnetPoolUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/subnet-pools/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/subnet-pools/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SubnetPoolUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SubnetPoolUpdateThen(::httpmock::Then);
+    impl SubnetPoolUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPool) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolDeleteWhen(::httpmock::When);
+    impl SubnetPoolDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/subnet-pools/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/subnet-pools/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SubnetPoolDeleteThen(::httpmock::Then);
+    impl SubnetPoolDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolMemberListWhen(::httpmock::When);
+    impl SubnetPoolMemberListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/subnet-pools/[^/]*/members$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/members$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+    }
+
+    pub struct SubnetPoolMemberListThen(::httpmock::Then);
+    impl SubnetPoolMemberListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPoolMemberResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolMemberAddWhen(::httpmock::When);
+    impl SubnetPoolMemberAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/subnet-pools/[^/]*/members/add$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/members/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SubnetPoolMemberAdd) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SubnetPoolMemberAddThen(::httpmock::Then);
+    impl SubnetPoolMemberAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SubnetPoolMember) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolMemberRemoveWhen(::httpmock::When);
+    impl SubnetPoolMemberRemoveWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/subnet-pools/[^/]*/members/remove$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/members/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SubnetPoolMemberRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SubnetPoolMemberRemoveThen(::httpmock::Then);
+    impl SubnetPoolMemberRemoveThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolSiloListWhen(::httpmock::When);
+    impl SubnetPoolSiloListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/subnet-pools/[^/]*/silos$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/silos$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct SubnetPoolSiloListThen(::httpmock::Then);
+    impl SubnetPoolSiloListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPoolSiloLinkResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolSiloLinkWhen(::httpmock::When);
+    impl SubnetPoolSiloLinkWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/subnet-pools/[^/]*/silos$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/silos$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SubnetPoolLinkSilo) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SubnetPoolSiloLinkThen(::httpmock::Then);
+    impl SubnetPoolSiloLinkThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SubnetPoolSiloLink) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolSiloUpdateWhen(::httpmock::When);
+    impl SubnetPoolSiloUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::PUT).path_matches(
+                regex::Regex::new("^/v1/system/subnet-pools/[^/]*/silos/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/silos/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/.*/silos/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SubnetPoolSiloUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SubnetPoolSiloUpdateThen(::httpmock::Then);
+    impl SubnetPoolSiloUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPoolSiloLink) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolSiloUnlinkWhen(::httpmock::When);
+    impl SubnetPoolSiloUnlinkWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/system/subnet-pools/[^/]*/silos/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/silos/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/.*/silos/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SubnetPoolSiloUnlinkThen(::httpmock::Then);
+    impl SubnetPoolSiloUnlinkThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolUtilizationViewWhen(::httpmock::When);
+    impl SubnetPoolUtilizationViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/subnet-pools/[^/]*/utilization$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/subnet-pools/{}/utilization$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SubnetPoolUtilizationViewThen(::httpmock::Then);
+    impl SubnetPoolUtilizationViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SubnetPoolUtilization) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SystemTimeseriesQueryWhen(::httpmock::When);
     impl SystemTimeseriesQueryWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -21297,6 +22961,27 @@ pub trait MockServerExt {
     fn disk_finalize_import<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::DiskFinalizeImportWhen, operations::DiskFinalizeImportThen);
+    fn external_subnet_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetListWhen, operations::ExternalSubnetListThen);
+    fn external_subnet_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetCreateWhen, operations::ExternalSubnetCreateThen);
+    fn external_subnet_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetViewWhen, operations::ExternalSubnetViewThen);
+    fn external_subnet_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetUpdateWhen, operations::ExternalSubnetUpdateThen);
+    fn external_subnet_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetDeleteWhen, operations::ExternalSubnetDeleteThen);
+    fn external_subnet_attach<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetAttachWhen, operations::ExternalSubnetAttachThen);
+    fn external_subnet_detach<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetDetachWhen, operations::ExternalSubnetDetachThen);
     fn floating_ip_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::FloatingIpListWhen, operations::FloatingIpListThen);
@@ -21392,6 +23077,12 @@ pub trait MockServerExt {
         F: FnOnce(
             operations::InstanceEphemeralIpDetachWhen,
             operations::InstanceEphemeralIpDetachThen,
+        );
+    fn instance_external_subnet_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceExternalSubnetListWhen,
+            operations::InstanceExternalSubnetListThen,
         );
     fn instance_multicast_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
@@ -21633,6 +23324,12 @@ pub trait MockServerExt {
     fn rack_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::RackViewWhen, operations::RackViewThen);
+    fn rack_membership_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipStatusWhen, operations::RackMembershipStatusThen);
+    fn rack_membership_add_sleds<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipAddSledsWhen, operations::RackMembershipAddSledsThen);
     fn sled_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SledListWhen, operations::SledListThen);
@@ -21987,6 +23684,48 @@ pub trait MockServerExt {
     fn silo_quotas_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SiloQuotasUpdateWhen, operations::SiloQuotasUpdateThen);
+    fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen);
+    fn subnet_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolCreateWhen, operations::SubnetPoolCreateThen);
+    fn subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolViewWhen, operations::SubnetPoolViewThen);
+    fn subnet_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolUpdateWhen, operations::SubnetPoolUpdateThen);
+    fn subnet_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolDeleteWhen, operations::SubnetPoolDeleteThen);
+    fn subnet_pool_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolMemberListWhen, operations::SubnetPoolMemberListThen);
+    fn subnet_pool_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolMemberAddWhen, operations::SubnetPoolMemberAddThen);
+    fn subnet_pool_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolMemberRemoveWhen, operations::SubnetPoolMemberRemoveThen);
+    fn subnet_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloListWhen, operations::SubnetPoolSiloListThen);
+    fn subnet_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloLinkWhen, operations::SubnetPoolSiloLinkThen);
+    fn subnet_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloUpdateWhen, operations::SubnetPoolSiloUpdateThen);
+    fn subnet_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloUnlinkWhen, operations::SubnetPoolSiloUnlinkThen);
+    fn subnet_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SubnetPoolUtilizationViewWhen,
+            operations::SubnetPoolUtilizationViewThen,
+        );
     fn system_timeseries_query<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemTimeseriesQueryWhen, operations::SystemTimeseriesQueryThen);
@@ -22914,6 +24653,90 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn external_subnet_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetListWhen, operations::ExternalSubnetListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetListWhen::new(when),
+                operations::ExternalSubnetListThen::new(then),
+            )
+        })
+    }
+
+    fn external_subnet_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetCreateWhen, operations::ExternalSubnetCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetCreateWhen::new(when),
+                operations::ExternalSubnetCreateThen::new(then),
+            )
+        })
+    }
+
+    fn external_subnet_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetViewWhen, operations::ExternalSubnetViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetViewWhen::new(when),
+                operations::ExternalSubnetViewThen::new(then),
+            )
+        })
+    }
+
+    fn external_subnet_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetUpdateWhen, operations::ExternalSubnetUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetUpdateWhen::new(when),
+                operations::ExternalSubnetUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn external_subnet_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetDeleteWhen, operations::ExternalSubnetDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetDeleteWhen::new(when),
+                operations::ExternalSubnetDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn external_subnet_attach<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetAttachWhen, operations::ExternalSubnetAttachThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetAttachWhen::new(when),
+                operations::ExternalSubnetAttachThen::new(then),
+            )
+        })
+    }
+
+    fn external_subnet_detach<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExternalSubnetDetachWhen, operations::ExternalSubnetDetachThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExternalSubnetDetachWhen::new(when),
+                operations::ExternalSubnetDetachThen::new(then),
+            )
+        })
+    }
+
     fn floating_ip_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::FloatingIpListWhen, operations::FloatingIpListThen),
@@ -23258,6 +25081,21 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::InstanceEphemeralIpDetachWhen::new(when),
                 operations::InstanceEphemeralIpDetachThen::new(then),
+            )
+        })
+    }
+
+    fn instance_external_subnet_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceExternalSubnetListWhen,
+            operations::InstanceExternalSubnetListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceExternalSubnetListWhen::new(when),
+                operations::InstanceExternalSubnetListThen::new(then),
             )
         })
     }
@@ -24038,6 +25876,30 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::RackViewWhen::new(when),
                 operations::RackViewThen::new(then),
+            )
+        })
+    }
+
+    fn rack_membership_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipStatusWhen, operations::RackMembershipStatusThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackMembershipStatusWhen::new(when),
+                operations::RackMembershipStatusThen::new(then),
+            )
+        })
+    }
+
+    fn rack_membership_add_sleds<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackMembershipAddSledsWhen, operations::RackMembershipAddSledsThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackMembershipAddSledsWhen::new(when),
+                operations::RackMembershipAddSledsThen::new(then),
             )
         })
     }
@@ -25157,6 +27019,165 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SiloQuotasUpdateWhen::new(when),
                 operations::SiloQuotasUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolListWhen::new(when),
+                operations::SubnetPoolListThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolCreateWhen, operations::SubnetPoolCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolCreateWhen::new(when),
+                operations::SubnetPoolCreateThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolViewWhen, operations::SubnetPoolViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolViewWhen::new(when),
+                operations::SubnetPoolViewThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolUpdateWhen, operations::SubnetPoolUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolUpdateWhen::new(when),
+                operations::SubnetPoolUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolDeleteWhen, operations::SubnetPoolDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolDeleteWhen::new(when),
+                operations::SubnetPoolDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolMemberListWhen, operations::SubnetPoolMemberListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolMemberListWhen::new(when),
+                operations::SubnetPoolMemberListThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolMemberAddWhen, operations::SubnetPoolMemberAddThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolMemberAddWhen::new(when),
+                operations::SubnetPoolMemberAddThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolMemberRemoveWhen, operations::SubnetPoolMemberRemoveThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolMemberRemoveWhen::new(when),
+                operations::SubnetPoolMemberRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloListWhen, operations::SubnetPoolSiloListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolSiloListWhen::new(when),
+                operations::SubnetPoolSiloListThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloLinkWhen, operations::SubnetPoolSiloLinkThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolSiloLinkWhen::new(when),
+                operations::SubnetPoolSiloLinkThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloUpdateWhen, operations::SubnetPoolSiloUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolSiloUpdateWhen::new(when),
+                operations::SubnetPoolSiloUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolSiloUnlinkWhen, operations::SubnetPoolSiloUnlinkThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolSiloUnlinkWhen::new(when),
+                operations::SubnetPoolSiloUnlinkThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SubnetPoolUtilizationViewWhen,
+            operations::SubnetPoolUtilizationViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolUtilizationViewWhen::new(when),
+                operations::SubnetPoolUtilizationViewThen::new(then),
             )
         })
     }

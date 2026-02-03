@@ -791,7 +791,7 @@
         },
         {
           "name": "view",
-          "about": "View a support bundle",
+          "about": "View support bundle",
           "args": [
             {
               "long": "bundle-id",
@@ -1143,7 +1143,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a disk",
+          "about": "Create disk",
           "args": [
             {
               "long": "description"
@@ -1708,7 +1708,7 @@
               "subcommands": [
                 {
                   "name": "join",
-                  "about": "Join a multicast group by name, IP address, or UUID.",
+                  "about": "Join multicast group by name, IP address, or UUID",
                   "long_about": "Groups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.\n\nSource IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
                   "args": [
                     {
@@ -1748,7 +1748,7 @@
                 },
                 {
                   "name": "leave",
-                  "about": "Leave a multicast group by name, IP address, or UUID.",
+                  "about": "Leave multicast group by name, IP address, or UUID",
                   "args": [
                     {
                       "long": "instance",
@@ -1771,7 +1771,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List multicast groups for an instance.",
+                  "about": "List multicast groups for an instance",
                   "args": [
                     {
                       "long": "instance",
@@ -1814,7 +1814,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List multicast groups.",
+              "about": "List multicast groups",
               "args": [
                 {
                   "long": "limit",
@@ -1847,7 +1847,7 @@
               "subcommands": [
                 {
                   "name": "list",
-                  "about": "List members of a multicast group.",
+                  "about": "List members of multicast group",
                   "long_about": "The group can be specified by name, UUID, or multicast IP address.",
                   "args": [
                     {
@@ -1875,7 +1875,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a multicast group.",
+              "about": "Fetch multicast group",
               "long_about": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
               "args": [
                 {
@@ -2138,6 +2138,197 @@
       ]
     },
     {
+      "name": "external-subnet",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "attach",
+          "about": "Attach an external subnet to an instance",
+          "long_about": "Begins an asynchronous attach operation. Returns the subnet with `instance_id` set to the target instance. The attach completes asynchronously; poll the subnet to check completion.",
+          "args": [
+            {
+              "long": "external-subnet",
+              "help": "Name or ID of the external subnet"
+            },
+            {
+              "long": "instance",
+              "help": "Name or ID of the instance to attach to"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "create",
+          "about": "Create an external subnet",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete an external subnet",
+          "args": [
+            {
+              "long": "external-subnet",
+              "help": "Name or ID of the external subnet"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "detach",
+          "about": "Detach an external subnet from an instance",
+          "long_about": "Begins an asynchronous detach operation. Returns the subnet with `instance_id` cleared. The detach completes asynchronously.",
+          "args": [
+            {
+              "long": "external-subnet",
+              "help": "Name or ID of the external subnet"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List external subnets in a project",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "about": "Update an external subnet",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "external-subnet",
+              "help": "Name or ID of the external subnet"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch an external subnet",
+          "args": [
+            {
+              "long": "external-subnet",
+              "help": "Name or ID of the external subnet"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "floating-ip",
       "args": [
         {
@@ -2188,7 +2379,8 @@
         },
         {
           "name": "create",
-          "about": "Create floating IP",
+          "about": "Create a floating IP",
+          "long_about": "A specific IP address can be reserved, or an IP can be auto-allocated from a specific pool or the silo's default pool.",
           "args": [
             {
               "long": "description"
@@ -3026,10 +3218,19 @@
             {
               "name": "detach-ephemeral",
               "about": "Detach and deallocate ephemeral IP from instance",
+              "long_about": "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.",
               "args": [
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "ip-version",
+                  "values": [
+                    "v4",
+                    "v6"
+                  ],
+                  "help": "The IP version of the ephemeral IP to detach.\n\nRequired when the instance has both IPv4 and IPv6 ephemeral IPs. If only one ephemeral IP is attached, this field may be omitted."
                 },
                 {
                   "long": "profile",
@@ -3045,6 +3246,37 @@
             {
               "name": "list",
               "about": "List external IP addresses",
+              "args": [
+                {
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "external-subnet",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List external subnets attached to instance",
               "args": [
                 {
                   "long": "instance",
@@ -3421,7 +3653,7 @@
         },
         {
           "name": "reboot",
-          "about": "Reboot an instance",
+          "about": "Reboot instance",
           "args": [
             {
               "long": "instance",
@@ -4119,7 +4351,7 @@
           "subcommands": [
             {
               "name": "add",
-              "about": "Add range to IP pool.",
+              "about": "Add range to an IP pool",
               "long_about": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
               "args": [
                 {
@@ -4714,7 +4946,7 @@
         },
         {
           "name": "update",
-          "about": "Update a project",
+          "about": "Update project",
           "args": [
             {
               "long": "description"
@@ -4864,7 +5096,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a silo",
+          "about": "Create silo",
           "args": [
             {
               "long": "admin-group-name",
@@ -4908,7 +5140,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a silo",
+          "about": "Delete silo",
           "long_about": "Delete a silo by name or ID.",
           "args": [
             {
@@ -5595,6 +5827,367 @@
       ]
     },
     {
+      "name": "subnet-pool",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "create",
+          "about": "Create a subnet pool",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "ip-version",
+              "values": [
+                "v4",
+                "v6"
+              ],
+              "help": "The IP version for this pool (IPv4 or IPv6). All subnets in the pool must match this version."
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete a subnet pool",
+          "args": [
+            {
+              "long": "pool",
+              "help": "Name or ID of the subnet pool"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List subnet pools",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "member",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "add",
+              "about": "Add a member to a subnet pool",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "max-prefix-length",
+                  "help": "Maximum prefix length for allocations from this subnet; a larger prefix means smaller allocations are allowed (e.g. a /24 prefix yields smaller subnet allocations than a /16 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is 32 for IPv4 and 128 for IPv6."
+                },
+                {
+                  "long": "min-prefix-length",
+                  "help": "Minimum prefix length for allocations from this subnet; a smaller prefix means larger allocations are allowed (e.g. a /16 prefix yields larger subnet allocations than a /24 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is equal to the subnet's prefix length."
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "subnet",
+                  "help": "The subnet to add to the pool"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List members in a subnet pool",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ]
+            },
+            {
+              "name": "remove",
+              "about": "Remove a member from a subnet pool",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "subnet",
+                  "help": "The subnet to remove from the pool. Must match an existing entry exactly."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "silo",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "link",
+              "about": "Link a subnet pool to a silo",
+              "args": [
+                {
+                  "long": "is-default",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Whether this is the default subnet pool for the silo. When true, external subnet allocations that don't specify a pool use this one."
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "The silo to link"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List silos linked to a subnet pool",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "unlink",
+              "about": "Unlink a subnet pool from a silo",
+              "args": [
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            },
+            {
+              "name": "update",
+              "about": "Update a subnet pool's link to a silo",
+              "args": [
+                {
+                  "long": "is-default",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Whether this is the default subnet pool for the silo"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the subnet pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "about": "Update a subnet pool",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "pool",
+              "help": "Name or ID of the subnet pool"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "utilization",
+          "about": "Fetch subnet pool utilization",
+          "args": [
+            {
+              "long": "pool",
+              "help": "Name or ID of the subnet pool"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch a subnet pool",
+          "args": [
+            {
+              "long": "pool",
+              "help": "Name or ID of the subnet pool"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "system",
       "args": [
         {
@@ -5647,7 +6240,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Get a physical disk",
+                  "about": "Get physical disk",
                   "args": [
                     {
                       "long": "disk-id",
@@ -5689,6 +6282,59 @@
                       "long": "sort-by",
                       "values": [
                         "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "membership",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "add",
+                      "about": "Add new sleds to rack membership",
+                      "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "rack-id",
+                          "help": "ID of the rack"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "status",
+                      "about": "Retrieve the rack cluster membership status",
+                      "long_about": "Returns the status for the most recent change, or a specific version if one is specified.",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "rack-id"
+                        },
+                        {
+                          "long": "version"
+                        }
                       ]
                     }
                   ]
@@ -6414,7 +7060,7 @@
               "subcommands": [
                 {
                   "name": "disable",
-                  "about": "Disable a BFD session",
+                  "about": "Disable BFD session",
                   "args": [
                     {
                       "long": "json-body",
@@ -6441,7 +7087,7 @@
                 },
                 {
                   "name": "enable",
-                  "about": "Enable a BFD session",
+                  "about": "Enable BFD session",
                   "args": [
                     {
                       "long": "detection-threshold",
@@ -9105,7 +9751,7 @@
         },
         {
           "name": "update",
-          "about": "Update a VPC",
+          "about": "Update VPC",
           "args": [
             {
               "long": "description"

@@ -271,6 +271,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                         description: format!("{} disk", *self.name),
                         disk_backend: DiskBackend::Distributed(DiskSource::Image {
                             image_id: image_view.id,
+                            read_only: false,
                         }),
                         name: format!("{}-disk", *self.name)
                             .parse()
