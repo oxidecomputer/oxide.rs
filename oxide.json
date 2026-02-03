@@ -7,7 +7,7 @@
       "url": "https://oxide.computer",
       "email": "api@oxide.computer"
     },
-    "version": "2026013100.0.0"
+    "version": "2026020200.0.0"
   },
   "paths": {
     "/device/auth": {
@@ -7906,6 +7906,46 @@
             "name": "version",
             "schema": {
               "$ref": "#/components/schemas/RackMembershipVersion"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RackMembershipStatus"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/hardware/racks/{rack_id}/membership/abort": {
+      "post": {
+        "tags": [
+          "experimental"
+        ],
+        "summary": "Abort the latest rack membership change",
+        "description": "This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.",
+        "operationId": "rack_membership_abort",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "rack_id",
+            "description": "ID of the rack",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],

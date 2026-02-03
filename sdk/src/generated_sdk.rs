@@ -65098,7 +65098,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026013100.0.0
+/// Version: 2026020200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65139,7 +65139,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026013100.0.0"
+        "2026020200.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66320,6 +66320,26 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_>;
+    /// Abort the latest rack membership change
+    ///
+    /// This operation is synchronous. Upon returning from the API call, a
+    /// success response indicates that the prior membership change was aborted.
+    /// An error response indicates that there is no active membership change in
+    /// progress (previous changes have completed) or that the current
+    /// membership change could not be aborted.
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/hardware/racks/{rack_id}/membership/abort`
+    ///
+    /// Arguments:
+    /// - `rack_id`: ID of the rack
+    /// ```ignore
+    /// let response = client.rack_membership_abort()
+    ///    .rack_id(rack_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn rack_membership_abort(&self) -> builder::RackMembershipAbort<'_>;
     /// Add new sleds to rack membership
     ///
     /// Sends a `POST` request to
@@ -66482,6 +66502,10 @@ impl ClientExperimentalExt for Client {
 
     fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_> {
         builder::RackMembershipStatus::new(self)
+    }
+
+    fn rack_membership_abort(&self) -> builder::RackMembershipAbort<'_> {
+        builder::RackMembershipAbort::new(self)
     }
 
     fn rack_membership_add_sleds(&self) -> builder::RackMembershipAddSleds<'_> {
@@ -89803,6 +89827,80 @@ pub mod builder {
                 .build()?;
             let info = OperationInfo {
                 operation_id: "rack_membership_status",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::rack_membership_abort`]
+    ///
+    /// [`ClientExperimentalExt::rack_membership_abort`]: super::ClientExperimentalExt::rack_membership_abort
+    #[derive(Debug, Clone)]
+    pub struct RackMembershipAbort<'a> {
+        client: &'a super::Client,
+        rack_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> RackMembershipAbort<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                rack_id: Err("rack_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/hardware/racks/{rack_id}/membership/abort`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::RackMembershipStatus>, Error<types::Error>> {
+            let Self { client, rack_id } = self;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/racks/{}/membership/abort",
+                client.baseurl,
+                encode_path(&rack_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "rack_membership_abort",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
