@@ -11317,6 +11317,94 @@ pub mod operations {
         }
     }
 
+    pub struct CurrentSiloSubnetPoolListWhen(::httpmock::When);
+    impl CurrentSiloSubnetPoolListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/subnet-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct CurrentSiloSubnetPoolListThen(::httpmock::Then);
+    impl CurrentSiloSubnetPoolListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloSubnetPoolResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct AuditLogListWhen(::httpmock::When);
     impl AuditLogListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -17897,6 +17985,103 @@ pub mod operations {
         }
     }
 
+    pub struct SiloSubnetPoolListWhen(::httpmock::When);
+    impl SiloSubnetPoolListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/silos/[^/]*/subnet-pools$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/silos/{}/subnet-pools$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct SiloSubnetPoolListThen(::httpmock::Then);
+    impl SiloSubnetPoolListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloSubnetPoolResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SubnetPoolListWhen(::httpmock::When);
     impl SubnetPoolListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -23365,6 +23550,12 @@ pub trait MockServerExt {
     fn snapshot_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SnapshotDeleteWhen, operations::SnapshotDeleteThen);
+    fn current_silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::CurrentSiloSubnetPoolListWhen,
+            operations::CurrentSiloSubnetPoolListThen,
+        );
     fn audit_log_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::AuditLogListWhen, operations::AuditLogListThen);
@@ -23749,6 +23940,9 @@ pub trait MockServerExt {
     fn silo_quotas_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SiloQuotasUpdateWhen, operations::SiloQuotasUpdateThen);
+    fn silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloSubnetPoolListWhen, operations::SiloSubnetPoolListThen);
     fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen);
@@ -25870,6 +26064,21 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn current_silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::CurrentSiloSubnetPoolListWhen,
+            operations::CurrentSiloSubnetPoolListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CurrentSiloSubnetPoolListWhen::new(when),
+                operations::CurrentSiloSubnetPoolListThen::new(then),
+            )
+        })
+    }
+
     fn audit_log_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::AuditLogListWhen, operations::AuditLogListThen),
@@ -27096,6 +27305,18 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SiloQuotasUpdateWhen::new(when),
                 operations::SiloQuotasUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloSubnetPoolListWhen, operations::SiloSubnetPoolListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloSubnetPoolListWhen::new(when),
+                operations::SiloSubnetPoolListThen::new(then),
             )
         })
     }
