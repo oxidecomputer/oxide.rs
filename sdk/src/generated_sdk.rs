@@ -5032,6 +5032,7 @@ pub mod types {
     ///  "required": [
     ///    "addr",
     ///    "local_asn",
+    ///    "peer_id",
     ///    "remote_asn",
     ///    "state",
     ///    "state_duration_millis",
@@ -5048,6 +5049,10 @@ pub mod types {
     ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
+    ///    },
+    ///    "peer_id": {
+    ///      "description": "Interface name",
+    ///      "type": "string"
     ///    },
     ///    "remote_asn": {
     ///      "description": "Remote autonomous system number.",
@@ -5089,6 +5094,8 @@ pub mod types {
         pub addr: ::std::net::IpAddr,
         /// Local autonomous system number.
         pub local_asn: u32,
+        /// Interface name
+        pub peer_id: ::std::string::String,
         /// Remote autonomous system number.
         pub remote_asn: u32,
         /// State of the peer.
@@ -40731,6 +40738,7 @@ pub mod types {
         pub struct BgpPeerStatus {
             addr: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             local_asn: ::std::result::Result<u32, ::std::string::String>,
+            peer_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             remote_asn: ::std::result::Result<u32, ::std::string::String>,
             state: ::std::result::Result<super::BgpPeerState, ::std::string::String>,
             state_duration_millis: ::std::result::Result<u64, ::std::string::String>,
@@ -40742,6 +40750,7 @@ pub mod types {
                 Self {
                     addr: Err("no value supplied for addr".to_string()),
                     local_asn: Err("no value supplied for local_asn".to_string()),
+                    peer_id: Err("no value supplied for peer_id".to_string()),
                     remote_asn: Err("no value supplied for remote_asn".to_string()),
                     state: Err("no value supplied for state".to_string()),
                     state_duration_millis: Err(
@@ -40771,6 +40780,16 @@ pub mod types {
                 self.local_asn = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for local_asn: {e}"));
+                self
+            }
+            pub fn peer_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.peer_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for peer_id: {e}"));
                 self
             }
             pub fn remote_asn<T>(mut self, value: T) -> Self
@@ -40823,6 +40842,7 @@ pub mod types {
                 Ok(Self {
                     addr: value.addr?,
                     local_asn: value.local_asn?,
+                    peer_id: value.peer_id?,
                     remote_asn: value.remote_asn?,
                     state: value.state?,
                     state_duration_millis: value.state_duration_millis?,
@@ -40836,6 +40856,7 @@ pub mod types {
                 Self {
                     addr: Ok(value.addr),
                     local_asn: Ok(value.local_asn),
+                    peer_id: Ok(value.peer_id),
                     remote_asn: Ok(value.remote_asn),
                     state: Ok(value.state),
                     state_duration_millis: Ok(value.state_duration_millis),

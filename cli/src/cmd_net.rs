@@ -1451,8 +1451,9 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
     let mut tw = TabWriter::new(std::io::stdout()).ansi(true);
     writeln!(
         &mut tw,
-        "{}\t{}\t{}\t{}\t{}",
+        "{}\t{}\t{}\t{}\t{}\t{}",
         "Peer Address".dimmed(),
+        "Peer Id".dimmed(),
         "Local ASN".dimmed(),
         "Remote ASN".dimmed(),
         "Session State".dimmed(),
@@ -1461,8 +1462,9 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
     for s in st {
         writeln!(
             tw,
-            "{}\t{}\t{}\t{:?}\t{}",
+            "{}\t{}\t{}\t{}\t{:?}\t{}",
             s.addr,
+            s.peer_id,
             s.local_asn,
             s.remote_asn,
             s.state,
