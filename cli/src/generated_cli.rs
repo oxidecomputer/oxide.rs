@@ -193,6 +193,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotCreate => Self::cli_snapshot_create(),
             CliCommand::SnapshotView => Self::cli_snapshot_view(),
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
+            CliCommand::CurrentSiloSubnetPoolList => Self::cli_current_silo_subnet_pool_list(),
             CliCommand::AuditLogList => Self::cli_audit_log_list(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
@@ -323,6 +324,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
+            CliCommand::SiloSubnetPoolList => Self::cli_silo_subnet_pool_list(),
             CliCommand::SubnetPoolList => Self::cli_subnet_pool_list(),
             CliCommand::SubnetPoolCreate => Self::cli_subnet_pool_create(),
             CliCommand::SubnetPoolView => Self::cli_subnet_pool_view(),
@@ -4966,6 +4968,31 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete snapshot")
     }
 
+    pub fn cli_current_silo_subnet_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List subnet pools linked to the user's current silo")
+    }
+
     pub fn cli_audit_log_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -6708,6 +6735,13 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
+                ::clap::Arg::new("max-paths")
+                    .long("max-paths")
+                    .value_parser(::clap::value_parser!(u8))
+                    .required(false)
+                    .help("Maximum number of paths to use when multiple \"best paths\" exist"),
+            )
+            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
@@ -7499,6 +7533,38 @@ impl<T: CliConfig> Cli<T> {
             )
             .about("Update resource quotas for silo")
             .long_about("If a quota value is not specified, it will remain unchanged.")
+    }
+
+    pub fn cli_silo_subnet_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List subnet pools linked to a silo")
     }
 
     pub fn cli_subnet_pool_list() -> ::clap::Command {
@@ -9777,6 +9843,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotCreate => self.execute_snapshot_create(matches).await,
             CliCommand::SnapshotView => self.execute_snapshot_view(matches).await,
             CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
+            CliCommand::CurrentSiloSubnetPoolList => {
+                self.execute_current_silo_subnet_pool_list(matches).await
+            }
             CliCommand::AuditLogList => self.execute_audit_log_list(matches).await,
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
             CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
@@ -9974,6 +10043,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloPolicyUpdate => self.execute_silo_policy_update(matches).await,
             CliCommand::SiloQuotasView => self.execute_silo_quotas_view(matches).await,
             CliCommand::SiloQuotasUpdate => self.execute_silo_quotas_update(matches).await,
+            CliCommand::SiloSubnetPoolList => self.execute_silo_subnet_pool_list(matches).await,
             CliCommand::SubnetPoolList => self.execute_subnet_pool_list(matches).await,
             CliCommand::SubnetPoolCreate => self.execute_subnet_pool_create(matches).await,
             CliCommand::SubnetPoolView => self.execute_subnet_pool_view(matches).await,
@@ -15273,6 +15343,46 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_current_silo_subnet_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.current_silo_subnet_pool_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_current_silo_subnet_pool_list(matches, &mut request)?;
+        self.config.list_start::<types::SiloSubnetPoolResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SiloSubnetPoolResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_audit_log_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.audit_log_list();
         if let Some(value) =
@@ -17358,6 +17468,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<u8>("max-paths") {
+            request = request.body_map(|body| body.max_paths(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -18400,6 +18514,50 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_silo_subnet_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.silo_subnet_pool_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_silo_subnet_pool_list(matches, &mut request)?;
+        self.config.list_start::<types::SiloSubnetPoolResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SiloSubnetPoolResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -21931,6 +22089,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_current_silo_subnet_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::CurrentSiloSubnetPoolList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_audit_log_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -22683,6 +22849,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_silo_subnet_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SiloSubnetPoolList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_subnet_pool_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23355,6 +23529,7 @@ pub enum CliCommand {
     SnapshotCreate,
     SnapshotView,
     SnapshotDelete,
+    CurrentSiloSubnetPoolList,
     AuditLogList,
     PhysicalDiskList,
     PhysicalDiskView,
@@ -23449,6 +23624,7 @@ pub enum CliCommand {
     SiloPolicyUpdate,
     SiloQuotasView,
     SiloQuotasUpdate,
+    SiloSubnetPoolList,
     SubnetPoolList,
     SubnetPoolCreate,
     SubnetPoolView,
@@ -23668,6 +23844,7 @@ impl CliCommand {
             CliCommand::SnapshotCreate,
             CliCommand::SnapshotView,
             CliCommand::SnapshotDelete,
+            CliCommand::CurrentSiloSubnetPoolList,
             CliCommand::AuditLogList,
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
@@ -23762,6 +23939,7 @@ impl CliCommand {
             CliCommand::SiloPolicyUpdate,
             CliCommand::SiloQuotasView,
             CliCommand::SiloQuotasUpdate,
+            CliCommand::SiloSubnetPoolList,
             CliCommand::SubnetPoolList,
             CliCommand::SubnetPoolCreate,
             CliCommand::SubnetPoolView,

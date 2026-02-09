@@ -4173,6 +4173,7 @@ pub mod types {
     ///    "asn",
     ///    "description",
     ///    "id",
+    ///    "max_paths",
     ///    "name",
     ///    "time_created",
     ///    "time_modified"
@@ -4194,6 +4195,15 @@ pub mod types {
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "max_paths": {
+    ///      "description": "Maximum number of paths to use when multiple \"best
+    /// paths\" exist",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/MaxPathConfig"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
@@ -4236,6 +4246,8 @@ pub mod types {
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
+        /// Maximum number of paths to use when multiple "best paths" exist
+        pub max_paths: MaxPathConfig,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
@@ -4286,6 +4298,14 @@ pub mod types {
     ///    "description": {
     ///      "type": "string"
     ///    },
+    ///    "max_paths": {
+    ///      "description": "Maximum number of paths to use when multiple \"best
+    /// paths\" exist",
+    ///      "default": 1,
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
@@ -4317,6 +4337,9 @@ pub mod types {
         pub asn: u32,
         pub bgp_announce_set_id: NameOrId,
         pub description: ::std::string::String,
+        /// Maximum number of paths to use when multiple "best paths" exist
+        #[serde(default = "defaults::default_u64::<u8, 1>")]
+        pub max_paths: u8,
         pub name: Name,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
@@ -4533,7 +4556,6 @@ pub mod types {
     /// should be contacted on.",
     ///  "type": "object",
     ///  "required": [
-    ///    "addr",
     ///    "allowed_export",
     ///    "allowed_import",
     ///    "bgp_config",
@@ -4544,12 +4566,18 @@ pub mod types {
     ///    "hold_time",
     ///    "idle_hold_time",
     ///    "interface_name",
-    ///    "keepalive"
+    ///    "keepalive",
+    ///    "router_lifetime"
     ///  ],
     ///  "properties": {
     ///    "addr": {
-    ///      "description": "The address of the host to peer with.",
-    ///      "type": "string",
+    ///      "description": "The address of the host to peer with. If not
+    /// provided, this is an unnumbered BGP session that will be established
+    /// over the interface specified by `interface_name`.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
     ///      "format": "ip"
     ///    },
     ///    "allowed_export": {
@@ -4684,6 +4712,13 @@ pub mod types {
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
+    ///    "router_lifetime": {
+    ///      "description": "Router lifetime in seconds for unnumbered BGP
+    /// peers.",
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
     ///    "vlan_id": {
     ///      "description": "Associate a VLAN ID with a peer.",
     ///      "type": [
@@ -4701,8 +4736,11 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpPeer {
-        /// The address of the host to peer with.
-        pub addr: ::std::net::IpAddr,
+        /// The address of the host to peer with. If not provided, this is an
+        /// unnumbered BGP session that will be established over the interface
+        /// specified by `interface_name`.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub addr: ::std::option::Option<::std::net::IpAddr>,
         /// Define export policy for a peer.
         pub allowed_export: ImportExportPolicy,
         /// Define import policy for a peer.
@@ -4748,6 +4786,8 @@ pub mod types {
         /// Require that a peer has a specified ASN.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub remote_asn: ::std::option::Option<u32>,
+        /// Router lifetime in seconds for unnumbered BGP peers.
+        pub router_lifetime: u16,
         /// Associate a VLAN ID with a peer.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
@@ -19530,6 +19570,69 @@ pub mod types {
         }
     }
 
+    /// `MaxPathConfig`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "integer",
+    ///  "format": "uint8",
+    ///  "minimum": 0.0
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct MaxPathConfig(pub u8);
+    impl ::std::ops::Deref for MaxPathConfig {
+        type Target = u8;
+        fn deref(&self) -> &u8 {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<MaxPathConfig> for u8 {
+        fn from(value: MaxPathConfig) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<u8> for MaxPathConfig {
+        fn from(value: u8) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for MaxPathConfig {
+        type Err = <u8 as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for MaxPathConfig {
+        type Error = <u8 as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for MaxPathConfig {
+        type Error = <u8 as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for MaxPathConfig {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     /// A `Measurement` is a timestamped datum from a single metric
     ///
     /// <details><summary>JSON schema</summary>
@@ -26344,6 +26447,150 @@ pub mod types {
 
     impl SiloRoleRoleAssignment {
         pub fn builder() -> builder::SiloRoleRoleAssignment {
+            Default::default()
+        }
+    }
+
+    /// A subnet pool in the context of a silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A subnet pool in the context of a silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "ip_version",
+    ///    "is_default",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip_version": {
+    ///      "description": "The IP version for the pool.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpVersion"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, external
+    /// subnet allocations will come from that pool when no other pool is
+    /// specified.\n\nA silo can have at most one default pool per IP version
+    /// (IPv4 or IPv6), allowing up to 2 default pools total.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SiloSubnetPool {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// The IP version for the pool.
+        pub ip_version: IpVersion,
+        /// When a pool is the default for a silo, external subnet allocations
+        /// will come from that pool when no other pool is specified.
+        ///
+        /// A silo can have at most one default pool per IP version (IPv4 or
+        /// IPv6), allowing up to 2 default pools total.
+        pub is_default: bool,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl SiloSubnetPool {
+        pub fn builder() -> builder::SiloSubnetPool {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SiloSubnetPool"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SiloSubnetPoolResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<SiloSubnetPool>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl SiloSubnetPoolResultsPage {
+        pub fn builder() -> builder::SiloSubnetPoolResultsPage {
             Default::default()
         }
     }
@@ -39651,6 +39898,7 @@ pub mod types {
             asn: ::std::result::Result<u32, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            max_paths: ::std::result::Result<super::MaxPathConfig, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
@@ -39672,6 +39920,7 @@ pub mod types {
                     asn: Err("no value supplied for asn".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    max_paths: Err("no value supplied for max_paths".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -39709,6 +39958,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn max_paths<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::MaxPathConfig>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_paths = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max_paths: {e}"));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -39762,6 +40021,7 @@ pub mod types {
                     asn: value.asn?,
                     description: value.description?,
                     id: value.id?,
+                    max_paths: value.max_paths?,
                     name: value.name?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -39776,6 +40036,7 @@ pub mod types {
                     asn: Ok(value.asn),
                     description: Ok(value.description),
                     id: Ok(value.id),
+                    max_paths: Ok(value.max_paths),
                     name: Ok(value.name),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -39789,6 +40050,7 @@ pub mod types {
             asn: ::std::result::Result<u32, ::std::string::String>,
             bgp_announce_set_id: ::std::result::Result<super::NameOrId, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            max_paths: ::std::result::Result<u8, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             vrf: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
@@ -39801,6 +40063,7 @@ pub mod types {
                         "no value supplied for bgp_announce_set_id".to_string()
                     ),
                     description: Err("no value supplied for description".to_string()),
+                    max_paths: Ok(super::defaults::default_u64::<u8, 1>()),
                     name: Err("no value supplied for name".to_string()),
                     vrf: Ok(Default::default()),
                 }
@@ -39838,6 +40101,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {e}"));
                 self
             }
+            pub fn max_paths<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u8>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_paths = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max_paths: {e}"));
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -39869,6 +40142,7 @@ pub mod types {
                     asn: value.asn?,
                     bgp_announce_set_id: value.bgp_announce_set_id?,
                     description: value.description?,
+                    max_paths: value.max_paths?,
                     name: value.name?,
                     vrf: value.vrf?,
                 })
@@ -39881,6 +40155,7 @@ pub mod types {
                     asn: Ok(value.asn),
                     bgp_announce_set_id: Ok(value.bgp_announce_set_id),
                     description: Ok(value.description),
+                    max_paths: Ok(value.max_paths),
                     name: Ok(value.name),
                     vrf: Ok(value.vrf),
                 }
@@ -40091,7 +40366,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeer {
-            addr: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            addr: ::std::result::Result<
+                ::std::option::Option<::std::net::IpAddr>,
+                ::std::string::String,
+            >,
             allowed_export: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
             allowed_import: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
             bgp_config: ::std::result::Result<super::NameOrId, ::std::string::String>,
@@ -40112,13 +40390,14 @@ pub mod types {
             multi_exit_discriminator:
                 ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
             remote_asn: ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
+            router_lifetime: ::std::result::Result<u16, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpPeer {
             fn default() -> Self {
                 Self {
-                    addr: Err("no value supplied for addr".to_string()),
+                    addr: Ok(Default::default()),
                     allowed_export: Err("no value supplied for allowed_export".to_string()),
                     allowed_import: Err("no value supplied for allowed_import".to_string()),
                     bgp_config: Err("no value supplied for bgp_config".to_string()),
@@ -40135,6 +40414,7 @@ pub mod types {
                     min_ttl: Ok(Default::default()),
                     multi_exit_discriminator: Ok(Default::default()),
                     remote_asn: Ok(Default::default()),
+                    router_lifetime: Err("no value supplied for router_lifetime".to_string()),
                     vlan_id: Ok(Default::default()),
                 }
             }
@@ -40143,7 +40423,7 @@ pub mod types {
         impl BgpPeer {
             pub fn addr<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.addr = value
@@ -40311,6 +40591,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for remote_asn: {e}"));
                 self
             }
+            pub fn router_lifetime<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u16>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.router_lifetime = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for router_lifetime: {e}")
+                });
+                self
+            }
             pub fn vlan_id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<u16>>,
@@ -40346,6 +40636,7 @@ pub mod types {
                     min_ttl: value.min_ttl?,
                     multi_exit_discriminator: value.multi_exit_discriminator?,
                     remote_asn: value.remote_asn?,
+                    router_lifetime: value.router_lifetime?,
                     vlan_id: value.vlan_id?,
                 })
             }
@@ -40371,6 +40662,7 @@ pub mod types {
                     min_ttl: Ok(value.min_ttl),
                     multi_exit_discriminator: Ok(value.multi_exit_discriminator),
                     remote_asn: Ok(value.remote_asn),
+                    router_lifetime: Ok(value.router_lifetime),
                     vlan_id: Ok(value.vlan_id),
                 }
             }
@@ -56373,6 +56665,206 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SiloSubnetPool {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SiloSubnetPool {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    ip_version: Err("no value supplied for ip_version".to_string()),
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SiloSubnetPool {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                self
+            }
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SiloSubnetPool> for super::SiloSubnetPool {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloSubnetPool,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    ip_version: value.ip_version?,
+                    is_default: value.is_default?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SiloSubnetPool> for SiloSubnetPool {
+            fn from(value: super::SiloSubnetPool) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    ip_version: Ok(value.ip_version),
+                    is_default: Ok(value.is_default),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloSubnetPoolResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SiloSubnetPool>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SiloSubnetPoolResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SiloSubnetPoolResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SiloSubnetPool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SiloSubnetPoolResultsPage> for super::SiloSubnetPoolResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloSubnetPoolResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SiloSubnetPoolResultsPage> for SiloSubnetPoolResultsPage {
+            fn from(value: super::SiloSubnetPoolResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SiloUtilization {
             allocated: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
             provisioned: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
@@ -65027,6 +65519,14 @@ pub mod types {
             V
         }
 
+        pub(super) fn default_u64<T, const V: u64>() -> T
+        where
+            T: ::std::convert::TryFrom<u64>,
+            <T as ::std::convert::TryFrom<u64>>::Error: ::std::fmt::Debug,
+        {
+            T::try_from(V).unwrap()
+        }
+
         pub(super) fn address_allocator_auto_pool_selector() -> super::PoolSelector {
             super::PoolSelector::Auto {
                 ip_version: ::std::option::Option::None,
@@ -65098,7 +65598,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026020200.0.0
+/// Version: 2026020700.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65139,7 +65639,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026020200.0.0"
+        "2026020700.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -67773,6 +68273,24 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate<'_>;
+    /// List subnet pools linked to the user's current silo
+    ///
+    /// Sends a `GET` request to `/v1/subnet-pools`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.current_silo_subnet_pool_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_silo_subnet_pool_list(&self) -> builder::CurrentSiloSubnetPoolList<'_>;
 }
 
 impl ClientProjectsExt for Client {
@@ -67810,6 +68328,10 @@ impl ClientProjectsExt for Client {
 
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate<'_> {
         builder::ProjectPolicyUpdate::new(self)
+    }
+
+    fn current_silo_subnet_pool_list(&self) -> builder::CurrentSiloSubnetPoolList<'_> {
+        builder::CurrentSiloSubnetPoolList::new(self)
     }
 }
 
@@ -70369,6 +70891,26 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate<'_>;
+    /// List subnet pools linked to a silo
+    ///
+    /// Sends a `GET` request to `/v1/system/silos/{silo}/subnet-pools`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_subnet_pool_list()
+    ///    .silo(silo)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_subnet_pool_list(&self) -> builder::SiloSubnetPoolList<'_>;
     /// List built-in (system) users in silo
     ///
     /// Sends a `GET` request to `/v1/system/users`
@@ -70545,6 +71087,10 @@ impl ClientSystemSilosExt for Client {
 
     fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate<'_> {
         builder::SiloQuotasUpdate::new(self)
+    }
+
+    fn silo_subnet_pool_list(&self) -> builder::SiloSubnetPoolList<'_> {
+        builder::SiloSubnetPoolList::new(self)
     }
 
     fn silo_user_list(&self) -> builder::SiloUserList<'_> {
@@ -88907,6 +89453,159 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientProjectsExt::current_silo_subnet_pool_list`]
+    ///
+    /// [`ClientProjectsExt::current_silo_subnet_pool_list`]: super::ClientProjectsExt::current_silo_subnet_pool_list
+    #[derive(Debug, Clone)]
+    pub struct CurrentSiloSubnetPoolList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> CurrentSiloSubnetPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/subnet-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloSubnetPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/subnet-pools", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "current_silo_subnet_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/subnet-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloSubnetPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemAuditLogExt::audit_log_list`]
     ///
     /// [`ClientSystemAuditLogExt::audit_log_list`]: super::ClientSystemAuditLogExt::audit_log_list
@@ -98741,6 +99440,177 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_subnet_pool_list`]
+    ///
+    /// [`ClientSystemSilosExt::silo_subnet_pool_list`]: super::ClientSystemSilosExt::silo_subnet_pool_list
+    #[derive(Debug, Clone)]
+    pub struct SiloSubnetPoolList<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloSubnetPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/silos/{silo}/subnet-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloSubnetPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                silo,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/subnet-pools",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "silo_subnet_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/silos/{silo}/subnet-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloSubnetPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
         }
     }
 
