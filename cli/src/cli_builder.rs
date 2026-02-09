@@ -807,7 +807,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList
-        | CliCommand::UserBuiltinView => None,
+        | CliCommand::UserBuiltinView
+        | CliCommand::CurrentSiloSubnetPoolList
+        | CliCommand::SiloSubnetPoolList => None,
     }
 }
 

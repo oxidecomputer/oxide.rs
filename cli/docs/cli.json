@@ -7408,6 +7408,10 @@
                           "help": "XXX"
                         },
                         {
+                          "long": "max-paths",
+                          "help": "Maximum number of paths to use when multiple \"best paths\" exist"
+                        },
+                        {
                           "long": "name"
                         },
                         {
@@ -7799,6 +7803,9 @@
                         {
                           "long": "remote-asn",
                           "help": "Require that a peer has a specified ASN"
+                        },
+                        {
+                          "long": "router-lifetime"
                         },
                         {
                           "long": "switch",

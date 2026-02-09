@@ -422,7 +422,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == self.peer)
+                    .find(|x| x.addr == Some(self.peer))
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 let list: Vec<IpNet> = self
@@ -503,7 +503,7 @@ impl AuthenticatedCmd for CmdBgpAuth {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == self.peer)
+                    .find(|x| x.addr == Some(self.peer))
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 peer.md5_auth_key = self.authstring.clone();
@@ -565,7 +565,7 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == self.peer)
+                    .find(|x| x.addr == Some(self.peer))
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 peer.local_pref = self.local_pref
@@ -1079,6 +1079,9 @@ pub struct CmdBgpPeerSet {
     /// Associate a VLAN ID with a peer.
     #[arg(long)]
     pub vlan_id: Option<u16>,
+
+    #[arg(long)]
+    pub router_lifetime: Option<u16>,
 }
 
 #[async_trait]
@@ -1087,7 +1090,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let peer = BgpPeer {
-            addr: self.addr,
+            addr: Some(self.addr),
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering
             } else {
@@ -1125,6 +1128,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             multi_exit_discriminator: self.multi_exit_discriminator,
             remote_asn: self.remote_asn,
             vlan_id: self.vlan_id,
+            router_lifetime: self.router_lifetime.unwrap_or(0),
         };
         match settings
             .bgp_peers
@@ -1187,7 +1191,7 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
             .find(|link| *link.link_name == PHY0)
         {
             let before = config.peers.len();
-            config.peers.retain(|x| x.addr != self.addr);
+            config.peers.retain(|x| x.addr != Some(self.addr));
             let after = config.peers.len();
             if before == after {
                 eprintln_nopipe!("no peers match the provided address");
@@ -1340,7 +1344,7 @@ impl AuthenticatedCmd for CmdPortConfig {
                 for p in &config.bgp_peers {
                     writeln!(
                         &mut tw,
-                        "{}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
+                        "{:?}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
                         p.addr,
                         match &p.bgp_config {
                             NameOrId::Id(id) =>  bgp_configs[id].to_string(),
