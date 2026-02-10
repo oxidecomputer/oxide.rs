@@ -2212,11 +2212,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Attach an external subnet to an instance")
-            .long_about(
-                "Begins an asynchronous attach operation. Returns the subnet with `instance_id` \
-                 set to the target instance. The attach completes asynchronously; poll the subnet \
-                 to check completion.",
-            )
     }
 
     pub fn cli_external_subnet_detach() -> ::clap::Command {
@@ -2236,10 +2231,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Detach an external subnet from an instance")
-            .long_about(
-                "Begins an asynchronous detach operation. Returns the subnet with `instance_id` \
-                 cleared. The detach completes asynchronously.",
-            )
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {

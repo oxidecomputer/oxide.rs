@@ -65442,7 +65442,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026020900.0.0
+/// Version: 2026020901.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65483,7 +65483,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026020900.0.0"
+        "2026020901.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66947,10 +66947,6 @@ pub trait ClientExternalSubnetsExt {
     fn external_subnet_delete(&self) -> builder::ExternalSubnetDelete<'_>;
     /// Attach an external subnet to an instance
     ///
-    /// Begins an asynchronous attach operation. Returns the subnet with
-    /// `instance_id` set to the target instance. The attach completes
-    /// asynchronously; poll the subnet to check completion.
-    ///
     /// Sends a `POST` request to
     /// `/v1/external-subnets/{external_subnet}/attach`
     ///
@@ -66968,9 +66964,6 @@ pub trait ClientExternalSubnetsExt {
     /// ```
     fn external_subnet_attach(&self) -> builder::ExternalSubnetAttach<'_>;
     /// Detach an external subnet from an instance
-    ///
-    /// Begins an asynchronous detach operation. Returns the subnet with
-    /// `instance_id` cleared. The detach completes asynchronously.
     ///
     /// Sends a `POST` request to
     /// `/v1/external-subnets/{external_subnet}/detach`

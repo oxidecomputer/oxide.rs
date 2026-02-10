@@ -2150,7 +2150,6 @@
         {
           "name": "attach",
           "about": "Attach an external subnet to an instance",
-          "long_about": "Begins an asynchronous attach operation. Returns the subnet with `instance_id` set to the target instance. The attach completes asynchronously; poll the subnet to check completion.",
           "args": [
             {
               "long": "external-subnet",
@@ -2230,7 +2229,6 @@
         {
           "name": "detach",
           "about": "Detach an external subnet from an instance",
-          "long_about": "Begins an asynchronous detach operation. Returns the subnet with `instance_id` cleared. The detach completes asynchronously.",
           "args": [
             {
               "long": "external-subnet",
