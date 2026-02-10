@@ -52,7 +52,7 @@ ratatui = "0.30.0"
 rcgen = { version = "0.14.7", features = ["pem"] }
 regex = "1.12.2"
 regress = "0.10.5"
-reqwest = "0.13.1"
+reqwest = "0.13.2"
 rustc_version = "0.4.1"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
