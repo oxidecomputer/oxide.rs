@@ -26348,6 +26348,150 @@ pub mod types {
         }
     }
 
+    /// A subnet pool in the context of a silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A subnet pool in the context of a silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "ip_version",
+    ///    "is_default",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip_version": {
+    ///      "description": "The IP version for the pool.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpVersion"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, external
+    /// subnet allocations will come from that pool when no other pool is
+    /// specified.\n\nA silo can have at most one default pool per IP version
+    /// (IPv4 or IPv6), allowing up to 2 default pools total.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SiloSubnetPool {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// The IP version for the pool.
+        pub ip_version: IpVersion,
+        /// When a pool is the default for a silo, external subnet allocations
+        /// will come from that pool when no other pool is specified.
+        ///
+        /// A silo can have at most one default pool per IP version (IPv4 or
+        /// IPv6), allowing up to 2 default pools total.
+        pub is_default: bool,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl SiloSubnetPool {
+        pub fn builder() -> builder::SiloSubnetPool {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SiloSubnetPool"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SiloSubnetPoolResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<SiloSubnetPool>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl SiloSubnetPoolResultsPage {
+        pub fn builder() -> builder::SiloSubnetPoolResultsPage {
+            Default::default()
+        }
+    }
+
     /// View of a silo's resource utilization and capacity
     ///
     /// <details><summary>JSON schema</summary>
@@ -56373,6 +56517,206 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SiloSubnetPool {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SiloSubnetPool {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    ip_version: Err("no value supplied for ip_version".to_string()),
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SiloSubnetPool {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {e}"));
+                self
+            }
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SiloSubnetPool> for super::SiloSubnetPool {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloSubnetPool,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    ip_version: value.ip_version?,
+                    is_default: value.is_default?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SiloSubnetPool> for SiloSubnetPool {
+            fn from(value: super::SiloSubnetPool) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    ip_version: Ok(value.ip_version),
+                    is_default: Ok(value.is_default),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloSubnetPoolResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SiloSubnetPool>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SiloSubnetPoolResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SiloSubnetPoolResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SiloSubnetPool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SiloSubnetPoolResultsPage> for super::SiloSubnetPoolResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloSubnetPoolResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SiloSubnetPoolResultsPage> for SiloSubnetPoolResultsPage {
+            fn from(value: super::SiloSubnetPoolResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SiloUtilization {
             allocated: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
             provisioned: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
@@ -65098,7 +65442,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026020200.0.0
+/// Version: 2026020901.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65139,7 +65483,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026020200.0.0"
+        "2026020901.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66603,10 +66947,6 @@ pub trait ClientExternalSubnetsExt {
     fn external_subnet_delete(&self) -> builder::ExternalSubnetDelete<'_>;
     /// Attach an external subnet to an instance
     ///
-    /// Begins an asynchronous attach operation. Returns the subnet with
-    /// `instance_id` set to the target instance. The attach completes
-    /// asynchronously; poll the subnet to check completion.
-    ///
     /// Sends a `POST` request to
     /// `/v1/external-subnets/{external_subnet}/attach`
     ///
@@ -66624,9 +66964,6 @@ pub trait ClientExternalSubnetsExt {
     /// ```
     fn external_subnet_attach(&self) -> builder::ExternalSubnetAttach<'_>;
     /// Detach an external subnet from an instance
-    ///
-    /// Begins an asynchronous detach operation. Returns the subnet with
-    /// `instance_id` cleared. The detach completes asynchronously.
     ///
     /// Sends a `POST` request to
     /// `/v1/external-subnets/{external_subnet}/detach`
@@ -67528,6 +67865,52 @@ impl ClientInstancesExt for Client {
     }
 }
 
+/// IP pools are collections of external IPs that can be allocated and attached
+/// to instances.
+pub trait ClientIpPoolsExt {
+    /// List IP pools
+    ///
+    /// Sends a `GET` request to `/v1/ip-pools`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.ip_pool_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_list(&self) -> builder::IpPoolList<'_>;
+    /// Fetch IP pool
+    ///
+    /// Sends a `GET` request to `/v1/ip-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// ```ignore
+    /// let response = client.ip_pool_view()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_view(&self) -> builder::IpPoolView<'_>;
+}
+
+impl ClientIpPoolsExt for Client {
+    fn ip_pool_list(&self) -> builder::IpPoolList<'_> {
+        builder::IpPoolList::new(self)
+    }
+
+    fn ip_pool_view(&self) -> builder::IpPoolView<'_> {
+        builder::IpPoolView::new(self)
+    }
+}
+
 /// Authentication endpoints
 pub trait ClientLoginExt {
     /// Authenticate a user via SAML
@@ -67644,37 +68027,6 @@ impl ClientPolicyExt for Client {
 /// Projects are a grouping of associated resources such as instances and disks
 /// within a silo for purposes of billing and access control.
 pub trait ClientProjectsExt {
-    /// List IP pools
-    ///
-    /// Sends a `GET` request to `/v1/ip-pools`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.project_ip_pool_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn project_ip_pool_list(&self) -> builder::ProjectIpPoolList<'_>;
-    /// Fetch IP pool
-    ///
-    /// Sends a `GET` request to `/v1/ip-pools/{pool}`
-    ///
-    /// Arguments:
-    /// - `pool`: Name or ID of the IP pool
-    /// ```ignore
-    /// let response = client.project_ip_pool_view()
-    ///    .pool(pool)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn project_ip_pool_view(&self) -> builder::ProjectIpPoolView<'_>;
     /// List projects
     ///
     /// Sends a `GET` request to `/v1/projects`
@@ -67776,14 +68128,6 @@ pub trait ClientProjectsExt {
 }
 
 impl ClientProjectsExt for Client {
-    fn project_ip_pool_list(&self) -> builder::ProjectIpPoolList<'_> {
-        builder::ProjectIpPoolList::new(self)
-    }
-
-    fn project_ip_pool_view(&self) -> builder::ProjectIpPoolView<'_> {
-        builder::ProjectIpPoolView::new(self)
-    }
-
     fn project_list(&self) -> builder::ProjectList<'_> {
         builder::ProjectList::new(self)
     }
@@ -68207,6 +68551,52 @@ impl ClientSnapshotsExt for Client {
 
     fn snapshot_delete(&self) -> builder::SnapshotDelete<'_> {
         builder::SnapshotDelete::new(self)
+    }
+}
+
+/// Subnet pools are collections of external subnets that can be allocated and
+/// attached to instances.
+pub trait ClientSubnetPoolsExt {
+    /// List subnet pools
+    ///
+    /// Sends a `GET` request to `/v1/subnet-pools`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.subnet_pool_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_list(&self) -> builder::SubnetPoolList<'_>;
+    /// Fetch subnet pool
+    ///
+    /// Sends a `GET` request to `/v1/subnet-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the subnet pool
+    /// ```ignore
+    /// let response = client.subnet_pool_view()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn subnet_pool_view(&self) -> builder::SubnetPoolView<'_>;
+}
+
+impl ClientSubnetPoolsExt for Client {
+    fn subnet_pool_list(&self) -> builder::SubnetPoolList<'_> {
+        builder::SubnetPoolList::new(self)
+    }
+
+    fn subnet_pool_view(&self) -> builder::SubnetPoolView<'_> {
+        builder::SubnetPoolView::new(self)
     }
 }
 
@@ -68964,9 +69354,8 @@ impl ClientSystemHardwareExt for Client {
     }
 }
 
-/// IP pools are collections of external IPs that can be assigned to silos. When
-/// a pool is linked to a silo, users in that silo can allocate IPs from the
-/// pool for their instances.
+/// IP pools are collections of external IPs. Linking a pool to a silo makes it
+/// available for allocation by users in that silo.
 pub trait ClientSystemIpPoolsExt {
     /// List IP pools
     ///
@@ -68978,14 +69367,14 @@ pub trait ClientSystemIpPoolsExt {
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
-    /// let response = client.ip_pool_list()
+    /// let response = client.system_ip_pool_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_list(&self) -> builder::IpPoolList<'_>;
+    fn system_ip_pool_list(&self) -> builder::SystemIpPoolList<'_>;
     /// Create IP pool
     ///
     /// IPv6 is not yet supported for unicast pools.
@@ -68993,12 +69382,12 @@ pub trait ClientSystemIpPoolsExt {
     /// Sends a `POST` request to `/v1/system/ip-pools`
     ///
     /// ```ignore
-    /// let response = client.ip_pool_create()
+    /// let response = client.system_ip_pool_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_create(&self) -> builder::IpPoolCreate<'_>;
+    fn system_ip_pool_create(&self) -> builder::SystemIpPoolCreate<'_>;
     /// Fetch IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
@@ -69006,12 +69395,12 @@ pub trait ClientSystemIpPoolsExt {
     /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// ```ignore
-    /// let response = client.ip_pool_view()
+    /// let response = client.system_ip_pool_view()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_view(&self) -> builder::IpPoolView<'_>;
+    fn system_ip_pool_view(&self) -> builder::SystemIpPoolView<'_>;
     /// Update IP pool
     ///
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
@@ -69020,13 +69409,13 @@ pub trait ClientSystemIpPoolsExt {
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
     /// ```ignore
-    /// let response = client.ip_pool_update()
+    /// let response = client.system_ip_pool_update()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_update(&self) -> builder::IpPoolUpdate<'_>;
+    fn system_ip_pool_update(&self) -> builder::SystemIpPoolUpdate<'_>;
     /// Delete IP pool
     ///
     /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
@@ -69034,12 +69423,12 @@ pub trait ClientSystemIpPoolsExt {
     /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// ```ignore
-    /// let response = client.ip_pool_delete()
+    /// let response = client.system_ip_pool_delete()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_delete(&self) -> builder::IpPoolDelete<'_>;
+    fn system_ip_pool_delete(&self) -> builder::SystemIpPoolDelete<'_>;
     /// List ranges for IP pool
     ///
     /// Ranges are ordered by their first address.
@@ -69052,15 +69441,15 @@ pub trait ClientSystemIpPoolsExt {
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// ```ignore
-    /// let response = client.ip_pool_range_list()
+    /// let response = client.system_ip_pool_range_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList<'_>;
-    /// Add range to an IP pool
+    fn system_ip_pool_range_list(&self) -> builder::SystemIpPoolRangeList<'_>;
+    /// Add range to IP pool
     ///
     /// IPv6 ranges are not allowed yet for unicast pools.
     ///
@@ -69078,13 +69467,13 @@ pub trait ClientSystemIpPoolsExt {
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
     /// ```ignore
-    /// let response = client.ip_pool_range_add()
+    /// let response = client.system_ip_pool_range_add()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd<'_>;
+    fn system_ip_pool_range_add(&self) -> builder::SystemIpPoolRangeAdd<'_>;
     /// Remove range from IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
@@ -69093,13 +69482,13 @@ pub trait ClientSystemIpPoolsExt {
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
     /// ```ignore
-    /// let response = client.ip_pool_range_remove()
+    /// let response = client.system_ip_pool_range_remove()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove<'_>;
+    fn system_ip_pool_range_remove(&self) -> builder::SystemIpPoolRangeRemove<'_>;
     /// List IP pool's linked silos
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/silos`
@@ -69111,7 +69500,7 @@ pub trait ClientSystemIpPoolsExt {
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
-    /// let response = client.ip_pool_silo_list()
+    /// let response = client.system_ip_pool_silo_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -69119,7 +69508,7 @@ pub trait ClientSystemIpPoolsExt {
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList<'_>;
+    fn system_ip_pool_silo_list(&self) -> builder::SystemIpPoolSiloList<'_>;
     /// Link IP pool to silo
     ///
     /// Users in linked silos can allocate external IPs from this pool for their
@@ -69132,13 +69521,13 @@ pub trait ClientSystemIpPoolsExt {
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
     /// ```ignore
-    /// let response = client.ip_pool_silo_link()
+    /// let response = client.system_ip_pool_silo_link()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink<'_>;
+    fn system_ip_pool_silo_link(&self) -> builder::SystemIpPoolSiloLink<'_>;
     /// Make IP pool default for silo
     ///
     /// When a user asks for an IP (e.g., at instance create time) without
@@ -69150,14 +69539,14 @@ pub trait ClientSystemIpPoolsExt {
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
     ///
     /// ```ignore
-    /// let response = client.ip_pool_silo_update()
+    /// let response = client.system_ip_pool_silo_update()
     ///    .pool(pool)
     ///    .silo(silo)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate<'_>;
+    fn system_ip_pool_silo_update(&self) -> builder::SystemIpPoolSiloUpdate<'_>;
     /// Unlink IP pool from silo
     ///
     /// Will fail if there are any outstanding IPs allocated in the silo.
@@ -69165,13 +69554,13 @@ pub trait ClientSystemIpPoolsExt {
     /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
     ///
     /// ```ignore
-    /// let response = client.ip_pool_silo_unlink()
+    /// let response = client.system_ip_pool_silo_unlink()
     ///    .pool(pool)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink<'_>;
+    fn system_ip_pool_silo_unlink(&self) -> builder::SystemIpPoolSiloUnlink<'_>;
     /// Fetch IP pool utilization
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/utilization`
@@ -69179,22 +69568,22 @@ pub trait ClientSystemIpPoolsExt {
     /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// ```ignore
-    /// let response = client.ip_pool_utilization_view()
+    /// let response = client.system_ip_pool_utilization_view()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView<'_>;
+    fn system_ip_pool_utilization_view(&self) -> builder::SystemIpPoolUtilizationView<'_>;
     /// Fetch Oxide service IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
     /// ```ignore
-    /// let response = client.ip_pool_service_view()
+    /// let response = client.system_ip_pool_service_view()
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView<'_>;
+    fn system_ip_pool_service_view(&self) -> builder::SystemIpPoolServiceView<'_>;
     /// List IP ranges for the Oxide service pool
     ///
     /// Ranges are ordered by their first address.
@@ -69206,13 +69595,13 @@ pub trait ClientSystemIpPoolsExt {
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// ```ignore
-    /// let response = client.ip_pool_service_range_list()
+    /// let response = client.system_ip_pool_service_range_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList<'_>;
+    fn system_ip_pool_service_range_list(&self) -> builder::SystemIpPoolServiceRangeList<'_>;
     /// Add IP range to Oxide service pool
     ///
     /// IPv6 ranges are not allowed yet.
@@ -69220,92 +69609,92 @@ pub trait ClientSystemIpPoolsExt {
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
     /// ```ignore
-    /// let response = client.ip_pool_service_range_add()
+    /// let response = client.system_ip_pool_service_range_add()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd<'_>;
+    fn system_ip_pool_service_range_add(&self) -> builder::SystemIpPoolServiceRangeAdd<'_>;
     /// Remove IP range from Oxide service pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
     ///
     /// ```ignore
-    /// let response = client.ip_pool_service_range_remove()
+    /// let response = client.system_ip_pool_service_range_remove()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove<'_>;
+    fn system_ip_pool_service_range_remove(&self) -> builder::SystemIpPoolServiceRangeRemove<'_>;
 }
 
 impl ClientSystemIpPoolsExt for Client {
-    fn ip_pool_list(&self) -> builder::IpPoolList<'_> {
-        builder::IpPoolList::new(self)
+    fn system_ip_pool_list(&self) -> builder::SystemIpPoolList<'_> {
+        builder::SystemIpPoolList::new(self)
     }
 
-    fn ip_pool_create(&self) -> builder::IpPoolCreate<'_> {
-        builder::IpPoolCreate::new(self)
+    fn system_ip_pool_create(&self) -> builder::SystemIpPoolCreate<'_> {
+        builder::SystemIpPoolCreate::new(self)
     }
 
-    fn ip_pool_view(&self) -> builder::IpPoolView<'_> {
-        builder::IpPoolView::new(self)
+    fn system_ip_pool_view(&self) -> builder::SystemIpPoolView<'_> {
+        builder::SystemIpPoolView::new(self)
     }
 
-    fn ip_pool_update(&self) -> builder::IpPoolUpdate<'_> {
-        builder::IpPoolUpdate::new(self)
+    fn system_ip_pool_update(&self) -> builder::SystemIpPoolUpdate<'_> {
+        builder::SystemIpPoolUpdate::new(self)
     }
 
-    fn ip_pool_delete(&self) -> builder::IpPoolDelete<'_> {
-        builder::IpPoolDelete::new(self)
+    fn system_ip_pool_delete(&self) -> builder::SystemIpPoolDelete<'_> {
+        builder::SystemIpPoolDelete::new(self)
     }
 
-    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList<'_> {
-        builder::IpPoolRangeList::new(self)
+    fn system_ip_pool_range_list(&self) -> builder::SystemIpPoolRangeList<'_> {
+        builder::SystemIpPoolRangeList::new(self)
     }
 
-    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd<'_> {
-        builder::IpPoolRangeAdd::new(self)
+    fn system_ip_pool_range_add(&self) -> builder::SystemIpPoolRangeAdd<'_> {
+        builder::SystemIpPoolRangeAdd::new(self)
     }
 
-    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove<'_> {
-        builder::IpPoolRangeRemove::new(self)
+    fn system_ip_pool_range_remove(&self) -> builder::SystemIpPoolRangeRemove<'_> {
+        builder::SystemIpPoolRangeRemove::new(self)
     }
 
-    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList<'_> {
-        builder::IpPoolSiloList::new(self)
+    fn system_ip_pool_silo_list(&self) -> builder::SystemIpPoolSiloList<'_> {
+        builder::SystemIpPoolSiloList::new(self)
     }
 
-    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink<'_> {
-        builder::IpPoolSiloLink::new(self)
+    fn system_ip_pool_silo_link(&self) -> builder::SystemIpPoolSiloLink<'_> {
+        builder::SystemIpPoolSiloLink::new(self)
     }
 
-    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate<'_> {
-        builder::IpPoolSiloUpdate::new(self)
+    fn system_ip_pool_silo_update(&self) -> builder::SystemIpPoolSiloUpdate<'_> {
+        builder::SystemIpPoolSiloUpdate::new(self)
     }
 
-    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink<'_> {
-        builder::IpPoolSiloUnlink::new(self)
+    fn system_ip_pool_silo_unlink(&self) -> builder::SystemIpPoolSiloUnlink<'_> {
+        builder::SystemIpPoolSiloUnlink::new(self)
     }
 
-    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView<'_> {
-        builder::IpPoolUtilizationView::new(self)
+    fn system_ip_pool_utilization_view(&self) -> builder::SystemIpPoolUtilizationView<'_> {
+        builder::SystemIpPoolUtilizationView::new(self)
     }
 
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView<'_> {
-        builder::IpPoolServiceView::new(self)
+    fn system_ip_pool_service_view(&self) -> builder::SystemIpPoolServiceView<'_> {
+        builder::SystemIpPoolServiceView::new(self)
     }
 
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList<'_> {
-        builder::IpPoolServiceRangeList::new(self)
+    fn system_ip_pool_service_range_list(&self) -> builder::SystemIpPoolServiceRangeList<'_> {
+        builder::SystemIpPoolServiceRangeList::new(self)
     }
 
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd<'_> {
-        builder::IpPoolServiceRangeAdd::new(self)
+    fn system_ip_pool_service_range_add(&self) -> builder::SystemIpPoolServiceRangeAdd<'_> {
+        builder::SystemIpPoolServiceRangeAdd::new(self)
     }
 
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove<'_> {
-        builder::IpPoolServiceRangeRemove::new(self)
+    fn system_ip_pool_service_range_remove(&self) -> builder::SystemIpPoolServiceRangeRemove<'_> {
+        builder::SystemIpPoolServiceRangeRemove::new(self)
     }
 }
 
@@ -70369,6 +70758,26 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate<'_>;
+    /// List subnet pools linked to a silo
+    ///
+    /// Sends a `GET` request to `/v1/system/silos/{silo}/subnet-pools`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_subnet_pool_list()
+    ///    .silo(silo)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_subnet_pool_list(&self) -> builder::SiloSubnetPoolList<'_>;
     /// List built-in (system) users in silo
     ///
     /// Sends a `GET` request to `/v1/system/users`
@@ -70547,6 +70956,10 @@ impl ClientSystemSilosExt for Client {
         builder::SiloQuotasUpdate::new(self)
     }
 
+    fn silo_subnet_pool_list(&self) -> builder::SiloSubnetPoolList<'_> {
+        builder::SiloSubnetPoolList::new(self)
+    }
+
     fn silo_user_list(&self) -> builder::SiloUserList<'_> {
         builder::SiloUserList::new(self)
     }
@@ -70594,9 +71007,8 @@ impl ClientSystemStatusExt for Client {
     }
 }
 
-/// Subnet pools are collections of IP subnets that can be assigned to silos.
-/// When a pool is linked to a silo, users in that silo can allocate external
-/// subnets from the pool.
+/// Subnet pools are collections of external subnets. Linking a pool to a silo
+/// makes it available for allocation by users in that silo.
 pub trait ClientSystemSubnetPoolsExt {
     /// List subnet pools
     ///
@@ -70608,39 +71020,39 @@ pub trait ClientSystemSubnetPoolsExt {
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
-    /// let response = client.subnet_pool_list()
+    /// let response = client.system_subnet_pool_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_list(&self) -> builder::SubnetPoolList<'_>;
-    /// Create a subnet pool
+    fn system_subnet_pool_list(&self) -> builder::SystemSubnetPoolList<'_>;
+    /// Create subnet pool
     ///
     /// Sends a `POST` request to `/v1/system/subnet-pools`
     ///
     /// ```ignore
-    /// let response = client.subnet_pool_create()
+    /// let response = client.system_subnet_pool_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_create(&self) -> builder::SubnetPoolCreate<'_>;
-    /// Fetch a subnet pool
+    fn system_subnet_pool_create(&self) -> builder::SystemSubnetPoolCreate<'_>;
+    /// Fetch subnet pool
     ///
     /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}`
     ///
     /// Arguments:
     /// - `pool`: Name or ID of the subnet pool
     /// ```ignore
-    /// let response = client.subnet_pool_view()
+    /// let response = client.system_subnet_pool_view()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_view(&self) -> builder::SubnetPoolView<'_>;
-    /// Update a subnet pool
+    fn system_subnet_pool_view(&self) -> builder::SystemSubnetPoolView<'_>;
+    /// Update subnet pool
     ///
     /// Sends a `PUT` request to `/v1/system/subnet-pools/{pool}`
     ///
@@ -70648,27 +71060,27 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `pool`: Name or ID of the subnet pool
     /// - `body`
     /// ```ignore
-    /// let response = client.subnet_pool_update()
+    /// let response = client.system_subnet_pool_update()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_update(&self) -> builder::SubnetPoolUpdate<'_>;
-    /// Delete a subnet pool
+    fn system_subnet_pool_update(&self) -> builder::SystemSubnetPoolUpdate<'_>;
+    /// Delete subnet pool
     ///
     /// Sends a `DELETE` request to `/v1/system/subnet-pools/{pool}`
     ///
     /// Arguments:
     /// - `pool`: Name or ID of the subnet pool
     /// ```ignore
-    /// let response = client.subnet_pool_delete()
+    /// let response = client.system_subnet_pool_delete()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_delete(&self) -> builder::SubnetPoolDelete<'_>;
-    /// List members in a subnet pool
+    fn system_subnet_pool_delete(&self) -> builder::SystemSubnetPoolDelete<'_>;
+    /// List members in subnet pool
     ///
     /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/members`
     ///
@@ -70678,15 +71090,15 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// ```ignore
-    /// let response = client.subnet_pool_member_list()
+    /// let response = client.system_subnet_pool_member_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_member_list(&self) -> builder::SubnetPoolMemberList<'_>;
-    /// Add a member to a subnet pool
+    fn system_subnet_pool_member_list(&self) -> builder::SystemSubnetPoolMemberList<'_>;
+    /// Add member to subnet pool
     ///
     /// Sends a `POST` request to `/v1/system/subnet-pools/{pool}/members/add`
     ///
@@ -70694,14 +71106,14 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `pool`: Name or ID of the subnet pool
     /// - `body`
     /// ```ignore
-    /// let response = client.subnet_pool_member_add()
+    /// let response = client.system_subnet_pool_member_add()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_member_add(&self) -> builder::SubnetPoolMemberAdd<'_>;
-    /// Remove a member from a subnet pool
+    fn system_subnet_pool_member_add(&self) -> builder::SystemSubnetPoolMemberAdd<'_>;
+    /// Remove member from subnet pool
     ///
     /// Sends a `POST` request to
     /// `/v1/system/subnet-pools/{pool}/members/remove`
@@ -70710,14 +71122,14 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `pool`: Name or ID of the subnet pool
     /// - `body`
     /// ```ignore
-    /// let response = client.subnet_pool_member_remove()
+    /// let response = client.system_subnet_pool_member_remove()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_member_remove(&self) -> builder::SubnetPoolMemberRemove<'_>;
-    /// List silos linked to a subnet pool
+    fn system_subnet_pool_member_remove(&self) -> builder::SystemSubnetPoolMemberRemove<'_>;
+    /// List silos linked to subnet pool
     ///
     /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/silos`
     ///
@@ -70728,7 +71140,7 @@ pub trait ClientSystemSubnetPoolsExt {
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
-    /// let response = client.subnet_pool_silo_list()
+    /// let response = client.system_subnet_pool_silo_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -70736,8 +71148,8 @@ pub trait ClientSystemSubnetPoolsExt {
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_silo_list(&self) -> builder::SubnetPoolSiloList<'_>;
-    /// Link a subnet pool to a silo
+    fn system_subnet_pool_silo_list(&self) -> builder::SystemSubnetPoolSiloList<'_>;
+    /// Link subnet pool to silo
     ///
     /// Sends a `POST` request to `/v1/system/subnet-pools/{pool}/silos`
     ///
@@ -70745,14 +71157,14 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `pool`: Name or ID of the subnet pool
     /// - `body`
     /// ```ignore
-    /// let response = client.subnet_pool_silo_link()
+    /// let response = client.system_subnet_pool_silo_link()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_silo_link(&self) -> builder::SubnetPoolSiloLink<'_>;
-    /// Update a subnet pool's link to a silo
+    fn system_subnet_pool_silo_link(&self) -> builder::SystemSubnetPoolSiloLink<'_>;
+    /// Update subnet pool's link to silo
     ///
     /// Sends a `PUT` request to `/v1/system/subnet-pools/{pool}/silos/{silo}`
     ///
@@ -70761,15 +71173,15 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `silo`: Name or ID of the silo
     /// - `body`
     /// ```ignore
-    /// let response = client.subnet_pool_silo_update()
+    /// let response = client.system_subnet_pool_silo_update()
     ///    .pool(pool)
     ///    .silo(silo)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_silo_update(&self) -> builder::SubnetPoolSiloUpdate<'_>;
-    /// Unlink a subnet pool from a silo
+    fn system_subnet_pool_silo_update(&self) -> builder::SystemSubnetPoolSiloUpdate<'_>;
+    /// Unlink subnet pool from silo
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/subnet-pools/{pool}/silos/{silo}`
@@ -70778,13 +71190,13 @@ pub trait ClientSystemSubnetPoolsExt {
     /// - `pool`: Name or ID of the subnet pool
     /// - `silo`: Name or ID of the silo
     /// ```ignore
-    /// let response = client.subnet_pool_silo_unlink()
+    /// let response = client.system_subnet_pool_silo_unlink()
     ///    .pool(pool)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_silo_unlink(&self) -> builder::SubnetPoolSiloUnlink<'_>;
+    fn system_subnet_pool_silo_unlink(&self) -> builder::SystemSubnetPoolSiloUnlink<'_>;
     /// Fetch subnet pool utilization
     ///
     /// Sends a `GET` request to `/v1/system/subnet-pools/{pool}/utilization`
@@ -70792,65 +71204,65 @@ pub trait ClientSystemSubnetPoolsExt {
     /// Arguments:
     /// - `pool`: Name or ID of the subnet pool
     /// ```ignore
-    /// let response = client.subnet_pool_utilization_view()
+    /// let response = client.system_subnet_pool_utilization_view()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
     /// ```
-    fn subnet_pool_utilization_view(&self) -> builder::SubnetPoolUtilizationView<'_>;
+    fn system_subnet_pool_utilization_view(&self) -> builder::SystemSubnetPoolUtilizationView<'_>;
 }
 
 impl ClientSystemSubnetPoolsExt for Client {
-    fn subnet_pool_list(&self) -> builder::SubnetPoolList<'_> {
-        builder::SubnetPoolList::new(self)
+    fn system_subnet_pool_list(&self) -> builder::SystemSubnetPoolList<'_> {
+        builder::SystemSubnetPoolList::new(self)
     }
 
-    fn subnet_pool_create(&self) -> builder::SubnetPoolCreate<'_> {
-        builder::SubnetPoolCreate::new(self)
+    fn system_subnet_pool_create(&self) -> builder::SystemSubnetPoolCreate<'_> {
+        builder::SystemSubnetPoolCreate::new(self)
     }
 
-    fn subnet_pool_view(&self) -> builder::SubnetPoolView<'_> {
-        builder::SubnetPoolView::new(self)
+    fn system_subnet_pool_view(&self) -> builder::SystemSubnetPoolView<'_> {
+        builder::SystemSubnetPoolView::new(self)
     }
 
-    fn subnet_pool_update(&self) -> builder::SubnetPoolUpdate<'_> {
-        builder::SubnetPoolUpdate::new(self)
+    fn system_subnet_pool_update(&self) -> builder::SystemSubnetPoolUpdate<'_> {
+        builder::SystemSubnetPoolUpdate::new(self)
     }
 
-    fn subnet_pool_delete(&self) -> builder::SubnetPoolDelete<'_> {
-        builder::SubnetPoolDelete::new(self)
+    fn system_subnet_pool_delete(&self) -> builder::SystemSubnetPoolDelete<'_> {
+        builder::SystemSubnetPoolDelete::new(self)
     }
 
-    fn subnet_pool_member_list(&self) -> builder::SubnetPoolMemberList<'_> {
-        builder::SubnetPoolMemberList::new(self)
+    fn system_subnet_pool_member_list(&self) -> builder::SystemSubnetPoolMemberList<'_> {
+        builder::SystemSubnetPoolMemberList::new(self)
     }
 
-    fn subnet_pool_member_add(&self) -> builder::SubnetPoolMemberAdd<'_> {
-        builder::SubnetPoolMemberAdd::new(self)
+    fn system_subnet_pool_member_add(&self) -> builder::SystemSubnetPoolMemberAdd<'_> {
+        builder::SystemSubnetPoolMemberAdd::new(self)
     }
 
-    fn subnet_pool_member_remove(&self) -> builder::SubnetPoolMemberRemove<'_> {
-        builder::SubnetPoolMemberRemove::new(self)
+    fn system_subnet_pool_member_remove(&self) -> builder::SystemSubnetPoolMemberRemove<'_> {
+        builder::SystemSubnetPoolMemberRemove::new(self)
     }
 
-    fn subnet_pool_silo_list(&self) -> builder::SubnetPoolSiloList<'_> {
-        builder::SubnetPoolSiloList::new(self)
+    fn system_subnet_pool_silo_list(&self) -> builder::SystemSubnetPoolSiloList<'_> {
+        builder::SystemSubnetPoolSiloList::new(self)
     }
 
-    fn subnet_pool_silo_link(&self) -> builder::SubnetPoolSiloLink<'_> {
-        builder::SubnetPoolSiloLink::new(self)
+    fn system_subnet_pool_silo_link(&self) -> builder::SystemSubnetPoolSiloLink<'_> {
+        builder::SystemSubnetPoolSiloLink::new(self)
     }
 
-    fn subnet_pool_silo_update(&self) -> builder::SubnetPoolSiloUpdate<'_> {
-        builder::SubnetPoolSiloUpdate::new(self)
+    fn system_subnet_pool_silo_update(&self) -> builder::SystemSubnetPoolSiloUpdate<'_> {
+        builder::SystemSubnetPoolSiloUpdate::new(self)
     }
 
-    fn subnet_pool_silo_unlink(&self) -> builder::SubnetPoolSiloUnlink<'_> {
-        builder::SubnetPoolSiloUnlink::new(self)
+    fn system_subnet_pool_silo_unlink(&self) -> builder::SystemSubnetPoolSiloUnlink<'_> {
+        builder::SystemSubnetPoolSiloUnlink::new(self)
     }
 
-    fn subnet_pool_utilization_view(&self) -> builder::SubnetPoolUtilizationView<'_> {
-        builder::SubnetPoolUtilizationView::new(self)
+    fn system_subnet_pool_utilization_view(&self) -> builder::SystemSubnetPoolUtilizationView<'_> {
+        builder::SystemSubnetPoolUtilizationView::new(self)
     }
 }
 
@@ -85128,18 +85540,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientProjectsExt::project_ip_pool_list`]
+    /// Builder for [`ClientIpPoolsExt::ip_pool_list`]
     ///
-    /// [`ClientProjectsExt::project_ip_pool_list`]: super::ClientProjectsExt::project_ip_pool_list
+    /// [`ClientIpPoolsExt::ip_pool_list`]: super::ClientIpPoolsExt::ip_pool_list
     #[derive(Debug, Clone)]
-    pub struct ProjectIpPoolList<'a> {
+    pub struct IpPoolList<'a> {
         client: &'a super::Client,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> ProjectIpPoolList<'a> {
+    impl<'a> IpPoolList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -85216,7 +85628,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "project_ip_pool_list",
+                operation_id: "ip_pool_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -85281,16 +85693,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientProjectsExt::project_ip_pool_view`]
+    /// Builder for [`ClientIpPoolsExt::ip_pool_view`]
     ///
-    /// [`ClientProjectsExt::project_ip_pool_view`]: super::ClientProjectsExt::project_ip_pool_view
+    /// [`ClientIpPoolsExt::ip_pool_view`]: super::ClientIpPoolsExt::ip_pool_view
     #[derive(Debug, Clone)]
-    pub struct ProjectIpPoolView<'a> {
+    pub struct IpPoolView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> ProjectIpPoolView<'a> {
+    impl<'a> IpPoolView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -85333,7 +85745,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "project_ip_pool_view",
+                operation_id: "ip_pool_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -88896,6 +89308,232 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSubnetPoolsExt::subnet_pool_list`]
+    ///
+    /// [`ClientSubnetPoolsExt::subnet_pool_list`]: super::ClientSubnetPoolsExt::subnet_pool_list
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SubnetPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/subnet-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloSubnetPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/subnet-pools", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/subnet-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloSubnetPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSubnetPoolsExt::subnet_pool_view`]
+    ///
+    /// [`ClientSubnetPoolsExt::subnet_pool_view`]: super::ClientSubnetPoolsExt::subnet_pool_view
+    #[derive(Debug, Clone)]
+    pub struct SubnetPoolView<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SubnetPoolView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/subnet-pools/{pool}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloSubnetPool>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/subnet-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "subnet_pool_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -92595,18 +93233,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_list`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_list`]: super::ClientSystemIpPoolsExt::ip_pool_list
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_list`]: super::ClientSystemIpPoolsExt::system_ip_pool_list
     #[derive(Debug, Clone)]
-    pub struct IpPoolList<'a> {
+    pub struct SystemIpPoolList<'a> {
         client: &'a super::Client,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> IpPoolList<'a> {
+    impl<'a> SystemIpPoolList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92683,7 +93321,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_list",
+                operation_id: "system_ip_pool_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92748,16 +93386,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_create`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_create`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_create`]: super::ClientSystemIpPoolsExt::ip_pool_create
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_create`]: super::ClientSystemIpPoolsExt::system_ip_pool_create
     #[derive(Debug, Clone)]
-    pub struct IpPoolCreate<'a> {
+    pub struct SystemIpPoolCreate<'a> {
         client: &'a super::Client,
         body: Result<types::builder::IpPoolCreate, String>,
     }
 
-    impl<'a> IpPoolCreate<'a> {
+    impl<'a> SystemIpPoolCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92809,7 +93447,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_create",
+                operation_id: "system_ip_pool_create",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92828,16 +93466,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_view`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_view`]: super::ClientSystemIpPoolsExt::ip_pool_view
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_view`]: super::ClientSystemIpPoolsExt::system_ip_pool_view
     #[derive(Debug, Clone)]
-    pub struct IpPoolView<'a> {
+    pub struct SystemIpPoolView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> IpPoolView<'a> {
+    impl<'a> SystemIpPoolView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92880,7 +93518,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_view",
+                operation_id: "system_ip_pool_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92899,17 +93537,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_update`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_update`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_update`]: super::ClientSystemIpPoolsExt::ip_pool_update
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_update`]: super::ClientSystemIpPoolsExt::system_ip_pool_update
     #[derive(Debug, Clone)]
-    pub struct IpPoolUpdate<'a> {
+    pub struct SystemIpPoolUpdate<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::IpPoolUpdate, String>,
     }
 
-    impl<'a> IpPoolUpdate<'a> {
+    impl<'a> SystemIpPoolUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92977,7 +93615,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_update",
+                operation_id: "system_ip_pool_update",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92996,16 +93634,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_delete`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_delete`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_delete`]: super::ClientSystemIpPoolsExt::ip_pool_delete
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_delete`]: super::ClientSystemIpPoolsExt::system_ip_pool_delete
     #[derive(Debug, Clone)]
-    pub struct IpPoolDelete<'a> {
+    pub struct SystemIpPoolDelete<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> IpPoolDelete<'a> {
+    impl<'a> SystemIpPoolDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93048,7 +93686,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_delete",
+                operation_id: "system_ip_pool_delete",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93067,18 +93705,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_range_list`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_range_list`]: super::ClientSystemIpPoolsExt::ip_pool_range_list
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_range_list`]: super::ClientSystemIpPoolsExt::system_ip_pool_range_list
     #[derive(Debug, Clone)]
-    pub struct IpPoolRangeList<'a> {
+    pub struct SystemIpPoolRangeList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
-    impl<'a> IpPoolRangeList<'a> {
+    impl<'a> SystemIpPoolRangeList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93157,7 +93795,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_range_list",
+                operation_id: "system_ip_pool_range_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93221,17 +93859,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_add`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_range_add`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_range_add`]: super::ClientSystemIpPoolsExt::ip_pool_range_add
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_range_add`]: super::ClientSystemIpPoolsExt::system_ip_pool_range_add
     #[derive(Debug, Clone)]
-    pub struct IpPoolRangeAdd<'a> {
+    pub struct SystemIpPoolRangeAdd<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolRangeAdd<'a> {
+    impl<'a> SystemIpPoolRangeAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93287,7 +93925,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_range_add",
+                operation_id: "system_ip_pool_range_add",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93306,17 +93944,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_remove`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_range_remove`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_range_remove`]: super::ClientSystemIpPoolsExt::ip_pool_range_remove
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_range_remove`]: super::ClientSystemIpPoolsExt::system_ip_pool_range_remove
     #[derive(Debug, Clone)]
-    pub struct IpPoolRangeRemove<'a> {
+    pub struct SystemIpPoolRangeRemove<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolRangeRemove<'a> {
+    impl<'a> SystemIpPoolRangeRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93372,7 +94010,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_range_remove",
+                operation_id: "system_ip_pool_range_remove",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93391,11 +94029,11 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_silo_list`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_silo_list`]: super::ClientSystemIpPoolsExt::ip_pool_silo_list
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_silo_list`]: super::ClientSystemIpPoolsExt::system_ip_pool_silo_list
     #[derive(Debug, Clone)]
-    pub struct IpPoolSiloList<'a> {
+    pub struct SystemIpPoolSiloList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
@@ -93403,7 +94041,7 @@ pub mod builder {
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
-    impl<'a> IpPoolSiloList<'a> {
+    impl<'a> SystemIpPoolSiloList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93497,7 +94135,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_silo_list",
+                operation_id: "system_ip_pool_silo_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93562,17 +94200,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_link`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_silo_link`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_silo_link`]: super::ClientSystemIpPoolsExt::ip_pool_silo_link
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_silo_link`]: super::ClientSystemIpPoolsExt::system_ip_pool_silo_link
     #[derive(Debug, Clone)]
-    pub struct IpPoolSiloLink<'a> {
+    pub struct SystemIpPoolSiloLink<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::IpPoolLinkSilo, String>,
     }
 
-    impl<'a> IpPoolSiloLink<'a> {
+    impl<'a> SystemIpPoolSiloLink<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93642,7 +94280,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_silo_link",
+                operation_id: "system_ip_pool_silo_link",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93661,18 +94299,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_update`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_silo_update`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_silo_update`]: super::ClientSystemIpPoolsExt::ip_pool_silo_update
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_silo_update`]: super::ClientSystemIpPoolsExt::system_ip_pool_silo_update
     #[derive(Debug, Clone)]
-    pub struct IpPoolSiloUpdate<'a> {
+    pub struct SystemIpPoolSiloUpdate<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         silo: Result<types::NameOrId, String>,
         body: Result<types::builder::IpPoolSiloUpdate, String>,
     }
 
-    impl<'a> IpPoolSiloUpdate<'a> {
+    impl<'a> SystemIpPoolSiloUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93762,7 +94400,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_silo_update",
+                operation_id: "system_ip_pool_silo_update",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93781,17 +94419,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_unlink`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_silo_unlink`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_silo_unlink`]: super::ClientSystemIpPoolsExt::ip_pool_silo_unlink
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_silo_unlink`]: super::ClientSystemIpPoolsExt::system_ip_pool_silo_unlink
     #[derive(Debug, Clone)]
-    pub struct IpPoolSiloUnlink<'a> {
+    pub struct SystemIpPoolSiloUnlink<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> IpPoolSiloUnlink<'a> {
+    impl<'a> SystemIpPoolSiloUnlink<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93848,7 +94486,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_silo_unlink",
+                operation_id: "system_ip_pool_silo_unlink",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93867,16 +94505,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_utilization_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_utilization_view`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_utilization_view`]: super::ClientSystemIpPoolsExt::ip_pool_utilization_view
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_utilization_view`]: super::ClientSystemIpPoolsExt::system_ip_pool_utilization_view
     #[derive(Debug, Clone)]
-    pub struct IpPoolUtilizationView<'a> {
+    pub struct SystemIpPoolUtilizationView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> IpPoolUtilizationView<'a> {
+    impl<'a> SystemIpPoolUtilizationView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -93921,7 +94559,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_utilization_view",
+                operation_id: "system_ip_pool_utilization_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93940,15 +94578,15 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_service_view`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_service_view`]: super::ClientSystemIpPoolsExt::ip_pool_service_view
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_view`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_view
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceView<'a> {
+    pub struct SystemIpPoolServiceView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> IpPoolServiceView<'a> {
+    impl<'a> SystemIpPoolServiceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
@@ -93973,7 +94611,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_service_view",
+                operation_id: "system_ip_pool_service_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -93992,17 +94630,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_list`]
+    /// Builder for
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_list`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_list`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_list
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_list`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_range_list
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeList<'a> {
+    pub struct SystemIpPoolServiceRangeList<'a> {
         client: &'a super::Client,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
-    impl<'a> IpPoolServiceRangeList<'a> {
+    impl<'a> SystemIpPoolServiceRangeList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -94064,7 +94703,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_service_range_list",
+                operation_id: "system_ip_pool_service_range_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -94128,16 +94767,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_add`]
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_service_range_add`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_add`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_add
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_add`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_range_add
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeAdd<'a> {
+    pub struct SystemIpPoolServiceRangeAdd<'a> {
         client: &'a super::Client,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolServiceRangeAdd<'a> {
+    impl<'a> SystemIpPoolServiceRangeAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -94177,7 +94816,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_service_range_add",
+                operation_id: "system_ip_pool_service_range_add",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -94196,16 +94835,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_remove`]
+    /// Builder for
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_remove`]
     ///
-    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_remove`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_remove
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_remove`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_range_remove
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeRemove<'a> {
+    pub struct SystemIpPoolServiceRangeRemove<'a> {
         client: &'a super::Client,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolServiceRangeRemove<'a> {
+    impl<'a> SystemIpPoolServiceRangeRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -94249,7 +94889,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "ip_pool_service_range_remove",
+                operation_id: "system_ip_pool_service_range_remove",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -98744,18 +99384,189 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_list`]
+    /// Builder for [`ClientSystemSilosExt::silo_subnet_pool_list`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_list`]: super::ClientSystemSubnetPoolsExt::subnet_pool_list
+    /// [`ClientSystemSilosExt::silo_subnet_pool_list`]: super::ClientSystemSilosExt::silo_subnet_pool_list
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolList<'a> {
+    pub struct SiloSubnetPoolList<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloSubnetPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/silos/{silo}/subnet-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloSubnetPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                silo,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/subnet-pools",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "silo_subnet_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/silos/{silo}/subnet-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloSubnetPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_list`]
+    ///
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_list`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_list
+    #[derive(Debug, Clone)]
+    pub struct SystemSubnetPoolList<'a> {
         client: &'a super::Client,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> SubnetPoolList<'a> {
+    impl<'a> SystemSubnetPoolList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -98832,7 +99643,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_list",
+                operation_id: "system_subnet_pool_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -98897,16 +99708,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_create`]
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_create`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_create`]: super::ClientSystemSubnetPoolsExt::subnet_pool_create
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_create`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_create
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolCreate<'a> {
+    pub struct SystemSubnetPoolCreate<'a> {
         client: &'a super::Client,
         body: Result<types::builder::SubnetPoolCreate, String>,
     }
 
-    impl<'a> SubnetPoolCreate<'a> {
+    impl<'a> SystemSubnetPoolCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -98960,7 +99771,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_create",
+                operation_id: "system_subnet_pool_create",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -98979,16 +99790,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_view`]
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_view`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_view`]: super::ClientSystemSubnetPoolsExt::subnet_pool_view
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_view`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_view
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolView<'a> {
+    pub struct SystemSubnetPoolView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> SubnetPoolView<'a> {
+    impl<'a> SystemSubnetPoolView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99031,7 +99842,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_view",
+                operation_id: "system_subnet_pool_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99050,17 +99861,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_update`]
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_update`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_update`]: super::ClientSystemSubnetPoolsExt::subnet_pool_update
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_update`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_update
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolUpdate<'a> {
+    pub struct SystemSubnetPoolUpdate<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::SubnetPoolUpdate, String>,
     }
 
-    impl<'a> SubnetPoolUpdate<'a> {
+    impl<'a> SystemSubnetPoolUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99130,7 +99941,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_update",
+                operation_id: "system_subnet_pool_update",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99149,16 +99960,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_delete`]
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_delete`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_delete`]: super::ClientSystemSubnetPoolsExt::subnet_pool_delete
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_delete`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_delete
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolDelete<'a> {
+    pub struct SystemSubnetPoolDelete<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> SubnetPoolDelete<'a> {
+    impl<'a> SystemSubnetPoolDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99201,7 +100012,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_delete",
+                operation_id: "system_subnet_pool_delete",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99220,18 +100031,19 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_member_list`]
+    /// Builder for
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_member_list`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_member_list`]: super::ClientSystemSubnetPoolsExt::subnet_pool_member_list
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_member_list`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_member_list
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolMemberList<'a> {
+    pub struct SystemSubnetPoolMemberList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
-    impl<'a> SubnetPoolMemberList<'a> {
+    impl<'a> SystemSubnetPoolMemberList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99311,7 +100123,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_member_list",
+                operation_id: "system_subnet_pool_member_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99375,17 +100187,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_member_add`]
+    /// Builder for
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_member_add`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_member_add`]: super::ClientSystemSubnetPoolsExt::subnet_pool_member_add
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_member_add`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_member_add
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolMemberAdd<'a> {
+    pub struct SystemSubnetPoolMemberAdd<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::SubnetPoolMemberAdd, String>,
     }
 
-    impl<'a> SubnetPoolMemberAdd<'a> {
+    impl<'a> SystemSubnetPoolMemberAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99458,7 +100271,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_member_add",
+                operation_id: "system_subnet_pool_member_add",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99477,17 +100290,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_member_remove`]
+    /// Builder for
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_member_remove`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_member_remove`]: super::ClientSystemSubnetPoolsExt::subnet_pool_member_remove
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_member_remove`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_member_remove
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolMemberRemove<'a> {
+    pub struct SystemSubnetPoolMemberRemove<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::SubnetPoolMemberRemove, String>,
     }
 
-    impl<'a> SubnetPoolMemberRemove<'a> {
+    impl<'a> SystemSubnetPoolMemberRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99560,7 +100374,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_member_remove",
+                operation_id: "system_subnet_pool_member_remove",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99579,11 +100393,11 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_list`]
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_list`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_list`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_list
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_list`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_silo_list
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolSiloList<'a> {
+    pub struct SystemSubnetPoolSiloList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
@@ -99591,7 +100405,7 @@ pub mod builder {
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
-    impl<'a> SubnetPoolSiloList<'a> {
+    impl<'a> SystemSubnetPoolSiloList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99686,7 +100500,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_silo_list",
+                operation_id: "system_subnet_pool_silo_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99752,17 +100566,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_link`]
+    /// Builder for [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_link`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_link`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_link
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_link`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_silo_link
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolSiloLink<'a> {
+    pub struct SystemSubnetPoolSiloLink<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::SubnetPoolLinkSilo, String>,
     }
 
-    impl<'a> SubnetPoolSiloLink<'a> {
+    impl<'a> SystemSubnetPoolSiloLink<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99834,7 +100648,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_silo_link",
+                operation_id: "system_subnet_pool_silo_link",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99853,18 +100667,19 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_update`]
+    /// Builder for
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_update`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_update`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_update
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_update`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_silo_update
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolSiloUpdate<'a> {
+    pub struct SystemSubnetPoolSiloUpdate<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         silo: Result<types::NameOrId, String>,
         body: Result<types::builder::SubnetPoolSiloUpdate, String>,
     }
 
-    impl<'a> SubnetPoolSiloUpdate<'a> {
+    impl<'a> SystemSubnetPoolSiloUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -99957,7 +100772,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_silo_update",
+                operation_id: "system_subnet_pool_silo_update",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -99976,17 +100791,18 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_silo_unlink`]
+    /// Builder for
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_unlink`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_silo_unlink`]: super::ClientSystemSubnetPoolsExt::subnet_pool_silo_unlink
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_silo_unlink`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_silo_unlink
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolSiloUnlink<'a> {
+    pub struct SystemSubnetPoolSiloUnlink<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> SubnetPoolSiloUnlink<'a> {
+    impl<'a> SystemSubnetPoolSiloUnlink<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -100043,7 +100859,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_silo_unlink",
+                operation_id: "system_subnet_pool_silo_unlink",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -100062,16 +100878,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSubnetPoolsExt::subnet_pool_utilization_view`]
+    /// Builder for
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_utilization_view`]
     ///
-    /// [`ClientSystemSubnetPoolsExt::subnet_pool_utilization_view`]: super::ClientSystemSubnetPoolsExt::subnet_pool_utilization_view
+    /// [`ClientSystemSubnetPoolsExt::system_subnet_pool_utilization_view`]: super::ClientSystemSubnetPoolsExt::system_subnet_pool_utilization_view
     #[derive(Debug, Clone)]
-    pub struct SubnetPoolUtilizationView<'a> {
+    pub struct SystemSubnetPoolUtilizationView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> SubnetPoolUtilizationView<'a> {
+    impl<'a> SystemSubnetPoolUtilizationView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -100117,7 +100934,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "subnet_pool_utilization_view",
+                operation_id: "system_subnet_pool_utilization_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -106159,12 +106976,14 @@ pub mod prelude {
     pub use super::ClientFloatingIpsExt;
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;
+    pub use super::ClientIpPoolsExt;
     pub use super::ClientLoginExt;
     pub use super::ClientMetricsExt;
     pub use super::ClientPolicyExt;
     pub use super::ClientProjectsExt;
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
+    pub use super::ClientSubnetPoolsExt;
     pub use super::ClientSystemAlertsExt;
     pub use super::ClientSystemAuditLogExt;
     pub use super::ClientSystemHardwareExt;

@@ -115,10 +115,10 @@ impl Default for NewCli<'_> {
 
             let cmd = Cli::<OxideOverride>::get_command(op);
             let cmd = match op {
-                CliCommand::IpPoolRangeAdd
-                | CliCommand::IpPoolRangeRemove
-                | CliCommand::IpPoolServiceRangeAdd
-                | CliCommand::IpPoolServiceRangeRemove => cmd
+                CliCommand::SystemIpPoolRangeAdd
+                | CliCommand::SystemIpPoolRangeRemove
+                | CliCommand::SystemIpPoolServiceRangeAdd
+                | CliCommand::SystemIpPoolServiceRangeRemove => cmd
                     .mut_arg("json-body", |arg| arg.required(false))
                     .arg(
                         clap::Arg::new("first")
@@ -453,8 +453,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProjectDelete => Some("project delete"),
         CliCommand::ProjectPolicyView => Some("project policy view"),
         CliCommand::ProjectPolicyUpdate => Some("project policy update"),
-        CliCommand::ProjectIpPoolList => Some("project ip-pool list"),
-        CliCommand::ProjectIpPoolView => Some("project ip-pool view"),
+
+        CliCommand::IpPoolList => Some("ip-pool list"),
+        CliCommand::IpPoolView => Some("ip-pool view"),
+        CliCommand::SubnetPoolList => Some("subnet-pool list"),
+        CliCommand::SubnetPoolView => Some("subnet-pool view"),
 
         CliCommand::ImageList => Some("image list"),
         CliCommand::ImageCreate => Some("image create"),
@@ -463,37 +466,47 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ImagePromote => Some("image promote"),
         CliCommand::ImageDemote => Some("image demote"),
 
-        CliCommand::IpPoolList => Some("ip-pool list"),
-        CliCommand::IpPoolCreate => Some("ip-pool create"),
-        CliCommand::IpPoolView => Some("ip-pool view"),
-        CliCommand::IpPoolUpdate => Some("ip-pool update"),
-        CliCommand::IpPoolDelete => Some("ip-pool delete"),
-        CliCommand::IpPoolRangeList => Some("ip-pool range list"),
-        CliCommand::IpPoolRangeAdd => Some("ip-pool range add"),
-        CliCommand::IpPoolRangeRemove => Some("ip-pool range remove"),
-        CliCommand::IpPoolServiceView => Some("ip-pool service view"),
-        CliCommand::IpPoolServiceRangeList => Some("ip-pool service range list"),
-        CliCommand::IpPoolServiceRangeAdd => Some("ip-pool service range add"),
-        CliCommand::IpPoolServiceRangeRemove => Some("ip-pool service remove"),
-        CliCommand::IpPoolSiloList => Some("ip-pool silo list"),
-        CliCommand::IpPoolSiloLink => Some("ip-pool silo link"),
-        CliCommand::IpPoolSiloUpdate => Some("ip-pool silo update"),
-        CliCommand::IpPoolSiloUnlink => Some("ip-pool silo unlink"),
-        CliCommand::IpPoolUtilizationView => Some("ip-pool utilization"),
+        CliCommand::SystemIpPoolList => Some("system networking ip-pool list"),
+        CliCommand::SystemIpPoolView => Some("system networking ip-pool view"),
+        CliCommand::SystemIpPoolCreate => Some("system networking ip-pool create"),
+        CliCommand::SystemIpPoolUpdate => Some("system networking ip-pool update"),
+        CliCommand::SystemIpPoolDelete => Some("system networking ip-pool delete"),
+        CliCommand::SystemIpPoolRangeList => Some("system networking ip-pool range list"),
+        CliCommand::SystemIpPoolRangeAdd => Some("system networking ip-pool range add"),
+        CliCommand::SystemIpPoolRangeRemove => Some("system networking ip-pool range remove"),
+        CliCommand::SystemIpPoolServiceView => Some("system networking ip-pool service view"),
+        CliCommand::SystemIpPoolServiceRangeList => {
+            Some("system networking ip-pool service range list")
+        }
+        CliCommand::SystemIpPoolServiceRangeAdd => {
+            Some("system networking ip-pool service range add")
+        }
+        CliCommand::SystemIpPoolServiceRangeRemove => {
+            Some("system networking ip-pool service remove")
+        }
+        CliCommand::SystemIpPoolSiloList => Some("system networking ip-pool silo list"),
+        CliCommand::SystemIpPoolSiloLink => Some("system networking ip-pool silo link"),
+        CliCommand::SystemIpPoolSiloUpdate => Some("system networking ip-pool silo update"),
+        CliCommand::SystemIpPoolSiloUnlink => Some("system networking ip-pool silo unlink"),
+        CliCommand::SystemIpPoolUtilizationView => Some("system networking ip-pool utilization"),
 
-        CliCommand::SubnetPoolCreate => Some("subnet-pool create"),
-        CliCommand::SubnetPoolList => Some("subnet-pool list"),
-        CliCommand::SubnetPoolView => Some("subnet-pool view"),
-        CliCommand::SubnetPoolDelete => Some("subnet-pool delete"),
-        CliCommand::SubnetPoolUpdate => Some("subnet-pool update"),
-        CliCommand::SubnetPoolUtilizationView => Some("subnet-pool utilization"),
-        CliCommand::SubnetPoolMemberList => Some("subnet-pool member list"),
-        CliCommand::SubnetPoolMemberAdd => Some("subnet-pool member add"),
-        CliCommand::SubnetPoolMemberRemove => Some("subnet-pool member remove"),
-        CliCommand::SubnetPoolSiloList => Some("subnet-pool silo list"),
-        CliCommand::SubnetPoolSiloLink => Some("subnet-pool silo link"),
-        CliCommand::SubnetPoolSiloUnlink => Some("subnet-pool silo unlink"),
-        CliCommand::SubnetPoolSiloUpdate => Some("subnet-pool silo update"),
+        CliCommand::SystemSubnetPoolCreate => Some("system networking subnet-pool create"),
+        CliCommand::SystemSubnetPoolList => Some("system networking subnet-pool list"),
+        CliCommand::SystemSubnetPoolView => Some("system networking subnet-pool view"),
+        CliCommand::SystemSubnetPoolDelete => Some("system networking subnet-pool delete"),
+        CliCommand::SystemSubnetPoolUpdate => Some("system networking subnet-pool update"),
+        CliCommand::SystemSubnetPoolUtilizationView => {
+            Some("system networking subnet-pool utilization")
+        }
+        CliCommand::SystemSubnetPoolMemberList => Some("system networking subnet-pool member list"),
+        CliCommand::SystemSubnetPoolMemberAdd => Some("system networking subnet-pool member add"),
+        CliCommand::SystemSubnetPoolMemberRemove => {
+            Some("system networking subnet-pool member remove")
+        }
+        CliCommand::SystemSubnetPoolSiloList => Some("system networking subnet-pool silo list"),
+        CliCommand::SystemSubnetPoolSiloLink => Some("system networking subnet-pool silo link"),
+        CliCommand::SystemSubnetPoolSiloUnlink => Some("system networking subnet-pool silo unlink"),
+        CliCommand::SystemSubnetPoolSiloUpdate => Some("system networking subnet-pool silo update"),
 
         CliCommand::SiloList => Some("silo list"),
         CliCommand::SiloCreate => Some("silo create"),
@@ -523,6 +536,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SiloUtilizationList => Some("silo utilization list"),
         CliCommand::SiloUtilizationView => Some("silo utilization view"),
         CliCommand::SiloIpPoolList => Some("silo ip-pool list"),
+        CliCommand::SiloSubnetPoolList => Some("silo subnet-pool list"),
 
         CliCommand::UtilizationView => Some("utilization"),
 

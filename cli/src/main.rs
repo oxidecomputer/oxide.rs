@@ -222,34 +222,34 @@ impl CliConfig for OxideOverride {
     }
 
     // Deal with all the operations that require an `IpPool` as input
-    fn execute_ip_pool_range_add(
+    fn execute_system_ip_pool_range_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide::builder::IpPoolRangeAdd,
+        request: &mut oxide::builder::SystemIpPoolRangeAdd,
     ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
-    fn execute_ip_pool_range_remove(
+    fn execute_system_ip_pool_range_remove(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide::builder::IpPoolRangeRemove,
+        request: &mut oxide::builder::SystemIpPoolRangeRemove,
     ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
-    fn execute_ip_pool_service_range_add(
+    fn execute_system_ip_pool_service_range_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide::builder::IpPoolServiceRangeAdd,
+        request: &mut oxide::builder::SystemIpPoolServiceRangeAdd,
     ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
-    fn execute_ip_pool_service_range_remove(
+    fn execute_system_ip_pool_service_range_remove(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide::builder::IpPoolServiceRangeRemove,
+        request: &mut oxide::builder::SystemIpPoolServiceRangeRemove,
     ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
