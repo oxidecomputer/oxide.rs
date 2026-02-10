@@ -8784,8 +8784,8 @@ pub mod operations {
         }
     }
 
-    pub struct ProjectIpPoolListWhen(::httpmock::When);
-    impl ProjectIpPoolListWhen {
+    pub struct IpPoolListWhen(::httpmock::When);
+    impl IpPoolListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -8832,8 +8832,8 @@ pub mod operations {
         }
     }
 
-    pub struct ProjectIpPoolListThen(::httpmock::Then);
-    impl ProjectIpPoolListThen {
+    pub struct IpPoolListThen(::httpmock::Then);
+    impl IpPoolListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -8872,8 +8872,8 @@ pub mod operations {
         }
     }
 
-    pub struct ProjectIpPoolViewWhen(::httpmock::When);
-    impl ProjectIpPoolViewWhen {
+    pub struct IpPoolViewWhen(::httpmock::When);
+    impl IpPoolViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -8892,8 +8892,8 @@ pub mod operations {
         }
     }
 
-    pub struct ProjectIpPoolViewThen(::httpmock::Then);
-    impl ProjectIpPoolViewThen {
+    pub struct IpPoolViewThen(::httpmock::Then);
+    impl IpPoolViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11317,8 +11317,8 @@ pub mod operations {
         }
     }
 
-    pub struct CurrentSiloSubnetPoolListWhen(::httpmock::When);
-    impl CurrentSiloSubnetPoolListWhen {
+    pub struct SubnetPoolListWhen(::httpmock::When);
+    impl SubnetPoolListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -11365,8 +11365,8 @@ pub mod operations {
         }
     }
 
-    pub struct CurrentSiloSubnetPoolListThen(::httpmock::Then);
-    impl CurrentSiloSubnetPoolListThen {
+    pub struct SubnetPoolListThen(::httpmock::Then);
+    impl SubnetPoolListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11376,6 +11376,67 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloSubnetPoolResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SubnetPoolViewWhen(::httpmock::When);
+    impl SubnetPoolViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/subnet-pools/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/subnet-pools/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SubnetPoolViewThen(::httpmock::Then);
+    impl SubnetPoolViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloSubnetPool) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13701,8 +13762,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolListWhen(::httpmock::When);
-    impl IpPoolListWhen {
+    pub struct SystemIpPoolListWhen(::httpmock::When);
+    impl SystemIpPoolListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -13749,8 +13810,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolListThen(::httpmock::Then);
-    impl IpPoolListThen {
+    pub struct SystemIpPoolListThen(::httpmock::Then);
+    impl SystemIpPoolListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -13789,8 +13850,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolCreateWhen(::httpmock::When);
-    impl IpPoolCreateWhen {
+    pub struct SystemIpPoolCreateWhen(::httpmock::When);
+    impl SystemIpPoolCreateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -13808,8 +13869,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolCreateThen(::httpmock::Then);
-    impl IpPoolCreateThen {
+    pub struct SystemIpPoolCreateThen(::httpmock::Then);
+    impl SystemIpPoolCreateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -13848,8 +13909,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolViewWhen(::httpmock::When);
-    impl IpPoolViewWhen {
+    pub struct SystemIpPoolViewWhen(::httpmock::When);
+    impl SystemIpPoolViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -13869,8 +13930,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolViewThen(::httpmock::Then);
-    impl IpPoolViewThen {
+    pub struct SystemIpPoolViewThen(::httpmock::Then);
+    impl SystemIpPoolViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -13909,8 +13970,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolUpdateWhen(::httpmock::When);
-    impl IpPoolUpdateWhen {
+    pub struct SystemIpPoolUpdateWhen(::httpmock::When);
+    impl SystemIpPoolUpdateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -13934,8 +13995,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolUpdateThen(::httpmock::Then);
-    impl IpPoolUpdateThen {
+    pub struct SystemIpPoolUpdateThen(::httpmock::Then);
+    impl SystemIpPoolUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -13974,8 +14035,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolDeleteWhen(::httpmock::When);
-    impl IpPoolDeleteWhen {
+    pub struct SystemIpPoolDeleteWhen(::httpmock::When);
+    impl SystemIpPoolDeleteWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -13995,8 +14056,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolDeleteThen(::httpmock::Then);
-    impl IpPoolDeleteThen {
+    pub struct SystemIpPoolDeleteThen(::httpmock::Then);
+    impl SystemIpPoolDeleteThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14030,8 +14091,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolRangeListWhen(::httpmock::When);
-    impl IpPoolRangeListWhen {
+    pub struct SystemIpPoolRangeListWhen(::httpmock::When);
+    impl SystemIpPoolRangeListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -14076,8 +14137,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolRangeListThen(::httpmock::Then);
-    impl IpPoolRangeListThen {
+    pub struct SystemIpPoolRangeListThen(::httpmock::Then);
+    impl SystemIpPoolRangeListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14116,8 +14177,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolRangeAddWhen(::httpmock::When);
-    impl IpPoolRangeAddWhen {
+    pub struct SystemIpPoolRangeAddWhen(::httpmock::When);
+    impl SystemIpPoolRangeAddWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner.method(::httpmock::Method::POST).path_matches(
@@ -14144,8 +14205,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolRangeAddThen(::httpmock::Then);
-    impl IpPoolRangeAddThen {
+    pub struct SystemIpPoolRangeAddThen(::httpmock::Then);
+    impl SystemIpPoolRangeAddThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14184,8 +14245,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolRangeRemoveWhen(::httpmock::When);
-    impl IpPoolRangeRemoveWhen {
+    pub struct SystemIpPoolRangeRemoveWhen(::httpmock::When);
+    impl SystemIpPoolRangeRemoveWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::POST).path_matches(
                 regex::Regex::new("^/v1/system/ip-pools/[^/]*/ranges/remove$").unwrap(),
@@ -14210,8 +14271,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolRangeRemoveThen(::httpmock::Then);
-    impl IpPoolRangeRemoveThen {
+    pub struct SystemIpPoolRangeRemoveThen(::httpmock::Then);
+    impl SystemIpPoolRangeRemoveThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14245,8 +14306,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloListWhen(::httpmock::When);
-    impl IpPoolSiloListWhen {
+    pub struct SystemIpPoolSiloListWhen(::httpmock::When);
+    impl SystemIpPoolSiloListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -14302,8 +14363,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloListThen(::httpmock::Then);
-    impl IpPoolSiloListThen {
+    pub struct SystemIpPoolSiloListThen(::httpmock::Then);
+    impl SystemIpPoolSiloListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14342,8 +14403,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloLinkWhen(::httpmock::When);
-    impl IpPoolSiloLinkWhen {
+    pub struct SystemIpPoolSiloLinkWhen(::httpmock::When);
+    impl SystemIpPoolSiloLinkWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -14370,8 +14431,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloLinkThen(::httpmock::Then);
-    impl IpPoolSiloLinkThen {
+    pub struct SystemIpPoolSiloLinkThen(::httpmock::Then);
+    impl SystemIpPoolSiloLinkThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14410,8 +14471,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloUpdateWhen(::httpmock::When);
-    impl IpPoolSiloUpdateWhen {
+    pub struct SystemIpPoolSiloUpdateWhen(::httpmock::When);
+    impl SystemIpPoolSiloUpdateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::PUT).path_matches(
                 regex::Regex::new("^/v1/system/ip-pools/[^/]*/silos/[^/]*$").unwrap(),
@@ -14445,8 +14506,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloUpdateThen(::httpmock::Then);
-    impl IpPoolSiloUpdateThen {
+    pub struct SystemIpPoolSiloUpdateThen(::httpmock::Then);
+    impl SystemIpPoolSiloUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14485,8 +14546,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloUnlinkWhen(::httpmock::When);
-    impl IpPoolSiloUnlinkWhen {
+    pub struct SystemIpPoolSiloUnlinkWhen(::httpmock::When);
+    impl SystemIpPoolSiloUnlinkWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::DELETE).path_matches(
                 regex::Regex::new("^/v1/system/ip-pools/[^/]*/silos/[^/]*$").unwrap(),
@@ -14516,8 +14577,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolSiloUnlinkThen(::httpmock::Then);
-    impl IpPoolSiloUnlinkThen {
+    pub struct SystemIpPoolSiloUnlinkThen(::httpmock::Then);
+    impl SystemIpPoolSiloUnlinkThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14551,8 +14612,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolUtilizationViewWhen(::httpmock::When);
-    impl IpPoolUtilizationViewWhen {
+    pub struct SystemIpPoolUtilizationViewWhen(::httpmock::When);
+    impl SystemIpPoolUtilizationViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::GET).path_matches(
                 regex::Regex::new("^/v1/system/ip-pools/[^/]*/utilization$").unwrap(),
@@ -14573,8 +14634,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolUtilizationViewThen(::httpmock::Then);
-    impl IpPoolUtilizationViewThen {
+    pub struct SystemIpPoolUtilizationViewThen(::httpmock::Then);
+    impl SystemIpPoolUtilizationViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14613,8 +14674,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceViewWhen(::httpmock::When);
-    impl IpPoolServiceViewWhen {
+    pub struct SystemIpPoolServiceViewWhen(::httpmock::When);
+    impl SystemIpPoolServiceViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -14628,8 +14689,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceViewThen(::httpmock::Then);
-    impl IpPoolServiceViewThen {
+    pub struct SystemIpPoolServiceViewThen(::httpmock::Then);
+    impl SystemIpPoolServiceViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14668,8 +14729,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceRangeListWhen(::httpmock::When);
-    impl IpPoolServiceRangeListWhen {
+    pub struct SystemIpPoolServiceRangeListWhen(::httpmock::When);
+    impl SystemIpPoolServiceRangeListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner.method(::httpmock::Method::GET).path_matches(
@@ -14705,8 +14766,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceRangeListThen(::httpmock::Then);
-    impl IpPoolServiceRangeListThen {
+    pub struct SystemIpPoolServiceRangeListThen(::httpmock::Then);
+    impl SystemIpPoolServiceRangeListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14745,8 +14806,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceRangeAddWhen(::httpmock::When);
-    impl IpPoolServiceRangeAddWhen {
+    pub struct SystemIpPoolServiceRangeAddWhen(::httpmock::When);
+    impl SystemIpPoolServiceRangeAddWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::POST).path_matches(
                 regex::Regex::new("^/v1/system/ip-pools-service/ranges/add$").unwrap(),
@@ -14762,8 +14823,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceRangeAddThen(::httpmock::Then);
-    impl IpPoolServiceRangeAddThen {
+    pub struct SystemIpPoolServiceRangeAddThen(::httpmock::Then);
+    impl SystemIpPoolServiceRangeAddThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14802,8 +14863,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceRangeRemoveWhen(::httpmock::When);
-    impl IpPoolServiceRangeRemoveWhen {
+    pub struct SystemIpPoolServiceRangeRemoveWhen(::httpmock::When);
+    impl SystemIpPoolServiceRangeRemoveWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::POST).path_matches(
                 regex::Regex::new("^/v1/system/ip-pools-service/ranges/remove$").unwrap(),
@@ -14819,8 +14880,8 @@ pub mod operations {
         }
     }
 
-    pub struct IpPoolServiceRangeRemoveThen(::httpmock::Then);
-    impl IpPoolServiceRangeRemoveThen {
+    pub struct SystemIpPoolServiceRangeRemoveThen(::httpmock::Then);
+    impl SystemIpPoolServiceRangeRemoveThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18082,8 +18143,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolListWhen(::httpmock::When);
-    impl SubnetPoolListWhen {
+    pub struct SystemSubnetPoolListWhen(::httpmock::When);
+    impl SystemSubnetPoolListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -18130,8 +18191,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolListThen(::httpmock::Then);
-    impl SubnetPoolListThen {
+    pub struct SystemSubnetPoolListThen(::httpmock::Then);
+    impl SystemSubnetPoolListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18170,8 +18231,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolCreateWhen(::httpmock::When);
-    impl SubnetPoolCreateWhen {
+    pub struct SystemSubnetPoolCreateWhen(::httpmock::When);
+    impl SystemSubnetPoolCreateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -18189,8 +18250,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolCreateThen(::httpmock::Then);
-    impl SubnetPoolCreateThen {
+    pub struct SystemSubnetPoolCreateThen(::httpmock::Then);
+    impl SystemSubnetPoolCreateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18229,8 +18290,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolViewWhen(::httpmock::When);
-    impl SubnetPoolViewWhen {
+    pub struct SystemSubnetPoolViewWhen(::httpmock::When);
+    impl SystemSubnetPoolViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -18250,8 +18311,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolViewThen(::httpmock::Then);
-    impl SubnetPoolViewThen {
+    pub struct SystemSubnetPoolViewThen(::httpmock::Then);
+    impl SystemSubnetPoolViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18290,8 +18351,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolUpdateWhen(::httpmock::When);
-    impl SubnetPoolUpdateWhen {
+    pub struct SystemSubnetPoolUpdateWhen(::httpmock::When);
+    impl SystemSubnetPoolUpdateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -18315,8 +18376,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolUpdateThen(::httpmock::Then);
-    impl SubnetPoolUpdateThen {
+    pub struct SystemSubnetPoolUpdateThen(::httpmock::Then);
+    impl SystemSubnetPoolUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18355,8 +18416,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolDeleteWhen(::httpmock::When);
-    impl SubnetPoolDeleteWhen {
+    pub struct SystemSubnetPoolDeleteWhen(::httpmock::When);
+    impl SystemSubnetPoolDeleteWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -18376,8 +18437,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolDeleteThen(::httpmock::Then);
-    impl SubnetPoolDeleteThen {
+    pub struct SystemSubnetPoolDeleteThen(::httpmock::Then);
+    impl SystemSubnetPoolDeleteThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18411,8 +18472,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolMemberListWhen(::httpmock::When);
-    impl SubnetPoolMemberListWhen {
+    pub struct SystemSubnetPoolMemberListWhen(::httpmock::When);
+    impl SystemSubnetPoolMemberListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::GET).path_matches(
                 regex::Regex::new("^/v1/system/subnet-pools/[^/]*/members$").unwrap(),
@@ -18455,8 +18516,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolMemberListThen(::httpmock::Then);
-    impl SubnetPoolMemberListThen {
+    pub struct SystemSubnetPoolMemberListThen(::httpmock::Then);
+    impl SystemSubnetPoolMemberListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18495,8 +18556,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolMemberAddWhen(::httpmock::When);
-    impl SubnetPoolMemberAddWhen {
+    pub struct SystemSubnetPoolMemberAddWhen(::httpmock::When);
+    impl SystemSubnetPoolMemberAddWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::POST).path_matches(
                 regex::Regex::new("^/v1/system/subnet-pools/[^/]*/members/add$").unwrap(),
@@ -18521,8 +18582,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolMemberAddThen(::httpmock::Then);
-    impl SubnetPoolMemberAddThen {
+    pub struct SystemSubnetPoolMemberAddThen(::httpmock::Then);
+    impl SystemSubnetPoolMemberAddThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18561,8 +18622,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolMemberRemoveWhen(::httpmock::When);
-    impl SubnetPoolMemberRemoveWhen {
+    pub struct SystemSubnetPoolMemberRemoveWhen(::httpmock::When);
+    impl SystemSubnetPoolMemberRemoveWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::POST).path_matches(
                 regex::Regex::new("^/v1/system/subnet-pools/[^/]*/members/remove$").unwrap(),
@@ -18587,8 +18648,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolMemberRemoveThen(::httpmock::Then);
-    impl SubnetPoolMemberRemoveThen {
+    pub struct SystemSubnetPoolMemberRemoveThen(::httpmock::Then);
+    impl SystemSubnetPoolMemberRemoveThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18622,8 +18683,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloListWhen(::httpmock::When);
-    impl SubnetPoolSiloListWhen {
+    pub struct SystemSubnetPoolSiloListWhen(::httpmock::When);
+    impl SystemSubnetPoolSiloListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner.method(::httpmock::Method::GET).path_matches(
@@ -18679,8 +18740,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloListThen(::httpmock::Then);
-    impl SubnetPoolSiloListThen {
+    pub struct SystemSubnetPoolSiloListThen(::httpmock::Then);
+    impl SystemSubnetPoolSiloListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18719,8 +18780,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloLinkWhen(::httpmock::When);
-    impl SubnetPoolSiloLinkWhen {
+    pub struct SystemSubnetPoolSiloLinkWhen(::httpmock::When);
+    impl SystemSubnetPoolSiloLinkWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner.method(::httpmock::Method::POST).path_matches(
@@ -18747,8 +18808,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloLinkThen(::httpmock::Then);
-    impl SubnetPoolSiloLinkThen {
+    pub struct SystemSubnetPoolSiloLinkThen(::httpmock::Then);
+    impl SystemSubnetPoolSiloLinkThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18787,8 +18848,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloUpdateWhen(::httpmock::When);
-    impl SubnetPoolSiloUpdateWhen {
+    pub struct SystemSubnetPoolSiloUpdateWhen(::httpmock::When);
+    impl SystemSubnetPoolSiloUpdateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::PUT).path_matches(
                 regex::Regex::new("^/v1/system/subnet-pools/[^/]*/silos/[^/]*$").unwrap(),
@@ -18822,8 +18883,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloUpdateThen(::httpmock::Then);
-    impl SubnetPoolSiloUpdateThen {
+    pub struct SystemSubnetPoolSiloUpdateThen(::httpmock::Then);
+    impl SystemSubnetPoolSiloUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18862,8 +18923,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloUnlinkWhen(::httpmock::When);
-    impl SubnetPoolSiloUnlinkWhen {
+    pub struct SystemSubnetPoolSiloUnlinkWhen(::httpmock::When);
+    impl SystemSubnetPoolSiloUnlinkWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::DELETE).path_matches(
                 regex::Regex::new("^/v1/system/subnet-pools/[^/]*/silos/[^/]*$").unwrap(),
@@ -18893,8 +18954,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolSiloUnlinkThen(::httpmock::Then);
-    impl SubnetPoolSiloUnlinkThen {
+    pub struct SystemSubnetPoolSiloUnlinkThen(::httpmock::Then);
+    impl SystemSubnetPoolSiloUnlinkThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18928,8 +18989,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolUtilizationViewWhen(::httpmock::When);
-    impl SubnetPoolUtilizationViewWhen {
+    pub struct SystemSubnetPoolUtilizationViewWhen(::httpmock::When);
+    impl SystemSubnetPoolUtilizationViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(inner.method(::httpmock::Method::GET).path_matches(
                 regex::Regex::new("^/v1/system/subnet-pools/[^/]*/utilization$").unwrap(),
@@ -18950,8 +19011,8 @@ pub mod operations {
         }
     }
 
-    pub struct SubnetPoolUtilizationViewThen(::httpmock::Then);
-    impl SubnetPoolUtilizationViewThen {
+    pub struct SystemSubnetPoolUtilizationViewThen(::httpmock::Then);
+    impl SystemSubnetPoolUtilizationViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -23421,12 +23482,12 @@ pub trait MockServerExt {
     fn internet_gateway_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::InternetGatewayDeleteWhen, operations::InternetGatewayDeleteThen);
-    fn project_ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ProjectIpPoolListWhen, operations::ProjectIpPoolListThen);
-    fn project_ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::IpPoolListWhen, operations::IpPoolListThen);
+    fn ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ProjectIpPoolViewWhen, operations::ProjectIpPoolViewThen);
+        F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen);
     fn login_local<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen);
@@ -23550,12 +23611,12 @@ pub trait MockServerExt {
     fn snapshot_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SnapshotDeleteWhen, operations::SnapshotDeleteThen);
-    fn current_silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(
-            operations::CurrentSiloSubnetPoolListWhen,
-            operations::CurrentSiloSubnetPoolListThen,
-        );
+        F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen);
+    fn subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolViewWhen, operations::SubnetPoolViewThen);
     fn audit_log_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::AuditLogListWhen, operations::AuditLogListThen);
@@ -23676,59 +23737,68 @@ pub trait MockServerExt {
             operations::SamlIdentityProviderViewWhen,
             operations::SamlIdentityProviderViewThen,
         );
-    fn ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolListWhen, operations::IpPoolListThen);
-    fn ip_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolListWhen, operations::SystemIpPoolListThen);
+    fn system_ip_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolCreateWhen, operations::IpPoolCreateThen);
-    fn ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolCreateWhen, operations::SystemIpPoolCreateThen);
+    fn system_ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen);
-    fn ip_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolViewWhen, operations::SystemIpPoolViewThen);
+    fn system_ip_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolUpdateWhen, operations::IpPoolUpdateThen);
-    fn ip_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolUpdateWhen, operations::SystemIpPoolUpdateThen);
+    fn system_ip_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolDeleteWhen, operations::IpPoolDeleteThen);
-    fn ip_pool_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolDeleteWhen, operations::SystemIpPoolDeleteThen);
+    fn system_ip_pool_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolRangeListWhen, operations::IpPoolRangeListThen);
-    fn ip_pool_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolRangeListWhen, operations::SystemIpPoolRangeListThen);
+    fn system_ip_pool_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolRangeAddWhen, operations::IpPoolRangeAddThen);
-    fn ip_pool_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolRangeAddWhen, operations::SystemIpPoolRangeAddThen);
+    fn system_ip_pool_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolRangeRemoveWhen, operations::IpPoolRangeRemoveThen);
-    fn ip_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolRangeRemoveWhen, operations::SystemIpPoolRangeRemoveThen);
+    fn system_ip_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloListWhen, operations::IpPoolSiloListThen);
-    fn ip_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolSiloListWhen, operations::SystemIpPoolSiloListThen);
+    fn system_ip_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloLinkWhen, operations::IpPoolSiloLinkThen);
-    fn ip_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolSiloLinkWhen, operations::SystemIpPoolSiloLinkThen);
+    fn system_ip_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloUpdateWhen, operations::IpPoolSiloUpdateThen);
-    fn ip_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolSiloUpdateWhen, operations::SystemIpPoolSiloUpdateThen);
+    fn system_ip_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloUnlinkWhen, operations::IpPoolSiloUnlinkThen);
-    fn ip_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolUtilizationViewWhen, operations::IpPoolUtilizationViewThen);
-    fn ip_pool_service_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen);
-    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen);
-    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen);
-    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemIpPoolSiloUnlinkWhen, operations::SystemIpPoolSiloUnlinkThen);
+    fn system_ip_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
-            operations::IpPoolServiceRangeRemoveWhen,
-            operations::IpPoolServiceRangeRemoveThen,
+            operations::SystemIpPoolUtilizationViewWhen,
+            operations::SystemIpPoolUtilizationViewThen,
+        );
+    fn system_ip_pool_service_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SystemIpPoolServiceViewWhen, operations::SystemIpPoolServiceViewThen);
+    fn system_ip_pool_service_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemIpPoolServiceRangeListWhen,
+            operations::SystemIpPoolServiceRangeListThen,
+        );
+    fn system_ip_pool_service_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemIpPoolServiceRangeAddWhen,
+            operations::SystemIpPoolServiceRangeAddThen,
+        );
+    fn system_ip_pool_service_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemIpPoolServiceRangeRemoveWhen,
+            operations::SystemIpPoolServiceRangeRemoveThen,
         );
     fn system_metric<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
@@ -23943,47 +24013,68 @@ pub trait MockServerExt {
     fn silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SiloSubnetPoolListWhen, operations::SiloSubnetPoolListThen);
-    fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen);
-    fn subnet_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemSubnetPoolListWhen, operations::SystemSubnetPoolListThen);
+    fn system_subnet_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolCreateWhen, operations::SubnetPoolCreateThen);
-    fn subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemSubnetPoolCreateWhen, operations::SystemSubnetPoolCreateThen);
+    fn system_subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolViewWhen, operations::SubnetPoolViewThen);
-    fn subnet_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemSubnetPoolViewWhen, operations::SystemSubnetPoolViewThen);
+    fn system_subnet_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolUpdateWhen, operations::SubnetPoolUpdateThen);
-    fn subnet_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemSubnetPoolUpdateWhen, operations::SystemSubnetPoolUpdateThen);
+    fn system_subnet_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolDeleteWhen, operations::SubnetPoolDeleteThen);
-    fn subnet_pool_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolMemberListWhen, operations::SubnetPoolMemberListThen);
-    fn subnet_pool_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolMemberAddWhen, operations::SubnetPoolMemberAddThen);
-    fn subnet_pool_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolMemberRemoveWhen, operations::SubnetPoolMemberRemoveThen);
-    fn subnet_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloListWhen, operations::SubnetPoolSiloListThen);
-    fn subnet_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloLinkWhen, operations::SubnetPoolSiloLinkThen);
-    fn subnet_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloUpdateWhen, operations::SubnetPoolSiloUpdateThen);
-    fn subnet_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloUnlinkWhen, operations::SubnetPoolSiloUnlinkThen);
-    fn subnet_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::SystemSubnetPoolDeleteWhen, operations::SystemSubnetPoolDeleteThen);
+    fn system_subnet_pool_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
-            operations::SubnetPoolUtilizationViewWhen,
-            operations::SubnetPoolUtilizationViewThen,
+            operations::SystemSubnetPoolMemberListWhen,
+            operations::SystemSubnetPoolMemberListThen,
+        );
+    fn system_subnet_pool_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolMemberAddWhen,
+            operations::SystemSubnetPoolMemberAddThen,
+        );
+    fn system_subnet_pool_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolMemberRemoveWhen,
+            operations::SystemSubnetPoolMemberRemoveThen,
+        );
+    fn system_subnet_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloListWhen,
+            operations::SystemSubnetPoolSiloListThen,
+        );
+    fn system_subnet_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloLinkWhen,
+            operations::SystemSubnetPoolSiloLinkThen,
+        );
+    fn system_subnet_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloUpdateWhen,
+            operations::SystemSubnetPoolSiloUpdateThen,
+        );
+    fn system_subnet_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloUnlinkWhen,
+            operations::SystemSubnetPoolSiloUnlinkThen,
+        );
+    fn system_subnet_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolUtilizationViewWhen,
+            operations::SystemSubnetPoolUtilizationViewThen,
         );
     fn system_timeseries_query<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
@@ -25620,26 +25711,26 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn project_ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ProjectIpPoolListWhen, operations::ProjectIpPoolListThen),
+        F: FnOnce(operations::IpPoolListWhen, operations::IpPoolListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ProjectIpPoolListWhen::new(when),
-                operations::ProjectIpPoolListThen::new(then),
+                operations::IpPoolListWhen::new(when),
+                operations::IpPoolListThen::new(then),
             )
         })
     }
 
-    fn project_ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ProjectIpPoolViewWhen, operations::ProjectIpPoolViewThen),
+        F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ProjectIpPoolViewWhen::new(when),
-                operations::ProjectIpPoolViewThen::new(then),
+                operations::IpPoolViewWhen::new(when),
+                operations::IpPoolViewThen::new(then),
             )
         })
     }
@@ -26064,17 +26155,26 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn current_silo_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(
-            operations::CurrentSiloSubnetPoolListWhen,
-            operations::CurrentSiloSubnetPoolListThen,
-        ),
+        F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::CurrentSiloSubnetPoolListWhen::new(when),
-                operations::CurrentSiloSubnetPoolListThen::new(then),
+                operations::SubnetPoolListWhen::new(when),
+                operations::SubnetPoolListThen::new(then),
+            )
+        })
+    }
+
+    fn subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SubnetPoolViewWhen, operations::SubnetPoolViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SubnetPoolViewWhen::new(when),
+                operations::SubnetPoolViewThen::new(then),
             )
         })
     }
@@ -26469,209 +26569,218 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolListWhen, operations::IpPoolListThen),
+        F: FnOnce(operations::SystemIpPoolListWhen, operations::SystemIpPoolListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolListWhen::new(when),
-                operations::IpPoolListThen::new(then),
+                operations::SystemIpPoolListWhen::new(when),
+                operations::SystemIpPoolListThen::new(then),
             )
         })
     }
 
-    fn ip_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolCreateWhen, operations::IpPoolCreateThen),
+        F: FnOnce(operations::SystemIpPoolCreateWhen, operations::SystemIpPoolCreateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolCreateWhen::new(when),
-                operations::IpPoolCreateThen::new(then),
+                operations::SystemIpPoolCreateWhen::new(when),
+                operations::SystemIpPoolCreateThen::new(then),
             )
         })
     }
 
-    fn ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen),
+        F: FnOnce(operations::SystemIpPoolViewWhen, operations::SystemIpPoolViewThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolViewWhen::new(when),
-                operations::IpPoolViewThen::new(then),
+                operations::SystemIpPoolViewWhen::new(when),
+                operations::SystemIpPoolViewThen::new(then),
             )
         })
     }
 
-    fn ip_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolUpdateWhen, operations::IpPoolUpdateThen),
+        F: FnOnce(operations::SystemIpPoolUpdateWhen, operations::SystemIpPoolUpdateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolUpdateWhen::new(when),
-                operations::IpPoolUpdateThen::new(then),
+                operations::SystemIpPoolUpdateWhen::new(when),
+                operations::SystemIpPoolUpdateThen::new(then),
             )
         })
     }
 
-    fn ip_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolDeleteWhen, operations::IpPoolDeleteThen),
+        F: FnOnce(operations::SystemIpPoolDeleteWhen, operations::SystemIpPoolDeleteThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolDeleteWhen::new(when),
-                operations::IpPoolDeleteThen::new(then),
+                operations::SystemIpPoolDeleteWhen::new(when),
+                operations::SystemIpPoolDeleteThen::new(then),
             )
         })
     }
 
-    fn ip_pool_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolRangeListWhen, operations::IpPoolRangeListThen),
+        F: FnOnce(operations::SystemIpPoolRangeListWhen, operations::SystemIpPoolRangeListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolRangeListWhen::new(when),
-                operations::IpPoolRangeListThen::new(then),
+                operations::SystemIpPoolRangeListWhen::new(when),
+                operations::SystemIpPoolRangeListThen::new(then),
             )
         })
     }
 
-    fn ip_pool_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolRangeAddWhen, operations::IpPoolRangeAddThen),
+        F: FnOnce(operations::SystemIpPoolRangeAddWhen, operations::SystemIpPoolRangeAddThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolRangeAddWhen::new(when),
-                operations::IpPoolRangeAddThen::new(then),
+                operations::SystemIpPoolRangeAddWhen::new(when),
+                operations::SystemIpPoolRangeAddThen::new(then),
             )
         })
     }
 
-    fn ip_pool_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolRangeRemoveWhen, operations::IpPoolRangeRemoveThen),
+        F: FnOnce(operations::SystemIpPoolRangeRemoveWhen, operations::SystemIpPoolRangeRemoveThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolRangeRemoveWhen::new(when),
-                operations::IpPoolRangeRemoveThen::new(then),
+                operations::SystemIpPoolRangeRemoveWhen::new(when),
+                operations::SystemIpPoolRangeRemoveThen::new(then),
             )
         })
     }
 
-    fn ip_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloListWhen, operations::IpPoolSiloListThen),
+        F: FnOnce(operations::SystemIpPoolSiloListWhen, operations::SystemIpPoolSiloListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolSiloListWhen::new(when),
-                operations::IpPoolSiloListThen::new(then),
+                operations::SystemIpPoolSiloListWhen::new(when),
+                operations::SystemIpPoolSiloListThen::new(then),
             )
         })
     }
 
-    fn ip_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloLinkWhen, operations::IpPoolSiloLinkThen),
+        F: FnOnce(operations::SystemIpPoolSiloLinkWhen, operations::SystemIpPoolSiloLinkThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolSiloLinkWhen::new(when),
-                operations::IpPoolSiloLinkThen::new(then),
+                operations::SystemIpPoolSiloLinkWhen::new(when),
+                operations::SystemIpPoolSiloLinkThen::new(then),
             )
         })
     }
 
-    fn ip_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloUpdateWhen, operations::IpPoolSiloUpdateThen),
+        F: FnOnce(operations::SystemIpPoolSiloUpdateWhen, operations::SystemIpPoolSiloUpdateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolSiloUpdateWhen::new(when),
-                operations::IpPoolSiloUpdateThen::new(then),
+                operations::SystemIpPoolSiloUpdateWhen::new(when),
+                operations::SystemIpPoolSiloUpdateThen::new(then),
             )
         })
     }
 
-    fn ip_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::IpPoolSiloUnlinkWhen, operations::IpPoolSiloUnlinkThen),
+        F: FnOnce(operations::SystemIpPoolSiloUnlinkWhen, operations::SystemIpPoolSiloUnlinkThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolSiloUnlinkWhen::new(when),
-                operations::IpPoolSiloUnlinkThen::new(then),
+                operations::SystemIpPoolSiloUnlinkWhen::new(when),
+                operations::SystemIpPoolSiloUnlinkThen::new(then),
             )
         })
     }
 
-    fn ip_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolUtilizationViewWhen, operations::IpPoolUtilizationViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolUtilizationViewWhen::new(when),
-                operations::IpPoolUtilizationViewThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceViewWhen::new(when),
-                operations::IpPoolServiceViewThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceRangeListWhen::new(when),
-                operations::IpPoolServiceRangeListThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceRangeAddWhen::new(when),
-                operations::IpPoolServiceRangeAddThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_ip_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
-            operations::IpPoolServiceRangeRemoveWhen,
-            operations::IpPoolServiceRangeRemoveThen,
+            operations::SystemIpPoolUtilizationViewWhen,
+            operations::SystemIpPoolUtilizationViewThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::IpPoolServiceRangeRemoveWhen::new(when),
-                operations::IpPoolServiceRangeRemoveThen::new(then),
+                operations::SystemIpPoolUtilizationViewWhen::new(when),
+                operations::SystemIpPoolUtilizationViewThen::new(then),
+            )
+        })
+    }
+
+    fn system_ip_pool_service_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SystemIpPoolServiceViewWhen, operations::SystemIpPoolServiceViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemIpPoolServiceViewWhen::new(when),
+                operations::SystemIpPoolServiceViewThen::new(then),
+            )
+        })
+    }
+
+    fn system_ip_pool_service_range_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemIpPoolServiceRangeListWhen,
+            operations::SystemIpPoolServiceRangeListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemIpPoolServiceRangeListWhen::new(when),
+                operations::SystemIpPoolServiceRangeListThen::new(then),
+            )
+        })
+    }
+
+    fn system_ip_pool_service_range_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemIpPoolServiceRangeAddWhen,
+            operations::SystemIpPoolServiceRangeAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemIpPoolServiceRangeAddWhen::new(when),
+                operations::SystemIpPoolServiceRangeAddThen::new(then),
+            )
+        })
+    }
+
+    fn system_ip_pool_service_range_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemIpPoolServiceRangeRemoveWhen,
+            operations::SystemIpPoolServiceRangeRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemIpPoolServiceRangeRemoveWhen::new(when),
+                operations::SystemIpPoolServiceRangeRemoveThen::new(then),
             )
         })
     }
@@ -27321,161 +27430,182 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolListWhen, operations::SubnetPoolListThen),
+        F: FnOnce(operations::SystemSubnetPoolListWhen, operations::SystemSubnetPoolListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SubnetPoolListWhen::new(when),
-                operations::SubnetPoolListThen::new(then),
+                operations::SystemSubnetPoolListWhen::new(when),
+                operations::SystemSubnetPoolListThen::new(then),
             )
         })
     }
 
-    fn subnet_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolCreateWhen, operations::SubnetPoolCreateThen),
+        F: FnOnce(operations::SystemSubnetPoolCreateWhen, operations::SystemSubnetPoolCreateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SubnetPoolCreateWhen::new(when),
-                operations::SubnetPoolCreateThen::new(then),
+                operations::SystemSubnetPoolCreateWhen::new(when),
+                operations::SystemSubnetPoolCreateThen::new(then),
             )
         })
     }
 
-    fn subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolViewWhen, operations::SubnetPoolViewThen),
+        F: FnOnce(operations::SystemSubnetPoolViewWhen, operations::SystemSubnetPoolViewThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SubnetPoolViewWhen::new(when),
-                operations::SubnetPoolViewThen::new(then),
+                operations::SystemSubnetPoolViewWhen::new(when),
+                operations::SystemSubnetPoolViewThen::new(then),
             )
         })
     }
 
-    fn subnet_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolUpdateWhen, operations::SubnetPoolUpdateThen),
+        F: FnOnce(operations::SystemSubnetPoolUpdateWhen, operations::SystemSubnetPoolUpdateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SubnetPoolUpdateWhen::new(when),
-                operations::SubnetPoolUpdateThen::new(then),
+                operations::SystemSubnetPoolUpdateWhen::new(when),
+                operations::SystemSubnetPoolUpdateThen::new(then),
             )
         })
     }
 
-    fn subnet_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::SubnetPoolDeleteWhen, operations::SubnetPoolDeleteThen),
+        F: FnOnce(operations::SystemSubnetPoolDeleteWhen, operations::SystemSubnetPoolDeleteThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SubnetPoolDeleteWhen::new(when),
-                operations::SubnetPoolDeleteThen::new(then),
+                operations::SystemSubnetPoolDeleteWhen::new(when),
+                operations::SystemSubnetPoolDeleteThen::new(then),
             )
         })
     }
 
-    fn subnet_pool_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolMemberListWhen, operations::SubnetPoolMemberListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolMemberListWhen::new(when),
-                operations::SubnetPoolMemberListThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolMemberAddWhen, operations::SubnetPoolMemberAddThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolMemberAddWhen::new(when),
-                operations::SubnetPoolMemberAddThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolMemberRemoveWhen, operations::SubnetPoolMemberRemoveThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolMemberRemoveWhen::new(when),
-                operations::SubnetPoolMemberRemoveThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloListWhen, operations::SubnetPoolSiloListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolSiloListWhen::new(when),
-                operations::SubnetPoolSiloListThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloLinkWhen, operations::SubnetPoolSiloLinkThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolSiloLinkWhen::new(when),
-                operations::SubnetPoolSiloLinkThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloUpdateWhen, operations::SubnetPoolSiloUpdateThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolSiloUpdateWhen::new(when),
-                operations::SubnetPoolSiloUpdateThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(operations::SubnetPoolSiloUnlinkWhen, operations::SubnetPoolSiloUnlinkThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SubnetPoolSiloUnlinkWhen::new(when),
-                operations::SubnetPoolSiloUnlinkThen::new(then),
-            )
-        })
-    }
-
-    fn subnet_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_subnet_pool_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
-            operations::SubnetPoolUtilizationViewWhen,
-            operations::SubnetPoolUtilizationViewThen,
+            operations::SystemSubnetPoolMemberListWhen,
+            operations::SystemSubnetPoolMemberListThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SubnetPoolUtilizationViewWhen::new(when),
-                operations::SubnetPoolUtilizationViewThen::new(then),
+                operations::SystemSubnetPoolMemberListWhen::new(when),
+                operations::SystemSubnetPoolMemberListThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolMemberAddWhen,
+            operations::SystemSubnetPoolMemberAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolMemberAddWhen::new(when),
+                operations::SystemSubnetPoolMemberAddThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolMemberRemoveWhen,
+            operations::SystemSubnetPoolMemberRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolMemberRemoveWhen::new(when),
+                operations::SystemSubnetPoolMemberRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_silo_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloListWhen,
+            operations::SystemSubnetPoolSiloListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolSiloListWhen::new(when),
+                operations::SystemSubnetPoolSiloListThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_silo_link<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloLinkWhen,
+            operations::SystemSubnetPoolSiloLinkThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolSiloLinkWhen::new(when),
+                operations::SystemSubnetPoolSiloLinkThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_silo_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloUpdateWhen,
+            operations::SystemSubnetPoolSiloUpdateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolSiloUpdateWhen::new(when),
+                operations::SystemSubnetPoolSiloUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_silo_unlink<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolSiloUnlinkWhen,
+            operations::SystemSubnetPoolSiloUnlinkThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolSiloUnlinkWhen::new(when),
+                operations::SystemSubnetPoolSiloUnlinkThen::new(then),
+            )
+        })
+    }
+
+    fn system_subnet_pool_utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::SystemSubnetPoolUtilizationViewWhen,
+            operations::SystemSubnetPoolUtilizationViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemSubnetPoolUtilizationViewWhen::new(when),
+                operations::SystemSubnetPoolUtilizationViewThen::new(then),
             )
         })
     }

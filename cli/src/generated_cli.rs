@@ -150,8 +150,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InternetGatewayCreate => Self::cli_internet_gateway_create(),
             CliCommand::InternetGatewayView => Self::cli_internet_gateway_view(),
             CliCommand::InternetGatewayDelete => Self::cli_internet_gateway_delete(),
-            CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
-            CliCommand::ProjectIpPoolView => Self::cli_project_ip_pool_view(),
+            CliCommand::IpPoolList => Self::cli_ip_pool_list(),
+            CliCommand::IpPoolView => Self::cli_ip_pool_view(),
             CliCommand::LoginLocal => Self::cli_login_local(),
             CliCommand::Logout => Self::cli_logout(),
             CliCommand::CurrentUserView => Self::cli_current_user_view(),
@@ -193,7 +193,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotCreate => Self::cli_snapshot_create(),
             CliCommand::SnapshotView => Self::cli_snapshot_view(),
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
-            CliCommand::CurrentSiloSubnetPoolList => Self::cli_current_silo_subnet_pool_list(),
+            CliCommand::SubnetPoolList => Self::cli_subnet_pool_list(),
+            CliCommand::SubnetPoolView => Self::cli_subnet_pool_view(),
             CliCommand::AuditLogList => Self::cli_audit_log_list(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
@@ -234,23 +235,27 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::LocalIdpUserSetPassword => Self::cli_local_idp_user_set_password(),
             CliCommand::SamlIdentityProviderCreate => Self::cli_saml_identity_provider_create(),
             CliCommand::SamlIdentityProviderView => Self::cli_saml_identity_provider_view(),
-            CliCommand::IpPoolList => Self::cli_ip_pool_list(),
-            CliCommand::IpPoolCreate => Self::cli_ip_pool_create(),
-            CliCommand::IpPoolView => Self::cli_ip_pool_view(),
-            CliCommand::IpPoolUpdate => Self::cli_ip_pool_update(),
-            CliCommand::IpPoolDelete => Self::cli_ip_pool_delete(),
-            CliCommand::IpPoolRangeList => Self::cli_ip_pool_range_list(),
-            CliCommand::IpPoolRangeAdd => Self::cli_ip_pool_range_add(),
-            CliCommand::IpPoolRangeRemove => Self::cli_ip_pool_range_remove(),
-            CliCommand::IpPoolSiloList => Self::cli_ip_pool_silo_list(),
-            CliCommand::IpPoolSiloLink => Self::cli_ip_pool_silo_link(),
-            CliCommand::IpPoolSiloUpdate => Self::cli_ip_pool_silo_update(),
-            CliCommand::IpPoolSiloUnlink => Self::cli_ip_pool_silo_unlink(),
-            CliCommand::IpPoolUtilizationView => Self::cli_ip_pool_utilization_view(),
-            CliCommand::IpPoolServiceView => Self::cli_ip_pool_service_view(),
-            CliCommand::IpPoolServiceRangeList => Self::cli_ip_pool_service_range_list(),
-            CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
-            CliCommand::IpPoolServiceRangeRemove => Self::cli_ip_pool_service_range_remove(),
+            CliCommand::SystemIpPoolList => Self::cli_system_ip_pool_list(),
+            CliCommand::SystemIpPoolCreate => Self::cli_system_ip_pool_create(),
+            CliCommand::SystemIpPoolView => Self::cli_system_ip_pool_view(),
+            CliCommand::SystemIpPoolUpdate => Self::cli_system_ip_pool_update(),
+            CliCommand::SystemIpPoolDelete => Self::cli_system_ip_pool_delete(),
+            CliCommand::SystemIpPoolRangeList => Self::cli_system_ip_pool_range_list(),
+            CliCommand::SystemIpPoolRangeAdd => Self::cli_system_ip_pool_range_add(),
+            CliCommand::SystemIpPoolRangeRemove => Self::cli_system_ip_pool_range_remove(),
+            CliCommand::SystemIpPoolSiloList => Self::cli_system_ip_pool_silo_list(),
+            CliCommand::SystemIpPoolSiloLink => Self::cli_system_ip_pool_silo_link(),
+            CliCommand::SystemIpPoolSiloUpdate => Self::cli_system_ip_pool_silo_update(),
+            CliCommand::SystemIpPoolSiloUnlink => Self::cli_system_ip_pool_silo_unlink(),
+            CliCommand::SystemIpPoolUtilizationView => Self::cli_system_ip_pool_utilization_view(),
+            CliCommand::SystemIpPoolServiceView => Self::cli_system_ip_pool_service_view(),
+            CliCommand::SystemIpPoolServiceRangeList => {
+                Self::cli_system_ip_pool_service_range_list()
+            }
+            CliCommand::SystemIpPoolServiceRangeAdd => Self::cli_system_ip_pool_service_range_add(),
+            CliCommand::SystemIpPoolServiceRangeRemove => {
+                Self::cli_system_ip_pool_service_range_remove()
+            }
             CliCommand::SystemMetric => Self::cli_system_metric(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
@@ -325,19 +330,23 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SiloSubnetPoolList => Self::cli_silo_subnet_pool_list(),
-            CliCommand::SubnetPoolList => Self::cli_subnet_pool_list(),
-            CliCommand::SubnetPoolCreate => Self::cli_subnet_pool_create(),
-            CliCommand::SubnetPoolView => Self::cli_subnet_pool_view(),
-            CliCommand::SubnetPoolUpdate => Self::cli_subnet_pool_update(),
-            CliCommand::SubnetPoolDelete => Self::cli_subnet_pool_delete(),
-            CliCommand::SubnetPoolMemberList => Self::cli_subnet_pool_member_list(),
-            CliCommand::SubnetPoolMemberAdd => Self::cli_subnet_pool_member_add(),
-            CliCommand::SubnetPoolMemberRemove => Self::cli_subnet_pool_member_remove(),
-            CliCommand::SubnetPoolSiloList => Self::cli_subnet_pool_silo_list(),
-            CliCommand::SubnetPoolSiloLink => Self::cli_subnet_pool_silo_link(),
-            CliCommand::SubnetPoolSiloUpdate => Self::cli_subnet_pool_silo_update(),
-            CliCommand::SubnetPoolSiloUnlink => Self::cli_subnet_pool_silo_unlink(),
-            CliCommand::SubnetPoolUtilizationView => Self::cli_subnet_pool_utilization_view(),
+            CliCommand::SystemSubnetPoolList => Self::cli_system_subnet_pool_list(),
+            CliCommand::SystemSubnetPoolCreate => Self::cli_system_subnet_pool_create(),
+            CliCommand::SystemSubnetPoolView => Self::cli_system_subnet_pool_view(),
+            CliCommand::SystemSubnetPoolUpdate => Self::cli_system_subnet_pool_update(),
+            CliCommand::SystemSubnetPoolDelete => Self::cli_system_subnet_pool_delete(),
+            CliCommand::SystemSubnetPoolMemberList => Self::cli_system_subnet_pool_member_list(),
+            CliCommand::SystemSubnetPoolMemberAdd => Self::cli_system_subnet_pool_member_add(),
+            CliCommand::SystemSubnetPoolMemberRemove => {
+                Self::cli_system_subnet_pool_member_remove()
+            }
+            CliCommand::SystemSubnetPoolSiloList => Self::cli_system_subnet_pool_silo_list(),
+            CliCommand::SystemSubnetPoolSiloLink => Self::cli_system_subnet_pool_silo_link(),
+            CliCommand::SystemSubnetPoolSiloUpdate => Self::cli_system_subnet_pool_silo_update(),
+            CliCommand::SystemSubnetPoolSiloUnlink => Self::cli_system_subnet_pool_silo_unlink(),
+            CliCommand::SystemSubnetPoolUtilizationView => {
+                Self::cli_system_subnet_pool_utilization_view()
+            }
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
             CliCommand::SystemUpdateRepositoryList => Self::cli_system_update_repository_list(),
@@ -2203,11 +2212,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Attach an external subnet to an instance")
-            .long_about(
-                "Begins an asynchronous attach operation. Returns the subnet with `instance_id` \
-                 set to the target instance. The attach completes asynchronously; poll the subnet \
-                 to check completion.",
-            )
     }
 
     pub fn cli_external_subnet_detach() -> ::clap::Command {
@@ -2227,10 +2231,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Detach an external subnet from an instance")
-            .long_about(
-                "Begins an asynchronous detach operation. Returns the subnet with `instance_id` \
-                 cleared. The detach completes asynchronously.",
-            )
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {
@@ -4055,7 +4055,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete internet gateway")
     }
 
-    pub fn cli_project_ip_pool_list() -> ::clap::Command {
+    pub fn cli_ip_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -4080,7 +4080,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pools")
     }
 
-    pub fn cli_project_ip_pool_view() -> ::clap::Command {
+    pub fn cli_ip_pool_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -4968,7 +4968,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete snapshot")
     }
 
-    pub fn cli_current_silo_subnet_pool_list() -> ::clap::Command {
+    pub fn cli_subnet_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -4990,7 +4990,19 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List subnet pools linked to the user's current silo")
+            .about("List subnet pools")
+    }
+
+    pub fn cli_subnet_pool_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the subnet pool"),
+            )
+            .about("Fetch subnet pool")
     }
 
     pub fn cli_audit_log_list() -> ::clap::Command {
@@ -5920,7 +5932,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch SAML identity provider")
     }
 
-    pub fn cli_ip_pool_list() -> ::clap::Command {
+    pub fn cli_system_ip_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -5945,7 +5957,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pools")
     }
 
-    pub fn cli_ip_pool_create() -> ::clap::Command {
+    pub fn cli_system_ip_pool_create() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("description")
@@ -6003,7 +6015,7 @@ impl<T: CliConfig> Cli<T> {
             .long_about("IPv6 is not yet supported for unicast pools.")
     }
 
-    pub fn cli_ip_pool_view() -> ::clap::Command {
+    pub fn cli_system_ip_pool_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -6015,7 +6027,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch IP pool")
     }
 
-    pub fn cli_ip_pool_update() -> ::clap::Command {
+    pub fn cli_system_ip_pool_update() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("description")
@@ -6053,7 +6065,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Update IP pool")
     }
 
-    pub fn cli_ip_pool_delete() -> ::clap::Command {
+    pub fn cli_system_ip_pool_delete() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -6065,7 +6077,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete IP pool")
     }
 
-    pub fn cli_ip_pool_range_list() -> ::clap::Command {
+    pub fn cli_system_ip_pool_range_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -6085,7 +6097,7 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Ranges are ordered by their first address.")
     }
 
-    pub fn cli_ip_pool_range_add() -> ::clap::Command {
+    pub fn cli_system_ip_pool_range_add() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -6108,7 +6120,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add range to an IP pool")
+            .about("Add range to IP pool")
             .long_about(
                 "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all \
                  ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast \
@@ -6118,7 +6130,7 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_ip_pool_range_remove() -> ::clap::Command {
+    pub fn cli_system_ip_pool_range_remove() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -6144,7 +6156,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Remove range from IP pool")
     }
 
-    pub fn cli_ip_pool_silo_list() -> ::clap::Command {
+    pub fn cli_system_ip_pool_silo_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -6174,7 +6186,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pool's linked silos")
     }
 
-    pub fn cli_ip_pool_silo_link() -> ::clap::Command {
+    pub fn cli_system_ip_pool_silo_link() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("is-default")
@@ -6224,7 +6236,7 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_ip_pool_silo_update() -> ::clap::Command {
+    pub fn cli_system_ip_pool_silo_update() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("is-default")
@@ -6276,7 +6288,7 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_ip_pool_silo_unlink() -> ::clap::Command {
+    pub fn cli_system_ip_pool_silo_unlink() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -6294,7 +6306,7 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
     }
 
-    pub fn cli_ip_pool_utilization_view() -> ::clap::Command {
+    pub fn cli_system_ip_pool_utilization_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -6306,11 +6318,11 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch IP pool utilization")
     }
 
-    pub fn cli_ip_pool_service_view() -> ::clap::Command {
+    pub fn cli_system_ip_pool_service_view() -> ::clap::Command {
         ::clap::Command::new("").about("Fetch Oxide service IP pool")
     }
 
-    pub fn cli_ip_pool_service_range_list() -> ::clap::Command {
+    pub fn cli_system_ip_pool_service_range_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -6323,7 +6335,7 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Ranges are ordered by their first address.")
     }
 
-    pub fn cli_ip_pool_service_range_add() -> ::clap::Command {
+    pub fn cli_system_ip_pool_service_range_add() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6343,7 +6355,7 @@ impl<T: CliConfig> Cli<T> {
             .long_about("IPv6 ranges are not allowed yet.")
     }
 
-    pub fn cli_ip_pool_service_range_remove() -> ::clap::Command {
+    pub fn cli_system_ip_pool_service_range_remove() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6733,13 +6745,6 @@ impl<T: CliConfig> Cli<T> {
                     .long("description")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("max-paths")
-                    .long("max-paths")
-                    .value_parser(::clap::value_parser!(u8))
-                    .required(false)
-                    .help("Maximum number of paths to use when multiple \"best paths\" exist"),
             )
             .arg(
                 ::clap::Arg::new("name")
@@ -7567,7 +7572,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List subnet pools linked to a silo")
     }
 
-    pub fn cli_subnet_pool_list() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -7592,7 +7597,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List subnet pools")
     }
 
-    pub fn cli_subnet_pool_create() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_create() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("description")
@@ -7636,10 +7641,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a subnet pool")
+            .about("Create subnet pool")
     }
 
-    pub fn cli_subnet_pool_view() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -7648,10 +7653,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the subnet pool"),
             )
-            .about("Fetch a subnet pool")
+            .about("Fetch subnet pool")
     }
 
-    pub fn cli_subnet_pool_update() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_update() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("description")
@@ -7686,10 +7691,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a subnet pool")
+            .about("Update subnet pool")
     }
 
-    pub fn cli_subnet_pool_delete() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_delete() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -7698,10 +7703,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the subnet pool"),
             )
-            .about("Delete a subnet pool")
+            .about("Delete subnet pool")
     }
 
-    pub fn cli_subnet_pool_member_list() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_member_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -7717,10 +7722,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the subnet pool"),
             )
-            .about("List members in a subnet pool")
+            .about("List members in subnet pool")
     }
 
-    pub fn cli_subnet_pool_member_add() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_member_add() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("max-prefix-length")
@@ -7775,10 +7780,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a member to a subnet pool")
+            .about("Add member to subnet pool")
     }
 
-    pub fn cli_subnet_pool_member_remove() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_member_remove() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -7810,10 +7815,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Remove a member from a subnet pool")
+            .about("Remove member from subnet pool")
     }
 
-    pub fn cli_subnet_pool_silo_list() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_silo_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("limit")
@@ -7840,10 +7845,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List silos linked to a subnet pool")
+            .about("List silos linked to subnet pool")
     }
 
-    pub fn cli_subnet_pool_silo_link() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_silo_link() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("is-default")
@@ -7883,10 +7888,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Link a subnet pool to a silo")
+            .about("Link subnet pool to silo")
     }
 
-    pub fn cli_subnet_pool_silo_update() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_silo_update() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("is-default")
@@ -7923,10 +7928,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a subnet pool's link to a silo")
+            .about("Update subnet pool's link to silo")
     }
 
-    pub fn cli_subnet_pool_silo_unlink() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_silo_unlink() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -7942,10 +7947,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Unlink a subnet pool from a silo")
+            .about("Unlink subnet pool from silo")
     }
 
-    pub fn cli_subnet_pool_utilization_view() -> ::clap::Command {
+    pub fn cli_system_subnet_pool_utilization_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("pool")
@@ -9781,8 +9786,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InternetGatewayDelete => {
                 self.execute_internet_gateway_delete(matches).await
             }
-            CliCommand::ProjectIpPoolList => self.execute_project_ip_pool_list(matches).await,
-            CliCommand::ProjectIpPoolView => self.execute_project_ip_pool_view(matches).await,
+            CliCommand::IpPoolList => self.execute_ip_pool_list(matches).await,
+            CliCommand::IpPoolView => self.execute_ip_pool_view(matches).await,
             CliCommand::LoginLocal => self.execute_login_local(matches).await,
             CliCommand::Logout => self.execute_logout(matches).await,
             CliCommand::CurrentUserView => self.execute_current_user_view(matches).await,
@@ -9843,9 +9848,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotCreate => self.execute_snapshot_create(matches).await,
             CliCommand::SnapshotView => self.execute_snapshot_view(matches).await,
             CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
-            CliCommand::CurrentSiloSubnetPoolList => {
-                self.execute_current_silo_subnet_pool_list(matches).await
-            }
+            CliCommand::SubnetPoolList => self.execute_subnet_pool_list(matches).await,
+            CliCommand::SubnetPoolView => self.execute_subnet_pool_view(matches).await,
             CliCommand::AuditLogList => self.execute_audit_log_list(matches).await,
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
             CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
@@ -9909,30 +9913,48 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SamlIdentityProviderView => {
                 self.execute_saml_identity_provider_view(matches).await
             }
-            CliCommand::IpPoolList => self.execute_ip_pool_list(matches).await,
-            CliCommand::IpPoolCreate => self.execute_ip_pool_create(matches).await,
-            CliCommand::IpPoolView => self.execute_ip_pool_view(matches).await,
-            CliCommand::IpPoolUpdate => self.execute_ip_pool_update(matches).await,
-            CliCommand::IpPoolDelete => self.execute_ip_pool_delete(matches).await,
-            CliCommand::IpPoolRangeList => self.execute_ip_pool_range_list(matches).await,
-            CliCommand::IpPoolRangeAdd => self.execute_ip_pool_range_add(matches).await,
-            CliCommand::IpPoolRangeRemove => self.execute_ip_pool_range_remove(matches).await,
-            CliCommand::IpPoolSiloList => self.execute_ip_pool_silo_list(matches).await,
-            CliCommand::IpPoolSiloLink => self.execute_ip_pool_silo_link(matches).await,
-            CliCommand::IpPoolSiloUpdate => self.execute_ip_pool_silo_update(matches).await,
-            CliCommand::IpPoolSiloUnlink => self.execute_ip_pool_silo_unlink(matches).await,
-            CliCommand::IpPoolUtilizationView => {
-                self.execute_ip_pool_utilization_view(matches).await
+            CliCommand::SystemIpPoolList => self.execute_system_ip_pool_list(matches).await,
+            CliCommand::SystemIpPoolCreate => self.execute_system_ip_pool_create(matches).await,
+            CliCommand::SystemIpPoolView => self.execute_system_ip_pool_view(matches).await,
+            CliCommand::SystemIpPoolUpdate => self.execute_system_ip_pool_update(matches).await,
+            CliCommand::SystemIpPoolDelete => self.execute_system_ip_pool_delete(matches).await,
+            CliCommand::SystemIpPoolRangeList => {
+                self.execute_system_ip_pool_range_list(matches).await
             }
-            CliCommand::IpPoolServiceView => self.execute_ip_pool_service_view(matches).await,
-            CliCommand::IpPoolServiceRangeList => {
-                self.execute_ip_pool_service_range_list(matches).await
+            CliCommand::SystemIpPoolRangeAdd => {
+                self.execute_system_ip_pool_range_add(matches).await
             }
-            CliCommand::IpPoolServiceRangeAdd => {
-                self.execute_ip_pool_service_range_add(matches).await
+            CliCommand::SystemIpPoolRangeRemove => {
+                self.execute_system_ip_pool_range_remove(matches).await
             }
-            CliCommand::IpPoolServiceRangeRemove => {
-                self.execute_ip_pool_service_range_remove(matches).await
+            CliCommand::SystemIpPoolSiloList => {
+                self.execute_system_ip_pool_silo_list(matches).await
+            }
+            CliCommand::SystemIpPoolSiloLink => {
+                self.execute_system_ip_pool_silo_link(matches).await
+            }
+            CliCommand::SystemIpPoolSiloUpdate => {
+                self.execute_system_ip_pool_silo_update(matches).await
+            }
+            CliCommand::SystemIpPoolSiloUnlink => {
+                self.execute_system_ip_pool_silo_unlink(matches).await
+            }
+            CliCommand::SystemIpPoolUtilizationView => {
+                self.execute_system_ip_pool_utilization_view(matches).await
+            }
+            CliCommand::SystemIpPoolServiceView => {
+                self.execute_system_ip_pool_service_view(matches).await
+            }
+            CliCommand::SystemIpPoolServiceRangeList => {
+                self.execute_system_ip_pool_service_range_list(matches)
+                    .await
+            }
+            CliCommand::SystemIpPoolServiceRangeAdd => {
+                self.execute_system_ip_pool_service_range_add(matches).await
+            }
+            CliCommand::SystemIpPoolServiceRangeRemove => {
+                self.execute_system_ip_pool_service_range_remove(matches)
+                    .await
             }
             CliCommand::SystemMetric => self.execute_system_metric(matches).await,
             CliCommand::NetworkingAddressLotList => {
@@ -10044,22 +10066,41 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasView => self.execute_silo_quotas_view(matches).await,
             CliCommand::SiloQuotasUpdate => self.execute_silo_quotas_update(matches).await,
             CliCommand::SiloSubnetPoolList => self.execute_silo_subnet_pool_list(matches).await,
-            CliCommand::SubnetPoolList => self.execute_subnet_pool_list(matches).await,
-            CliCommand::SubnetPoolCreate => self.execute_subnet_pool_create(matches).await,
-            CliCommand::SubnetPoolView => self.execute_subnet_pool_view(matches).await,
-            CliCommand::SubnetPoolUpdate => self.execute_subnet_pool_update(matches).await,
-            CliCommand::SubnetPoolDelete => self.execute_subnet_pool_delete(matches).await,
-            CliCommand::SubnetPoolMemberList => self.execute_subnet_pool_member_list(matches).await,
-            CliCommand::SubnetPoolMemberAdd => self.execute_subnet_pool_member_add(matches).await,
-            CliCommand::SubnetPoolMemberRemove => {
-                self.execute_subnet_pool_member_remove(matches).await
+            CliCommand::SystemSubnetPoolList => self.execute_system_subnet_pool_list(matches).await,
+            CliCommand::SystemSubnetPoolCreate => {
+                self.execute_system_subnet_pool_create(matches).await
             }
-            CliCommand::SubnetPoolSiloList => self.execute_subnet_pool_silo_list(matches).await,
-            CliCommand::SubnetPoolSiloLink => self.execute_subnet_pool_silo_link(matches).await,
-            CliCommand::SubnetPoolSiloUpdate => self.execute_subnet_pool_silo_update(matches).await,
-            CliCommand::SubnetPoolSiloUnlink => self.execute_subnet_pool_silo_unlink(matches).await,
-            CliCommand::SubnetPoolUtilizationView => {
-                self.execute_subnet_pool_utilization_view(matches).await
+            CliCommand::SystemSubnetPoolView => self.execute_system_subnet_pool_view(matches).await,
+            CliCommand::SystemSubnetPoolUpdate => {
+                self.execute_system_subnet_pool_update(matches).await
+            }
+            CliCommand::SystemSubnetPoolDelete => {
+                self.execute_system_subnet_pool_delete(matches).await
+            }
+            CliCommand::SystemSubnetPoolMemberList => {
+                self.execute_system_subnet_pool_member_list(matches).await
+            }
+            CliCommand::SystemSubnetPoolMemberAdd => {
+                self.execute_system_subnet_pool_member_add(matches).await
+            }
+            CliCommand::SystemSubnetPoolMemberRemove => {
+                self.execute_system_subnet_pool_member_remove(matches).await
+            }
+            CliCommand::SystemSubnetPoolSiloList => {
+                self.execute_system_subnet_pool_silo_list(matches).await
+            }
+            CliCommand::SystemSubnetPoolSiloLink => {
+                self.execute_system_subnet_pool_silo_link(matches).await
+            }
+            CliCommand::SystemSubnetPoolSiloUpdate => {
+                self.execute_system_subnet_pool_silo_update(matches).await
+            }
+            CliCommand::SystemSubnetPoolSiloUnlink => {
+                self.execute_system_subnet_pool_silo_unlink(matches).await
+            }
+            CliCommand::SystemSubnetPoolUtilizationView => {
+                self.execute_system_subnet_pool_utilization_view(matches)
+                    .await
             }
             CliCommand::SystemTimeseriesQuery => {
                 self.execute_system_timeseries_query(matches).await
@@ -14204,11 +14245,8 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_ip_pool_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.project_ip_pool_list();
+    pub async fn execute_ip_pool_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.ip_pool_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -14217,8 +14255,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_project_ip_pool_list(matches, &mut request)?;
+        self.config.execute_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -14244,17 +14281,13 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_ip_pool_view(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.project_ip_pool_view();
+    pub async fn execute_ip_pool_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        self.config
-            .execute_project_ip_pool_view(matches, &mut request)?;
+        self.config.execute_ip_pool_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -15343,11 +15376,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_current_silo_subnet_pool_list(
+    pub async fn execute_subnet_pool_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.current_silo_subnet_pool_list();
+        let mut request = self.client.subnet_pool_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -15357,7 +15390,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_current_silo_subnet_pool_list(matches, &mut request)?;
+            .execute_subnet_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SiloSubnetPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -15379,6 +15412,30 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_subnet_pool_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.subnet_pool_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        self.config
+            .execute_subnet_pool_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -16483,8 +16540,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_list();
+    pub async fn execute_system_ip_pool_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -16493,7 +16553,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config.execute_ip_pool_list(matches, &mut request)?;
+        self.config
+            .execute_system_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -16518,8 +16579,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_create();
+    pub async fn execute_system_ip_pool_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -16544,7 +16608,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config.execute_ip_pool_create(matches, &mut request)?;
+        self.config
+            .execute_system_ip_pool_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16558,13 +16623,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_view();
+    pub async fn execute_system_ip_pool_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        self.config.execute_ip_pool_view(matches, &mut request)?;
+        self.config
+            .execute_system_ip_pool_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16578,8 +16647,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_update();
+    pub async fn execute_system_ip_pool_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -16600,7 +16672,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config.execute_ip_pool_update(matches, &mut request)?;
+        self.config
+            .execute_system_ip_pool_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16614,13 +16687,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_delete();
+    pub async fn execute_system_ip_pool_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        self.config.execute_ip_pool_delete(matches, &mut request)?;
+        self.config
+            .execute_system_ip_pool_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16634,11 +16711,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_range_list(
+    pub async fn execute_system_ip_pool_range_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_range_list();
+        let mut request = self.client.system_ip_pool_range_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -16648,7 +16725,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_range_list(matches, &mut request)?;
+            .execute_system_ip_pool_range_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -16674,11 +16751,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_range_add(
+    pub async fn execute_system_ip_pool_range_add(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_range_add();
+        let mut request = self.client.system_ip_pool_range_add();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -16692,7 +16769,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_range_add(matches, &mut request)?;
+            .execute_system_ip_pool_range_add(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16706,11 +16783,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_range_remove(
+    pub async fn execute_system_ip_pool_range_remove(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_range_remove();
+        let mut request = self.client.system_ip_pool_range_remove();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -16724,7 +16801,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_range_remove(matches, &mut request)?;
+            .execute_system_ip_pool_range_remove(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16738,11 +16815,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_silo_list(
+    pub async fn execute_system_ip_pool_silo_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_silo_list();
+        let mut request = self.client.system_ip_pool_silo_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -16756,7 +16833,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_list(matches, &mut request)?;
+            .execute_system_ip_pool_silo_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolSiloLinkResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -16782,11 +16859,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_silo_link(
+    pub async fn execute_system_ip_pool_silo_link(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_silo_link();
+        let mut request = self.client.system_ip_pool_silo_link();
         if let Some(value) = matches.get_one::<bool>("is-default") {
             request = request.body_map(|body| body.is_default(value.clone()))
         }
@@ -16808,7 +16885,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_link(matches, &mut request)?;
+            .execute_system_ip_pool_silo_link(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16822,11 +16899,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_silo_update(
+    pub async fn execute_system_ip_pool_silo_update(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_silo_update();
+        let mut request = self.client.system_ip_pool_silo_update();
         if let Some(value) = matches.get_one::<bool>("is-default") {
             request = request.body_map(|body| body.is_default(value.clone()))
         }
@@ -16848,7 +16925,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_update(matches, &mut request)?;
+            .execute_system_ip_pool_silo_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16862,11 +16939,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_silo_unlink(
+    pub async fn execute_system_ip_pool_silo_unlink(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_silo_unlink();
+        let mut request = self.client.system_ip_pool_silo_unlink();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -16876,7 +16953,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_unlink(matches, &mut request)?;
+            .execute_system_ip_pool_silo_unlink(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16890,17 +16967,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_utilization_view(
+    pub async fn execute_system_ip_pool_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_utilization_view();
+        let mut request = self.client.system_ip_pool_utilization_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         self.config
-            .execute_ip_pool_utilization_view(matches, &mut request)?;
+            .execute_system_ip_pool_utilization_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16914,13 +16991,13 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_service_view(
+    pub async fn execute_system_ip_pool_service_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_service_view();
+        let mut request = self.client.system_ip_pool_service_view();
         self.config
-            .execute_ip_pool_service_view(matches, &mut request)?;
+            .execute_system_ip_pool_service_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16934,17 +17011,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_service_range_list(
+    pub async fn execute_system_ip_pool_service_range_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_service_range_list();
+        let mut request = self.client.system_ip_pool_service_range_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
         self.config
-            .execute_ip_pool_service_range_list(matches, &mut request)?;
+            .execute_system_ip_pool_service_range_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -16970,11 +17047,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_service_range_add(
+    pub async fn execute_system_ip_pool_service_range_add(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_service_range_add();
+        let mut request = self.client.system_ip_pool_service_range_add();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -16984,7 +17061,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_service_range_add(matches, &mut request)?;
+            .execute_system_ip_pool_service_range_add(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16998,11 +17075,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_service_range_remove(
+    pub async fn execute_system_ip_pool_service_range_remove(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.ip_pool_service_range_remove();
+        let mut request = self.client.system_ip_pool_service_range_remove();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17012,7 +17089,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_service_range_remove(matches, &mut request)?;
+            .execute_system_ip_pool_service_range_remove(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -17466,10 +17543,6 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u8>("max-paths") {
-            request = request.body_map(|body| body.max_paths(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -18562,11 +18635,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_list(
+    pub async fn execute_system_subnet_pool_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_list();
+        let mut request = self.client.system_subnet_pool_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -18576,7 +18649,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_list(matches, &mut request)?;
+            .execute_system_subnet_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SubnetPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
@@ -18602,11 +18675,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_create(
+    pub async fn execute_system_subnet_pool_create(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_create();
+        let mut request = self.client.system_subnet_pool_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -18628,7 +18701,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_create(matches, &mut request)?;
+            .execute_system_subnet_pool_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18642,17 +18715,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_view(
+    pub async fn execute_system_subnet_pool_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_view();
+        let mut request = self.client.system_subnet_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         self.config
-            .execute_subnet_pool_view(matches, &mut request)?;
+            .execute_system_subnet_pool_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18666,11 +18739,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_update(
+    pub async fn execute_system_subnet_pool_update(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_update();
+        let mut request = self.client.system_subnet_pool_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -18692,7 +18765,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_update(matches, &mut request)?;
+            .execute_system_subnet_pool_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18706,17 +18779,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_delete(
+    pub async fn execute_system_subnet_pool_delete(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_delete();
+        let mut request = self.client.system_subnet_pool_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         self.config
-            .execute_subnet_pool_delete(matches, &mut request)?;
+            .execute_system_subnet_pool_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18730,11 +18803,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_member_list(
+    pub async fn execute_system_subnet_pool_member_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_member_list();
+        let mut request = self.client.system_subnet_pool_member_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -18744,7 +18817,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_member_list(matches, &mut request)?;
+            .execute_system_subnet_pool_member_list(matches, &mut request)?;
         self.config
             .list_start::<types::SubnetPoolMemberResultsPage>();
         let mut stream = futures::StreamExt::take(
@@ -18771,11 +18844,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_member_add(
+    pub async fn execute_system_subnet_pool_member_add(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_member_add();
+        let mut request = self.client.system_subnet_pool_member_add();
         if let Some(value) = matches.get_one::<u8>("max-prefix-length") {
             request = request.body_map(|body| body.max_prefix_length(value.clone()))
         }
@@ -18801,7 +18874,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_member_add(matches, &mut request)?;
+            .execute_system_subnet_pool_member_add(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18815,11 +18888,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_member_remove(
+    pub async fn execute_system_subnet_pool_member_remove(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_member_remove();
+        let mut request = self.client.system_subnet_pool_member_remove();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -18837,7 +18910,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_member_remove(matches, &mut request)?;
+            .execute_system_subnet_pool_member_remove(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18851,11 +18924,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_silo_list(
+    pub async fn execute_system_subnet_pool_silo_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_silo_list();
+        let mut request = self.client.system_subnet_pool_silo_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -18869,7 +18942,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_silo_list(matches, &mut request)?;
+            .execute_system_subnet_pool_silo_list(matches, &mut request)?;
         self.config
             .list_start::<types::SubnetPoolSiloLinkResultsPage>();
         let mut stream = futures::StreamExt::take(
@@ -18896,11 +18969,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_silo_link(
+    pub async fn execute_system_subnet_pool_silo_link(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_silo_link();
+        let mut request = self.client.system_subnet_pool_silo_link();
         if let Some(value) = matches.get_one::<bool>("is-default") {
             request = request.body_map(|body| body.is_default(value.clone()))
         }
@@ -18922,7 +18995,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_silo_link(matches, &mut request)?;
+            .execute_system_subnet_pool_silo_link(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18936,11 +19009,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_silo_update(
+    pub async fn execute_system_subnet_pool_silo_update(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_silo_update();
+        let mut request = self.client.system_subnet_pool_silo_update();
         if let Some(value) = matches.get_one::<bool>("is-default") {
             request = request.body_map(|body| body.is_default(value.clone()))
         }
@@ -18962,7 +19035,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_silo_update(matches, &mut request)?;
+            .execute_system_subnet_pool_silo_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18976,11 +19049,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_silo_unlink(
+    pub async fn execute_system_subnet_pool_silo_unlink(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_silo_unlink();
+        let mut request = self.client.system_subnet_pool_silo_unlink();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -18990,7 +19063,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_subnet_pool_silo_unlink(matches, &mut request)?;
+            .execute_system_subnet_pool_silo_unlink(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -19004,17 +19077,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_subnet_pool_utilization_view(
+    pub async fn execute_system_subnet_pool_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.subnet_pool_utilization_view();
+        let mut request = self.client.system_subnet_pool_utilization_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         self.config
-            .execute_subnet_pool_utilization_view(matches, &mut request)?;
+            .execute_system_subnet_pool_utilization_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -21809,18 +21882,18 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_project_ip_pool_list(
+    fn execute_ip_pool_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::ProjectIpPoolList,
+        request: &mut builder::IpPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_project_ip_pool_view(
+    fn execute_ip_pool_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::ProjectIpPoolView,
+        request: &mut builder::IpPoolView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -22089,10 +22162,18 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_current_silo_subnet_pool_list(
+    fn execute_subnet_pool_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::CurrentSiloSubnetPoolList,
+        request: &mut builder::SubnetPoolList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_subnet_pool_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SubnetPoolView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -22337,138 +22418,138 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_ip_pool_list(
+    fn execute_system_ip_pool_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolList,
+        request: &mut builder::SystemIpPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_create(
+    fn execute_system_ip_pool_create(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolCreate,
+        request: &mut builder::SystemIpPoolCreate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_view(
+    fn execute_system_ip_pool_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolView,
+        request: &mut builder::SystemIpPoolView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_update(
+    fn execute_system_ip_pool_update(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolUpdate,
+        request: &mut builder::SystemIpPoolUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_delete(
+    fn execute_system_ip_pool_delete(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolDelete,
+        request: &mut builder::SystemIpPoolDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_range_list(
+    fn execute_system_ip_pool_range_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolRangeList,
+        request: &mut builder::SystemIpPoolRangeList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_range_add(
+    fn execute_system_ip_pool_range_add(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolRangeAdd,
+        request: &mut builder::SystemIpPoolRangeAdd,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_range_remove(
+    fn execute_system_ip_pool_range_remove(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolRangeRemove,
+        request: &mut builder::SystemIpPoolRangeRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_silo_list(
+    fn execute_system_ip_pool_silo_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolSiloList,
+        request: &mut builder::SystemIpPoolSiloList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_silo_link(
+    fn execute_system_ip_pool_silo_link(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolSiloLink,
+        request: &mut builder::SystemIpPoolSiloLink,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_silo_update(
+    fn execute_system_ip_pool_silo_update(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolSiloUpdate,
+        request: &mut builder::SystemIpPoolSiloUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_silo_unlink(
+    fn execute_system_ip_pool_silo_unlink(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolSiloUnlink,
+        request: &mut builder::SystemIpPoolSiloUnlink,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_utilization_view(
+    fn execute_system_ip_pool_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolUtilizationView,
+        request: &mut builder::SystemIpPoolUtilizationView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_service_view(
+    fn execute_system_ip_pool_service_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolServiceView,
+        request: &mut builder::SystemIpPoolServiceView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_service_range_list(
+    fn execute_system_ip_pool_service_range_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolServiceRangeList,
+        request: &mut builder::SystemIpPoolServiceRangeList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_service_range_add(
+    fn execute_system_ip_pool_service_range_add(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolServiceRangeAdd,
+        request: &mut builder::SystemIpPoolServiceRangeAdd,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_ip_pool_service_range_remove(
+    fn execute_system_ip_pool_service_range_remove(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::IpPoolServiceRangeRemove,
+        request: &mut builder::SystemIpPoolServiceRangeRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -22857,106 +22938,106 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_subnet_pool_list(
+    fn execute_system_subnet_pool_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolList,
+        request: &mut builder::SystemSubnetPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_create(
+    fn execute_system_subnet_pool_create(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolCreate,
+        request: &mut builder::SystemSubnetPoolCreate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_view(
+    fn execute_system_subnet_pool_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolView,
+        request: &mut builder::SystemSubnetPoolView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_update(
+    fn execute_system_subnet_pool_update(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolUpdate,
+        request: &mut builder::SystemSubnetPoolUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_delete(
+    fn execute_system_subnet_pool_delete(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolDelete,
+        request: &mut builder::SystemSubnetPoolDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_member_list(
+    fn execute_system_subnet_pool_member_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolMemberList,
+        request: &mut builder::SystemSubnetPoolMemberList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_member_add(
+    fn execute_system_subnet_pool_member_add(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolMemberAdd,
+        request: &mut builder::SystemSubnetPoolMemberAdd,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_member_remove(
+    fn execute_system_subnet_pool_member_remove(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolMemberRemove,
+        request: &mut builder::SystemSubnetPoolMemberRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_silo_list(
+    fn execute_system_subnet_pool_silo_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolSiloList,
+        request: &mut builder::SystemSubnetPoolSiloList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_silo_link(
+    fn execute_system_subnet_pool_silo_link(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolSiloLink,
+        request: &mut builder::SystemSubnetPoolSiloLink,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_silo_update(
+    fn execute_system_subnet_pool_silo_update(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolSiloUpdate,
+        request: &mut builder::SystemSubnetPoolSiloUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_silo_unlink(
+    fn execute_system_subnet_pool_silo_unlink(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolSiloUnlink,
+        request: &mut builder::SystemSubnetPoolSiloUnlink,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_subnet_pool_utilization_view(
+    fn execute_system_subnet_pool_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SubnetPoolUtilizationView,
+        request: &mut builder::SystemSubnetPoolUtilizationView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -23494,8 +23575,8 @@ pub enum CliCommand {
     InternetGatewayCreate,
     InternetGatewayView,
     InternetGatewayDelete,
-    ProjectIpPoolList,
-    ProjectIpPoolView,
+    IpPoolList,
+    IpPoolView,
     LoginLocal,
     Logout,
     CurrentUserView,
@@ -23529,7 +23610,8 @@ pub enum CliCommand {
     SnapshotCreate,
     SnapshotView,
     SnapshotDelete,
-    CurrentSiloSubnetPoolList,
+    SubnetPoolList,
+    SubnetPoolView,
     AuditLogList,
     PhysicalDiskList,
     PhysicalDiskView,
@@ -23560,23 +23642,23 @@ pub enum CliCommand {
     LocalIdpUserSetPassword,
     SamlIdentityProviderCreate,
     SamlIdentityProviderView,
-    IpPoolList,
-    IpPoolCreate,
-    IpPoolView,
-    IpPoolUpdate,
-    IpPoolDelete,
-    IpPoolRangeList,
-    IpPoolRangeAdd,
-    IpPoolRangeRemove,
-    IpPoolSiloList,
-    IpPoolSiloLink,
-    IpPoolSiloUpdate,
-    IpPoolSiloUnlink,
-    IpPoolUtilizationView,
-    IpPoolServiceView,
-    IpPoolServiceRangeList,
-    IpPoolServiceRangeAdd,
-    IpPoolServiceRangeRemove,
+    SystemIpPoolList,
+    SystemIpPoolCreate,
+    SystemIpPoolView,
+    SystemIpPoolUpdate,
+    SystemIpPoolDelete,
+    SystemIpPoolRangeList,
+    SystemIpPoolRangeAdd,
+    SystemIpPoolRangeRemove,
+    SystemIpPoolSiloList,
+    SystemIpPoolSiloLink,
+    SystemIpPoolSiloUpdate,
+    SystemIpPoolSiloUnlink,
+    SystemIpPoolUtilizationView,
+    SystemIpPoolServiceView,
+    SystemIpPoolServiceRangeList,
+    SystemIpPoolServiceRangeAdd,
+    SystemIpPoolServiceRangeRemove,
     SystemMetric,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
@@ -23625,19 +23707,19 @@ pub enum CliCommand {
     SiloQuotasView,
     SiloQuotasUpdate,
     SiloSubnetPoolList,
-    SubnetPoolList,
-    SubnetPoolCreate,
-    SubnetPoolView,
-    SubnetPoolUpdate,
-    SubnetPoolDelete,
-    SubnetPoolMemberList,
-    SubnetPoolMemberAdd,
-    SubnetPoolMemberRemove,
-    SubnetPoolSiloList,
-    SubnetPoolSiloLink,
-    SubnetPoolSiloUpdate,
-    SubnetPoolSiloUnlink,
-    SubnetPoolUtilizationView,
+    SystemSubnetPoolList,
+    SystemSubnetPoolCreate,
+    SystemSubnetPoolView,
+    SystemSubnetPoolUpdate,
+    SystemSubnetPoolDelete,
+    SystemSubnetPoolMemberList,
+    SystemSubnetPoolMemberAdd,
+    SystemSubnetPoolMemberRemove,
+    SystemSubnetPoolSiloList,
+    SystemSubnetPoolSiloLink,
+    SystemSubnetPoolSiloUpdate,
+    SystemSubnetPoolSiloUnlink,
+    SystemSubnetPoolUtilizationView,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
     SystemUpdateRepositoryList,
@@ -23809,8 +23891,8 @@ impl CliCommand {
             CliCommand::InternetGatewayCreate,
             CliCommand::InternetGatewayView,
             CliCommand::InternetGatewayDelete,
-            CliCommand::ProjectIpPoolList,
-            CliCommand::ProjectIpPoolView,
+            CliCommand::IpPoolList,
+            CliCommand::IpPoolView,
             CliCommand::LoginLocal,
             CliCommand::Logout,
             CliCommand::CurrentUserView,
@@ -23844,7 +23926,8 @@ impl CliCommand {
             CliCommand::SnapshotCreate,
             CliCommand::SnapshotView,
             CliCommand::SnapshotDelete,
-            CliCommand::CurrentSiloSubnetPoolList,
+            CliCommand::SubnetPoolList,
+            CliCommand::SubnetPoolView,
             CliCommand::AuditLogList,
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
@@ -23875,23 +23958,23 @@ impl CliCommand {
             CliCommand::LocalIdpUserSetPassword,
             CliCommand::SamlIdentityProviderCreate,
             CliCommand::SamlIdentityProviderView,
-            CliCommand::IpPoolList,
-            CliCommand::IpPoolCreate,
-            CliCommand::IpPoolView,
-            CliCommand::IpPoolUpdate,
-            CliCommand::IpPoolDelete,
-            CliCommand::IpPoolRangeList,
-            CliCommand::IpPoolRangeAdd,
-            CliCommand::IpPoolRangeRemove,
-            CliCommand::IpPoolSiloList,
-            CliCommand::IpPoolSiloLink,
-            CliCommand::IpPoolSiloUpdate,
-            CliCommand::IpPoolSiloUnlink,
-            CliCommand::IpPoolUtilizationView,
-            CliCommand::IpPoolServiceView,
-            CliCommand::IpPoolServiceRangeList,
-            CliCommand::IpPoolServiceRangeAdd,
-            CliCommand::IpPoolServiceRangeRemove,
+            CliCommand::SystemIpPoolList,
+            CliCommand::SystemIpPoolCreate,
+            CliCommand::SystemIpPoolView,
+            CliCommand::SystemIpPoolUpdate,
+            CliCommand::SystemIpPoolDelete,
+            CliCommand::SystemIpPoolRangeList,
+            CliCommand::SystemIpPoolRangeAdd,
+            CliCommand::SystemIpPoolRangeRemove,
+            CliCommand::SystemIpPoolSiloList,
+            CliCommand::SystemIpPoolSiloLink,
+            CliCommand::SystemIpPoolSiloUpdate,
+            CliCommand::SystemIpPoolSiloUnlink,
+            CliCommand::SystemIpPoolUtilizationView,
+            CliCommand::SystemIpPoolServiceView,
+            CliCommand::SystemIpPoolServiceRangeList,
+            CliCommand::SystemIpPoolServiceRangeAdd,
+            CliCommand::SystemIpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
@@ -23940,19 +24023,19 @@ impl CliCommand {
             CliCommand::SiloQuotasView,
             CliCommand::SiloQuotasUpdate,
             CliCommand::SiloSubnetPoolList,
-            CliCommand::SubnetPoolList,
-            CliCommand::SubnetPoolCreate,
-            CliCommand::SubnetPoolView,
-            CliCommand::SubnetPoolUpdate,
-            CliCommand::SubnetPoolDelete,
-            CliCommand::SubnetPoolMemberList,
-            CliCommand::SubnetPoolMemberAdd,
-            CliCommand::SubnetPoolMemberRemove,
-            CliCommand::SubnetPoolSiloList,
-            CliCommand::SubnetPoolSiloLink,
-            CliCommand::SubnetPoolSiloUpdate,
-            CliCommand::SubnetPoolSiloUnlink,
-            CliCommand::SubnetPoolUtilizationView,
+            CliCommand::SystemSubnetPoolList,
+            CliCommand::SystemSubnetPoolCreate,
+            CliCommand::SystemSubnetPoolView,
+            CliCommand::SystemSubnetPoolUpdate,
+            CliCommand::SystemSubnetPoolDelete,
+            CliCommand::SystemSubnetPoolMemberList,
+            CliCommand::SystemSubnetPoolMemberAdd,
+            CliCommand::SystemSubnetPoolMemberRemove,
+            CliCommand::SystemSubnetPoolSiloList,
+            CliCommand::SystemSubnetPoolSiloLink,
+            CliCommand::SystemSubnetPoolSiloUpdate,
+            CliCommand::SystemSubnetPoolSiloUnlink,
+            CliCommand::SystemSubnetPoolUtilizationView,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
             CliCommand::SystemUpdateRepositoryList,
