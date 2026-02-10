@@ -11,7 +11,7 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.101"
 assert_cmd = "2.1.2"
 async-trait = "0.1.89"
 base64 = "0.22.1"
