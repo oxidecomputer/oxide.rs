@@ -4260,63 +4260,6 @@
       ],
       "subcommands": [
         {
-          "name": "create",
-          "about": "Create IP pool",
-          "long_about": "IPv6 is not yet supported for unicast pools.",
-          "args": [
-            {
-              "long": "description"
-            },
-            {
-              "long": "ip-version",
-              "values": [
-                "v4",
-                "v6"
-              ],
-              "help": "The IP version of the pool.\n\nThe default is IPv4."
-            },
-            {
-              "long": "json-body",
-              "help": "Path to a file that contains the full json body."
-            },
-            {
-              "long": "json-body-template",
-              "help": "XXX"
-            },
-            {
-              "long": "name"
-            },
-            {
-              "long": "pool-type",
-              "values": [
-                "unicast",
-                "multicast"
-              ],
-              "help": "Type of IP pool (defaults to Unicast)"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
-          "name": "delete",
-          "about": "Delete IP pool",
-          "args": [
-            {
-              "long": "pool",
-              "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
           "name": "list",
           "about": "List IP pools",
           "args": [
@@ -4336,367 +4279,6 @@
                 "name_descending",
                 "id_ascending"
               ]
-            }
-          ]
-        },
-        {
-          "name": "range",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "add",
-              "about": "Add range to an IP pool",
-              "long_about": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
-              "args": [
-                {
-                  "long": "first"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "last"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List ranges for IP pool",
-              "long_about": "Ranges are ordered by their first address.",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
-              "name": "remove",
-              "about": "Remove range from IP pool",
-              "args": [
-                {
-                  "long": "first"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "last"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "service",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "range",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ],
-              "subcommands": [
-                {
-                  "name": "add",
-                  "about": "Add IP range to Oxide service pool",
-                  "long_about": "IPv6 ranges are not allowed yet.",
-                  "args": [
-                    {
-                      "long": "first"
-                    },
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "last"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
-                },
-                {
-                  "name": "list",
-                  "about": "List IP ranges for the Oxide service pool",
-                  "long_about": "Ranges are ordered by their first address.",
-                  "args": [
-                    {
-                      "long": "limit",
-                      "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "remove",
-              "about": "Remove IP range from Oxide service pool",
-              "args": [
-                {
-                  "long": "first"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "last"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "Fetch Oxide service IP pool",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "silo",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "link",
-              "about": "Link IP pool to silo",
-              "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
-              "args": [
-                {
-                  "long": "is-default",
-                  "values": [
-                    "true",
-                    "false"
-                  ],
-                  "help": "When a pool is the default for a silo, floating IPs and instance ephemeral IPs will come from that pool when no other pool is specified.\n\nA silo can have at most one default pool per combination of pool type (unicast or multicast) and IP version (IPv4 or IPv6), allowing up to 4 default pools total."
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "silo"
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List IP pool's linked silos",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "unlink",
-              "about": "Unlink IP pool from silo",
-              "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
-              "args": [
-                {
-                  "long": "pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "silo"
-                }
-              ]
-            },
-            {
-              "name": "update",
-              "about": "Make IP pool default for silo",
-              "long_about": "When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
-              "args": [
-                {
-                  "long": "is-default",
-                  "values": [
-                    "true",
-                    "false"
-                  ],
-                  "help": "When a pool is the default for a silo, floating IPs and instance ephemeral IPs will come from that pool when no other pool is specified.\n\nA silo can have at most one default pool per combination of pool type (unicast or multicast) and IP version (IPv4 or IPv6), allowing up to 4 default pools total. When a pool is made default, an existing default of the same type and version will remain linked but will no longer be the default."
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "silo"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "update",
-          "about": "Update IP pool",
-          "args": [
-            {
-              "long": "description"
-            },
-            {
-              "long": "json-body",
-              "help": "Path to a file that contains the full json body."
-            },
-            {
-              "long": "json-body-template",
-              "help": "XXX"
-            },
-            {
-              "long": "name"
-            },
-            {
-              "long": "pool",
-              "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
-          "name": "utilization",
-          "about": "Fetch IP pool utilization",
-          "args": [
-            {
-              "long": "pool",
-              "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
             }
           ]
         },
@@ -4818,56 +4400,6 @@
             {
               "long": "project",
               "help": "Name or ID of the project"
-            }
-          ]
-        },
-        {
-          "name": "ip-pool",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "list",
-              "about": "List IP pools",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "name_ascending",
-                    "name_descending",
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "Fetch IP pool",
-              "args": [
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
             }
           ]
         },
@@ -5592,6 +5124,45 @@
           ]
         },
         {
+          "name": "subnet-pool",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List subnet pools linked to a silo",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "user",
           "args": [
             {
@@ -5837,54 +5408,6 @@
       ],
       "subcommands": [
         {
-          "name": "create",
-          "about": "Create a subnet pool",
-          "args": [
-            {
-              "long": "description"
-            },
-            {
-              "long": "ip-version",
-              "values": [
-                "v4",
-                "v6"
-              ],
-              "help": "The IP version for this pool (IPv4 or IPv6). All subnets in the pool must match this version."
-            },
-            {
-              "long": "json-body",
-              "help": "Path to a file that contains the full json body."
-            },
-            {
-              "long": "json-body-template",
-              "help": "XXX"
-            },
-            {
-              "long": "name"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
-          "name": "delete",
-          "about": "Delete a subnet pool",
-          "args": [
-            {
-              "long": "pool",
-              "help": "Name or ID of the subnet pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
           "name": "list",
           "about": "List subnet pools",
           "args": [
@@ -5908,271 +5431,8 @@
           ]
         },
         {
-          "name": "member",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "add",
-              "about": "Add a member to a subnet pool",
-              "args": [
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "max-prefix-length",
-                  "help": "Maximum prefix length for allocations from this subnet; a larger prefix means smaller allocations are allowed (e.g. a /24 prefix yields smaller subnet allocations than a /16 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is 32 for IPv4 and 128 for IPv6."
-                },
-                {
-                  "long": "min-prefix-length",
-                  "help": "Minimum prefix length for allocations from this subnet; a smaller prefix means larger allocations are allowed (e.g. a /16 prefix yields larger subnet allocations than a /24 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is equal to the subnet's prefix length."
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "subnet",
-                  "help": "The subnet to add to the pool"
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List members in a subnet pool",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ]
-            },
-            {
-              "name": "remove",
-              "about": "Remove a member from a subnet pool",
-              "args": [
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "subnet",
-                  "help": "The subnet to remove from the pool. Must match an existing entry exactly."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "silo",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "link",
-              "about": "Link a subnet pool to a silo",
-              "args": [
-                {
-                  "long": "is-default",
-                  "values": [
-                    "true",
-                    "false"
-                  ],
-                  "help": "Whether this is the default subnet pool for the silo. When true, external subnet allocations that don't specify a pool use this one."
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "silo",
-                  "help": "The silo to link"
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List silos linked to a subnet pool",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "unlink",
-              "about": "Unlink a subnet pool from a silo",
-              "args": [
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "silo",
-                  "help": "Name or ID of the silo"
-                }
-              ]
-            },
-            {
-              "name": "update",
-              "about": "Update a subnet pool's link to a silo",
-              "args": [
-                {
-                  "long": "is-default",
-                  "values": [
-                    "true",
-                    "false"
-                  ],
-                  "help": "Whether this is the default subnet pool for the silo"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "pool",
-                  "help": "Name or ID of the subnet pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "silo",
-                  "help": "Name or ID of the silo"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "update",
-          "about": "Update a subnet pool",
-          "args": [
-            {
-              "long": "description"
-            },
-            {
-              "long": "json-body",
-              "help": "Path to a file that contains the full json body."
-            },
-            {
-              "long": "json-body-template",
-              "help": "XXX"
-            },
-            {
-              "long": "name"
-            },
-            {
-              "long": "pool",
-              "help": "Name or ID of the subnet pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
-          "name": "utilization",
-          "about": "Fetch subnet pool utilization",
-          "args": [
-            {
-              "long": "pool",
-              "help": "Name or ID of the subnet pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ]
-        },
-        {
           "name": "view",
-          "about": "Fetch a subnet pool",
+          "about": "Fetch subnet pool",
           "args": [
             {
               "long": "pool",
@@ -7982,6 +7242,474 @@
               ]
             },
             {
+              "name": "ip-pool",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create IP pool",
+                  "long_about": "IPv6 is not yet supported for unicast pools.",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "ip-version",
+                      "values": [
+                        "v4",
+                        "v6"
+                      ],
+                      "help": "The IP version of the pool.\n\nThe default is IPv4."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "pool-type",
+                      "values": [
+                        "unicast",
+                        "multicast"
+                      ],
+                      "help": "Type of IP pool (defaults to Unicast)"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete IP pool",
+                  "args": [
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the IP pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List IP pools",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "range",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "add",
+                      "about": "Add range to IP pool",
+                      "long_about": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+                      "args": [
+                        {
+                          "long": "first"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "last"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the IP pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List ranges for IP pool",
+                      "long_about": "Ranges are ordered by their first address.",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the IP pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove",
+                      "about": "Remove range from IP pool",
+                      "args": [
+                        {
+                          "long": "first"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "last"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the IP pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "service",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "range",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ],
+                      "subcommands": [
+                        {
+                          "name": "add",
+                          "about": "Add IP range to Oxide service pool",
+                          "long_about": "IPv6 ranges are not allowed yet.",
+                          "args": [
+                            {
+                              "long": "first"
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "last"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "list",
+                          "about": "List IP ranges for the Oxide service pool",
+                          "long_about": "Ranges are ordered by their first address.",
+                          "args": [
+                            {
+                              "long": "limit",
+                              "help": "Maximum number of items returned by a single call"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove",
+                      "about": "Remove IP range from Oxide service pool",
+                      "args": [
+                        {
+                          "long": "first"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "last"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view",
+                      "about": "Fetch Oxide service IP pool",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "silo",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "link",
+                      "about": "Link IP pool to silo",
+                      "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
+                      "args": [
+                        {
+                          "long": "is-default",
+                          "values": [
+                            "true",
+                            "false"
+                          ],
+                          "help": "When a pool is the default for a silo, floating IPs and instance ephemeral IPs will come from that pool when no other pool is specified.\n\nA silo can have at most one default pool per combination of pool type (unicast or multicast) and IP version (IPv4 or IPv6), allowing up to 4 default pools total."
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the IP pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "silo"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List IP pool's linked silos",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the IP pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "unlink",
+                      "about": "Unlink IP pool from silo",
+                      "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
+                      "args": [
+                        {
+                          "long": "pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "silo"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "update",
+                      "about": "Make IP pool default for silo",
+                      "long_about": "When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
+                      "args": [
+                        {
+                          "long": "is-default",
+                          "values": [
+                            "true",
+                            "false"
+                          ],
+                          "help": "When a pool is the default for a silo, floating IPs and instance ephemeral IPs will come from that pool when no other pool is specified.\n\nA silo can have at most one default pool per combination of pool type (unicast or multicast) and IP version (IPv4 or IPv6), allowing up to 4 default pools total. When a pool is made default, an existing default of the same type and version will remain linked but will no longer be the default."
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "silo"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update IP pool",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the IP pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "utilization",
+                  "about": "Fetch IP pool utilization",
+                  "args": [
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the IP pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch IP pool",
+                  "args": [
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the IP pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "link",
               "about": "Manage switch port links.",
               "long_about": "Manage switch port links.\n\nLinks carry layer-2 Ethernet properties for a lane or set of lanes on a\nswitch port. Lane geometry is defined in physical port settings. At the\npresent time only single lane configurations are supported, and thus only\na single link per physical port is supported.",
@@ -8549,6 +8277,367 @@
                     {
                       "long": "vlan-id",
                       "help": "The route vlan id"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "subnet-pool",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create subnet pool",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "ip-version",
+                      "values": [
+                        "v4",
+                        "v6"
+                      ],
+                      "help": "The IP version for this pool (IPv4 or IPv6). All subnets in the pool must match this version."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete subnet pool",
+                  "args": [
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the subnet pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List subnet pools",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "member",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "add",
+                      "about": "Add member to subnet pool",
+                      "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "max-prefix-length",
+                          "help": "Maximum prefix length for allocations from this subnet; a larger prefix means smaller allocations are allowed (e.g. a /24 prefix yields smaller subnet allocations than a /16 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is 32 for IPv4 and 128 for IPv6."
+                        },
+                        {
+                          "long": "min-prefix-length",
+                          "help": "Minimum prefix length for allocations from this subnet; a smaller prefix means larger allocations are allowed (e.g. a /16 prefix yields larger subnet allocations than a /24 prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is equal to the subnet's prefix length."
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "subnet",
+                          "help": "The subnet to add to the pool"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List members in subnet pool",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove",
+                      "about": "Remove member from subnet pool",
+                      "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "subnet",
+                          "help": "The subnet to remove from the pool. Must match an existing entry exactly."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "silo",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "link",
+                      "about": "Link subnet pool to silo",
+                      "args": [
+                        {
+                          "long": "is-default",
+                          "values": [
+                            "true",
+                            "false"
+                          ],
+                          "help": "Whether this is the default subnet pool for the silo. When true, external subnet allocations that don't specify a pool use this one."
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "silo",
+                          "help": "The silo to link"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List silos linked to subnet pool",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "unlink",
+                      "about": "Unlink subnet pool from silo",
+                      "args": [
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "silo",
+                          "help": "Name or ID of the silo"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "update",
+                      "about": "Update subnet pool's link to silo",
+                      "args": [
+                        {
+                          "long": "is-default",
+                          "values": [
+                            "true",
+                            "false"
+                          ],
+                          "help": "Whether this is the default subnet pool for the silo"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "pool",
+                          "help": "Name or ID of the subnet pool"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "silo",
+                          "help": "Name or ID of the silo"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update subnet pool",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the subnet pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "utilization",
+                  "about": "Fetch subnet pool utilization",
+                  "args": [
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the subnet pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch subnet pool",
+                  "args": [
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the subnet pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
