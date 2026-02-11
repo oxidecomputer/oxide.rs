@@ -16112,7 +16112,66 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::BgpExported) -> Self {
+        pub fn ok(self, value: &::std::vec::Vec<types::BgpExported>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpImportedWhen(::httpmock::When);
+    impl NetworkingBgpImportedWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/networking/bgp-imported$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn asn(self, value: u32) -> Self {
+            Self(self.0.query_param("asn", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingBgpImportedThen(::httpmock::Then);
+    impl NetworkingBgpImportedThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &::std::vec::Vec<types::BgpImported>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -16170,63 +16229,6 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::AggregateBgpMessageHistory) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct NetworkingBgpImportedRoutesIpv4When(::httpmock::When);
-    impl NetworkingBgpImportedRoutesIpv4When {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(inner.method(::httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/networking/bgp-routes-ipv4$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn asn(self, value: u32) -> Self {
-            Self(self.0.query_param("asn", value.to_string()))
-        }
-    }
-
-    pub struct NetworkingBgpImportedRoutesIpv4Then(::httpmock::Then);
-    impl NetworkingBgpImportedRoutesIpv4Then {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &::std::vec::Vec<types::BgpImportedRouteIpv4>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -23823,17 +23825,14 @@ pub trait MockServerExt {
     fn networking_bgp_exported<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::NetworkingBgpExportedWhen, operations::NetworkingBgpExportedThen);
+    fn networking_bgp_imported<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::NetworkingBgpImportedWhen, operations::NetworkingBgpImportedThen);
     fn networking_bgp_message_history<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
             operations::NetworkingBgpMessageHistoryWhen,
             operations::NetworkingBgpMessageHistoryThen,
-        );
-    fn networking_bgp_imported_routes_ipv4<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(
-            operations::NetworkingBgpImportedRoutesIpv4When,
-            operations::NetworkingBgpImportedRoutesIpv4Then,
         );
     fn networking_bgp_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
@@ -26940,6 +26939,18 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn networking_bgp_imported<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::NetworkingBgpImportedWhen, operations::NetworkingBgpImportedThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpImportedWhen::new(when),
+                operations::NetworkingBgpImportedThen::new(then),
+            )
+        })
+    }
+
     fn networking_bgp_message_history<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -26951,21 +26962,6 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::NetworkingBgpMessageHistoryWhen::new(when),
                 operations::NetworkingBgpMessageHistoryThen::new(then),
-            )
-        })
-    }
-
-    fn networking_bgp_imported_routes_ipv4<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
-    where
-        F: FnOnce(
-            operations::NetworkingBgpImportedRoutesIpv4When,
-            operations::NetworkingBgpImportedRoutesIpv4Then,
-        ),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::NetworkingBgpImportedRoutesIpv4When::new(when),
-                operations::NetworkingBgpImportedRoutesIpv4Then::new(then),
             )
         })
     }

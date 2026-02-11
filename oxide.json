@@ -10736,7 +10736,6 @@
         "tags": [
           "system/networking"
         ],
-        "summary": "Get BGP exported routes",
         "operationId": "networking_bgp_exported",
         "responses": {
           "200": {
@@ -10744,7 +10743,55 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BgpExported"
+                  "title": "Array_of_BgpExported",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BgpExported"
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/bgp-imported": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Get imported IPv4 BGP routes",
+        "operationId": "networking_bgp_imported",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "asn",
+            "description": "The ASN to filter on. Required.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "uint32",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Array_of_BgpImported",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BgpImported"
+                  }
                 }
               }
             }
@@ -10785,50 +10832,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AggregateBgpMessageHistory"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
-        }
-      }
-    },
-    "/v1/system/networking/bgp-routes-ipv4": {
-      "get": {
-        "tags": [
-          "system/networking"
-        ],
-        "summary": "Get imported IPv4 BGP routes",
-        "operationId": "networking_bgp_imported_routes_ipv4",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "asn",
-            "description": "The ASN to filter on. Required.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "uint32",
-              "minimum": 0
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "Array_of_BgpImportedRouteIpv4",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BgpImportedRouteIpv4"
-                  }
                 }
               }
             }
@@ -17207,9 +17210,11 @@
           "max_paths": {
             "description": "Maximum number of paths to use when multiple \"best paths\" exist",
             "default": 1,
-            "type": "integer",
-            "format": "uint8",
-            "minimum": 0
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MaxPathConfig"
+              }
+            ]
           },
           "name": {
             "$ref": "#/components/schemas/Name"
@@ -17253,25 +17258,37 @@
         ]
       },
       "BgpExported": {
-        "description": "The current status of a BGP peer.",
+        "description": "Route exported to a peer.",
         "type": "object",
         "properties": {
-          "exports": {
-            "description": "Exported routes indexed by peer address.",
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Ipv4Net"
+          "peer_id": {
+            "description": "Identifier for the BGP peer.",
+            "type": "string"
+          },
+          "prefix": {
+            "description": "The destination network prefix.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IpNet"
               }
-            }
+            ]
+          },
+          "switch": {
+            "description": "Switch the route is exported from.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SwitchLocation"
+              }
+            ]
           }
         },
         "required": [
-          "exports"
+          "peer_id",
+          "prefix",
+          "switch"
         ]
       },
-      "BgpImportedRouteIpv4": {
+      "BgpImported": {
         "description": "A route imported from a BGP peer.",
         "type": "object",
         "properties": {
@@ -17284,13 +17301,13 @@
           "nexthop": {
             "description": "The nexthop the prefix is reachable through.",
             "type": "string",
-            "format": "ipv4"
+            "format": "ip"
           },
           "prefix": {
             "description": "The destination network prefix.",
             "allOf": [
               {
-                "$ref": "#/components/schemas/Ipv4Net"
+                "$ref": "#/components/schemas/IpNet"
               }
             ]
           },
@@ -24514,7 +24531,8 @@
       "MaxPathConfig": {
         "type": "integer",
         "format": "uint8",
-        "minimum": 0
+        "minimum": 1,
+        "maximum": 32
       },
       "Measurement": {
         "description": "A `Measurement` is a timestamped datum from a single metric",

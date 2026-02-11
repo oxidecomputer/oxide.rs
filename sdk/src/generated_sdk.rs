@@ -4302,9 +4302,11 @@ pub mod types {
     ///      "description": "Maximum number of paths to use when multiple \"best
     /// paths\" exist",
     ///      "default": 1,
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/MaxPathConfig"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -4338,8 +4340,8 @@ pub mod types {
         pub bgp_announce_set_id: NameOrId,
         pub description: ::std::string::String,
         /// Maximum number of paths to use when multiple "best paths" exist
-        #[serde(default = "defaults::default_u64::<u8, 1>")]
-        pub max_paths: u8,
+        #[serde(default = "defaults::bgp_config_create_max_paths")]
+        pub max_paths: MaxPathConfig,
         pub name: Name,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
@@ -4401,27 +4403,39 @@ pub mod types {
         }
     }
 
-    /// The current status of a BGP peer.
+    /// Route exported to a peer.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "The current status of a BGP peer.",
+    ///  "description": "Route exported to a peer.",
     ///  "type": "object",
     ///  "required": [
-    ///    "exports"
+    ///    "peer_id",
+    ///    "prefix",
+    ///    "switch"
     ///  ],
     ///  "properties": {
-    ///    "exports": {
-    ///      "description": "Exported routes indexed by peer address.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "type": "array",
-    ///        "items": {
-    ///          "$ref": "#/components/schemas/Ipv4Net"
+    ///    "peer_id": {
+    ///      "description": "Identifier for the BGP peer.",
+    ///      "type": "string"
+    ///    },
+    ///    "prefix": {
+    ///      "description": "The destination network prefix.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-    ///      }
+    ///      ]
+    ///    },
+    ///    "switch": {
+    ///      "description": "Switch the route is exported from.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -4431,8 +4445,12 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpExported {
-        /// Exported routes indexed by peer address.
-        pub exports: ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<Ipv4Net>>,
+        /// Identifier for the BGP peer.
+        pub peer_id: ::std::string::String,
+        /// The destination network prefix.
+        pub prefix: IpNet,
+        /// Switch the route is exported from.
+        pub switch: SwitchLocation,
     }
 
     impl BgpExported {
@@ -4465,13 +4483,13 @@ pub mod types {
     ///    "nexthop": {
     ///      "description": "The nexthop the prefix is reachable through.",
     ///      "type": "string",
-    ///      "format": "ipv4"
+    ///      "format": "ip"
     ///    },
     ///    "prefix": {
     ///      "description": "The destination network prefix.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Net"
+    ///          "$ref": "#/components/schemas/IpNet"
     ///        }
     ///      ]
     ///    },
@@ -4490,19 +4508,19 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct BgpImportedRouteIpv4 {
+    pub struct BgpImported {
         /// BGP identifier of the originating router.
         pub id: u32,
         /// The nexthop the prefix is reachable through.
-        pub nexthop: ::std::net::Ipv4Addr,
+        pub nexthop: ::std::net::IpAddr,
         /// The destination network prefix.
-        pub prefix: Ipv4Net,
+        pub prefix: IpNet,
         /// Switch the route is imported into.
         pub switch: SwitchLocation,
     }
 
-    impl BgpImportedRouteIpv4 {
-        pub fn builder() -> builder::BgpImportedRouteIpv4 {
+    impl BgpImported {
+        pub fn builder() -> builder::BgpImported {
             Default::default()
         }
     }
@@ -19585,7 +19603,8 @@ pub mod types {
     /// {
     ///  "type": "integer",
     ///  "format": "uint8",
-    ///  "minimum": 0.0
+    ///  "maximum": 32.0,
+    ///  "minimum": 1.0
     /// }
     /// ```
     /// </details>
@@ -19593,42 +19612,42 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     #[serde(transparent)]
-    pub struct MaxPathConfig(pub u8);
+    pub struct MaxPathConfig(pub ::std::num::NonZeroU8);
     impl ::std::ops::Deref for MaxPathConfig {
-        type Target = u8;
-        fn deref(&self) -> &u8 {
+        type Target = ::std::num::NonZeroU8;
+        fn deref(&self) -> &::std::num::NonZeroU8 {
             &self.0
         }
     }
 
-    impl ::std::convert::From<MaxPathConfig> for u8 {
+    impl ::std::convert::From<MaxPathConfig> for ::std::num::NonZeroU8 {
         fn from(value: MaxPathConfig) -> Self {
             value.0
         }
     }
 
-    impl ::std::convert::From<u8> for MaxPathConfig {
-        fn from(value: u8) -> Self {
+    impl ::std::convert::From<::std::num::NonZeroU8> for MaxPathConfig {
+        fn from(value: ::std::num::NonZeroU8) -> Self {
             Self(value)
         }
     }
 
     impl ::std::str::FromStr for MaxPathConfig {
-        type Err = <u8 as ::std::str::FromStr>::Err;
+        type Err = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
         }
     }
 
     impl ::std::convert::TryFrom<&str> for MaxPathConfig {
-        type Error = <u8 as ::std::str::FromStr>::Err;
+        type Error = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
         fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl ::std::convert::TryFrom<String> for MaxPathConfig {
-        type Error = <u8 as ::std::str::FromStr>::Err;
+        type Error = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
         fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
@@ -40057,7 +40076,7 @@ pub mod types {
             asn: ::std::result::Result<u32, ::std::string::String>,
             bgp_announce_set_id: ::std::result::Result<super::NameOrId, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            max_paths: ::std::result::Result<u8, ::std::string::String>,
+            max_paths: ::std::result::Result<super::MaxPathConfig, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             vrf: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
@@ -40070,7 +40089,7 @@ pub mod types {
                         "no value supplied for bgp_announce_set_id".to_string()
                     ),
                     description: Err("no value supplied for description".to_string()),
-                    max_paths: Ok(super::defaults::default_u64::<u8, 1>()),
+                    max_paths: Ok(super::defaults::bgp_config_create_max_paths()),
                     name: Err("no value supplied for name".to_string()),
                     vrf: Ok(Default::default()),
                 }
@@ -40110,7 +40129,7 @@ pub mod types {
             }
             pub fn max_paths<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<u8>,
+                T: ::std::convert::TryInto<super::MaxPathConfig>,
                 T::Error: ::std::fmt::Display,
             {
                 self.max_paths = value
@@ -40233,100 +40252,35 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpExported {
-            exports: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<super::Ipv4Net>>,
-                ::std::string::String,
-            >,
+            peer_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpExported {
             fn default() -> Self {
                 Self {
-                    exports: Err("no value supplied for exports".to_string()),
-                }
-            }
-        }
-
-        impl BgpExported {
-            pub fn exports<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<
-                        ::std::string::String,
-                        ::std::vec::Vec<super::Ipv4Net>,
-                    >,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.exports = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for exports: {e}"));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<BgpExported> for super::BgpExported {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: BgpExported,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    exports: value.exports?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::BgpExported> for BgpExported {
-            fn from(value: super::BgpExported) -> Self {
-                Self {
-                    exports: Ok(value.exports),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct BgpImportedRouteIpv4 {
-            id: ::std::result::Result<u32, ::std::string::String>,
-            nexthop: ::std::result::Result<::std::net::Ipv4Addr, ::std::string::String>,
-            prefix: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for BgpImportedRouteIpv4 {
-            fn default() -> Self {
-                Self {
-                    id: Err("no value supplied for id".to_string()),
-                    nexthop: Err("no value supplied for nexthop".to_string()),
+                    peer_id: Err("no value supplied for peer_id".to_string()),
                     prefix: Err("no value supplied for prefix".to_string()),
                     switch: Err("no value supplied for switch".to_string()),
                 }
             }
         }
 
-        impl BgpImportedRouteIpv4 {
-            pub fn id<T>(mut self, value: T) -> Self
+        impl BgpExported {
+            pub fn peer_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<u32>,
+                T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.id = value
+                self.peer_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
-                self
-            }
-            pub fn nexthop<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::net::Ipv4Addr>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.nexthop = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for nexthop: {e}"));
+                    .map_err(|e| format!("error converting supplied value for peer_id: {e}"));
                 self
             }
             pub fn prefix<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Ipv4Net>,
+                T: ::std::convert::TryInto<super::IpNet>,
                 T::Error: ::std::fmt::Display,
             {
                 self.prefix = value
@@ -40346,10 +40300,95 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::TryFrom<BgpImportedRouteIpv4> for super::BgpImportedRouteIpv4 {
+        impl ::std::convert::TryFrom<BgpExported> for super::BgpExported {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: BgpImportedRouteIpv4,
+                value: BgpExported,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    peer_id: value.peer_id?,
+                    prefix: value.prefix?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::BgpExported> for BgpExported {
+            fn from(value: super::BgpExported) -> Self {
+                Self {
+                    peer_id: Ok(value.peer_id),
+                    prefix: Ok(value.prefix),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpImported {
+            id: ::std::result::Result<u32, ::std::string::String>,
+            nexthop: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for BgpImported {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    nexthop: Err("no value supplied for nexthop".to_string()),
+                    prefix: Err("no value supplied for prefix".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BgpImported {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn nexthop<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nexthop = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nexthop: {e}"));
+                self
+            }
+            pub fn prefix<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpNet>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.prefix = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for prefix: {e}"));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<BgpImported> for super::BgpImported {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BgpImported,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
@@ -40360,8 +40399,8 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::From<super::BgpImportedRouteIpv4> for BgpImportedRouteIpv4 {
-            fn from(value: super::BgpImportedRouteIpv4) -> Self {
+        impl ::std::convert::From<super::BgpImported> for BgpImported {
+            fn from(value: super::BgpImported) -> Self {
                 Self {
                     id: Ok(value.id),
                     nexthop: Ok(value.nexthop),
@@ -65540,18 +65579,22 @@ pub mod types {
             V
         }
 
-        pub(super) fn default_u64<T, const V: u64>() -> T
+        pub(super) fn default_nzu64<T, const V: u64>() -> T
         where
-            T: ::std::convert::TryFrom<u64>,
-            <T as ::std::convert::TryFrom<u64>>::Error: ::std::fmt::Debug,
+            T: ::std::convert::TryFrom<::std::num::NonZeroU64>,
+            <T as ::std::convert::TryFrom<::std::num::NonZeroU64>>::Error: ::std::fmt::Debug,
         {
-            T::try_from(V).unwrap()
+            T::try_from(::std::num::NonZeroU64::try_from(V).unwrap()).unwrap()
         }
 
         pub(super) fn address_allocator_auto_pool_selector() -> super::PoolSelector {
             super::PoolSelector::Auto {
                 ip_version: ::std::option::Option::None,
             }
+        }
+
+        pub(super) fn bgp_config_create_max_paths() -> super::MaxPathConfig {
+            super::MaxPathConfig(::std::num::NonZeroU8::new(1).unwrap())
         }
 
         pub(super) fn ephemeral_ip_create_pool_selector() -> super::PoolSelector {
@@ -70238,8 +70281,6 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announcement_list(&self) -> builder::NetworkingBgpAnnouncementList<'_>;
-    /// Get BGP exported routes
-    ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-exported`
     ///
     /// ```ignore
@@ -70248,6 +70289,19 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_exported(&self) -> builder::NetworkingBgpExported<'_>;
+    /// Get imported IPv4 BGP routes
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-imported`
+    ///
+    /// Arguments:
+    /// - `asn`: The ASN to filter on. Required.
+    /// ```ignore
+    /// let response = client.networking_bgp_imported()
+    ///    .asn(asn)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_imported(&self) -> builder::NetworkingBgpImported<'_>;
     /// Get BGP router message history
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-message-history`
@@ -70261,19 +70315,6 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory<'_>;
-    /// Get imported IPv4 BGP routes
-    ///
-    /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
-    ///
-    /// Arguments:
-    /// - `asn`: The ASN to filter on. Required.
-    /// ```ignore
-    /// let response = client.networking_bgp_imported_routes_ipv4()
-    ///    .asn(asn)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_bgp_imported_routes_ipv4(&self) -> builder::NetworkingBgpImportedRoutesIpv4<'_>;
     /// Get BGP peer status
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-status`
@@ -70518,12 +70559,12 @@ impl ClientSystemNetworkingExt for Client {
         builder::NetworkingBgpExported::new(self)
     }
 
-    fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory<'_> {
-        builder::NetworkingBgpMessageHistory::new(self)
+    fn networking_bgp_imported(&self) -> builder::NetworkingBgpImported<'_> {
+        builder::NetworkingBgpImported::new(self)
     }
 
-    fn networking_bgp_imported_routes_ipv4(&self) -> builder::NetworkingBgpImportedRoutesIpv4<'_> {
-        builder::NetworkingBgpImportedRoutesIpv4::new(self)
+    fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory<'_> {
+        builder::NetworkingBgpMessageHistory::new(self)
     }
 
     fn networking_bgp_status(&self) -> builder::NetworkingBgpStatus<'_> {
@@ -96797,7 +96838,10 @@ pub mod builder {
         }
 
         /// Sends a `GET` request to `/v1/system/networking/bgp-exported`
-        pub async fn send(self) -> Result<ResponseValue<types::BgpExported>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpExported>>, Error<types::Error>>
+        {
             let Self { client } = self;
             let url = format!("{}/v1/system/networking/bgp-exported", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -96817,6 +96861,77 @@ pub mod builder {
                 .build()?;
             let info = OperationInfo {
                 operation_id: "networking_bgp_exported",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_imported`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_imported`]: super::ClientSystemNetworkingExt::networking_bgp_imported
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpImported<'a> {
+        client: &'a super::Client,
+        asn: Result<u32, String>,
+    }
+
+    impl<'a> NetworkingBgpImported<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                asn: Err("asn was not initialized".to_string()),
+            }
+        }
+
+        pub fn asn<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u32>,
+        {
+            self.asn = value
+                .try_into()
+                .map_err(|_| "conversion to `u32` for asn failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-imported`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpImported>>, Error<types::Error>>
+        {
+            let Self { client, asn } = self;
+            let asn = asn.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp-imported", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("asn", &asn))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_imported",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -96891,78 +97006,6 @@ pub mod builder {
                 .build()?;
             let info = OperationInfo {
                 operation_id: "networking_bgp_message_history",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4`]: super::ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4
-    #[derive(Debug, Clone)]
-    pub struct NetworkingBgpImportedRoutesIpv4<'a> {
-        client: &'a super::Client,
-        asn: Result<u32, String>,
-    }
-
-    impl<'a> NetworkingBgpImportedRoutesIpv4<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                asn: Err("asn was not initialized".to_string()),
-            }
-        }
-
-        pub fn asn<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<u32>,
-        {
-            self.asn = value
-                .try_into()
-                .map_err(|_| "conversion to `u32` for asn failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpImportedRouteIpv4>>, Error<types::Error>>
-        {
-            let Self { client, asn } = self;
-            let asn = asn.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/bgp-routes-ipv4", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("asn", &asn))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "networking_bgp_imported_routes_ipv4",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
