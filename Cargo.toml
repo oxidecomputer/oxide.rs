@@ -31,7 +31,7 @@ expectorate = { version = "1.2.0", features = ["predicates"] }
 flume = "0.12.0"
 futures = "0.3.31"
 http = "1.4.0"
-httpmock = "0.8.2"
+httpmock = "0.8.3"
 humantime = "2.3.0"
 indicatif = "0.18.3"
 libc = "0.2.180"
