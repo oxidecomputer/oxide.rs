@@ -4749,7 +4749,7 @@
                       "args": [
                         {
                           "long": "external-id",
-                          "help": "username used to log in"
+                          "help": "Username used to log in"
                         },
                         {
                           "long": "json-body",
@@ -4837,7 +4837,7 @@
                   "args": [
                     {
                       "long": "acs-url",
-                      "help": "service provider endpoint where the response will be sent"
+                      "help": "Service provider endpoint where the response will be sent"
                     },
                     {
                       "long": "description"
@@ -4848,7 +4848,7 @@
                     },
                     {
                       "long": "idp-entity-id",
-                      "help": "idp's entity id"
+                      "help": "IdP's entity ID"
                     },
                     {
                       "long": "json-body",
@@ -4888,15 +4888,15 @@
                     },
                     {
                       "long": "slo-url",
-                      "help": "service provider endpoint where the idp should send log out requests"
+                      "help": "Service provider endpoint where the IdP should send log out requests"
                     },
                     {
                       "long": "sp-client-id",
-                      "help": "sp's client id"
+                      "help": "SP's client ID"
                     },
                     {
                       "long": "technical-contact-email",
-                      "help": "customer's technical contact for saml configuration"
+                      "help": "Customer's technical contact for SAML configuration"
                     }
                   ]
                 },
@@ -7252,7 +7252,6 @@
                 {
                   "name": "create",
                   "about": "Create IP pool",
-                  "long_about": "IPv6 is not yet supported for unicast pools.",
                   "args": [
                     {
                       "long": "description"
@@ -7342,7 +7341,7 @@
                     {
                       "name": "add",
                       "about": "Add range to IP pool",
-                      "long_about": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+                      "long_about": "For multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
                       "args": [
                         {
                           "long": "first"
@@ -8038,7 +8037,7 @@
                         "true",
                         "false"
                       ],
-                      "help": "Address is an anycast address. This allows the address to be assigned to multiple locations simultaneously."
+                      "help": "Address is an anycast address.\n\nThis allows the address to be assigned to multiple locations simultaneously."
                     },
                     {
                       "long": "json-body",

@@ -5743,7 +5743,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("external-id")
                     .value_parser(::clap::value_parser!(types::UserId))
                     .required_unless_present("json-body")
-                    .help("username used to log in"),
+                    .help("Username used to log in"),
             )
             .arg(
                 ::clap::Arg::new("silo")
@@ -5836,7 +5836,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("acs-url")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("service provider endpoint where the response will be sent"),
+                    .help("Service provider endpoint where the response will be sent"),
             )
             .arg(
                 ::clap::Arg::new("description")
@@ -5860,7 +5860,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("idp-entity-id")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("idp's entity id"),
+                    .help("IdP's entity ID"),
             )
             .arg(
                 ::clap::Arg::new("name")
@@ -5880,21 +5880,21 @@ impl<T: CliConfig> Cli<T> {
                     .long("slo-url")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("service provider endpoint where the idp should send log out requests"),
+                    .help("Service provider endpoint where the IdP should send log out requests"),
             )
             .arg(
                 ::clap::Arg::new("sp-client-id")
                     .long("sp-client-id")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("sp's client id"),
+                    .help("SP's client ID"),
             )
             .arg(
                 ::clap::Arg::new("technical-contact-email")
                     .long("technical-contact-email")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("customer's technical contact for saml configuration"),
+                    .help("Customer's technical contact for SAML configuration"),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6012,7 +6012,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Create IP pool")
-            .long_about("IPv6 is not yet supported for unicast pools.")
     }
 
     pub fn cli_system_ip_pool_view() -> ::clap::Command {
@@ -6122,11 +6121,11 @@ impl<T: CliConfig> Cli<T> {
             )
             .about("Add range to IP pool")
             .long_about(
-                "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all \
-                 ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast \
-                 (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not \
-                 allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag \
-                 field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+                "For multicast pools, all ranges must be either Any-Source Multicast (ASM) or \
+                 Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the \
+                 same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 \
+                 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 \
+                 addresses with flag field = 3",
             )
     }
 
@@ -6999,8 +6998,8 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(bool))
                     .required_unless_present("json-body")
                     .help(
-                        "Address is an anycast address. This allows the address to be assigned to \
-                         multiple locations simultaneously.",
+                        "Address is an anycast address.\n\nThis allows the address to be assigned \
+                         to multiple locations simultaneously.",
                     ),
             )
             .arg(
