@@ -377,14 +377,14 @@ pub mod types {
         }
     }
 
-    /// Parameters for creating an address lot block. Fist and last addresses
+    /// Parameters for creating an address lot block. First and last addresses
     /// are inclusive.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Parameters for creating an address lot block. Fist and
+    ///  "description": "Parameters for creating an address lot block. First and
     /// last addresses are inclusive.",
     ///  "type": "object",
     ///  "required": [
@@ -2002,6 +2002,8 @@ pub mod types {
     ///          ]
     ///        },
     ///        "secrets": {
+    ///          "description": "A list containing the IDs of the secret keys
+    /// used to sign payloads sent to this receiver.",
     ///          "type": "array",
     ///          "items": {
     ///            "$ref": "#/components/schemas/WebhookSecret"
@@ -2023,6 +2025,8 @@ pub mod types {
         Webhook {
             /// The URL that webhook notification requests are sent to.
             endpoint: ::std::string::String,
+            /// A list containing the IDs of the secret keys used to sign
+            /// payloads sent to this receiver.
             secrets: ::std::vec::Vec<WebhookSecret>,
         },
     }
@@ -4254,16 +4258,16 @@ pub mod types {
         }
     }
 
-    /// Parameters for creating a BGP configuration. This includes and
-    /// autonomous system number (ASN) and a virtual routing and forwarding
-    /// (VRF) identifier.
+    /// Parameters for creating a BGP configuration. This includes an autonomous
+    /// system number (ASN) and a virtual routing and forwarding (VRF)
+    /// identifier.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "description": "Parameters for creating a BGP configuration. This
-    /// includes and autonomous system number (ASN) and a virtual routing and
+    /// includes an autonomous system number (ASN) and a virtual routing and
     /// forwarding (VRF) identifier.",
     ///  "type": "object",
     ///  "required": [
@@ -6607,7 +6611,7 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "title": "disk block size in bytes",
+    ///  "title": "Disk block size in bytes",
     ///  "type": "integer",
     ///  "enum": [
     ///    512,
@@ -8228,13 +8232,13 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "private_key": {
-    ///      "description": "request signing RSA private key in PKCS#1 format
-    /// (base64 encoded der file)",
+    ///      "description": "Request signing RSA private key in PKCS#1 format
+    /// (base64 encoded DER file)",
     ///      "type": "string"
     ///    },
     ///    "public_cert": {
-    ///      "description": "request signing public certificate (base64 encoded
-    /// der file)",
+    ///      "description": "Request signing public certificate (base64 encoded
+    /// DER file)",
     ///      "type": "string"
     ///    }
     ///  }
@@ -8245,10 +8249,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DerEncodedKeyPair {
-        /// request signing RSA private key in PKCS#1 format (base64 encoded der
+        /// Request signing RSA private key in PKCS#1 format (base64 encoded DER
         /// file)
         pub private_key: ::std::string::String,
-        /// request signing public certificate (base64 encoded der file)
+        /// Request signing public certificate (base64 encoded DER file)
         pub public_cert: ::std::string::String,
     }
 
@@ -8273,8 +8277,8 @@ pub mod types {
     ///  "properties": {
     ///    "id": {
     ///      "description": "A unique, immutable, system-controlled identifier
-    /// for the token. Note that this ID is not the bearer token itself, which
-    /// starts with \"oxide-token-\"",
+    /// for the token.\n\nNote that this ID is not the bearer token itself,
+    /// which starts with \"oxide-token-\".",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
@@ -8300,8 +8304,9 @@ pub mod types {
     )]
     pub struct DeviceAccessToken {
         /// A unique, immutable, system-controlled identifier for the token.
+        ///
         /// Note that this ID is not the bearer token itself, which starts with
-        /// "oxide-token-"
+        /// "oxide-token-".
         pub id: ::uuid::Uuid,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Expiration timestamp. A null value means the token does not
@@ -8901,8 +8906,8 @@ pub mod types {
     ///      ],
     ///      "properties": {
     ///        "block_size": {
-    ///          "description": "size of blocks for this Disk. valid values are:
-    /// 512, 2048, or 4096",
+    ///          "description": "Size of blocks for this disk. Valid values are:
+    /// 512, 2048, or 4096.",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/BlockSize"
@@ -9001,8 +9006,8 @@ pub mod types {
         /// Create a blank disk
         #[serde(rename = "blank")]
         Blank {
-            /// size of blocks for this Disk. valid values are: 512, 2048, or
-            /// 4096
+            /// Size of blocks for this disk. Valid values are: 512, 2048, or
+            /// 4096.
             block_size: BlockSize,
         },
         /// Create a disk from a disk snapshot
@@ -13864,7 +13869,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "block_size": {
-    ///      "description": "size of blocks in bytes",
+    ///      "description": "Size of blocks in bytes",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -13920,7 +13925,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "size": {
-    ///      "description": "total size in bytes",
+    ///      "description": "Total size in bytes",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -13949,7 +13954,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Image {
-        /// size of blocks in bytes
+        /// Size of blocks in bytes
         pub block_size: ByteCount,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
@@ -13965,7 +13970,7 @@ pub mod types {
         /// ID of the parent project if the image is a project image
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub project_id: ::std::option::Option<::uuid::Uuid>,
-        /// total size in bytes
+        /// Total size in bytes
         pub size: ByteCount,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -14810,8 +14815,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "anti_affinity_groups": {
-    ///      "description": "Anti-Affinity groups which this instance should be
-    /// added.",
+    ///      "description": "Anti-affinity groups to which this instance should
+    /// be added.",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
@@ -15003,7 +15008,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceCreate {
-        /// Anti-Affinity groups which this instance should be added.
+        /// Anti-affinity groups to which this instance should be added.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub anti_affinity_groups: ::std::vec::Vec<NameOrId>,
         /// The auto-restart policy for this instance.
@@ -16490,7 +16495,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "address": {
-    ///      "description": "The associated IP address,",
+    ///      "description": "The associated IP address",
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
@@ -16505,7 +16510,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "internet_gateway_id": {
-    ///      "description": "The associated internet gateway.",
+    ///      "description": "The associated internet gateway",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
@@ -16536,13 +16541,13 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InternetGatewayIpAddress {
-        /// The associated IP address,
+        /// The associated IP address
         pub address: ::std::net::IpAddr,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// The associated internet gateway.
+        /// The associated internet gateway
         pub internet_gateway_id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
@@ -16975,14 +16980,13 @@ pub mod types {
     }
 
     /// A collection of IP ranges. If a pool is linked to a silo, IP addresses
-    /// from the pool can be allocated within that silo
+    /// from the pool can be allocated within that silo.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A collection of IP ranges. If a pool is linked to a
-    /// silo, IP addresses from the pool can be allocated within that silo",
+    ///  "description": "A collection of IP ranges. If a pool is linked to a silo, IP addresses from the pool can be allocated within that silo.",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -19272,7 +19276,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "anycast": {
-    ///      "description": "Address is an anycast address. This allows the
+    ///      "description": "Address is an anycast address.\n\nThis allows the
     /// address to be assigned to multiple locations simultaneously.",
     ///      "type": "boolean"
     ///    },
@@ -19310,8 +19314,10 @@ pub mod types {
         /// The name or id of the address lot this loopback address will pull an
         /// address from.
         pub address_lot: NameOrId,
-        /// Address is an anycast address. This allows the address to be
-        /// assigned to multiple locations simultaneously.
+        /// Address is an anycast address.
+        ///
+        /// This allows the address to be assigned to multiple locations
+        /// simultaneously.
         pub anycast: bool,
         /// The subnet mask to use for the address.
         pub mask: u8,
@@ -23377,13 +23383,13 @@ pub mod types {
         }
     }
 
-    /// View of an Rack
+    /// View of a Rack
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "View of an Rack",
+    ///  "description": "View of a Rack",
     ///  "type": "object",
     ///  "required": [
     ///    "id",
@@ -24769,7 +24775,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "acs_url": {
-    ///      "description": "service provider endpoint where the response will
+    ///      "description": "Service provider endpoint where the response will
     /// be sent",
     ///      "type": "string"
     ///    },
@@ -24786,11 +24792,11 @@ pub mod types {
     ///      ]
     ///    },
     ///    "idp_entity_id": {
-    ///      "description": "idp's entity id",
+    ///      "description": "IdP's entity ID",
     ///      "type": "string"
     ///    },
     ///    "idp_metadata_source": {
-    ///      "description": "the source of an identity provider metadata
+    ///      "description": "The source of an identity provider metadata
     /// descriptor",
     ///      "allOf": [
     ///        {
@@ -24802,7 +24808,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "signing_keypair": {
-    ///      "description": "request signing key pair",
+    ///      "description": "Request signing key pair",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -24817,16 +24823,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "slo_url": {
-    ///      "description": "service provider endpoint where the idp should send
+    ///      "description": "Service provider endpoint where the IdP should send
     /// log out requests",
     ///      "type": "string"
     ///    },
     ///    "sp_client_id": {
-    ///      "description": "sp's client id",
+    ///      "description": "SP's client ID",
     ///      "type": "string"
     ///    },
     ///    "technical_contact_email": {
-    ///      "description": "customer's technical contact for saml
+    ///      "description": "Customer's technical contact for SAML
     /// configuration",
     ///      "type": "string"
     ///    }
@@ -24838,7 +24844,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SamlIdentityProviderCreate {
-        /// service provider endpoint where the response will be sent
+        /// Service provider endpoint where the response will be sent
         pub acs_url: ::std::string::String,
         pub description: ::std::string::String,
         /// If set, SAML attributes with this name will be considered to denote
@@ -24846,19 +24852,19 @@ pub mod types {
         /// comma-separated list of group names.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub group_attribute_name: ::std::option::Option<::std::string::String>,
-        /// idp's entity id
+        /// IdP's entity ID
         pub idp_entity_id: ::std::string::String,
-        /// the source of an identity provider metadata descriptor
+        /// The source of an identity provider metadata descriptor
         pub idp_metadata_source: IdpMetadataSource,
         pub name: Name,
-        /// request signing key pair
+        /// Request signing key pair
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub signing_keypair: ::std::option::Option<DerEncodedKeyPair>,
-        /// service provider endpoint where the idp should send log out requests
+        /// Service provider endpoint where the IdP should send log out requests
         pub slo_url: ::std::string::String,
-        /// sp's client id
+        /// SP's client ID
         pub sp_client_id: ::std::string::String,
-        /// customer's technical contact for saml configuration
+        /// Customer's technical contact for SAML configuration
         pub technical_contact_email: ::std::string::String,
     }
 
@@ -26509,7 +26515,7 @@ pub mod types {
     ///  "properties": {
     ///    "allocated": {
     ///      "description": "Accounts for the total amount of resources reserved
-    /// for silos via their quotas",
+    /// for silos via their quotas.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
@@ -26517,10 +26523,10 @@ pub mod types {
     ///      ]
     ///    },
     ///    "provisioned": {
-    ///      "description": "Accounts for resources allocated by in silos like
-    /// CPU or memory for running instances and storage for disks and snapshots
-    /// Note that CPU and memory resources associated with a stopped instances
-    /// are not counted here",
+    ///      "description": "Accounts for the total resources allocated by the
+    /// silo, including CPU and memory for running instances and storage for
+    /// disks and snapshots.\n\nNote that CPU and memory resources associated
+    /// with stopped instances are not counted here.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
@@ -26543,12 +26549,14 @@ pub mod types {
     )]
     pub struct SiloUtilization {
         /// Accounts for the total amount of resources reserved for silos via
-        /// their quotas
+        /// their quotas.
         pub allocated: VirtualResourceCounts,
-        /// Accounts for resources allocated by in silos like CPU or memory for
-        /// running instances and storage for disks and snapshots Note that CPU
-        /// and memory resources associated with a stopped instances are not
-        /// counted here
+        /// Accounts for the total resources allocated by the silo, including
+        /// CPU and memory for running instances and storage for disks and
+        /// snapshots.
+        ///
+        /// Note that CPU and memory resources associated with stopped instances
+        /// are not counted here.
         pub provisioned: VirtualResourceCounts,
         pub silo_id: ::uuid::Uuid,
         pub silo_name: Name,
@@ -32726,7 +32734,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "external_id": {
-    ///      "description": "username used to log in",
+    ///      "description": "Username used to log in",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/UserId"
@@ -32734,7 +32742,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "password": {
-    ///      "description": "how to set the user's login password",
+    ///      "description": "How to set the user's login password",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/UserPassword"
@@ -32749,9 +32757,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct UserCreate {
-        /// username used to log in
+        /// Username used to log in
         pub external_id: UserId,
-        /// how to set the user's login password
+        /// How to set the user's login password
         pub password: UserPassword,
     }
 
@@ -33035,8 +33043,8 @@ pub mod types {
     ///  "properties": {
     ///    "capacity": {
     ///      "description": "The total amount of resources that can be
-    /// provisioned in this silo Actions that would exceed this limit will
-    /// fail",
+    /// provisioned in this silo. Actions that would exceed this limit will
+    /// fail.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
@@ -33045,9 +33053,9 @@ pub mod types {
     ///    },
     ///    "provisioned": {
     ///      "description": "Accounts for resources allocated to running
-    /// instances or storage allocated via disks or snapshots Note that CPU and
-    /// memory resources associated with a stopped instances are not counted
-    /// here whereas associated disks will still be counted",
+    /// instances or storage allocated via disks or snapshots.\n\nNote that CPU
+    /// and memory resources associated with stopped instances are not counted
+    /// here, whereas associated disks will still be counted.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
@@ -33062,13 +33070,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Utilization {
-        /// The total amount of resources that can be provisioned in this silo
-        /// Actions that would exceed this limit will fail
+        /// The total amount of resources that can be provisioned in this silo.
+        /// Actions that would exceed this limit will fail.
         pub capacity: VirtualResourceCounts,
         /// Accounts for resources allocated to running instances or storage
-        /// allocated via disks or snapshots Note that CPU and memory resources
-        /// associated with a stopped instances are not counted here whereas
-        /// associated disks will still be counted
+        /// allocated via disks or snapshots.
+        ///
+        /// Note that CPU and memory resources associated with stopped instances
+        /// are not counted here, whereas associated disks will still be
+        /// counted.
         pub provisioned: VirtualResourceCounts,
     }
 
@@ -33642,12 +33652,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "project_id": {
-    ///      "description": "id for the project containing this VPC",
+    ///      "description": "ID for the project containing this VPC",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "system_router_id": {
-    ///      "description": "id for the system router where subnet default
+    ///      "description": "ID for the system router where subnet default
     /// routes are registered",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -33680,9 +33690,9 @@ pub mod types {
         pub ipv6_prefix: Ipv6Net,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// id for the project containing this VPC
+        /// ID for the project containing this VPC
         pub project_id: ::uuid::Uuid,
-        /// id for the system router where subnet default routes are registered
+        /// ID for the system router where subnet default routes are registered
         pub system_router_id: ::uuid::Uuid,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -35226,7 +35236,7 @@ pub mod types {
     }
 
     /// A VPC subnet represents a logical grouping for instances that allows
-    /// network traffic between them, within a IPv4 subnetwork or optionally an
+    /// network traffic between them, within an IPv4 subnetwork or optionally an
     /// IPv6 subnetwork.
     ///
     /// <details><summary>JSON schema</summary>
@@ -35234,7 +35244,7 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A VPC subnet represents a logical grouping for
-    /// instances that allows network traffic between them, within a IPv4
+    /// instances that allows network traffic between them, within an IPv4
     /// subnetwork or optionally an IPv6 subnetwork.",
     ///  "type": "object",
     ///  "required": [
@@ -36019,6 +36029,8 @@ pub mod types {
     ///      ]
     ///    },
     ///    "secrets": {
+    ///      "description": "A list containing the IDs of the secret keys used
+    /// to sign payloads sent to this receiver.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/WebhookSecret"
@@ -36058,6 +36070,8 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
+        /// A list containing the IDs of the secret keys used to sign payloads
+        /// sent to this receiver.
         pub secrets: ::std::vec::Vec<WebhookSecret>,
         /// The list of alert classes to which this receiver is subscribed.
         pub subscriptions: ::std::vec::Vec<AlertSubscription>,
@@ -65442,7 +65456,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026020901.0.0
+/// Version: 2026021300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65483,7 +65497,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026020901.0.0"
+        "2026021300.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -69377,8 +69391,6 @@ pub trait ClientSystemIpPoolsExt {
     fn system_ip_pool_list(&self) -> builder::SystemIpPoolList<'_>;
     /// Create IP pool
     ///
-    /// IPv6 is not yet supported for unicast pools.
-    ///
     /// Sends a `POST` request to `/v1/system/ip-pools`
     ///
     /// ```ignore
@@ -69450,8 +69462,6 @@ pub trait ClientSystemIpPoolsExt {
     /// ```
     fn system_ip_pool_range_list(&self) -> builder::SystemIpPoolRangeList<'_>;
     /// Add range to IP pool
-    ///
-    /// IPv6 ranges are not allowed yet for unicast pools.
     ///
     /// For multicast pools, all ranges must be either Any-Source Multicast
     /// (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and
