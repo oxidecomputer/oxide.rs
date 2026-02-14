@@ -92,7 +92,7 @@ fn test_port_config() {
             vrf: None,
             time_created: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
             time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
-            max_paths: MaxPathConfig(1),
+            max_paths: MaxPathConfig(1.try_into().unwrap()),
         }],
         next_page: None,
     };
