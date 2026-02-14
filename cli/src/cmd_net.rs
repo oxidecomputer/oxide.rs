@@ -1315,7 +1315,13 @@ impl AuthenticatedCmd for CmdPortConfig {
                         .find(|x| x.1.id == a.address_lot_block_id)
                         .unwrap();
 
-                    writeln!(&mut tw, "{}\t{}\t{:?}", addr, *alb.0.name, a.vlan_id)?;
+                    writeln!(
+                        &mut tw,
+                        "{}\t{}\t{}",
+                        addr,
+                        *alb.0.name,
+                        a.vlan_id.map_or("-".to_string(), |v| v.to_string())
+                    )?;
                 }
                 tw.flush()?;
                 println_nopipe!();
@@ -1344,10 +1350,10 @@ impl AuthenticatedCmd for CmdPortConfig {
                 for p in &config.bgp_peers {
                     writeln!(
                         &mut tw,
-                        "{:?}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
-                        p.addr,
+                        "{}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                        p.addr.map_or("-".to_string(), |a| a.to_string()),
                         match &p.bgp_config {
-                            NameOrId::Id(id) =>  bgp_configs[id].to_string(),
+                            NameOrId::Id(id) => bgp_configs[id].to_string(),
                             NameOrId::Name(name) => name.to_string(),
                         },
                         match &p.allowed_export {
@@ -1373,12 +1379,15 @@ impl AuthenticatedCmd for CmdPortConfig {
                         p.hold_time,
                         p.idle_hold_time,
                         p.keepalive,
-                        p.local_pref,
-                        p.md5_auth_key.as_ref().map(|x| format!("{:x}", md5::compute(x))),
-                        p.min_ttl,
-                        p.multi_exit_discriminator,
-                        p.remote_asn,
-                        p.vlan_id,
+                        p.local_pref.map_or("-".to_string(), |x| x.to_string()),
+                        p.md5_auth_key
+                            .as_ref()
+                            .map_or("-".to_string(), |x| format!("{:x}", md5::compute(x))),
+                        p.min_ttl.map_or("-".to_string(), |x| x.to_string()),
+                        p.multi_exit_discriminator
+                            .map_or("-".to_string(), |x| x.to_string()),
+                        p.remote_asn.map_or("-".to_string(), |asn| asn.to_string()),
+                        p.vlan_id.map_or("-".to_string(), |v| v.to_string()),
                     )?;
                 }
                 tw.flush()?;
@@ -1462,7 +1471,7 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
     for s in st {
         writeln!(
             tw,
-            "{}\t{}\t{}\t{}\t{:?}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}",
             s.addr,
             s.peer_id,
             s.local_asn,
