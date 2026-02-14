@@ -285,10 +285,8 @@ impl<T: CliConfig> Cli<T> {
                 Self::cli_networking_bgp_announcement_list()
             }
             CliCommand::NetworkingBgpExported => Self::cli_networking_bgp_exported(),
+            CliCommand::NetworkingBgpImported => Self::cli_networking_bgp_imported(),
             CliCommand::NetworkingBgpMessageHistory => Self::cli_networking_bgp_message_history(),
-            CliCommand::NetworkingBgpImportedRoutesIpv4 => {
-                Self::cli_networking_bgp_imported_routes_ipv4()
-            }
             CliCommand::NetworkingBgpStatus => Self::cli_networking_bgp_status(),
             CliCommand::NetworkingInboundIcmpView => Self::cli_networking_inbound_icmp_view(),
             CliCommand::NetworkingInboundIcmpUpdate => Self::cli_networking_inbound_icmp_update(),
@@ -5743,7 +5741,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("external-id")
                     .value_parser(::clap::value_parser!(types::UserId))
                     .required_unless_present("json-body")
-                    .help("username used to log in"),
+                    .help("Username used to log in"),
             )
             .arg(
                 ::clap::Arg::new("silo")
@@ -5836,7 +5834,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("acs-url")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("service provider endpoint where the response will be sent"),
+                    .help("Service provider endpoint where the response will be sent"),
             )
             .arg(
                 ::clap::Arg::new("description")
@@ -5860,7 +5858,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("idp-entity-id")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("idp's entity id"),
+                    .help("IdP's entity ID"),
             )
             .arg(
                 ::clap::Arg::new("name")
@@ -5880,21 +5878,21 @@ impl<T: CliConfig> Cli<T> {
                     .long("slo-url")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("service provider endpoint where the idp should send log out requests"),
+                    .help("Service provider endpoint where the IdP should send log out requests"),
             )
             .arg(
                 ::clap::Arg::new("sp-client-id")
                     .long("sp-client-id")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("sp's client id"),
+                    .help("SP's client ID"),
             )
             .arg(
                 ::clap::Arg::new("technical-contact-email")
                     .long("technical-contact-email")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
-                    .help("customer's technical contact for saml configuration"),
+                    .help("Customer's technical contact for SAML configuration"),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6012,7 +6010,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Create IP pool")
-            .long_about("IPv6 is not yet supported for unicast pools.")
     }
 
     pub fn cli_system_ip_pool_view() -> ::clap::Command {
@@ -6122,11 +6119,11 @@ impl<T: CliConfig> Cli<T> {
             )
             .about("Add range to IP pool")
             .long_about(
-                "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all \
-                 ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast \
-                 (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not \
-                 allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag \
-                 field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+                "For multicast pools, all ranges must be either Any-Source Multicast (ASM) or \
+                 Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the \
+                 same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 \
+                 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 \
+                 addresses with flag field = 3",
             )
     }
 
@@ -6747,6 +6744,13 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
+                ::clap::Arg::new("max-paths")
+                    .long("max-paths")
+                    .value_parser(::clap::value_parser!(types::MaxPathConfig))
+                    .required(false)
+                    .help("Maximum number of paths to use when multiple \"best paths\" exist"),
+            )
+            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
@@ -6883,7 +6887,19 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_networking_bgp_exported() -> ::clap::Command {
-        ::clap::Command::new("").about("Get BGP exported routes")
+        ::clap::Command::new("").about("List BGP exported routes")
+    }
+
+    pub fn cli_networking_bgp_imported() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("asn")
+                    .long("asn")
+                    .value_parser(::clap::value_parser!(u32))
+                    .required(true)
+                    .help("The ASN to filter on. Required."),
+            )
+            .about("Get imported IPv4 BGP routes")
     }
 
     pub fn cli_networking_bgp_message_history() -> ::clap::Command {
@@ -6896,18 +6912,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("The ASN to filter on. Required."),
             )
             .about("Get BGP router message history")
-    }
-
-    pub fn cli_networking_bgp_imported_routes_ipv4() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("asn")
-                    .long("asn")
-                    .value_parser(::clap::value_parser!(u32))
-                    .required(true)
-                    .help("The ASN to filter on. Required."),
-            )
-            .about("Get imported IPv4 BGP routes")
     }
 
     pub fn cli_networking_bgp_status() -> ::clap::Command {
@@ -6999,8 +7003,8 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(bool))
                     .required_unless_present("json-body")
                     .help(
-                        "Address is an anycast address. This allows the address to be assigned to \
-                         multiple locations simultaneously.",
+                        "Address is an anycast address.\n\nThis allows the address to be assigned \
+                         to multiple locations simultaneously.",
                     ),
             )
             .arg(
@@ -10008,12 +10012,11 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpExported => {
                 self.execute_networking_bgp_exported(matches).await
             }
+            CliCommand::NetworkingBgpImported => {
+                self.execute_networking_bgp_imported(matches).await
+            }
             CliCommand::NetworkingBgpMessageHistory => {
                 self.execute_networking_bgp_message_history(matches).await
-            }
-            CliCommand::NetworkingBgpImportedRoutesIpv4 => {
-                self.execute_networking_bgp_imported_routes_ipv4(matches)
-                    .await
             }
             CliCommand::NetworkingBgpStatus => self.execute_networking_bgp_status(matches).await,
             CliCommand::NetworkingInboundIcmpView => {
@@ -17545,6 +17548,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::MaxPathConfig>("max-paths") {
+            request = request.body_map(|body| body.max_paths(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -17736,17 +17743,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_bgp_message_history(
+    pub async fn execute_networking_bgp_imported(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_bgp_message_history();
+        let mut request = self.client.networking_bgp_imported();
         if let Some(value) = matches.get_one::<u32>("asn") {
             request = request.asn(value.clone());
         }
 
         self.config
-            .execute_networking_bgp_message_history(matches, &mut request)?;
+            .execute_networking_bgp_imported(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -17760,17 +17767,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_bgp_imported_routes_ipv4(
+    pub async fn execute_networking_bgp_message_history(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_bgp_imported_routes_ipv4();
+        let mut request = self.client.networking_bgp_message_history();
         if let Some(value) = matches.get_one::<u32>("asn") {
             request = request.asn(value.clone());
         }
 
         self.config
-            .execute_networking_bgp_imported_routes_ipv4(matches, &mut request)?;
+            .execute_networking_bgp_message_history(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -22706,18 +22713,18 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_networking_bgp_message_history(
+    fn execute_networking_bgp_imported(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::NetworkingBgpMessageHistory,
+        request: &mut builder::NetworkingBgpImported,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_networking_bgp_imported_routes_ipv4(
+    fn execute_networking_bgp_message_history(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::NetworkingBgpImportedRoutesIpv4,
+        request: &mut builder::NetworkingBgpMessageHistory,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -23678,8 +23685,8 @@ pub enum CliCommand {
     NetworkingBgpAnnounceSetDelete,
     NetworkingBgpAnnouncementList,
     NetworkingBgpExported,
+    NetworkingBgpImported,
     NetworkingBgpMessageHistory,
-    NetworkingBgpImportedRoutesIpv4,
     NetworkingBgpStatus,
     NetworkingInboundIcmpView,
     NetworkingInboundIcmpUpdate,
@@ -23994,8 +24001,8 @@ impl CliCommand {
             CliCommand::NetworkingBgpAnnounceSetDelete,
             CliCommand::NetworkingBgpAnnouncementList,
             CliCommand::NetworkingBgpExported,
+            CliCommand::NetworkingBgpImported,
             CliCommand::NetworkingBgpMessageHistory,
-            CliCommand::NetworkingBgpImportedRoutesIpv4,
             CliCommand::NetworkingBgpStatus,
             CliCommand::NetworkingInboundIcmpView,
             CliCommand::NetworkingInboundIcmpUpdate,
