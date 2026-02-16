@@ -422,7 +422,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == self.peer)
+                    .find(|x| x.addr == Some(self.peer))
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 let list: Vec<IpNet> = self
@@ -503,7 +503,7 @@ impl AuthenticatedCmd for CmdBgpAuth {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == self.peer)
+                    .find(|x| x.addr == Some(self.peer))
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 peer.md5_auth_key = self.authstring.clone();
@@ -565,7 +565,7 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == self.peer)
+                    .find(|x| x.addr == Some(self.peer))
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 peer.local_pref = self.local_pref
@@ -826,7 +826,7 @@ pub struct CmdAddrAdd {
 
     /// Address to add.
     #[arg(long)]
-    addr: oxnet::Ipv4Net,
+    addr: oxnet::IpNet,
 
     /// Address lot to allocate from.
     #[arg(long)]
@@ -843,7 +843,7 @@ impl AuthenticatedCmd for CmdAddrAdd {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let addr = Address {
-            address: IpNet::V4(self.addr.to_string().parse().unwrap()),
+            address: self.addr.to_string().parse().unwrap(),
             address_lot: self.lot.clone(),
             vlan_id: self.vlan,
         };
@@ -1079,6 +1079,9 @@ pub struct CmdBgpPeerSet {
     /// Associate a VLAN ID with a peer.
     #[arg(long)]
     pub vlan_id: Option<u16>,
+
+    #[arg(long)]
+    pub router_lifetime: Option<u16>,
 }
 
 #[async_trait]
@@ -1087,7 +1090,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let peer = BgpPeer {
-            addr: self.addr,
+            addr: Some(self.addr),
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering
             } else {
@@ -1125,6 +1128,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             multi_exit_discriminator: self.multi_exit_discriminator,
             remote_asn: self.remote_asn,
             vlan_id: self.vlan_id,
+            router_lifetime: self.router_lifetime.unwrap_or(0),
         };
         match settings
             .bgp_peers
@@ -1187,7 +1191,7 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
             .find(|link| *link.link_name == PHY0)
         {
             let before = config.peers.len();
-            config.peers.retain(|x| x.addr != self.addr);
+            config.peers.retain(|x| x.addr != Some(self.addr));
             let after = config.peers.len();
             if before == after {
                 eprintln_nopipe!("no peers match the provided address");
@@ -1311,7 +1315,13 @@ impl AuthenticatedCmd for CmdPortConfig {
                         .find(|x| x.1.id == a.address_lot_block_id)
                         .unwrap();
 
-                    writeln!(&mut tw, "{}\t{}\t{:?}", addr, *alb.0.name, a.vlan_id)?;
+                    writeln!(
+                        &mut tw,
+                        "{}\t{}\t{}",
+                        addr,
+                        *alb.0.name,
+                        a.vlan_id.map_or("-".to_string(), |v| v.to_string())
+                    )?;
                 }
                 tw.flush()?;
                 println_nopipe!();
@@ -1340,10 +1350,10 @@ impl AuthenticatedCmd for CmdPortConfig {
                 for p in &config.bgp_peers {
                     writeln!(
                         &mut tw,
-                        "{}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
-                        p.addr,
+                        "{}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                        p.addr.map_or("-".to_string(), |a| a.to_string()),
                         match &p.bgp_config {
-                            NameOrId::Id(id) =>  bgp_configs[id].to_string(),
+                            NameOrId::Id(id) => bgp_configs[id].to_string(),
                             NameOrId::Name(name) => name.to_string(),
                         },
                         match &p.allowed_export {
@@ -1369,12 +1379,15 @@ impl AuthenticatedCmd for CmdPortConfig {
                         p.hold_time,
                         p.idle_hold_time,
                         p.keepalive,
-                        p.local_pref,
-                        p.md5_auth_key.as_ref().map(|x| format!("{:x}", md5::compute(x))),
-                        p.min_ttl,
-                        p.multi_exit_discriminator,
-                        p.remote_asn,
-                        p.vlan_id,
+                        p.local_pref.map_or("-".to_string(), |x| x.to_string()),
+                        p.md5_auth_key
+                            .as_ref()
+                            .map_or("-".to_string(), |x| format!("{:x}", md5::compute(x))),
+                        p.min_ttl.map_or("-".to_string(), |x| x.to_string()),
+                        p.multi_exit_discriminator
+                            .map_or("-".to_string(), |x| x.to_string()),
+                        p.remote_asn.map_or("-".to_string(), |asn| asn.to_string()),
+                        p.vlan_id.map_or("-".to_string(), |v| v.to_string()),
                     )?;
                 }
                 tw.flush()?;
@@ -1447,8 +1460,9 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
     let mut tw = TabWriter::new(std::io::stdout()).ansi(true);
     writeln!(
         &mut tw,
-        "{}\t{}\t{}\t{}\t{}",
+        "{}\t{}\t{}\t{}\t{}\t{}",
         "Peer Address".dimmed(),
+        "Peer Id".dimmed(),
         "Local ASN".dimmed(),
         "Remote ASN".dimmed(),
         "Session State".dimmed(),
@@ -1457,8 +1471,9 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
     for s in st {
         writeln!(
             tw,
-            "{}\t{}\t{}\t{:?}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}",
             s.addr,
+            s.peer_id,
             s.local_asn,
             s.remote_asn,
             s.state,

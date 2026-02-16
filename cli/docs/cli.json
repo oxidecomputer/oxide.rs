@@ -6666,6 +6666,10 @@
                           "help": "XXX"
                         },
                         {
+                          "long": "max-paths",
+                          "help": "Maximum number of paths to use when multiple \"best paths\" exist"
+                        },
+                        {
                           "long": "name"
                         },
                         {
@@ -6721,24 +6725,12 @@
                 },
                 {
                   "name": "exported",
+                  "about": "List BGP exported routes",
                   "args": [
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
-                    }
-                  ],
-                  "subcommands": [
-                    {
-                      "name": "ipv4",
-                      "about": "Get BGP exported routes",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
                     }
                   ]
                 },
@@ -6841,28 +6833,16 @@
                 },
                 {
                   "name": "imported",
+                  "about": "Get imported IPv4 BGP routes",
                   "args": [
+                    {
+                      "long": "asn",
+                      "help": "The ASN to filter on. Required."
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
-                    }
-                  ],
-                  "subcommands": [
-                    {
-                      "name": "ipv4",
-                      "about": "Get imported IPv4 BGP routes",
-                      "args": [
-                        {
-                          "long": "asn",
-                          "help": "The ASN to filter on. Required."
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
                     }
                   ]
                 },
@@ -7057,6 +7037,9 @@
                         {
                           "long": "remote-asn",
                           "help": "Require that a peer has a specified ASN"
+                        },
+                        {
+                          "long": "router-lifetime"
                         },
                         {
                           "long": "switch",

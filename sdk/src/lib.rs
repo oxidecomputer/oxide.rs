@@ -22,6 +22,7 @@ mod auth;
 mod clap_feature;
 #[cfg(feature = "extras")]
 pub mod extras;
+#[allow(unused)]
 mod generated_sdk;
 
 pub use auth::*;

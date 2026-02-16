@@ -639,8 +639,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingBgpAnnouncementList => {
             Some("system networking bgp announcement list")
         }
-        CliCommand::NetworkingBgpExported => Some("system networking bgp exported ipv4"),
-        CliCommand::NetworkingBgpImportedRoutesIpv4 => Some("system networking bgp imported ipv4"),
+        CliCommand::NetworkingBgpExported => Some("system networking bgp exported"),
+        CliCommand::NetworkingBgpImported => Some("system networking bgp imported"),
 
         // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),
