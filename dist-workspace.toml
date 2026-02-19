@@ -33,3 +33,7 @@ shells = ["bash","fish","zsh"]
 [dist.github-custom-runners.x86_64-unknown-linux-gnu.container]
 image = "quay.io/pypa/manylinux_2_28_x86_64"
 host = "x86_64-unknown-linux-musl"
+
+[dist.github-custom-runners]
+x86_64-apple-darwin = "macos-14"
+aarch64-apple-darwin = "macos-14"
