@@ -40,8 +40,8 @@ md5 = "0.8.0"
 newline-converter = "0.3.0"
 oauth2 = { version = "5.0.0", default-features = false }
 open = "5.3.3"
-oxide = { path = "sdk", version = "0.14.0" }
-oxide-httpmock = { path = "sdk-httpmock", version = "0.14.0" }
+oxide = { path = "sdk", version = "0.15.0" }
+oxide-httpmock = { path = "sdk-httpmock", version = "0.15.0" }
 oxnet = "0.1.4"
 predicates = "3.1.4"
 pretty_assertions = "1.4.1"
