@@ -19,21 +19,21 @@ built = { version = "0.8.0", features = ["git2"] }
 bytes = "1.11.1"
 camino = { version = "1.2", features = ["serde1"] }
 chrono = { version = "0.4.43", features = ["serde"] }
-clap = { version = "4.5.57", features = ["derive", "string", "env", "wrap_help"] }
+clap = { version = "4.5.58", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.65"
 colored = "3.1.1"
 crossterm = { version = "0.29.0", features = [ "event-stream" ] }
 dialoguer = "0.12.0"
 dirs = "6.0.0"
 dropshot = "0.16.7"
-env_logger = "0.11.8"
+env_logger = "0.11.9"
 expectorate = { version = "1.2.0", features = ["predicates"] }
 flume = "0.12.0"
 futures = "0.3.31"
 http = "1.4.0"
 httpmock = "0.8.3"
 humantime = "2.3.0"
-indicatif = "0.18.3"
+indicatif = "0.18.4"
 libc = "0.2.181"
 log = "0.4.29"
 md5 = "0.8.0"
@@ -72,7 +72,7 @@ toml_edit = "0.24.0"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter", "json"] }
 url = "2.5.8"
-uuid = { version = "1.20.0", features = ["serde", "v4"] }
+uuid = { version = "1.21.0", features = ["serde", "v4"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
