@@ -234,7 +234,12 @@ impl ClientConfig {
         const DEFAULT_TIMEOUT: u64 = 15;
 
         let dur = std::time::Duration::from_secs(timeout.unwrap_or(DEFAULT_TIMEOUT));
-        let mut client_builder = ClientBuilder::new().timeout(dur).user_agent(user_agent);
+        let mut client_builder = ClientBuilder::new()
+            .timeout(dur)
+            .user_agent(user_agent)
+            // We don't get any benefit from HTTP/2 and it is incompatible with
+            // websocket upgrades, so force HTTP/1.1 only.
+            .http1_only();
 
         // Use an explicit connect_timeout if provided, otherwise fallback to
         // timeout or default.
