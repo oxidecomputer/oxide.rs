@@ -26853,39 +26853,6 @@ pub mod types {
         }
     }
 
-    /// The unique ID of a sled.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The unique ID of a sled.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct SledId {
-        pub id: ::uuid::Uuid,
-    }
-
-    impl SledId {
-        pub fn builder() -> builder::SledId {
-            Default::default()
-        }
-    }
-
     /// An operator's view of an instance running on a given sled
     ///
     /// <details><summary>JSON schema</summary>
@@ -32242,43 +32209,6 @@ pub mod types {
 
     impl UninitializedSled {
         pub fn builder() -> builder::UninitializedSled {
-            Default::default()
-        }
-    }
-
-    /// The unique hardware ID for a sled
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The unique hardware ID for a sled",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "part",
-    ///    "serial"
-    ///  ],
-    ///  "properties": {
-    ///    "part": {
-    ///      "type": "string"
-    ///    },
-    ///    "serial": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct UninitializedSledId {
-        pub part: ::std::string::String,
-        pub serial: ::std::string::String,
-    }
-
-    impl UninitializedSledId {
-        pub fn builder() -> builder::UninitializedSledId {
             Default::default()
         }
     }
@@ -57256,47 +57186,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledId {
-            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for SledId {
-            fn default() -> Self {
-                Self {
-                    id: Err("no value supplied for id".to_string()),
-                }
-            }
-        }
-
-        impl SledId {
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<SledId> for super::SledId {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: SledId,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self { id: value.id? })
-            }
-        }
-
-        impl ::std::convert::From<super::SledId> for SledId {
-            fn from(value: super::SledId) -> Self {
-                Self { id: Ok(value.id) }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct SledInstance {
             active_sled_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -62245,65 +62134,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct UninitializedSledId {
-            part: ::std::result::Result<::std::string::String, ::std::string::String>,
-            serial: ::std::result::Result<::std::string::String, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for UninitializedSledId {
-            fn default() -> Self {
-                Self {
-                    part: Err("no value supplied for part".to_string()),
-                    serial: Err("no value supplied for serial".to_string()),
-                }
-            }
-        }
-
-        impl UninitializedSledId {
-            pub fn part<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.part = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for part: {e}"));
-                self
-            }
-            pub fn serial<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.serial = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for serial: {e}"));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<UninitializedSledId> for super::UninitializedSledId {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: UninitializedSledId,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    part: value.part?,
-                    serial: value.serial?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::UninitializedSledId> for UninitializedSledId {
-            fn from(value: super::UninitializedSledId) -> Self {
-                Self {
-                    part: Ok(value.part),
-                    serial: Ok(value.serial),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct UninitializedSledResultsPage {
             items: ::std::result::Result<
                 ::std::vec::Vec<super::UninitializedSled>,
@@ -65676,7 +65506,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026021301.0.0
+/// Version: 2026021900.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65717,7 +65547,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026021301.0.0"
+        "2026021900.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -69302,17 +69132,6 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_list(&self) -> builder::SledList<'_>;
-    /// Add sled to initialized rack
-    ///
-    /// Sends a `POST` request to `/v1/system/hardware/sleds`
-    ///
-    /// ```ignore
-    /// let response = client.sled_add()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn sled_add(&self) -> builder::SledAdd<'_>;
     /// Fetch sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
@@ -69533,10 +69352,6 @@ impl ClientSystemHardwareExt for Client {
 
     fn sled_list(&self) -> builder::SledList<'_> {
         builder::SledList::new(self)
-    }
-
-    fn sled_add(&self) -> builder::SledAdd<'_> {
-        builder::SledAdd::new(self)
     }
 
     fn sled_view(&self) -> builder::SledView<'_> {
@@ -91048,88 +90863,6 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemHardwareExt::sled_add`]
-    ///
-    /// [`ClientSystemHardwareExt::sled_add`]: super::ClientSystemHardwareExt::sled_add
-    #[derive(Debug, Clone)]
-    pub struct SledAdd<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::UninitializedSledId, String>,
-    }
-
-    impl<'a> SledAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::UninitializedSledId>,
-            <V as std::convert::TryInto<types::UninitializedSledId>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `UninitializedSledId` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::UninitializedSledId,
-            ) -> types::builder::UninitializedSledId,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/system/hardware/sleds`
-        pub async fn send(self) -> Result<ResponseValue<types::SledId>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(|v| types::UninitializedSledId::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "sled_add",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
         }
     }
 

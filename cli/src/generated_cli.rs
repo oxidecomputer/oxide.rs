@@ -207,7 +207,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::RackMembershipAbort => Self::cli_rack_membership_abort(),
             CliCommand::RackMembershipAddSleds => Self::cli_rack_membership_add_sleds(),
             CliCommand::SledList => Self::cli_sled_list(),
-            CliCommand::SledAdd => Self::cli_sled_add(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
@@ -5261,37 +5260,6 @@ impl<T: CliConfig> Cli<T> {
             .about("List sleds")
     }
 
-    pub fn cli_sled_add() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("part")
-                    .long("part")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("serial")
-                    .long("serial")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Add sled to initialized rack")
-    }
-
     pub fn cli_sled_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -9869,7 +9837,6 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_rack_membership_add_sleds(matches).await
             }
             CliCommand::SledList => self.execute_sled_list(matches).await,
-            CliCommand::SledAdd => self.execute_sled_add(matches).await,
             CliCommand::SledView => self.execute_sled_view(matches).await,
             CliCommand::SledPhysicalDiskList => self.execute_sled_physical_disk_list(matches).await,
             CliCommand::SledInstanceList => self.execute_sled_instance_list(matches).await,
@@ -15778,38 +15745,6 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
-            }
-        }
-    }
-
-    pub async fn execute_sled_add(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.sled_add();
-        if let Some(value) = matches.get_one::<::std::string::String>("part") {
-            request = request.body_map(|body| body.part(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<::std::string::String>("serial") {
-            request = request.body_map(|body| body.serial(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config.execute_sled_add(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -22265,14 +22200,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_sled_add(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SledAdd,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_sled_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -23629,7 +23556,6 @@ pub enum CliCommand {
     RackMembershipAbort,
     RackMembershipAddSleds,
     SledList,
-    SledAdd,
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
@@ -23945,7 +23871,6 @@ impl CliCommand {
             CliCommand::RackMembershipAbort,
             CliCommand::RackMembershipAddSleds,
             CliCommand::SledList,
-            CliCommand::SledAdd,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
