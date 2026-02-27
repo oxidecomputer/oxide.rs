@@ -5641,31 +5641,6 @@
               ],
               "subcommands": [
                 {
-                  "name": "add",
-                  "about": "Add sled to initialized rack",
-                  "args": [
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "part"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    },
-                    {
-                      "long": "serial"
-                    }
-                  ]
-                },
-                {
                   "name": "disk-led",
                   "about": "List physical disks attached to sleds",
                   "args": [

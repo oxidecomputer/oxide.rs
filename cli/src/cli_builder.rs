@@ -710,7 +710,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledList => Some("system hardware sled list"),
         CliCommand::SledListUninitialized => Some("system hardware sled list-uninitialized"),
         CliCommand::SledView => Some("system hardware sled view"),
-        CliCommand::SledAdd => Some("system hardware sled add"),
         CliCommand::SledSetProvisionPolicy => Some("system hardware sled set-provision-policy"),
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
