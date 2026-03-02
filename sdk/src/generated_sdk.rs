@@ -65506,7 +65506,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026021900.0.0
+/// Version: 2026022500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65547,7 +65547,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026021900.0.0"
+        "2026022500.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -71313,6 +71313,34 @@ impl ClientSystemSubnetPoolsExt for Client {
 
 /// Upload and manage system updates
 pub trait ClientSystemUpdateExt {
+    /// Instructs the system that a system recovery operation ("mupdate") was
+    ///
+    /// completed using the software in the specified release
+    ///
+    /// The system recovery operation is used to bypass the control plane to
+    /// deploy known-working software when the control plane itself is not
+    /// functioning or otherwise unable to update itself.  When the control
+    /// plane detects this, it stops making any changes to deployed software to
+    /// avoid reverting the recovery itself.  This operation puts the control
+    /// plane back in charge of determining what software should be deployed,
+    /// instructing it that the specified software (which is also what's
+    /// currently running) is what's supposed to be deployed.
+    ///
+    /// If the provided version does not match what's currently running, the
+    /// control plane will continue to avoid changing deployed software until
+    /// this operation is invoked with the correct version.
+    ///
+    /// This endpoint should only be called at the direction of Oxide support.
+    ///
+    /// Sends a `PUT` request to `/v1/system/update/recovery-finish`
+    ///
+    /// ```ignore
+    /// let response = client.system_update_recovery_finish()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_recovery_finish(&self) -> builder::SystemUpdateRecoveryFinish<'_>;
     /// List all TUF repositories
     ///
     /// Returns a paginated list of all TUF repositories ordered by system
@@ -71463,6 +71491,10 @@ pub trait ClientSystemUpdateExt {
 }
 
 impl ClientSystemUpdateExt for Client {
+    fn system_update_recovery_finish(&self) -> builder::SystemUpdateRecoveryFinish<'_> {
+        builder::SystemUpdateRecoveryFinish::new(self)
+    }
+
     fn system_update_repository_list(&self) -> builder::SystemUpdateRepositoryList<'_> {
         builder::SystemUpdateRepositoryList::new(self)
     }
@@ -101134,6 +101166,90 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemUpdateExt::system_update_recovery_finish`]
+    ///
+    /// [`ClientSystemUpdateExt::system_update_recovery_finish`]: super::ClientSystemUpdateExt::system_update_recovery_finish
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateRecoveryFinish<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SetTargetReleaseParams, String>,
+    }
+
+    impl<'a> SystemUpdateRecoveryFinish<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SetTargetReleaseParams>,
+            <V as std::convert::TryInto<types::SetTargetReleaseParams>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `SetTargetReleaseParams` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SetTargetReleaseParams,
+            ) -> types::builder::SetTargetReleaseParams,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/update/recovery-finish`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SetTargetReleaseParams::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/update/recovery-finish", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_recovery_finish",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 

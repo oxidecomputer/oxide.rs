@@ -346,6 +346,7 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
+            CliCommand::SystemUpdateRecoveryFinish => Self::cli_system_update_recovery_finish(),
             CliCommand::SystemUpdateRepositoryList => Self::cli_system_update_repository_list(),
             CliCommand::SystemUpdateRepositoryUpload => Self::cli_system_update_repository_upload(),
             CliCommand::SystemUpdateRepositoryView => Self::cli_system_update_repository_view(),
@@ -7973,6 +7974,48 @@ impl<T: CliConfig> Cli<T> {
             .about("List timeseries schemas")
     }
 
+    pub fn cli_system_update_recovery_finish() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("system-version")
+                    .long("system-version")
+                    .value_parser(::clap::value_parser!(
+                        types::SetTargetReleaseParamsSystemVersion
+                    ))
+                    .required_unless_present("json-body")
+                    .help("Version of the system software to make the target release."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Instructs the system that a system recovery operation (\"mupdate\") was")
+            .long_about(
+                "completed using the software in the specified release\n\nThe system recovery \
+                 operation is used to bypass the control plane to deploy known-working software \
+                 when the control plane itself is not functioning or otherwise unable to update \
+                 itself.  When the control plane detects this, it stops making any changes to \
+                 deployed software to avoid reverting the recovery itself.  This operation puts \
+                 the control plane back in charge of determining what software should be \
+                 deployed, instructing it that the specified software (which is also what's \
+                 currently running) is what's supposed to be deployed.\n\nIf the provided version \
+                 does not match what's currently running, the control plane will continue to \
+                 avoid changing deployed software until this operation is invoked with the \
+                 correct version.\n\nThis endpoint should only be called at the direction of \
+                 Oxide support.",
+            )
+    }
+
     pub fn cli_system_update_repository_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -10077,6 +10120,9 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemTimeseriesSchemaList => {
                 self.execute_system_timeseries_schema_list(matches).await
+            }
+            CliCommand::SystemUpdateRecoveryFinish => {
+                self.execute_system_update_recovery_finish(matches).await
             }
             CliCommand::SystemUpdateRepositoryList => {
                 self.execute_system_update_repository_list(matches).await
@@ -19112,6 +19158,40 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_update_recovery_finish(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_recovery_finish();
+        if let Some(value) =
+            matches.get_one::<types::SetTargetReleaseParamsSystemVersion>("system-version")
+        {
+            request = request.body_map(|body| body.system_version(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_system_update_recovery_finish(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_system_update_repository_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -22992,6 +23072,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_update_recovery_finish(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateRecoveryFinish,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_system_update_repository_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23655,6 +23743,7 @@ pub enum CliCommand {
     SystemSubnetPoolUtilizationView,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
+    SystemUpdateRecoveryFinish,
     SystemUpdateRepositoryList,
     SystemUpdateRepositoryUpload,
     SystemUpdateRepositoryView,
@@ -23970,6 +24059,7 @@ impl CliCommand {
             CliCommand::SystemSubnetPoolUtilizationView,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
+            CliCommand::SystemUpdateRecoveryFinish,
             CliCommand::SystemUpdateRepositoryList,
             CliCommand::SystemUpdateRepositoryUpload,
             CliCommand::SystemUpdateRepositoryView,
