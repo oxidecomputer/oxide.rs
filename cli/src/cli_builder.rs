@@ -698,6 +698,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SystemUpdateStatus => Some("system update status"),
         CliCommand::SystemUpdateRepositoryList => Some("system update repo list"),
         CliCommand::SystemUpdateRepositoryView => Some("system update repo view"),
+        CliCommand::SystemUpdateRecoveryFinish => Some("system update recovery-finish"),
         CliCommand::SystemUpdateRepositoryUpload => None, // Manually implemented
 
         CliCommand::SwitchList => Some("system hardware switch list"),
