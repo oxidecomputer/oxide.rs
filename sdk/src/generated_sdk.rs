@@ -83687,9 +83687,7 @@ pub mod builder {
 
         /// Sends a `GET` request to
         /// `/v1/instances/{instance}/serial-console/stream`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<reqwest::Upgraded>, Error<reqwest::Upgraded>> {
+        pub async fn send(self) -> Result<ResponseValue<reqwest::Upgraded>, Error<()>> {
             let Self {
                 client,
                 instance,
@@ -83739,7 +83737,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 101u16 => ResponseValue::upgrade(response).await,
-                200..=299 => ResponseValue::upgrade(response).await,
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
