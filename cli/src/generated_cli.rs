@@ -13709,7 +13709,8 @@ impl<T: CliConfig> Cli<T> {
                 todo!()
             }
             Err(r) => {
-                todo!()
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
