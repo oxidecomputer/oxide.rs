@@ -7255,7 +7255,9 @@ pub mod types {
     ///    "id",
     ///    "silo_admin",
     ///    "silo_id",
-    ///    "silo_name"
+    ///    "silo_name",
+    ///    "time_created",
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "display_name": {
@@ -7288,6 +7290,16 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this user was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this user was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
     ///    }
     ///  }
     /// }
@@ -7310,6 +7322,10 @@ pub mod types {
         pub silo_id: ::uuid::Uuid,
         /// Name of the silo to which this user belongs.
         pub silo_name: Name,
+        /// Timestamp when this user was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this user was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl CurrentUser {
@@ -11820,7 +11836,9 @@ pub mod types {
     ///  "required": [
     ///    "display_name",
     ///    "id",
-    ///    "silo_id"
+    ///    "silo_id",
+    ///    "time_created",
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "display_name": {
@@ -11835,6 +11853,16 @@ pub mod types {
     ///      "description": "Uuid of the silo to which this group belongs",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this group was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this group was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
     ///    }
     ///  }
     /// }
@@ -11849,6 +11877,10 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this group belongs
         pub silo_id: ::uuid::Uuid,
+        /// Timestamp when this group was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this group was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl Group {
@@ -32618,7 +32650,9 @@ pub mod types {
     ///  "required": [
     ///    "display_name",
     ///    "id",
-    ///    "silo_id"
+    ///    "silo_id",
+    ///    "time_created",
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "display_name": {
@@ -32633,6 +32667,16 @@ pub mod types {
     ///      "description": "Uuid of the silo to which this user belongs",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this user was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this user was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
     ///    }
     ///  }
     /// }
@@ -32647,6 +32691,10 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this user belongs
         pub silo_id: ::uuid::Uuid,
+        /// Timestamp when this user was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this user was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl User {
@@ -42137,6 +42185,14 @@ pub mod types {
             silo_admin: ::std::result::Result<bool, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for CurrentUser {
@@ -42148,6 +42204,8 @@ pub mod types {
                     silo_admin: Err("no value supplied for silo_admin".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
                     silo_name: Err("no value supplied for silo_name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
@@ -42213,6 +42271,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for silo_name: {e}"));
                 self
             }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<CurrentUser> for super::CurrentUser {
@@ -42227,6 +42305,8 @@ pub mod types {
                     silo_admin: value.silo_admin?,
                     silo_id: value.silo_id?,
                     silo_name: value.silo_name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -42240,6 +42320,8 @@ pub mod types {
                     silo_admin: Ok(value.silo_admin),
                     silo_id: Ok(value.silo_id),
                     silo_name: Ok(value.silo_name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -44656,6 +44738,14 @@ pub mod types {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Group {
@@ -44664,6 +44754,8 @@ pub mod types {
                     display_name: Err("no value supplied for display_name".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
@@ -44699,6 +44791,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
                 self
             }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<Group> for super::Group {
@@ -44710,6 +44822,8 @@ pub mod types {
                     display_name: value.display_name?,
                     id: value.id?,
                     silo_id: value.silo_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -44720,6 +44834,8 @@ pub mod types {
                     display_name: Ok(value.display_name),
                     id: Ok(value.id),
                     silo_id: Ok(value.silo_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -62446,6 +62562,14 @@ pub mod types {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for User {
@@ -62454,6 +62578,8 @@ pub mod types {
                     display_name: Err("no value supplied for display_name".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
@@ -62489,6 +62615,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
                 self
             }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<User> for super::User {
@@ -62498,6 +62644,8 @@ pub mod types {
                     display_name: value.display_name?,
                     id: value.id?,
                     silo_id: value.silo_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -62508,6 +62656,8 @@ pub mod types {
                     display_name: Ok(value.display_name),
                     id: Ok(value.id),
                     silo_id: Ok(value.silo_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -65506,7 +65656,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026022500.0.0
+/// Version: 2026030200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65547,7 +65697,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026022500.0.0"
+        "2026030200.0.0"
     }
 
     fn baseurl(&self) -> &str {
