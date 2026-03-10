@@ -4437,7 +4437,7 @@ pub mod types {
     ///      "description": "Switch the route is exported from.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -4454,7 +4454,7 @@ pub mod types {
         /// The destination network prefix.
         pub prefix: IpNet,
         /// Switch the route is exported from.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl BgpExported {
@@ -4501,7 +4501,7 @@ pub mod types {
     ///      "description": "Switch the route is imported into.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -4520,7 +4520,7 @@ pub mod types {
         /// The destination network prefix.
         pub prefix: IpNet,
         /// Switch the route is imported into.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl BgpImported {
@@ -5100,7 +5100,7 @@ pub mod types {
     ///      "description": "Switch with the peer session.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -5125,7 +5125,7 @@ pub mod types {
         /// Time of last state change.
         pub state_duration_millis: u64,
         /// Switch with the peer session.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl BgpPeerStatus {
@@ -29038,7 +29038,7 @@ pub mod types {
     ///      "description": "Switch this message history is associated with.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -29053,7 +29053,7 @@ pub mod types {
         /// Message history indexed by peer address.
         pub history: ::std::collections::HashMap<::std::string::String, BgpMessageHistory>,
         /// Switch this message history is associated with.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl SwitchBgpHistory {
@@ -29434,99 +29434,6 @@ pub mod types {
     impl ::std::convert::From<::serde_json::Value> for SwitchLinkState {
         fn from(value: ::serde_json::Value) -> Self {
             Self(value)
-        }
-    }
-
-    /// Identifies switch physical location
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Identifies switch physical location",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Switch in upper slot",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "switch0"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Switch in lower slot",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "switch1"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum SwitchLocation {
-        /// Switch in upper slot
-        #[serde(rename = "switch0")]
-        Switch0,
-        /// Switch in lower slot
-        #[serde(rename = "switch1")]
-        Switch1,
-    }
-
-    impl ::std::fmt::Display for SwitchLocation {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Switch0 => f.write_str("switch0"),
-                Self::Switch1 => f.write_str("switch1"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for SwitchLocation {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "switch0" => Ok(Self::Switch0),
-                "switch1" => Ok(Self::Switch1),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for SwitchLocation {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for SwitchLocation {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for SwitchLocation {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
         }
     }
 
@@ -30811,6 +30718,99 @@ pub mod types {
     impl SwitchResultsPage {
         pub fn builder() -> builder::SwitchResultsPage {
             Default::default()
+        }
+    }
+
+    /// Identifies switch physical location
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Identifies switch physical location",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Switch in upper slot",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "switch0"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Switch in lower slot",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "switch1"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum SwitchSlot {
+        /// Switch in upper slot
+        #[serde(rename = "switch0")]
+        Switch0,
+        /// Switch in lower slot
+        #[serde(rename = "switch1")]
+        Switch1,
+    }
+
+    impl ::std::fmt::Display for SwitchSlot {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Switch0 => f.write_str("switch0"),
+                Self::Switch1 => f.write_str("switch1"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for SwitchSlot {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "switch0" => Ok(Self::Switch0),
+                "switch1" => Ok(Self::Switch1),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SwitchSlot {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SwitchSlot {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SwitchSlot {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -40246,7 +40246,7 @@ pub mod types {
         pub struct BgpExported {
             peer_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpExported {
@@ -40282,7 +40282,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -40320,7 +40320,7 @@ pub mod types {
             id: ::std::result::Result<u32, ::std::string::String>,
             nexthop: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpImported {
@@ -40367,7 +40367,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -40773,7 +40773,7 @@ pub mod types {
             remote_asn: ::std::result::Result<u32, ::std::string::String>,
             state: ::std::result::Result<super::BgpPeerState, ::std::string::String>,
             state_duration_millis: ::std::result::Result<u64, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpPeerStatus {
@@ -40855,7 +40855,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -59615,7 +59615,7 @@ pub mod types {
                 ::std::collections::HashMap<::std::string::String, super::BgpMessageHistory>,
                 ::std::string::String,
             >,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchBgpHistory {
@@ -59642,7 +59642,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -65656,7 +65656,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026030200.0.0
+/// Version: 2026030600.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65697,7 +65697,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026030200.0.0"
+        "2026030600.0.0"
     }
 
     fn baseurl(&self) -> &str {
