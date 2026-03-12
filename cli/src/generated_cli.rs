@@ -688,7 +688,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new support bundle")
+            .about("Create support bundle")
     }
 
     pub fn cli_support_bundle_view() -> ::clap::Command {
@@ -733,7 +733,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a support bundle")
+            .about("Update support bundle")
     }
 
     pub fn cli_support_bundle_delete() -> ::clap::Command {
@@ -745,7 +745,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the support bundle"),
             )
-            .about("Delete an existing support bundle")
+            .about("Delete support bundle")
             .long_about(
                 "May also be used to cancel a support bundle which is currently being collected, \
                  or to remove metadata for a support bundle that has failed.",
@@ -753,23 +753,23 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_download() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the contents of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download support bundle contents")
     }
 
     pub fn cli_support_bundle_head() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download support bundle metadata")
     }
 
     pub fn cli_support_bundle_download_file() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download a file within a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download file from support bundle")
     }
 
     pub fn cli_support_bundle_head_file() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a file within the support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download metadata of file in support bundle")
     }
 
     pub fn cli_support_bundle_index() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the index of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download support bundle index")
     }
 
     pub fn cli_login_saml() -> ::clap::Command {
@@ -786,7 +786,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::Name))
                     .required(true),
             )
-            .about("Authenticate a user via SAML")
+            .about("Authenticate user via SAML")
     }
 
     pub fn cli_affinity_group_list() -> ::clap::Command {
@@ -1741,7 +1741,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create new system-wide x.509 certificate")
+            .about("Create system-wide x.509 certificate")
             .long_about(
                 "This certificate is automatically used by the Oxide Control plane to serve \
                  external connections.",
@@ -2048,7 +2048,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List external subnets in a project")
+            .about("List external subnets")
     }
 
     pub fn cli_external_subnet_create() -> ::clap::Command {
@@ -2086,7 +2086,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an external subnet")
+            .about("Create external subnet")
     }
 
     pub fn cli_external_subnet_view() -> ::clap::Command {
@@ -2105,7 +2105,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an external subnet")
+            .about("Fetch external subnet")
     }
 
     pub fn cli_external_subnet_update() -> ::clap::Command {
@@ -2150,7 +2150,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an external subnet")
+            .about("Update external subnet")
     }
 
     pub fn cli_external_subnet_delete() -> ::clap::Command {
@@ -2169,7 +2169,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an external subnet")
+            .about("Delete external subnet")
     }
 
     pub fn cli_external_subnet_attach() -> ::clap::Command {
@@ -2209,7 +2209,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach an external subnet to an instance")
+            .about("Attach external subnet to instance")
     }
 
     pub fn cli_external_subnet_detach() -> ::clap::Command {
@@ -2228,7 +2228,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Detach an external subnet from an instance")
+            .about("Detach external subnet from instance")
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {
@@ -2298,7 +2298,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a floating IP")
+            .about("Create floating IP")
             .long_about(
                 "A specific IP address can be reserved, or an IP can be auto-allocated from a \
                  specific pool or the silo's default pool.",
@@ -4124,7 +4124,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Authenticate a user via username and password")
+            .about("Authenticate user via username and password")
     }
 
     pub fn cli_logout() -> ::clap::Command {
@@ -5143,7 +5143,7 @@ impl<T: CliConfig> Cli<T> {
                          ports.",
                     ),
             )
-            .about("Fetch the LLDP neighbors seen on a switch port")
+            .about("Fetch LLDP neighbors for switch port")
     }
 
     pub fn cli_rack_list() -> ::clap::Command {
@@ -5195,7 +5195,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::RackMembershipVersion))
                     .required(false),
             )
-            .about("Retrieve the rack cluster membership status")
+            .about("Fetch rack cluster membership status")
             .long_about(
                 "Returns the status for the most recent change, or a specific version if one is \
                  specified.",
@@ -5455,7 +5455,7 @@ impl<T: CliConfig> Cli<T> {
                          ports.",
                     ),
             )
-            .about("Fetch the LLDP configuration for a switch port")
+            .about("Fetch LLDP configuration for switch port")
     }
 
     pub fn cli_networking_switch_port_lldp_config_update() -> ::clap::Command {
@@ -5560,7 +5560,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the LLDP configuration for a switch port")
+            .about("Update LLDP configuration for switch port")
     }
 
     pub fn cli_networking_switch_port_apply_settings() -> ::clap::Command {
@@ -6815,7 +6815,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create new BGP configuration")
+            .about("Create BGP configuration")
     }
 
     pub fn cli_networking_bgp_config_delete() -> ::clap::Command {
@@ -7338,7 +7338,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("Lists resource quotas for all silos")
+            .about("List resource quotas for all silos")
     }
 
     pub fn cli_silo_list() -> ::clap::Command {
@@ -8080,9 +8080,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Instructs the system that a system recovery operation (\"mupdate\") was")
+            .about("Clear system recovery status")
             .long_about(
-                "completed using the software in the specified release\n\nThe system recovery \
+                "Instructs the system that a system recovery operation (\"mupdate\") was \
+                 completed using the software in the specified release.\n\nThe system recovery \
                  operation is used to bypass the control plane to deploy known-working software \
                  when the control plane itself is not functioning or otherwise unable to update \
                  itself.  When the control plane detects this, it stops making any changes to \
