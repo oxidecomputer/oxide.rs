@@ -3610,7 +3610,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "remote",
-    ///    "switch"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "remote": {
@@ -3619,12 +3619,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
-    ///    "switch": {
-    ///      "description": "The switch to enable this session on. Must be
-    /// `switch0` or `switch1`.",
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack to disable
+    /// this session on.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -3638,9 +3638,8 @@ pub mod types {
     pub struct BfdSessionDisable {
         /// Address of the remote peer to disable a BFD session for.
         pub remote: ::std::net::IpAddr,
-        /// The switch to enable this session on. Must be `switch0` or
-        /// `switch1`.
-        pub switch: Name,
+        /// The slot of the switch within the rack to disable this session on.
+        pub switch_slot: SwitchSlot,
     }
 
     impl BfdSessionDisable {
@@ -3663,7 +3662,7 @@ pub mod types {
     ///    "mode",
     ///    "remote",
     ///    "required_rx",
-    ///    "switch"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "detection_threshold": {
@@ -3706,12 +3705,12 @@ pub mod types {
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
-    ///    "switch": {
-    ///      "description": "The switch to enable this session on. Must be
-    /// `switch0` or `switch1`.",
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack to enable
+    /// this session on.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -3738,9 +3737,8 @@ pub mod types {
         /// The minimum interval, in microseconds, between received BFD Control
         /// packets that this system requires
         pub required_rx: u64,
-        /// The switch to enable this session on. Must be `switch0` or
-        /// `switch1`.
-        pub switch: Name,
+        /// The slot of the switch within the rack to enable this session on.
+        pub switch_slot: SwitchSlot,
     }
 
     impl BfdSessionEnable {
@@ -3882,7 +3880,7 @@ pub mod types {
     ///    "peer",
     ///    "required_rx",
     ///    "state",
-    ///    "switch"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "detection_threshold": {
@@ -3912,8 +3910,8 @@ pub mod types {
     ///    "state": {
     ///      "$ref": "#/components/schemas/BfdState"
     ///    },
-    ///    "switch": {
-    ///      "$ref": "#/components/schemas/Name"
+    ///    "switch_slot": {
+    ///      "$ref": "#/components/schemas/SwitchSlot"
     ///    }
     ///  }
     /// }
@@ -3930,7 +3928,7 @@ pub mod types {
         pub peer: ::std::net::IpAddr,
         pub required_rx: u64,
         pub state: BfdState,
-        pub switch: Name,
+        pub switch_slot: SwitchSlot,
     }
 
     impl BfdStatus {
@@ -19282,7 +19280,7 @@ pub mod types {
     ///    "address_lot_block_id",
     ///    "id",
     ///    "rack_id",
-    ///    "switch_location"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "address": {
@@ -19309,10 +19307,14 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "switch_location": {
-    ///      "description": "Switch location where this loopback address is
-    /// assigned.",
-    ///      "type": "string"
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack where this
+    /// loopback address is assigned.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchSlot"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -19330,8 +19332,9 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// The id of the rack where this loopback address is assigned.
         pub rack_id: ::uuid::Uuid,
-        /// Switch location where this loopback address is assigned.
-        pub switch_location: ::std::string::String,
+        /// The slot of the switch within the rack where this loopback address
+        /// is assigned.
+        pub switch_slot: SwitchSlot,
     }
 
     impl LoopbackAddress {
@@ -19355,7 +19358,7 @@ pub mod types {
     ///    "anycast",
     ///    "mask",
     ///    "rack_id",
-    ///    "switch_location"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "address": {
@@ -19389,12 +19392,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "switch_location": {
-    ///      "description": "The location of the switch within the rack this
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack this
     /// loopback address will be configured on.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -19421,9 +19424,9 @@ pub mod types {
         /// The rack containing the switch this loopback address will be
         /// configured on.
         pub rack_id: ::uuid::Uuid,
-        /// The location of the switch within the rack this loopback address
-        /// will be configured on.
-        pub switch_location: Name,
+        /// The slot of the switch within the rack this loopback address will be
+        /// configured on.
+        pub switch_slot: SwitchSlot,
     }
 
     impl LoopbackAddressCreate {
@@ -29450,7 +29453,7 @@ pub mod types {
     ///    "id",
     ///    "port_name",
     ///    "rack_id",
-    ///    "switch_location"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "id": {
@@ -29480,9 +29483,14 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "switch_location": {
-    ///      "description": "The switch location of this switch port.",
-    ///      "type": "string"
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack of this
+    /// switch port.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchSlot"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -29502,8 +29510,8 @@ pub mod types {
         pub port_settings_id: ::std::option::Option<::uuid::Uuid>,
         /// The rack this switch port belongs to.
         pub rack_id: ::uuid::Uuid,
-        /// The switch location of this switch port.
-        pub switch_location: ::std::string::String,
+        /// The slot of the switch within the rack of this switch port.
+        pub switch_slot: SwitchSlot,
     }
 
     impl SwitchPort {
@@ -39284,14 +39292,14 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct BfdSessionDisable {
             remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
-            switch: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BfdSessionDisable {
             fn default() -> Self {
                 Self {
                     remote: Err("no value supplied for remote".to_string()),
-                    switch: Err("no value supplied for switch".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -39307,14 +39315,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for remote: {e}"));
                 self
             }
-            pub fn switch<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch = value
+                self.switch_slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -39326,7 +39334,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     remote: value.remote?,
-                    switch: value.switch?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -39335,7 +39343,7 @@ pub mod types {
             fn from(value: super::BfdSessionDisable) -> Self {
                 Self {
                     remote: Ok(value.remote),
-                    switch: Ok(value.switch),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -39350,7 +39358,7 @@ pub mod types {
             mode: ::std::result::Result<super::BfdMode, ::std::string::String>,
             remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             required_rx: ::std::result::Result<u64, ::std::string::String>,
-            switch: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BfdSessionEnable {
@@ -39363,7 +39371,7 @@ pub mod types {
                     mode: Err("no value supplied for mode".to_string()),
                     remote: Err("no value supplied for remote".to_string()),
                     required_rx: Err("no value supplied for required_rx".to_string()),
-                    switch: Err("no value supplied for switch".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -39419,14 +39427,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for required_rx: {e}"));
                 self
             }
-            pub fn switch<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch = value
+                self.switch_slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -39442,7 +39450,7 @@ pub mod types {
                     mode: value.mode?,
                     remote: value.remote?,
                     required_rx: value.required_rx?,
-                    switch: value.switch?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -39455,7 +39463,7 @@ pub mod types {
                     mode: Ok(value.mode),
                     remote: Ok(value.remote),
                     required_rx: Ok(value.required_rx),
-                    switch: Ok(value.switch),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -39471,7 +39479,7 @@ pub mod types {
             peer: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             required_rx: ::std::result::Result<u64, ::std::string::String>,
             state: ::std::result::Result<super::BfdState, ::std::string::String>,
-            switch: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BfdStatus {
@@ -39485,7 +39493,7 @@ pub mod types {
                     peer: Err("no value supplied for peer".to_string()),
                     required_rx: Err("no value supplied for required_rx".to_string()),
                     state: Err("no value supplied for state".to_string()),
-                    switch: Err("no value supplied for switch".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -39551,14 +39559,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for state: {e}"));
                 self
             }
-            pub fn switch<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch = value
+                self.switch_slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -39575,7 +39583,7 @@ pub mod types {
                     peer: value.peer?,
                     required_rx: value.required_rx?,
                     state: value.state?,
-                    switch: value.switch?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -39589,7 +39597,7 @@ pub mod types {
                     peer: Ok(value.peer),
                     required_rx: Ok(value.required_rx),
                     state: Ok(value.state),
-                    switch: Ok(value.switch),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -51017,7 +51025,7 @@ pub mod types {
             address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for LoopbackAddress {
@@ -51029,7 +51037,7 @@ pub mod types {
                     ),
                     id: Err("no value supplied for id".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    switch_location: Err("no value supplied for switch_location".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -51075,14 +51083,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
                 self
             }
-            pub fn switch_location<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
-                });
+                self.switch_slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -51097,7 +51105,7 @@ pub mod types {
                     address_lot_block_id: value.address_lot_block_id?,
                     id: value.id?,
                     rack_id: value.rack_id?,
-                    switch_location: value.switch_location?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -51109,7 +51117,7 @@ pub mod types {
                     address_lot_block_id: Ok(value.address_lot_block_id),
                     id: Ok(value.id),
                     rack_id: Ok(value.rack_id),
-                    switch_location: Ok(value.switch_location),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -51121,7 +51129,7 @@ pub mod types {
             anycast: ::std::result::Result<bool, ::std::string::String>,
             mask: ::std::result::Result<u8, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            switch_location: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for LoopbackAddressCreate {
@@ -51132,7 +51140,7 @@ pub mod types {
                     anycast: Err("no value supplied for anycast".to_string()),
                     mask: Err("no value supplied for mask".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    switch_location: Err("no value supplied for switch_location".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -51188,14 +51196,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
                 self
             }
-            pub fn switch_location<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
-                });
+                self.switch_slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -51211,7 +51219,7 @@ pub mod types {
                     anycast: value.anycast?,
                     mask: value.mask?,
                     rack_id: value.rack_id?,
-                    switch_location: value.switch_location?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -51224,7 +51232,7 @@ pub mod types {
                     anycast: Ok(value.anycast),
                     mask: Ok(value.mask),
                     rack_id: Ok(value.rack_id),
-                    switch_location: Ok(value.switch_location),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -59854,7 +59862,7 @@ pub mod types {
             port_settings_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchPort {
@@ -59864,7 +59872,7 @@ pub mod types {
                     port_name: Err("no value supplied for port_name".to_string()),
                     port_settings_id: Ok(Default::default()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    switch_location: Err("no value supplied for switch_location".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -59910,14 +59918,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
                 self
             }
-            pub fn switch_location<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
-                });
+                self.switch_slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -59932,7 +59940,7 @@ pub mod types {
                     port_name: value.port_name?,
                     port_settings_id: value.port_settings_id?,
                     rack_id: value.rack_id?,
-                    switch_location: value.switch_location?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -59944,7 +59952,7 @@ pub mod types {
                     port_name: Ok(value.port_name),
                     port_settings_id: Ok(value.port_settings_id),
                     rack_id: Ok(value.rack_id),
-                    switch_location: Ok(value.switch_location),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -65656,7 +65664,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026030600.0.0
+/// Version: 2026030601.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65697,7 +65705,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026030600.0.0"
+        "2026030601.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -69396,14 +69404,14 @@ pub trait ClientSystemHardwareExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// - `body`
     /// ```ignore
     /// let response = client.networking_switch_port_apply_settings()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .body(body)
     ///    .send()
     ///    .await;
@@ -69419,13 +69427,13 @@ pub trait ClientSystemHardwareExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// ```ignore
     /// let response = client.networking_switch_port_clear_settings()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .send()
     ///    .await;
     /// ```
@@ -69439,13 +69447,13 @@ pub trait ClientSystemHardwareExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// ```ignore
     /// let response = client.networking_switch_port_status()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .send()
     ///    .await;
     /// ```
@@ -69976,13 +69984,13 @@ pub trait ClientSystemNetworkingExt {
     /// Fetch the LLDP neighbors seen on a switch port
     ///
     /// Sends a `GET` request to
-    /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
-    /// {port}/lldp/neighbors`
+    /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_slot}/{port}/
+    /// lldp/neighbors`
     ///
     /// Arguments:
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// - `port`: A name to use when selecting switch ports.
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
@@ -69991,7 +69999,7 @@ pub trait ClientSystemNetworkingExt {
     /// ```ignore
     /// let response = client.networking_switch_port_lldp_neighbors()
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .port(port)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -70010,13 +70018,13 @@ pub trait ClientSystemNetworkingExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// ```ignore
     /// let response = client.networking_switch_port_lldp_config_view()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .send()
     ///    .await;
     /// ```
@@ -70031,14 +70039,14 @@ pub trait ClientSystemNetworkingExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// - `body`
     /// ```ignore
     /// let response = client.networking_switch_port_lldp_config_update()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .body(body)
     ///    .send()
     ///    .await;
@@ -70378,13 +70386,13 @@ pub trait ClientSystemNetworkingExt {
     /// Delete loopback address
     ///
     /// Sends a `DELETE` request to
-    /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
+    /// `/v1/system/networking/loopback-address/{rack_id}/{switch_slot}/
     /// {address}/{subnet_mask}`
     ///
     /// Arguments:
     /// - `rack_id`: The rack to use when selecting the loopback address.
-    /// - `switch_location`: The switch location to use when selecting the
-    ///   loopback address.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting the loopback address.
     /// - `address`: The IP address and subnet mask to use when selecting the
     ///   loopback address.
     /// - `subnet_mask`: The IP address and subnet mask to use when selecting
@@ -70392,7 +70400,7 @@ pub trait ClientSystemNetworkingExt {
     /// ```ignore
     /// let response = client.networking_loopback_address_delete()
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .address(address)
     ///    .subnet_mask(subnet_mask)
     ///    .send()
@@ -90193,7 +90201,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortLldpNeighbors<'a> {
         client: &'a super::Client,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         port: Result<types::Name, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
@@ -90205,7 +90213,7 @@ pub mod builder {
             Self {
                 client: client,
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 port: Err("port was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -90223,13 +90231,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -90275,7 +90283,7 @@ pub mod builder {
         }
 
         /// Sends a `GET` request to
-        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_slot}/
         /// {port}/lldp/neighbors`
         pub async fn send(
             self,
@@ -90283,14 +90291,14 @@ pub mod builder {
             let Self {
                 client,
                 rack_id,
-                switch_location,
+                switch_slot,
                 port,
                 limit,
                 page_token,
                 sort_by,
             } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let port = port.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
@@ -90299,7 +90307,7 @@ pub mod builder {
                 "{}/v1/system/hardware/rack-switch-port/{}/{}/{}/lldp/neighbors",
                 client.baseurl,
                 encode_path(&rack_id.to_string()),
-                encode_path(&switch_location.to_string()),
+                encode_path(&switch_slot.to_string()),
                 encode_path(&port.to_string()),
             );
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -90343,7 +90351,7 @@ pub mod builder {
         }
 
         /// Streams `GET` requests to
-        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_slot}/
         /// {port}/lldp/neighbors`
         pub fn stream(
             self,
@@ -91892,7 +91900,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
     }
 
     impl<'a> NetworkingSwitchPortLldpConfigView<'a> {
@@ -91901,7 +91909,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
             }
         }
 
@@ -91925,13 +91933,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -91944,11 +91952,11 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/lldp/config",
                 client.baseurl,
@@ -91969,8 +91977,8 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -92003,7 +92011,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         body: Result<types::builder::LldpLinkConfig, String>,
     }
 
@@ -92013,7 +92021,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 body: Ok(::std::default::Default::default()),
             }
         }
@@ -92038,13 +92046,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92075,12 +92083,12 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
                 body,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| types::LldpLinkConfig::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
@@ -92105,8 +92113,8 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -92139,7 +92147,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         body: Result<types::builder::SwitchPortApplySettings, String>,
     }
 
@@ -92149,7 +92157,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 body: Ok(::std::default::Default::default()),
             }
         }
@@ -92174,13 +92182,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92215,12 +92223,12 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
                 body,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| {
                     types::SwitchPortApplySettings::try_from(v).map_err(|e| e.to_string())
@@ -92247,8 +92255,8 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -92281,7 +92289,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
     }
 
     impl<'a> NetworkingSwitchPortClearSettings<'a> {
@@ -92290,7 +92298,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
             }
         }
 
@@ -92314,13 +92322,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92331,11 +92339,11 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
                 client.baseurl,
@@ -92356,8 +92364,8 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -92389,7 +92397,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
     }
 
     impl<'a> NetworkingSwitchPortStatus<'a> {
@@ -92398,7 +92406,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
             }
         }
 
@@ -92422,13 +92430,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92441,11 +92449,11 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/status",
                 client.baseurl,
@@ -92466,8 +92474,8 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -97486,7 +97494,7 @@ pub mod builder {
     pub struct NetworkingLoopbackAddressDelete<'a> {
         client: &'a super::Client,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         address: Result<::std::net::IpAddr, String>,
         subnet_mask: Result<u8, String>,
     }
@@ -97496,7 +97504,7 @@ pub mod builder {
             Self {
                 client: client,
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 address: Err("address was not initialized".to_string()),
                 subnet_mask: Err("subnet_mask was not initialized".to_string()),
             }
@@ -97512,13 +97520,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -97543,25 +97551,25 @@ pub mod builder {
         }
 
         /// Sends a `DELETE` request to
-        /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
+        /// `/v1/system/networking/loopback-address/{rack_id}/{switch_slot}/
         /// {address}/{subnet_mask}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
                 rack_id,
-                switch_location,
+                switch_slot,
                 address,
                 subnet_mask,
             } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let address = address.map_err(Error::InvalidRequest)?;
             let subnet_mask = subnet_mask.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/loopback-address/{}/{}/{}/{}",
                 client.baseurl,
                 encode_path(&rack_id.to_string()),
-                encode_path(&switch_location.to_string()),
+                encode_path(&switch_slot.to_string()),
                 encode_path(&address.to_string()),
                 encode_path(&subnet_mask.to_string()),
             );

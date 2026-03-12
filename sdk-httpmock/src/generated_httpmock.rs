@@ -11750,7 +11750,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/hardware/rack-switch-port/.*/{}/.*/lldp/neighbors$",
                 value.to_string()
@@ -12802,8 +12802,8 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
-            Self(self.0.query_param("switch_location", value.to_string()))
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
+            Self(self.0.query_param("switch_slot", value.to_string()))
         }
     }
 
@@ -12872,8 +12872,8 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
-            Self(self.0.query_param("switch_location", value.to_string()))
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
+            Self(self.0.query_param("switch_slot", value.to_string()))
         }
 
         pub fn body(self, value: &types::LldpLinkConfig) -> Self {
@@ -12941,8 +12941,8 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
-            Self(self.0.query_param("switch_location", value.to_string()))
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
+            Self(self.0.query_param("switch_slot", value.to_string()))
         }
 
         pub fn body(self, value: &types::SwitchPortApplySettings) -> Self {
@@ -13010,8 +13010,8 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
-            Self(self.0.query_param("switch_location", value.to_string()))
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
+            Self(self.0.query_param("switch_slot", value.to_string()))
         }
     }
 
@@ -13075,8 +13075,8 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
-            Self(self.0.query_param("switch_location", value.to_string()))
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
+            Self(self.0.query_param("switch_slot", value.to_string()))
         }
     }
 
@@ -16589,7 +16589,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn switch_location(self, value: &types::Name) -> Self {
+        pub fn switch_slot(self, value: types::SwitchSlot) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/loopback-address/.*/{}/.*/.*$",
                 value.to_string()

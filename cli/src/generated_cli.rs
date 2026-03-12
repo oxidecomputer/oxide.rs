@@ -5128,11 +5128,20 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .about("Fetch the LLDP neighbors seen on a switch port")
     }
@@ -5431,11 +5440,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .about("Fetch the LLDP configuration for a switch port")
     }
@@ -5499,11 +5517,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("system-description")
@@ -5560,11 +5587,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -5600,11 +5636,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .about("Clear switch port settings")
     }
@@ -5626,11 +5671,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .about("Get switch port status")
     }
@@ -6562,11 +6616,17 @@ impl<T: CliConfig> Cli<T> {
                     .help("Address of the remote peer to disable a BFD session for."),
             )
             .arg(
-                ::clap::Arg::new("switch")
-                    .long("switch")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required_unless_present("json-body")
-                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+                    .help("The slot of the switch within the rack to disable this session on."),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6639,11 +6699,17 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                ::clap::Arg::new("switch")
-                    .long("switch")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required_unless_present("json-body")
-                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+                    .help("The slot of the switch within the rack to enable this session on."),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6994,12 +7060,18 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required_unless_present("json-body")
                     .help(
-                        "The location of the switch within the rack this loopback address will be \
+                        "The slot of the switch within the rack this loopback address will be \
                          configured on.",
                     ),
             )
@@ -7050,11 +7122,20 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("The switch location to use when selecting the loopback address."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting the \
+                         loopback address.",
+                    ),
             )
             .about("Delete loopback address")
     }
@@ -15590,8 +15671,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -16034,8 +16115,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -16090,8 +16171,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         if let Some(value) = matches.get_one::<::std::string::String>("system-description") {
@@ -16142,8 +16223,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -16182,8 +16263,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -16214,8 +16295,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -17374,8 +17455,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.remote(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch") {
-            request = request.body_map(|body| body.switch(value.clone()))
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17426,8 +17507,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.required_rx(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch") {
-            request = request.body_map(|body| body.switch(value.clone()))
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17911,8 +17992,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.rack_id(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.body_map(|body| body.switch_location(value.clone()))
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17955,8 +18036,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.subnet_mask(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
