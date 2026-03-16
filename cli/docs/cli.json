@@ -657,7 +657,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a new support bundle",
+          "about": "Create support bundle",
           "args": [
             {
               "long": "json-body",
@@ -680,7 +680,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete an existing support bundle",
+          "about": "Delete support bundle",
           "long_about": "May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.",
           "args": [
             {
@@ -764,7 +764,7 @@
         },
         {
           "name": "update",
-          "about": "Update a support bundle",
+          "about": "Update support bundle",
           "args": [
             {
               "long": "bundle-id",
@@ -818,7 +818,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create new system-wide x.509 certificate",
+          "about": "Create system-wide x.509 certificate",
           "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
@@ -2149,7 +2149,7 @@
       "subcommands": [
         {
           "name": "attach",
-          "about": "Attach an external subnet to an instance",
+          "about": "Attach external subnet to instance",
           "args": [
             {
               "long": "external-subnet",
@@ -2180,7 +2180,7 @@
         },
         {
           "name": "create",
-          "about": "Create an external subnet",
+          "about": "Create external subnet",
           "args": [
             {
               "long": "description"
@@ -2209,7 +2209,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete an external subnet",
+          "about": "Delete external subnet",
           "args": [
             {
               "long": "external-subnet",
@@ -2228,7 +2228,7 @@
         },
         {
           "name": "detach",
-          "about": "Detach an external subnet from an instance",
+          "about": "Detach external subnet from instance",
           "args": [
             {
               "long": "external-subnet",
@@ -2247,7 +2247,7 @@
         },
         {
           "name": "list",
-          "about": "List external subnets in a project",
+          "about": "List external subnets",
           "args": [
             {
               "long": "limit",
@@ -2274,7 +2274,7 @@
         },
         {
           "name": "update",
-          "about": "Update an external subnet",
+          "about": "Update external subnet",
           "args": [
             {
               "long": "description"
@@ -2307,7 +2307,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch an external subnet",
+          "about": "Fetch external subnet",
           "args": [
             {
               "long": "external-subnet",
@@ -2377,7 +2377,7 @@
         },
         {
           "name": "create",
-          "about": "Create a floating IP",
+          "about": "Create floating IP",
           "long_about": "A specific IP address can be reserved, or an IP can be auto-allocated from a specific pool or the silo's default pool.",
           "args": [
             {
@@ -5049,7 +5049,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "Lists resource quotas for all silos",
+              "about": "List resource quotas for all silos",
               "args": [
                 {
                   "long": "limit",
@@ -5595,7 +5595,7 @@
                     },
                     {
                       "name": "status",
-                      "about": "Retrieve the rack cluster membership status",
+                      "about": "Fetch rack cluster membership status",
                       "long_about": "Returns the status for the most recent change, or a specific version if one is specified.",
                       "args": [
                         {
@@ -5862,8 +5862,12 @@
                       "help": "A rack id to use when selecting switch ports."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting switch ports."
                     }
                   ]
                 },
@@ -5885,8 +5889,12 @@
                       "help": "A rack id to use when selecting switch ports."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting switch ports."
                     }
                   ]
                 },
@@ -5944,8 +5952,12 @@
                       "help": "A rack id to use when selecting switch ports."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting switch ports."
                     }
                   ]
                 }
@@ -6329,8 +6341,12 @@
                       "help": "Address of the remote peer to disable a BFD session for."
                     },
                     {
-                      "long": "switch",
-                      "help": "The switch to enable this session on. Must be `switch0` or `switch1`."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to disable this session on."
                     }
                   ]
                 },
@@ -6376,8 +6392,12 @@
                       "help": "The minimum interval, in microseconds, between received BFD Control packets that this system requires"
                     },
                     {
-                      "long": "switch",
-                      "help": "The switch to enable this session on. Must be `switch0` or `switch1`."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to enable this session on."
                     }
                   ]
                 },
@@ -6620,7 +6640,7 @@
                   "subcommands": [
                     {
                       "name": "create",
-                      "about": "Create new BGP configuration",
+                      "about": "Create BGP configuration",
                       "args": [
                         {
                           "long": "asn",
@@ -7844,7 +7864,7 @@
               "subcommands": [
                 {
                   "name": "neighbors",
-                  "about": "Fetch the LLDP neighbors seen on a switch port",
+                  "about": "Fetch LLDP neighbors for switch port",
                   "args": [
                     {
                       "long": "limit",
@@ -7870,14 +7890,18 @@
                       ]
                     },
                     {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting switch ports."
                     }
                   ]
                 },
                 {
                   "name": "update",
-                  "about": "Update the LLDP configuration for a switch port",
+                  "about": "Update LLDP configuration for switch port",
                   "args": [
                     {
                       "long": "chassis-id",
@@ -7929,8 +7953,12 @@
                       "help": "A rack id to use when selecting switch ports."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting switch ports."
                     },
                     {
                       "long": "system-description",
@@ -7944,7 +7972,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch the LLDP configuration for a switch port",
+                  "about": "Fetch LLDP configuration for switch port",
                   "args": [
                     {
                       "long": "port",
@@ -7960,8 +7988,12 @@
                       "help": "A rack id to use when selecting switch ports."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting switch ports."
                     }
                   ]
                 }
@@ -8019,8 +8051,12 @@
                       "help": "The rack containing the switch this loopback address will be configured on."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "The location of the switch within the rack this loopback address will be configured on."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack this loopback address will be configured on."
                     }
                   ]
                 },
@@ -8046,8 +8082,12 @@
                       "help": "The IP address and subnet mask to use when selecting the loopback address."
                     },
                     {
-                      "long": "switch-location",
-                      "help": "The switch location to use when selecting the loopback address."
+                      "long": "switch-slot",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "The slot of the switch within the rack to use when selecting the loopback address."
                     }
                   ]
                 },
@@ -8759,8 +8799,8 @@
           "subcommands": [
             {
               "name": "recovery-finish",
-              "about": "Instructs the system that a system recovery operation (\"mupdate\") was",
-              "long_about": "completed using the software in the specified release\n\nThe system recovery operation is used to bypass the control plane to deploy known-working software when the control plane itself is not functioning or otherwise unable to update itself.  When the control plane detects this, it stops making any changes to deployed software to avoid reverting the recovery itself.  This operation puts the control plane back in charge of determining what software should be deployed, instructing it that the specified software (which is also what's currently running) is what's supposed to be deployed.\n\nIf the provided version does not match what's currently running, the control plane will continue to avoid changing deployed software until this operation is invoked with the correct version.\n\nThis endpoint should only be called at the direction of Oxide support.",
+              "about": "Clear system recovery status",
+              "long_about": "Instructs the system that a system recovery operation (\"mupdate\") was completed using the software in the specified release.\n\nThe system recovery operation is used to bypass the control plane to deploy known-working software when the control plane itself is not functioning or otherwise unable to update itself.  When the control plane detects this, it stops making any changes to deployed software to avoid reverting the recovery itself.  This operation puts the control plane back in charge of determining what software should be deployed, instructing it that the specified software (which is also what's currently running) is what's supposed to be deployed.\n\nIf the provided version does not match what's currently running, the control plane will continue to avoid changing deployed software until this operation is invoked with the correct version.\n\nThis endpoint should only be called at the direction of Oxide support.",
               "args": [
                 {
                   "long": "json-body",

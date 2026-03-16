@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2025 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use std::{
     fs::{read_to_string, write, File},
@@ -67,6 +67,8 @@ impl<'a> MockOAuth<'a> {
                 silo_name: "crystal-palace".try_into().unwrap(),
                 fleet_viewer: false,
                 silo_admin: false,
+                time_created: "1985-10-26T01:20:00-07:00".parse().unwrap(),
+                time_modified: "2015-10-21T16:29:00-07:00".parse().unwrap(),
             });
         });
         Self {
@@ -469,6 +471,8 @@ fn test_cmd_auth_status() {
             silo_name: "funky-town".parse().unwrap(),
             fleet_viewer: false,
             silo_admin: false,
+            time_created: "1985-10-26T01:20:00-07:00".parse().unwrap(),
+            time_modified: "2015-10-21T16:29:00-07:00".parse().unwrap(),
         });
     });
     let bad = server.current_user_view(|when, then| {
@@ -535,6 +539,8 @@ fn test_cmd_auth_status_env() {
             silo_name: "funky-town".parse().unwrap(),
             fleet_viewer: false,
             silo_admin: false,
+            time_created: "1985-10-26T01:20:00-07:00".parse().unwrap(),
+            time_modified: "2015-10-21T16:29:00-07:00".parse().unwrap(),
         });
     });
 
@@ -639,6 +645,8 @@ fn test_cmd_auth_debug_logging() {
             silo_name: "funky-town".parse().unwrap(),
             fleet_viewer: false,
             silo_admin: false,
+            time_created: "1985-10-26T01:20:00-07:00".parse().unwrap(),
+            time_modified: "2015-10-21T16:29:00-07:00".parse().unwrap(),
         });
     });
 

@@ -11,7 +11,7 @@ use oxide::types::{
     BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed,
     MaxPathConfig, Name, NameOrId, SwitchPort, SwitchPortAddressView, SwitchPortConfig,
     SwitchPortGeometry2, SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig,
-    SwitchPortSettings,
+    SwitchPortSettings, SwitchSlot,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -34,14 +34,14 @@ fn test_port_config() {
                 port_name: "qsfp0".try_into().unwrap(),
                 port_settings_id: Some(switch0_qsfp0_settings_id),
                 rack_id,
-                switch_location: String::from("switch0"),
+                switch_slot: SwitchSlot::Switch0,
             },
             SwitchPort {
                 id: Uuid::new_v4(),
                 port_name: "qsfp0".try_into().unwrap(),
                 port_settings_id: Some(switch1_qsfp0_settings_id),
                 rack_id,
-                switch_location: String::from("switch1"),
+                switch_slot: SwitchSlot::Switch1,
             },
         ],
         next_page: None,
