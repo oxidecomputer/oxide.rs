@@ -688,7 +688,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new support bundle")
+            .about("Create support bundle")
     }
 
     pub fn cli_support_bundle_view() -> ::clap::Command {
@@ -733,7 +733,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a support bundle")
+            .about("Update support bundle")
     }
 
     pub fn cli_support_bundle_delete() -> ::clap::Command {
@@ -745,7 +745,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the support bundle"),
             )
-            .about("Delete an existing support bundle")
+            .about("Delete support bundle")
             .long_about(
                 "May also be used to cancel a support bundle which is currently being collected, \
                  or to remove metadata for a support bundle that has failed.",
@@ -753,23 +753,23 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_download() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the contents of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download support bundle contents")
     }
 
     pub fn cli_support_bundle_head() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download support bundle metadata")
     }
 
     pub fn cli_support_bundle_download_file() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download a file within a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download file from support bundle")
     }
 
     pub fn cli_support_bundle_head_file() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a file within the support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download metadata of file in support bundle")
     }
 
     pub fn cli_support_bundle_index() -> ::clap::Command {
-        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the index of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download support bundle index")
     }
 
     pub fn cli_login_saml() -> ::clap::Command {
@@ -786,7 +786,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::Name))
                     .required(true),
             )
-            .about("Authenticate a user via SAML")
+            .about("Authenticate user via SAML")
     }
 
     pub fn cli_affinity_group_list() -> ::clap::Command {
@@ -1741,7 +1741,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create new system-wide x.509 certificate")
+            .about("Create system-wide x.509 certificate")
             .long_about(
                 "This certificate is automatically used by the Oxide Control plane to serve \
                  external connections.",
@@ -2048,7 +2048,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List external subnets in a project")
+            .about("List external subnets")
     }
 
     pub fn cli_external_subnet_create() -> ::clap::Command {
@@ -2086,7 +2086,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an external subnet")
+            .about("Create external subnet")
     }
 
     pub fn cli_external_subnet_view() -> ::clap::Command {
@@ -2105,7 +2105,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an external subnet")
+            .about("Fetch external subnet")
     }
 
     pub fn cli_external_subnet_update() -> ::clap::Command {
@@ -2150,7 +2150,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an external subnet")
+            .about("Update external subnet")
     }
 
     pub fn cli_external_subnet_delete() -> ::clap::Command {
@@ -2169,7 +2169,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an external subnet")
+            .about("Delete external subnet")
     }
 
     pub fn cli_external_subnet_attach() -> ::clap::Command {
@@ -2209,7 +2209,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach an external subnet to an instance")
+            .about("Attach external subnet to instance")
     }
 
     pub fn cli_external_subnet_detach() -> ::clap::Command {
@@ -2228,7 +2228,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Detach an external subnet from an instance")
+            .about("Detach external subnet from instance")
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {
@@ -2298,7 +2298,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a floating IP")
+            .about("Create floating IP")
             .long_about(
                 "A specific IP address can be reserved, or an IP can be auto-allocated from a \
                  specific pool or the silo's default pool.",
@@ -4124,7 +4124,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Authenticate a user via username and password")
+            .about("Authenticate user via username and password")
     }
 
     pub fn cli_logout() -> ::clap::Command {
@@ -5128,13 +5128,22 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
-            .about("Fetch the LLDP neighbors seen on a switch port")
+            .about("Fetch LLDP neighbors for switch port")
     }
 
     pub fn cli_rack_list() -> ::clap::Command {
@@ -5186,7 +5195,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::RackMembershipVersion))
                     .required(false),
             )
-            .about("Retrieve the rack cluster membership status")
+            .about("Fetch rack cluster membership status")
             .long_about(
                 "Returns the status for the most recent change, or a specific version if one is \
                  specified.",
@@ -5431,13 +5440,22 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
-            .about("Fetch the LLDP configuration for a switch port")
+            .about("Fetch LLDP configuration for switch port")
     }
 
     pub fn cli_networking_switch_port_lldp_config_update() -> ::clap::Command {
@@ -5499,11 +5517,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("system-description")
@@ -5533,7 +5560,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the LLDP configuration for a switch port")
+            .about("Update LLDP configuration for switch port")
     }
 
     pub fn cli_networking_switch_port_apply_settings() -> ::clap::Command {
@@ -5560,11 +5587,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -5600,11 +5636,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .about("Clear switch port settings")
     }
@@ -5626,11 +5671,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("A switch location to use when selecting switch ports."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting switch \
+                         ports.",
+                    ),
             )
             .about("Get switch port status")
     }
@@ -6562,11 +6616,17 @@ impl<T: CliConfig> Cli<T> {
                     .help("Address of the remote peer to disable a BFD session for."),
             )
             .arg(
-                ::clap::Arg::new("switch")
-                    .long("switch")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required_unless_present("json-body")
-                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+                    .help("The slot of the switch within the rack to disable this session on."),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6639,11 +6699,17 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                ::clap::Arg::new("switch")
-                    .long("switch")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required_unless_present("json-body")
-                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+                    .help("The slot of the switch within the rack to enable this session on."),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -6749,7 +6815,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create new BGP configuration")
+            .about("Create BGP configuration")
     }
 
     pub fn cli_networking_bgp_config_delete() -> ::clap::Command {
@@ -6994,12 +7060,18 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required_unless_present("json-body")
                     .help(
-                        "The location of the switch within the rack this loopback address will be \
+                        "The slot of the switch within the rack this loopback address will be \
                          configured on.",
                     ),
             )
@@ -7050,11 +7122,20 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                ::clap::Arg::new("switch-location")
-                    .long("switch-location")
-                    .value_parser(::clap::value_parser!(types::Name))
+                ::clap::Arg::new("switch-slot")
+                    .long("switch-slot")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::SwitchSlot::Switch0.to_string(),
+                            types::SwitchSlot::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchSlot::try_from(s).unwrap(),
+                    ))
                     .required(true)
-                    .help("The switch location to use when selecting the loopback address."),
+                    .help(
+                        "The slot of the switch within the rack to use when selecting the \
+                         loopback address.",
+                    ),
             )
             .about("Delete loopback address")
     }
@@ -7257,7 +7338,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("Lists resource quotas for all silos")
+            .about("List resource quotas for all silos")
     }
 
     pub fn cli_silo_list() -> ::clap::Command {
@@ -7999,9 +8080,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Instructs the system that a system recovery operation (\"mupdate\") was")
+            .about("Clear system recovery status")
             .long_about(
-                "completed using the software in the specified release\n\nThe system recovery \
+                "Instructs the system that a system recovery operation (\"mupdate\") was \
+                 completed using the software in the specified release.\n\nThe system recovery \
                  operation is used to bypass the control plane to deploy known-working software \
                  when the control plane itself is not functioning or otherwise unable to update \
                  itself.  When the control plane detects this, it stops making any changes to \
@@ -15590,8 +15672,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -16034,8 +16116,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -16090,8 +16172,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         if let Some(value) = matches.get_one::<::std::string::String>("system-description") {
@@ -16142,8 +16224,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -16182,8 +16264,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -16214,8 +16296,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config
@@ -17374,8 +17456,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.remote(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch") {
-            request = request.body_map(|body| body.switch(value.clone()))
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17426,8 +17508,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.required_rx(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch") {
-            request = request.body_map(|body| body.switch(value.clone()))
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17911,8 +17993,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.rack_id(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.body_map(|body| body.switch_location(value.clone()))
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17955,8 +18037,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.subnet_mask(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
-            request = request.switch_location(value.clone());
+        if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
+            request = request.switch_slot(value.clone());
         }
 
         self.config

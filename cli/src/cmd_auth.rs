@@ -424,8 +424,7 @@ impl CmdAuthLogin {
             id,
             silo_id,
             silo_name,
-            fleet_viewer: _,
-            silo_admin: _,
+            ..
         } = &user;
 
         writeln!(io::stdout(), "Login successful")?;

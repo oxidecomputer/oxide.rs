@@ -260,11 +260,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -278,7 +278,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -287,12 +287,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -304,17 +304,17 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct AddressLot {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// Desired use of `AddressLot`
         pub kind: AddressLotKind,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -791,20 +791,20 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "failure_domain": {
     ///      "$ref": "#/components/schemas/FailureDomain"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -820,12 +820,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -837,18 +837,18 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct AffinityGroup {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub failure_domain: FailureDomain,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub policy: AffinityPolicy,
         pub project_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -1896,11 +1896,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -1915,7 +1915,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -1932,12 +1932,12 @@ pub mod types {
     ///      }
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -1949,19 +1949,19 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct AlertReceiver {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// Configuration specific to the kind of alert receiver that this is.
         pub kind: AlertReceiverKind,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The list of alert classes to which this receiver is subscribed.
         pub subscriptions: ::std::vec::Vec<AlertSubscription>,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -2440,20 +2440,20 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "failure_domain": {
     ///      "$ref": "#/components/schemas/FailureDomain"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -2469,12 +2469,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -2486,18 +2486,18 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct AntiAffinityGroup {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub failure_domain: FailureDomain,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub policy: AffinityPolicy,
         pub project_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -3610,7 +3610,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "remote",
-    ///    "switch"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "remote": {
@@ -3619,12 +3619,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
-    ///    "switch": {
-    ///      "description": "The switch to enable this session on. Must be
-    /// `switch0` or `switch1`.",
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack to disable
+    /// this session on.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -3638,9 +3638,8 @@ pub mod types {
     pub struct BfdSessionDisable {
         /// Address of the remote peer to disable a BFD session for.
         pub remote: ::std::net::IpAddr,
-        /// The switch to enable this session on. Must be `switch0` or
-        /// `switch1`.
-        pub switch: Name,
+        /// The slot of the switch within the rack to disable this session on.
+        pub switch_slot: SwitchSlot,
     }
 
     impl BfdSessionDisable {
@@ -3663,7 +3662,7 @@ pub mod types {
     ///    "mode",
     ///    "remote",
     ///    "required_rx",
-    ///    "switch"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "detection_threshold": {
@@ -3706,12 +3705,12 @@ pub mod types {
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
-    ///    "switch": {
-    ///      "description": "The switch to enable this session on. Must be
-    /// `switch0` or `switch1`.",
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack to enable
+    /// this session on.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -3738,9 +3737,8 @@ pub mod types {
         /// The minimum interval, in microseconds, between received BFD Control
         /// packets that this system requires
         pub required_rx: u64,
-        /// The switch to enable this session on. Must be `switch0` or
-        /// `switch1`.
-        pub switch: Name,
+        /// The slot of the switch within the rack to enable this session on.
+        pub switch_slot: SwitchSlot,
     }
 
     impl BfdSessionEnable {
@@ -3882,7 +3880,7 @@ pub mod types {
     ///    "peer",
     ///    "required_rx",
     ///    "state",
-    ///    "switch"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "detection_threshold": {
@@ -3912,8 +3910,8 @@ pub mod types {
     ///    "state": {
     ///      "$ref": "#/components/schemas/BfdState"
     ///    },
-    ///    "switch": {
-    ///      "$ref": "#/components/schemas/Name"
+    ///    "switch_slot": {
+    ///      "$ref": "#/components/schemas/SwitchSlot"
     ///    }
     ///  }
     /// }
@@ -3930,7 +3928,7 @@ pub mod types {
         pub peer: ::std::net::IpAddr,
         pub required_rx: u64,
         pub state: BfdState,
-        pub switch: Name,
+        pub switch_slot: SwitchSlot,
     }
 
     impl BfdStatus {
@@ -3958,17 +3956,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -3977,12 +3975,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -3994,15 +3992,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpAnnounceSet {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -4191,11 +4189,11 @@ pub mod types {
     ///      "minimum": 0.0
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -4210,7 +4208,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -4219,12 +4217,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -4246,17 +4244,17 @@ pub mod types {
     pub struct BgpConfig {
         /// The autonomous system number of this BGP configuration.
         pub asn: u32,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// Maximum number of paths to use when multiple "best paths" exist
         pub max_paths: MaxPathConfig,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
@@ -4437,7 +4435,7 @@ pub mod types {
     ///      "description": "Switch the route is exported from.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -4454,7 +4452,7 @@ pub mod types {
         /// The destination network prefix.
         pub prefix: IpNet,
         /// Switch the route is exported from.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl BgpExported {
@@ -4501,7 +4499,7 @@ pub mod types {
     ///      "description": "Switch the route is imported into.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -4520,7 +4518,7 @@ pub mod types {
         /// The destination network prefix.
         pub prefix: IpNet,
         /// Switch the route is imported into.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl BgpImported {
@@ -5100,7 +5098,7 @@ pub mod types {
     ///      "description": "Switch with the peer session.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -5125,7 +5123,7 @@ pub mod types {
         /// Time of last state change.
         pub state_duration_millis: u64,
         /// Switch with the peer session.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl BgpPeerStatus {
@@ -6811,17 +6809,17 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -6838,12 +6836,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -6857,17 +6855,17 @@ pub mod types {
     pub struct Certificate {
         /// PEM-formatted string containing public certificate chain
         pub cert: ::std::string::String,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The service using this certificate
         pub service: ServiceUsingCertificate,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -7255,7 +7253,9 @@ pub mod types {
     ///    "id",
     ///    "silo_admin",
     ///    "silo_id",
-    ///    "silo_name"
+    ///    "silo_name",
+    ///    "time_created",
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "display_name": {
@@ -7288,6 +7288,16 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this user was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this user was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
     ///    }
     ///  }
     /// }
@@ -7310,6 +7320,10 @@ pub mod types {
         pub silo_id: ::uuid::Uuid,
         /// Name of the silo to which this user belongs.
         pub silo_name: Name,
+        /// Timestamp when this user was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this user was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl CurrentUser {
@@ -8639,7 +8653,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/ByteCount"
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "device_path": {
@@ -8649,7 +8663,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/DiskType"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -8663,7 +8677,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -8695,12 +8709,12 @@ pub mod types {
     ///      "$ref": "#/components/schemas/DiskState"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -8713,16 +8727,16 @@ pub mod types {
     )]
     pub struct Disk {
         pub block_size: ByteCount,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub device_path: ::std::string::String,
         pub disk_type: DiskType,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// ID of image from which disk was created, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub image_id: ::std::option::Option<::uuid::Uuid>,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: ::uuid::Uuid,
         /// Whether or not this disk is read-only.
@@ -8732,9 +8746,9 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub snapshot_id: ::std::option::Option<::uuid::Uuid>,
         pub state: DiskState,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -9825,12 +9839,12 @@ pub mod types {
     ///      ],
     ///      "properties": {
     ///        "description": {
-    ///          "description": "human-readable free-form text about a
+    ///          "description": "Human-readable free-form text about a
     /// resource",
     ///          "type": "string"
     ///        },
     ///        "id": {
-    ///          "description": "unique, immutable, system-controlled identifier
+    ///          "description": "Unique, immutable, system-controlled identifier
     /// for each resource",
     ///          "type": "string",
     ///          "format": "uuid"
@@ -9862,7 +9876,7 @@ pub mod types {
     ///          ]
     ///        },
     ///        "name": {
-    ///          "description": "unique, mutable, user-controlled identifier for
+    ///          "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///          "allOf": [
     ///            {
@@ -9876,12 +9890,12 @@ pub mod types {
     ///          "format": "uuid"
     ///        },
     ///        "time_created": {
-    ///          "description": "timestamp when this resource was created",
+    ///          "description": "Timestamp when this resource was created",
     ///          "type": "string",
     ///          "format": "date-time"
     ///        },
     ///        "time_modified": {
-    ///          "description": "timestamp when this resource was last
+    ///          "description": "Timestamp when this resource was last
     /// modified",
     ///          "type": "string",
     ///          "format": "date-time"
@@ -9921,9 +9935,9 @@ pub mod types {
         /// detached from instances.
         #[serde(rename = "floating")]
         Floating {
-            /// human-readable free-form text about a resource
+            /// Human-readable free-form text about a resource
             description: ::std::string::String,
-            /// unique, immutable, system-controlled identifier for each
+            /// Unique, immutable, system-controlled identifier for each
             /// resource
             id: ::uuid::Uuid,
             /// The ID of the instance that this Floating IP is attached to, if
@@ -9934,13 +9948,13 @@ pub mod types {
             ip: ::std::net::IpAddr,
             /// The ID of the IP pool this resource belongs to.
             ip_pool_id: ::uuid::Uuid,
-            /// unique, mutable, user-controlled identifier for each resource
+            /// Unique, mutable, user-controlled identifier for each resource
             name: Name,
             /// The project this resource exists within.
             project_id: ::uuid::Uuid,
-            /// timestamp when this resource was created
+            /// Timestamp when this resource was created
             time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-            /// timestamp when this resource was last modified
+            /// Timestamp when this resource was last modified
             time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         },
     }
@@ -10099,11 +10113,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -10117,7 +10131,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -10149,12 +10163,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -10166,14 +10180,14 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ExternalSubnet {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The instance this subnet is attached to, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub instance_id: ::std::option::Option<::uuid::Uuid>,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The project this subnet belongs to
         pub project_id: ::uuid::Uuid,
@@ -10183,9 +10197,9 @@ pub mod types {
         pub subnet_pool_id: ::uuid::Uuid,
         /// The subnet pool member this subnet corresponds to
         pub subnet_pool_member_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -11431,11 +11445,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -11460,7 +11474,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -11474,12 +11488,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -11491,9 +11505,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct FloatingIp {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The ID of the instance that this Floating IP is attached to, if it
         /// is presently in use.
@@ -11503,13 +11517,13 @@ pub mod types {
         pub ip: ::std::net::IpAddr,
         /// The ID of the IP pool this resource belongs to.
         pub ip_pool_id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The project this resource exists within.
         pub project_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -11820,7 +11834,9 @@ pub mod types {
     ///  "required": [
     ///    "display_name",
     ///    "id",
-    ///    "silo_id"
+    ///    "silo_id",
+    ///    "time_created",
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "display_name": {
@@ -11835,6 +11851,16 @@ pub mod types {
     ///      "description": "Uuid of the silo to which this group belongs",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this group was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this group was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
     ///    }
     ///  }
     /// }
@@ -11849,6 +11875,10 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this group belongs
         pub silo_id: ::uuid::Uuid,
+        /// Timestamp when this group was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this group was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl Group {
@@ -13487,7 +13517,7 @@ pub mod types {
     /// only.\n\nCurrently, we only support scanning in ascending order.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "sort in increasing order of \"id\"",
+    ///      "description": "Sort in increasing order of \"id\"",
     ///      "type": "string",
     ///      "enum": [
     ///        "id_ascending"
@@ -13511,7 +13541,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum IdSortMode {
-        /// sort in increasing order of "id"
+        /// Sort in increasing order of "id"
         #[serde(rename = "id_ascending")]
         IdAscending,
     }
@@ -13577,17 +13607,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -13604,12 +13634,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -13621,17 +13651,17 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IdentityProvider {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Identity provider type
         pub provider_type: IdentityProviderType,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -13942,7 +13972,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "digest": {
@@ -13961,13 +13991,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -13998,12 +14028,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -14021,14 +14051,14 @@ pub mod types {
     pub struct Image {
         /// Size of blocks in bytes
         pub block_size: ByteCount,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Hash of the image contents, if applicable
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub digest: ::std::option::Option<Digest>,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The family of the operating system like Debian, Ubuntu, etc.
         pub os: ::std::string::String,
@@ -14037,9 +14067,9 @@ pub mod types {
         pub project_id: ::std::option::Option<::uuid::Uuid>,
         /// Total size in bytes
         pub size: ByteCount,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Version of the operating system
         pub version: ::std::string::String,
@@ -14382,8 +14412,8 @@ pub mod types {
     ///      ]
     ///    },
     ///    "boot_disk_id": {
-    ///      "description": "the ID of the disk used to boot this Instance, if a
-    /// specific one is assigned.",
+    ///      "description": "The ID of the disk used to boot this instance, if a
+    /// specific one is assigned",
     ///      "type": [
     ///        "string",
     ///        "null"
@@ -14407,21 +14437,21 @@ pub mod types {
     ///      ]
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "hostname": {
-    ///      "description": "RFC1035-compliant hostname for the Instance.",
+    ///      "description": "RFC1035-compliant hostname for the instance",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "memory": {
-    ///      "description": "memory allocated for this Instance",
+    ///      "description": "Memory allocated for this instance",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -14429,7 +14459,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -14438,7 +14468,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "ncpus": {
-    ///      "description": "number of CPUs allocated for this Instance",
+    ///      "description": "Number of CPUs allocated for this instance",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/InstanceCpuCount"
@@ -14446,7 +14476,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "project_id": {
-    ///      "description": "id for the project containing this Instance",
+    ///      "description": "ID for the project containing this instance",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
@@ -14454,7 +14484,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/InstanceState"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -14469,7 +14499,7 @@ pub mod types {
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -14512,30 +14542,30 @@ pub mod types {
         /// on its current policy or the default if it has no configured policy.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
-        /// the ID of the disk used to boot this Instance, if a specific one is
-        /// assigned.
+        /// The ID of the disk used to boot this instance, if a specific one is
+        /// assigned
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub boot_disk_id: ::std::option::Option<::uuid::Uuid>,
         /// The CPU platform for this instance. If this is `null`, the instance
         /// requires no particular CPU platform.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// RFC1035-compliant hostname for the Instance.
+        /// RFC1035-compliant hostname for the instance
         pub hostname: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// memory allocated for this Instance
+        /// Memory allocated for this instance
         pub memory: ByteCount,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// number of CPUs allocated for this Instance
+        /// Number of CPUs allocated for this instance
         pub ncpus: InstanceCpuCount,
-        /// id for the project containing this Instance
+        /// ID for the project containing this instance
         pub project_id: ::uuid::Uuid,
         pub run_state: InstanceState,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The timestamp of the most recent time this instance was
         /// automatically restarted by the control plane.
@@ -14545,7 +14575,7 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub time_last_auto_restarted:
             ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         pub time_run_state_updated: ::chrono::DateTime<::chrono::offset::Utc>,
     }
@@ -15378,11 +15408,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -15409,7 +15439,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -15428,12 +15458,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -15450,9 +15480,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceNetworkInterface {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The Instance to which the interface belongs.
         pub instance_id: ::uuid::Uuid,
@@ -15460,16 +15490,16 @@ pub mod types {
         pub ip_stack: PrivateIpStack,
         /// The MAC address assigned to this interface.
         pub mac: MacAddr,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// True if this interface is the primary for the instance to which it's
         /// attached.
         pub primary: bool,
         /// The subnet to which the interface belongs.
         pub subnet_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the interface belongs.
         pub vpc_id: ::uuid::Uuid,
@@ -16443,17 +16473,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -16462,12 +16492,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -16484,15 +16514,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InternetGateway {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the gateway belongs.
         pub vpc_id: ::uuid::Uuid,
@@ -16565,11 +16595,11 @@ pub mod types {
     ///      "format": "ip"
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -16580,7 +16610,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -16589,12 +16619,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -16608,17 +16638,17 @@ pub mod types {
     pub struct InternetGatewayIpAddress {
         /// The associated IP address
         pub address: ::std::net::IpAddr,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The associated internet gateway
         pub internet_gateway_id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -16738,11 +16768,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -16758,7 +16788,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -16767,12 +16797,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -16784,19 +16814,19 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InternetGatewayIpPool {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The associated internet gateway.
         pub internet_gateway_id: ::uuid::Uuid,
         /// The associated IP pool.
         pub ip_pool_id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -17064,11 +17094,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -17082,7 +17112,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -17099,12 +17129,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -17116,19 +17146,19 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPool {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The IP version for the pool.
         pub ip_version: IpVersion,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Type of IP pool (unicast or multicast).
         pub pool_type: IpPoolType,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -19250,7 +19280,7 @@ pub mod types {
     ///    "address_lot_block_id",
     ///    "id",
     ///    "rack_id",
-    ///    "switch_location"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "address": {
@@ -19277,10 +19307,14 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "switch_location": {
-    ///      "description": "Switch location where this loopback address is
-    /// assigned.",
-    ///      "type": "string"
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack where this
+    /// loopback address is assigned.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchSlot"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -19298,8 +19332,9 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// The id of the rack where this loopback address is assigned.
         pub rack_id: ::uuid::Uuid,
-        /// Switch location where this loopback address is assigned.
-        pub switch_location: ::std::string::String,
+        /// The slot of the switch within the rack where this loopback address
+        /// is assigned.
+        pub switch_slot: SwitchSlot,
     }
 
     impl LoopbackAddress {
@@ -19323,7 +19358,7 @@ pub mod types {
     ///    "anycast",
     ///    "mask",
     ///    "rack_id",
-    ///    "switch_location"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "address": {
@@ -19357,12 +19392,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "switch_location": {
-    ///      "description": "The location of the switch within the rack this
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack this
     /// loopback address will be configured on.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -19389,9 +19424,9 @@ pub mod types {
         /// The rack containing the switch this loopback address will be
         /// configured on.
         pub rack_id: ::uuid::Uuid,
-        /// The location of the switch within the rack this loopback address
-        /// will be configured on.
-        pub switch_location: Name,
+        /// The slot of the switch within the rack this loopback address will be
+        /// configured on.
+        pub switch_slot: SwitchSlot,
     }
 
     impl LoopbackAddressCreate {
@@ -19922,11 +19957,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -19952,7 +19987,7 @@ pub mod types {
     ///      "minimum": 0.0
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -19977,12 +20012,12 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -19994,9 +20029,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct MulticastGroup {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The ID of the IP pool this resource belongs to.
         pub ip_pool_id: ::uuid::Uuid,
@@ -20006,7 +20041,7 @@ pub mod types {
         /// networks. None means no VLAN tagging on egress.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub mvlan: ::std::option::Option<u16>,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Union of all member source IP addresses (computed, read-only).
         ///
@@ -20017,9 +20052,9 @@ pub mod types {
         pub source_ips: ::std::vec::Vec<::std::net::IpAddr>,
         /// Current state of the multicast group.
         pub state: ::std::string::String,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -20195,11 +20230,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -20223,7 +20258,7 @@ pub mod types {
     ///      "format": "ip"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -20248,12 +20283,12 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -20265,9 +20300,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct MulticastGroupMember {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The ID of the instance that is a member of this group.
         pub instance_id: ::uuid::Uuid,
@@ -20275,7 +20310,7 @@ pub mod types {
         pub multicast_group_id: ::uuid::Uuid,
         /// The multicast IP address of the group this member belongs to.
         pub multicast_ip: ::std::net::IpAddr,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Source IP addresses for this member's multicast subscription.
         ///
@@ -20286,9 +20321,9 @@ pub mod types {
         pub source_ips: ::std::vec::Vec<::std::net::IpAddr>,
         /// Current state of the multicast group membership.
         pub state: ::std::string::String,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -20608,21 +20643,21 @@ pub mod types {
     /// id",
     ///  "oneOf": [
     ///    {
-    ///      "description": "sort in increasing order of \"name\"",
+    ///      "description": "Sort in increasing order of \"name\"",
     ///      "type": "string",
     ///      "enum": [
     ///        "name_ascending"
     ///      ]
     ///    },
     ///    {
-    ///      "description": "sort in decreasing order of \"name\"",
+    ///      "description": "Sort in decreasing order of \"name\"",
     ///      "type": "string",
     ///      "enum": [
     ///        "name_descending"
     ///      ]
     ///    },
     ///    {
-    ///      "description": "sort in increasing order of \"id\"",
+    ///      "description": "Sort in increasing order of \"id\"",
     ///      "type": "string",
     ///      "enum": [
     ///        "id_ascending"
@@ -20646,13 +20681,13 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum NameOrIdSortMode {
-        /// sort in increasing order of "name"
+        /// Sort in increasing order of "name"
         #[serde(rename = "name_ascending")]
         NameAscending,
-        /// sort in decreasing order of "name"
+        /// Sort in decreasing order of "name"
         #[serde(rename = "name_descending")]
         NameDescending,
-        /// sort in increasing order of "id"
+        /// Sort in increasing order of "id"
         #[serde(rename = "id_ascending")]
         IdAscending,
     }
@@ -20716,7 +20751,7 @@ pub mod types {
     /// only\n\nCurrently, we only support scanning in ascending order.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "sort in increasing order of \"name\"",
+    ///      "description": "Sort in increasing order of \"name\"",
     ///      "type": "string",
     ///      "enum": [
     ///        "name_ascending"
@@ -20740,7 +20775,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum NameSortMode {
-        /// sort in increasing order of "name"
+        /// Sort in increasing order of "name"
         #[serde(rename = "name_ascending")]
         NameAscending,
     }
@@ -21295,7 +21330,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/PhysicalDiskKind"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -21332,12 +21367,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -21353,7 +21388,7 @@ pub mod types {
     )]
     pub struct PhysicalDisk {
         pub form_factor: PhysicalDiskKind,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         pub model: ::std::string::String,
         /// The operator-defined policy for a physical disk.
@@ -21364,9 +21399,9 @@ pub mod types {
         pub sled_id: ::std::option::Option<::uuid::Uuid>,
         /// The current state Nexus believes the disk to be in.
         pub state: PhysicalDiskState,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         pub vendor: ::std::string::String,
     }
@@ -22664,17 +22699,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -22687,12 +22722,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -22704,16 +22739,16 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Probe {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub sled: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -23037,17 +23072,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -23056,12 +23091,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -23073,15 +23108,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Project {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -23527,18 +23562,18 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -23550,11 +23585,11 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Rack {
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -24333,7 +24368,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "destination": {
@@ -24346,7 +24381,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -24361,7 +24396,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -24379,12 +24414,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -24402,21 +24437,21 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RouterRoute {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Selects which traffic this routing rule will apply to
         pub destination: RouteDestination,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// Describes the kind of router. Set at creation. `read-only`
         pub kind: RouterRouteKind,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The location that matched packets should be forwarded to
         pub target: RouteTarget,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The ID of the VPC Router to which the route belongs
         pub vpc_router_id: ::uuid::Uuid,
@@ -24777,7 +24812,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "group_attribute_name": {
@@ -24790,7 +24825,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -24800,7 +24835,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -24831,12 +24866,12 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -24850,17 +24885,17 @@ pub mod types {
     pub struct SamlIdentityProvider {
         /// Service provider endpoint where the response will be sent
         pub acs_url: ::std::string::String,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// If set, attributes with this name will be considered to denote a
         /// user's group membership, where the values will be the group names.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub group_attribute_name: ::std::option::Option<::std::string::String>,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// IdP's entity id
         pub idp_entity_id: ::std::string::String,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Optional request signing public certificate (base64 encoded der
         /// file)
@@ -24872,9 +24907,9 @@ pub mod types {
         pub sp_client_id: ::std::string::String,
         /// Customer's technical contact for saml configuration
         pub technical_contact_email: ::std::string::String,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -25406,7 +25441,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "discoverable": {
@@ -25414,7 +25449,7 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -25441,7 +25476,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -25450,12 +25485,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -25471,12 +25506,12 @@ pub mod types {
         /// granted the silo admin role.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub admin_group_name: ::std::option::Option<::std::string::String>,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// A silo where discoverable is false can be retrieved only by its id -
         /// it will not be part of the "list all silos" output.
         pub discoverable: bool,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// How users and groups are managed in this Silo
         pub identity_mode: SiloIdentityMode,
@@ -25485,11 +25520,11 @@ pub mod types {
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
         pub mapped_fleet_roles: ::std::collections::HashMap<::std::string::String, Vec<FleetRole>>,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -25848,11 +25883,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -25874,7 +25909,7 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -25891,12 +25926,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -25908,9 +25943,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SiloIpPool {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The IP version for the pool.
         pub ip_version: IpVersion,
@@ -25922,13 +25957,13 @@ pub mod types {
         /// type (unicast or multicast) and IP version (IPv4 or IPv6), allowing
         /// up to 4 default pools total.
         pub is_default: bool,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Type of IP pool (unicast or multicast).
         pub pool_type: IpPoolType,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -26502,11 +26537,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -26527,7 +26562,7 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -26536,12 +26571,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -26553,9 +26588,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SiloSubnetPool {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The IP version for the pool.
         pub ip_version: IpVersion,
@@ -26565,11 +26600,11 @@ pub mod types {
         /// A silo can have at most one default pool per IP version (IPv4 or
         /// IPv6), allowing up to 2 default pools total.
         pub is_default: bool,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -26769,7 +26804,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/Baseboard"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -26796,12 +26831,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -26829,7 +26864,7 @@ pub mod types {
     )]
     pub struct Sled {
         pub baseboard: Baseboard,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The operator-defined policy of a sled.
         pub policy: SledPolicy,
@@ -26837,9 +26872,9 @@ pub mod types {
         pub rack_id: ::uuid::Uuid,
         /// The current state of the sled.
         pub state: SledState,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The number of hardware threads which can execute on this sled
         pub usable_hardware_threads: u32,
@@ -26880,7 +26915,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -26913,12 +26948,12 @@ pub mod types {
     ///      "$ref": "#/components/schemas/InstanceState"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -26931,7 +26966,7 @@ pub mod types {
     )]
     pub struct SledInstance {
         pub active_sled_id: ::uuid::Uuid,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         pub memory: i64,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -26941,9 +26976,9 @@ pub mod types {
         pub project_name: Name,
         pub silo_name: Name,
         pub state: InstanceState,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -27435,7 +27470,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "disk_id": {
@@ -27443,13 +27478,13 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -27468,12 +27503,12 @@ pub mod types {
     ///      "$ref": "#/components/schemas/SnapshotState"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -27485,19 +27520,19 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Snapshot {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub disk_id: ::uuid::Uuid,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: ::uuid::Uuid,
         pub size: ByteCount,
         pub state: SnapshotState,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -27711,17 +27746,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -27740,12 +27775,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -27757,19 +27792,19 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SshKey {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
         pub public_key: ::std::string::String,
         /// The user to whom this key belongs
         pub silo_user_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -27890,11 +27925,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -27908,7 +27943,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -27917,12 +27952,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -27934,17 +27969,17 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SubnetPool {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The IP version for this pool
         pub ip_version: IpVersion,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -28936,7 +28971,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/Baseboard"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -28948,12 +28983,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -28966,13 +29001,13 @@ pub mod types {
     )]
     pub struct Switch {
         pub baseboard: Baseboard,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The rack to which this Switch is currently attached
         pub rack_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -29006,7 +29041,7 @@ pub mod types {
     ///      "description": "Switch this message history is associated with.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///          "$ref": "#/components/schemas/SwitchSlot"
     ///        }
     ///      ]
     ///    }
@@ -29021,7 +29056,7 @@ pub mod types {
         /// Message history indexed by peer address.
         pub history: ::std::collections::HashMap<::std::string::String, BgpMessageHistory>,
         /// Switch this message history is associated with.
-        pub switch: SwitchLocation,
+        pub switch: SwitchSlot,
     }
 
     impl SwitchBgpHistory {
@@ -29405,99 +29440,6 @@ pub mod types {
         }
     }
 
-    /// Identifies switch physical location
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Identifies switch physical location",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Switch in upper slot",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "switch0"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Switch in lower slot",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "switch1"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum SwitchLocation {
-        /// Switch in upper slot
-        #[serde(rename = "switch0")]
-        Switch0,
-        /// Switch in lower slot
-        #[serde(rename = "switch1")]
-        Switch1,
-    }
-
-    impl ::std::fmt::Display for SwitchLocation {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Switch0 => f.write_str("switch0"),
-                Self::Switch1 => f.write_str("switch1"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for SwitchLocation {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "switch0" => Ok(Self::Switch0),
-                "switch1" => Ok(Self::Switch1),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for SwitchLocation {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for SwitchLocation {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for SwitchLocation {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     /// A switch port represents a physical external port on a rack switch.
     ///
     /// <details><summary>JSON schema</summary>
@@ -29511,7 +29453,7 @@ pub mod types {
     ///    "id",
     ///    "port_name",
     ///    "rack_id",
-    ///    "switch_location"
+    ///    "switch_slot"
     ///  ],
     ///  "properties": {
     ///    "id": {
@@ -29541,9 +29483,14 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "switch_location": {
-    ///      "description": "The switch location of this switch port.",
-    ///      "type": "string"
+    ///    "switch_slot": {
+    ///      "description": "The slot of the switch within the rack of this
+    /// switch port.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchSlot"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -29563,8 +29510,8 @@ pub mod types {
         pub port_settings_id: ::std::option::Option<::uuid::Uuid>,
         /// The rack this switch port belongs to.
         pub rack_id: ::uuid::Uuid,
-        /// The switch location of this switch port.
-        pub switch_location: ::std::string::String,
+        /// The slot of the switch within the rack of this switch port.
+        pub switch_slot: SwitchSlot,
     }
 
     impl SwitchPort {
@@ -30336,7 +30283,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "groups": {
@@ -30348,7 +30295,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -30368,7 +30315,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -30392,12 +30339,12 @@ pub mod types {
     ///      }
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -30420,26 +30367,26 @@ pub mod types {
         pub addresses: ::std::vec::Vec<SwitchPortAddressView>,
         /// BGP peer settings.
         pub bgp_peers: ::std::vec::Vec<BgpPeer>,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Switch port settings included from other switch port settings
         /// groups.
         pub groups: ::std::vec::Vec<SwitchPortSettingsGroups>,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// Layer 3 interface settings.
         pub interfaces: ::std::vec::Vec<SwitchInterfaceConfig>,
         /// Layer 2 link settings.
         pub links: ::std::vec::Vec<SwitchPortLinkConfig>,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Layer 1 physical port settings.
         pub port: SwitchPortConfig,
         /// IP route settings.
         pub routes: ::std::vec::Vec<SwitchPortRouteConfig>,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Vlan interface settings.
         pub vlan_interfaces: ::std::vec::Vec<SwitchVlanInterfaceConfig>,
@@ -30632,17 +30579,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -30651,12 +30598,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -30668,15 +30615,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SwitchPortSettingsIdentity {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -30779,6 +30726,99 @@ pub mod types {
     impl SwitchResultsPage {
         pub fn builder() -> builder::SwitchResultsPage {
             Default::default()
+        }
+    }
+
+    /// Identifies switch physical location
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Identifies switch physical location",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Switch in upper slot",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "switch0"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Switch in lower slot",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "switch1"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum SwitchSlot {
+        /// Switch in upper slot
+        #[serde(rename = "switch0")]
+        Switch0,
+        /// Switch in lower slot
+        #[serde(rename = "switch1")]
+        Switch1,
+    }
+
+    impl ::std::fmt::Display for SwitchSlot {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Switch0 => f.write_str("switch0"),
+                Self::Switch1 => f.write_str("switch1"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for SwitchSlot {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "switch0" => Ok(Self::Switch0),
+                "switch1" => Ok(Self::Switch1),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SwitchSlot {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SwitchSlot {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SwitchSlot {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -31179,7 +31219,7 @@ pub mod types {
     /// and ID",
     ///  "oneOf": [
     ///    {
-    ///      "description": "sort in increasing order of timestamp and ID, i.e.,
+    ///      "description": "Sort in increasing order of timestamp and ID, i.e.,
     /// earliest first",
     ///      "type": "string",
     ///      "enum": [
@@ -31187,7 +31227,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    {
-    ///      "description": "sort in increasing order of timestamp and ID, i.e.,
+    ///      "description": "Sort in increasing order of timestamp and ID, i.e.,
     /// most recent first",
     ///      "type": "string",
     ///      "enum": [
@@ -31212,10 +31252,10 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum TimeAndIdSortMode {
-        /// sort in increasing order of timestamp and ID, i.e., earliest first
+        /// Sort in increasing order of timestamp and ID, i.e., earliest first
         #[serde(rename = "time_and_id_ascending")]
         TimeAndIdAscending,
-        /// sort in increasing order of timestamp and ID, i.e., most recent
+        /// Sort in increasing order of timestamp and ID, i.e., most recent
         /// first
         #[serde(rename = "time_and_id_descending")]
         TimeAndIdDescending,
@@ -32618,7 +32658,9 @@ pub mod types {
     ///  "required": [
     ///    "display_name",
     ///    "id",
-    ///    "silo_id"
+    ///    "silo_id",
+    ///    "time_created",
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "display_name": {
@@ -32633,6 +32675,16 @@ pub mod types {
     ///      "description": "Uuid of the silo to which this user belongs",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this user was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this user was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
     ///    }
     ///  }
     /// }
@@ -32647,6 +32699,10 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this user belongs
         pub silo_id: ::uuid::Uuid,
+        /// Timestamp when this user was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this user was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl User {
@@ -32677,17 +32733,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -32696,12 +32752,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -32713,15 +32769,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct UserBuiltin {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -33675,7 +33731,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "dns_name": {
@@ -33687,7 +33743,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -33702,7 +33758,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -33722,12 +33778,12 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -33739,23 +33795,23 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Vpc {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// The name used for the VPC in DNS.
         pub dns_name: Name,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The unique local IPv6 address range for subnets in this VPC
         pub ipv6_prefix: Ipv6Net,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// ID for the project containing this VPC
         pub project_id: ::uuid::Uuid,
         /// ID for the system router where subnet default routes are registered
         pub system_router_id: ::uuid::Uuid,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -33915,7 +33971,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "direction": {
@@ -33936,13 +33992,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -33973,12 +34029,12 @@ pub mod types {
     ///      }
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -33997,15 +34053,15 @@ pub mod types {
     pub struct VpcFirewallRule {
         /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
         /// Reductions on the scope of the rule
         pub filters: VpcFirewallRuleFilter,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The relative priority of this rule
         pub priority: u16,
@@ -34013,9 +34069,9 @@ pub mod types {
         pub status: VpcFirewallRuleStatus,
         /// Determine the set of instances that the rule applies to
         pub targets: ::std::vec::Vec<VpcFirewallRuleTarget>,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which this rule belongs
         pub vpc_id: ::uuid::Uuid,
@@ -35007,11 +35063,11 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -35020,7 +35076,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/VpcRouterKind"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -35029,12 +35085,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -35051,16 +35107,16 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcRouter {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         pub kind: VpcRouterKind,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the router belongs.
         pub vpc_id: ::uuid::Uuid,
@@ -35326,11 +35382,11 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -35352,7 +35408,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -35361,12 +35417,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
@@ -35386,19 +35442,19 @@ pub mod types {
         /// ID for an attached custom router.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub custom_router_id: ::std::option::Option<::uuid::Uuid>,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The IPv4 subnet CIDR block.
         pub ipv4_block: Ipv4Net,
         /// The IPv6 subnet CIDR block.
         pub ipv6_block: Ipv6Net,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the subnet belongs.
         pub vpc_id: ::uuid::Uuid,
@@ -36063,7 +36119,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "endpoint": {
@@ -36073,13 +36129,13 @@ pub mod types {
     ///      "format": "uri"
     ///    },
     ///    "id": {
-    ///      "description": "unique, immutable, system-controlled identifier for
+    ///      "description": "Unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "unique, mutable, user-controlled identifier for
+    ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
     ///      "allOf": [
     ///        {
@@ -36104,12 +36160,12 @@ pub mod types {
     ///      }
     ///    },
     ///    "time_created": {
-    ///      "description": "timestamp when this resource was created",
+    ///      "description": "Timestamp when this resource was created",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "time_modified": {
-    ///      "description": "timestamp when this resource was last modified",
+    ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -36121,22 +36177,22 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct WebhookReceiver {
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// The URL that webhook notification requests are sent to.
         pub endpoint: ::std::string::String,
-        /// unique, immutable, system-controlled identifier for each resource
+        /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
-        /// unique, mutable, user-controlled identifier for each resource
+        /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// A list containing the IDs of the secret keys used to sign payloads
         /// sent to this receiver.
         pub secrets: ::std::vec::Vec<WebhookSecret>,
         /// The list of alert classes to which this receiver is subscribed.
         pub subscriptions: ::std::vec::Vec<AlertSubscription>,
-        /// timestamp when this resource was created
+        /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
+        /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
@@ -39236,14 +39292,14 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct BfdSessionDisable {
             remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
-            switch: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BfdSessionDisable {
             fn default() -> Self {
                 Self {
                     remote: Err("no value supplied for remote".to_string()),
-                    switch: Err("no value supplied for switch".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -39259,14 +39315,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for remote: {e}"));
                 self
             }
-            pub fn switch<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch = value
+                self.switch_slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -39278,7 +39334,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     remote: value.remote?,
-                    switch: value.switch?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -39287,7 +39343,7 @@ pub mod types {
             fn from(value: super::BfdSessionDisable) -> Self {
                 Self {
                     remote: Ok(value.remote),
-                    switch: Ok(value.switch),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -39302,7 +39358,7 @@ pub mod types {
             mode: ::std::result::Result<super::BfdMode, ::std::string::String>,
             remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             required_rx: ::std::result::Result<u64, ::std::string::String>,
-            switch: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BfdSessionEnable {
@@ -39315,7 +39371,7 @@ pub mod types {
                     mode: Err("no value supplied for mode".to_string()),
                     remote: Err("no value supplied for remote".to_string()),
                     required_rx: Err("no value supplied for required_rx".to_string()),
-                    switch: Err("no value supplied for switch".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -39371,14 +39427,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for required_rx: {e}"));
                 self
             }
-            pub fn switch<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch = value
+                self.switch_slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -39394,7 +39450,7 @@ pub mod types {
                     mode: value.mode?,
                     remote: value.remote?,
                     required_rx: value.required_rx?,
-                    switch: value.switch?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -39407,7 +39463,7 @@ pub mod types {
                     mode: Ok(value.mode),
                     remote: Ok(value.remote),
                     required_rx: Ok(value.required_rx),
-                    switch: Ok(value.switch),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -39423,7 +39479,7 @@ pub mod types {
             peer: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             required_rx: ::std::result::Result<u64, ::std::string::String>,
             state: ::std::result::Result<super::BfdState, ::std::string::String>,
-            switch: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BfdStatus {
@@ -39437,7 +39493,7 @@ pub mod types {
                     peer: Err("no value supplied for peer".to_string()),
                     required_rx: Err("no value supplied for required_rx".to_string()),
                     state: Err("no value supplied for state".to_string()),
-                    switch: Err("no value supplied for switch".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -39503,14 +39559,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for state: {e}"));
                 self
             }
-            pub fn switch<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch = value
+                self.switch_slot = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for switch: {e}"));
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -39527,7 +39583,7 @@ pub mod types {
                     peer: value.peer?,
                     required_rx: value.required_rx?,
                     state: value.state?,
-                    switch: value.switch?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -39541,7 +39597,7 @@ pub mod types {
                     peer: Ok(value.peer),
                     required_rx: Ok(value.required_rx),
                     state: Ok(value.state),
-                    switch: Ok(value.switch),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -40198,7 +40254,7 @@ pub mod types {
         pub struct BgpExported {
             peer_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpExported {
@@ -40234,7 +40290,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -40272,7 +40328,7 @@ pub mod types {
             id: ::std::result::Result<u32, ::std::string::String>,
             nexthop: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpImported {
@@ -40319,7 +40375,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -40725,7 +40781,7 @@ pub mod types {
             remote_asn: ::std::result::Result<u32, ::std::string::String>,
             state: ::std::result::Result<super::BgpPeerState, ::std::string::String>,
             state_duration_millis: ::std::result::Result<u64, ::std::string::String>,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpPeerStatus {
@@ -40807,7 +40863,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -42137,6 +42193,14 @@ pub mod types {
             silo_admin: ::std::result::Result<bool, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for CurrentUser {
@@ -42148,6 +42212,8 @@ pub mod types {
                     silo_admin: Err("no value supplied for silo_admin".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
                     silo_name: Err("no value supplied for silo_name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
@@ -42213,6 +42279,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for silo_name: {e}"));
                 self
             }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<CurrentUser> for super::CurrentUser {
@@ -42227,6 +42313,8 @@ pub mod types {
                     silo_admin: value.silo_admin?,
                     silo_id: value.silo_id?,
                     silo_name: value.silo_name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -42240,6 +42328,8 @@ pub mod types {
                     silo_admin: Ok(value.silo_admin),
                     silo_id: Ok(value.silo_id),
                     silo_name: Ok(value.silo_name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -44656,6 +44746,14 @@ pub mod types {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Group {
@@ -44664,6 +44762,8 @@ pub mod types {
                     display_name: Err("no value supplied for display_name".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
@@ -44699,6 +44799,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
                 self
             }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<Group> for super::Group {
@@ -44710,6 +44830,8 @@ pub mod types {
                     display_name: value.display_name?,
                     id: value.id?,
                     silo_id: value.silo_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -44720,6 +44842,8 @@ pub mod types {
                     display_name: Ok(value.display_name),
                     id: Ok(value.id),
                     silo_id: Ok(value.silo_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -50901,7 +51025,7 @@ pub mod types {
             address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for LoopbackAddress {
@@ -50913,7 +51037,7 @@ pub mod types {
                     ),
                     id: Err("no value supplied for id".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    switch_location: Err("no value supplied for switch_location".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -50959,14 +51083,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
                 self
             }
-            pub fn switch_location<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
-                });
+                self.switch_slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -50981,7 +51105,7 @@ pub mod types {
                     address_lot_block_id: value.address_lot_block_id?,
                     id: value.id?,
                     rack_id: value.rack_id?,
-                    switch_location: value.switch_location?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -50993,7 +51117,7 @@ pub mod types {
                     address_lot_block_id: Ok(value.address_lot_block_id),
                     id: Ok(value.id),
                     rack_id: Ok(value.rack_id),
-                    switch_location: Ok(value.switch_location),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -51005,7 +51129,7 @@ pub mod types {
             anycast: ::std::result::Result<bool, ::std::string::String>,
             mask: ::std::result::Result<u8, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            switch_location: ::std::result::Result<super::Name, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for LoopbackAddressCreate {
@@ -51016,7 +51140,7 @@ pub mod types {
                     anycast: Err("no value supplied for anycast".to_string()),
                     mask: Err("no value supplied for mask".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    switch_location: Err("no value supplied for switch_location".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -51072,14 +51196,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
                 self
             }
-            pub fn switch_location<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Name>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
-                });
+                self.switch_slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -51095,7 +51219,7 @@ pub mod types {
                     anycast: value.anycast?,
                     mask: value.mask?,
                     rack_id: value.rack_id?,
-                    switch_location: value.switch_location?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -51108,7 +51232,7 @@ pub mod types {
                     anycast: Ok(value.anycast),
                     mask: Ok(value.mask),
                     rack_id: Ok(value.rack_id),
-                    switch_location: Ok(value.switch_location),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -59499,7 +59623,7 @@ pub mod types {
                 ::std::collections::HashMap<::std::string::String, super::BgpMessageHistory>,
                 ::std::string::String,
             >,
-            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchBgpHistory {
@@ -59526,7 +59650,7 @@ pub mod types {
             }
             pub fn switch<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchLocation>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
                 self.switch = value
@@ -59738,7 +59862,7 @@ pub mod types {
             port_settings_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
+            switch_slot: ::std::result::Result<super::SwitchSlot, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchPort {
@@ -59748,7 +59872,7 @@ pub mod types {
                     port_name: Err("no value supplied for port_name".to_string()),
                     port_settings_id: Ok(Default::default()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    switch_location: Err("no value supplied for switch_location".to_string()),
+                    switch_slot: Err("no value supplied for switch_slot".to_string()),
                 }
             }
         }
@@ -59794,14 +59918,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
                 self
             }
-            pub fn switch_location<T>(mut self, value: T) -> Self
+            pub fn switch_slot<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::SwitchSlot>,
                 T::Error: ::std::fmt::Display,
             {
-                self.switch_location = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for switch_location: {e}")
-                });
+                self.switch_slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch_slot: {e}"));
                 self
             }
         }
@@ -59816,7 +59940,7 @@ pub mod types {
                     port_name: value.port_name?,
                     port_settings_id: value.port_settings_id?,
                     rack_id: value.rack_id?,
-                    switch_location: value.switch_location?,
+                    switch_slot: value.switch_slot?,
                 })
             }
         }
@@ -59828,7 +59952,7 @@ pub mod types {
                     port_name: Ok(value.port_name),
                     port_settings_id: Ok(value.port_settings_id),
                     rack_id: Ok(value.rack_id),
-                    switch_location: Ok(value.switch_location),
+                    switch_slot: Ok(value.switch_slot),
                 }
             }
         }
@@ -62446,6 +62570,14 @@ pub mod types {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for User {
@@ -62454,6 +62586,8 @@ pub mod types {
                     display_name: Err("no value supplied for display_name".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
                 }
             }
         }
@@ -62489,6 +62623,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for silo_id: {e}"));
                 self
             }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<User> for super::User {
@@ -62498,6 +62652,8 @@ pub mod types {
                     display_name: value.display_name?,
                     id: value.id?,
                     silo_id: value.silo_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
                 })
             }
         }
@@ -62508,6 +62664,8 @@ pub mod types {
                     display_name: Ok(value.display_name),
                     id: Ok(value.id),
                     silo_id: Ok(value.silo_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
                 }
             }
         }
@@ -65506,7 +65664,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026022500.0.0
+/// Version: 2026031200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65547,7 +65705,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026022500.0.0"
+        "2026031200.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66247,7 +66405,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_list(&self) -> builder::SupportBundleList<'_>;
-    /// Create a new support bundle
+    /// Create support bundle
     ///
     /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
     ///
@@ -66272,7 +66430,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_view(&self) -> builder::SupportBundleView<'_>;
-    /// Update a support bundle
+    /// Update support bundle
     ///
     /// Sends a `PUT` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}`
@@ -66288,7 +66446,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_update(&self) -> builder::SupportBundleUpdate<'_>;
-    /// Delete an existing support bundle
+    /// Delete support bundle
     ///
     /// May also be used to cancel a support bundle which is currently being
     /// collected, or to remove metadata for a support bundle that has failed.
@@ -66305,7 +66463,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_delete(&self) -> builder::SupportBundleDelete<'_>;
-    /// Download the contents of a support bundle
+    /// Download support bundle contents
     ///
     /// Sends a `GET` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
@@ -66324,7 +66482,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_download(&self) -> builder::SupportBundleDownload<'_>;
-    /// Download the metadata of a support bundle
+    /// Download support bundle metadata
     ///
     /// Sends a `HEAD` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
@@ -66343,7 +66501,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_head(&self) -> builder::SupportBundleHead<'_>;
-    /// Download a file within a support bundle
+    /// Download file from support bundle
     ///
     /// Sends a `GET` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}/download/{file}`
@@ -66364,7 +66522,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile<'_>;
-    /// Download the metadata of a file within the support bundle
+    /// Download metadata of file in support bundle
     ///
     /// Sends a `HEAD` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}/download/{file}`
@@ -66385,7 +66543,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile<'_>;
-    /// Download the index of a support bundle
+    /// Download support bundle index
     ///
     /// Sends a `GET` request to
     /// `/experimental/v1/system/support-bundles/{bundle_id}/index`
@@ -66712,7 +66870,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_>;
-    /// Retrieve the rack cluster membership status
+    /// Fetch rack cluster membership status
     ///
     /// Returns the status for the most recent change, or a specific version if
     /// one is specified.
@@ -66927,7 +67085,7 @@ impl ClientExperimentalExt for Client {
 
 /// External subnets that can be attached to instances.
 pub trait ClientExternalSubnetsExt {
-    /// List external subnets in a project
+    /// List external subnets
     ///
     /// Sends a `GET` request to `/v1/external-subnets`
     ///
@@ -66947,7 +67105,7 @@ pub trait ClientExternalSubnetsExt {
     ///    .await;
     /// ```
     fn external_subnet_list(&self) -> builder::ExternalSubnetList<'_>;
-    /// Create an external subnet
+    /// Create external subnet
     ///
     /// Sends a `POST` request to `/v1/external-subnets`
     ///
@@ -66962,7 +67120,7 @@ pub trait ClientExternalSubnetsExt {
     ///    .await;
     /// ```
     fn external_subnet_create(&self) -> builder::ExternalSubnetCreate<'_>;
-    /// Fetch an external subnet
+    /// Fetch external subnet
     ///
     /// Sends a `GET` request to `/v1/external-subnets/{external_subnet}`
     ///
@@ -66977,7 +67135,7 @@ pub trait ClientExternalSubnetsExt {
     ///    .await;
     /// ```
     fn external_subnet_view(&self) -> builder::ExternalSubnetView<'_>;
-    /// Update an external subnet
+    /// Update external subnet
     ///
     /// Sends a `PUT` request to `/v1/external-subnets/{external_subnet}`
     ///
@@ -66994,7 +67152,7 @@ pub trait ClientExternalSubnetsExt {
     ///    .await;
     /// ```
     fn external_subnet_update(&self) -> builder::ExternalSubnetUpdate<'_>;
-    /// Delete an external subnet
+    /// Delete external subnet
     ///
     /// Sends a `DELETE` request to `/v1/external-subnets/{external_subnet}`
     ///
@@ -67009,7 +67167,7 @@ pub trait ClientExternalSubnetsExt {
     ///    .await;
     /// ```
     fn external_subnet_delete(&self) -> builder::ExternalSubnetDelete<'_>;
-    /// Attach an external subnet to an instance
+    /// Attach external subnet to instance
     ///
     /// Sends a `POST` request to
     /// `/v1/external-subnets/{external_subnet}/attach`
@@ -67027,7 +67185,7 @@ pub trait ClientExternalSubnetsExt {
     ///    .await;
     /// ```
     fn external_subnet_attach(&self) -> builder::ExternalSubnetAttach<'_>;
-    /// Detach an external subnet from an instance
+    /// Detach external subnet from instance
     ///
     /// Sends a `POST` request to
     /// `/v1/external-subnets/{external_subnet}/detach`
@@ -67097,7 +67255,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_list(&self) -> builder::FloatingIpList<'_>;
-    /// Create a floating IP
+    /// Create floating IP
     ///
     /// A specific IP address can be reserved, or an IP can be auto-allocated
     /// from a specific pool or the silo's default pool.
@@ -67977,7 +68135,7 @@ impl ClientIpPoolsExt for Client {
 
 /// Authentication endpoints
 pub trait ClientLoginExt {
-    /// Authenticate a user via SAML
+    /// Authenticate user via SAML
     ///
     /// Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
     ///
@@ -67990,7 +68148,7 @@ pub trait ClientLoginExt {
     ///    .await;
     /// ```
     fn login_saml(&self) -> builder::LoginSaml<'_>;
-    /// Authenticate a user via username and password
+    /// Authenticate user via username and password
     ///
     /// Sends a `POST` request to `/v1/login/{silo_name}/local`
     ///
@@ -68266,7 +68424,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_list(&self) -> builder::CertificateList<'_>;
-    /// Create new system-wide x.509 certificate
+    /// Create system-wide x.509 certificate
     ///
     /// This certificate is automatically used by the Oxide Control plane to
     /// serve external connections.
@@ -69246,14 +69404,14 @@ pub trait ClientSystemHardwareExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// - `body`
     /// ```ignore
     /// let response = client.networking_switch_port_apply_settings()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .body(body)
     ///    .send()
     ///    .await;
@@ -69269,13 +69427,13 @@ pub trait ClientSystemHardwareExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// ```ignore
     /// let response = client.networking_switch_port_clear_settings()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .send()
     ///    .await;
     /// ```
@@ -69289,13 +69447,13 @@ pub trait ClientSystemHardwareExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// ```ignore
     /// let response = client.networking_switch_port_status()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .send()
     ///    .await;
     /// ```
@@ -69823,16 +69981,16 @@ impl ClientSystemMetricsExt for Client {
 
 /// This provides rack-level network configuration.
 pub trait ClientSystemNetworkingExt {
-    /// Fetch the LLDP neighbors seen on a switch port
+    /// Fetch LLDP neighbors for switch port
     ///
     /// Sends a `GET` request to
-    /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
-    /// {port}/lldp/neighbors`
+    /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_slot}/{port}/
+    /// lldp/neighbors`
     ///
     /// Arguments:
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// - `port`: A name to use when selecting switch ports.
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
@@ -69841,7 +69999,7 @@ pub trait ClientSystemNetworkingExt {
     /// ```ignore
     /// let response = client.networking_switch_port_lldp_neighbors()
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .port(port)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -69852,7 +70010,7 @@ pub trait ClientSystemNetworkingExt {
     fn networking_switch_port_lldp_neighbors(
         &self,
     ) -> builder::NetworkingSwitchPortLldpNeighbors<'_>;
-    /// Fetch the LLDP configuration for a switch port
+    /// Fetch LLDP configuration for switch port
     ///
     /// Sends a `GET` request to
     /// `/v1/system/hardware/switch-port/{port}/lldp/config`
@@ -69860,20 +70018,20 @@ pub trait ClientSystemNetworkingExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// ```ignore
     /// let response = client.networking_switch_port_lldp_config_view()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .send()
     ///    .await;
     /// ```
     fn networking_switch_port_lldp_config_view(
         &self,
     ) -> builder::NetworkingSwitchPortLldpConfigView<'_>;
-    /// Update the LLDP configuration for a switch port
+    /// Update LLDP configuration for switch port
     ///
     /// Sends a `POST` request to
     /// `/v1/system/hardware/switch-port/{port}/lldp/config`
@@ -69881,14 +70039,14 @@ pub trait ClientSystemNetworkingExt {
     /// Arguments:
     /// - `port`: A name to use when selecting switch ports.
     /// - `rack_id`: A rack id to use when selecting switch ports.
-    /// - `switch_location`: A switch location to use when selecting switch
-    ///   ports.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting switch ports.
     /// - `body`
     /// ```ignore
     /// let response = client.networking_switch_port_lldp_config_update()
     ///    .port(port)
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .body(body)
     ///    .send()
     ///    .await;
@@ -70045,7 +70203,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList<'_>;
-    /// Create new BGP configuration
+    /// Create BGP configuration
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp`
     ///
@@ -70228,13 +70386,13 @@ pub trait ClientSystemNetworkingExt {
     /// Delete loopback address
     ///
     /// Sends a `DELETE` request to
-    /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
+    /// `/v1/system/networking/loopback-address/{rack_id}/{switch_slot}/
     /// {address}/{subnet_mask}`
     ///
     /// Arguments:
     /// - `rack_id`: The rack to use when selecting the loopback address.
-    /// - `switch_location`: The switch location to use when selecting the
-    ///   loopback address.
+    /// - `switch_slot`: The slot of the switch within the rack to use when
+    ///   selecting the loopback address.
     /// - `address`: The IP address and subnet mask to use when selecting the
     ///   loopback address.
     /// - `subnet_mask`: The IP address and subnet mask to use when selecting
@@ -70242,7 +70400,7 @@ pub trait ClientSystemNetworkingExt {
     /// ```ignore
     /// let response = client.networking_loopback_address_delete()
     ///    .rack_id(rack_id)
-    ///    .switch_location(switch_location)
+    ///    .switch_slot(switch_slot)
     ///    .address(address)
     ///    .subnet_mask(subnet_mask)
     ///    .send()
@@ -70642,7 +70800,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn scim_token_delete(&self) -> builder::ScimTokenDelete<'_>;
-    /// Lists resource quotas for all silos
+    /// List resource quotas for all silos
     ///
     /// Sends a `GET` request to `/v1/system/silo-quotas`
     ///
@@ -71313,9 +71471,10 @@ impl ClientSystemSubnetPoolsExt for Client {
 
 /// Upload and manage system updates
 pub trait ClientSystemUpdateExt {
-    /// Instructs the system that a system recovery operation ("mupdate") was
+    /// Clear system recovery status
     ///
-    /// completed using the software in the specified release
+    /// Instructs the system that a system recovery operation ("mupdate") was
+    /// completed using the software in the specified release.
     ///
     /// The system recovery operation is used to bypass the control plane to
     /// deploy known-working software when the control plane itself is not
@@ -90043,7 +90202,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortLldpNeighbors<'a> {
         client: &'a super::Client,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         port: Result<types::Name, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
@@ -90055,7 +90214,7 @@ pub mod builder {
             Self {
                 client: client,
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 port: Err("port was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -90073,13 +90232,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -90125,7 +90284,7 @@ pub mod builder {
         }
 
         /// Sends a `GET` request to
-        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_slot}/
         /// {port}/lldp/neighbors`
         pub async fn send(
             self,
@@ -90133,14 +90292,14 @@ pub mod builder {
             let Self {
                 client,
                 rack_id,
-                switch_location,
+                switch_slot,
                 port,
                 limit,
                 page_token,
                 sort_by,
             } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let port = port.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
@@ -90149,7 +90308,7 @@ pub mod builder {
                 "{}/v1/system/hardware/rack-switch-port/{}/{}/{}/lldp/neighbors",
                 client.baseurl,
                 encode_path(&rack_id.to_string()),
-                encode_path(&switch_location.to_string()),
+                encode_path(&switch_slot.to_string()),
                 encode_path(&port.to_string()),
             );
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -90193,7 +90352,7 @@ pub mod builder {
         }
 
         /// Streams `GET` requests to
-        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_slot}/
         /// {port}/lldp/neighbors`
         pub fn stream(
             self,
@@ -91742,7 +91901,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
     }
 
     impl<'a> NetworkingSwitchPortLldpConfigView<'a> {
@@ -91751,7 +91910,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
             }
         }
 
@@ -91775,13 +91934,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -91794,11 +91953,11 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/lldp/config",
                 client.baseurl,
@@ -91819,8 +91978,8 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -91853,7 +92012,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         body: Result<types::builder::LldpLinkConfig, String>,
     }
 
@@ -91863,7 +92022,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 body: Ok(::std::default::Default::default()),
             }
         }
@@ -91888,13 +92047,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -91925,12 +92084,12 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
                 body,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| types::LldpLinkConfig::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
@@ -91955,8 +92114,8 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -91989,7 +92148,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         body: Result<types::builder::SwitchPortApplySettings, String>,
     }
 
@@ -91999,7 +92158,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 body: Ok(::std::default::Default::default()),
             }
         }
@@ -92024,13 +92183,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92065,12 +92224,12 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
                 body,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| {
                     types::SwitchPortApplySettings::try_from(v).map_err(|e| e.to_string())
@@ -92097,8 +92256,8 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -92131,7 +92290,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
     }
 
     impl<'a> NetworkingSwitchPortClearSettings<'a> {
@@ -92140,7 +92299,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
             }
         }
 
@@ -92164,13 +92323,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92181,11 +92340,11 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
                 client.baseurl,
@@ -92206,8 +92365,8 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -92239,7 +92398,7 @@ pub mod builder {
         client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
     }
 
     impl<'a> NetworkingSwitchPortStatus<'a> {
@@ -92248,7 +92407,7 @@ pub mod builder {
                 client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
             }
         }
 
@@ -92272,13 +92431,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -92291,11 +92450,11 @@ pub mod builder {
                 client,
                 port,
                 rack_id,
-                switch_location,
+                switch_slot,
             } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/status",
                 client.baseurl,
@@ -92316,8 +92475,8 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
                 .query(&progenitor_client::QueryParam::new(
-                    "switch_location",
-                    &switch_location,
+                    "switch_slot",
+                    &switch_slot,
                 ))
                 .headers(header_map)
                 .build()?;
@@ -97336,7 +97495,7 @@ pub mod builder {
     pub struct NetworkingLoopbackAddressDelete<'a> {
         client: &'a super::Client,
         rack_id: Result<::uuid::Uuid, String>,
-        switch_location: Result<types::Name, String>,
+        switch_slot: Result<types::SwitchSlot, String>,
         address: Result<::std::net::IpAddr, String>,
         subnet_mask: Result<u8, String>,
     }
@@ -97346,7 +97505,7 @@ pub mod builder {
             Self {
                 client: client,
                 rack_id: Err("rack_id was not initialized".to_string()),
-                switch_location: Err("switch_location was not initialized".to_string()),
+                switch_slot: Err("switch_slot was not initialized".to_string()),
                 address: Err("address was not initialized".to_string()),
                 subnet_mask: Err("subnet_mask was not initialized".to_string()),
             }
@@ -97362,13 +97521,13 @@ pub mod builder {
             self
         }
 
-        pub fn switch_location<V>(mut self, value: V) -> Self
+        pub fn switch_slot<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Name>,
+            V: std::convert::TryInto<types::SwitchSlot>,
         {
-            self.switch_location = value
+            self.switch_slot = value
                 .try_into()
-                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+                .map_err(|_| "conversion to `SwitchSlot` for switch_slot failed".to_string());
             self
         }
 
@@ -97393,25 +97552,25 @@ pub mod builder {
         }
 
         /// Sends a `DELETE` request to
-        /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
+        /// `/v1/system/networking/loopback-address/{rack_id}/{switch_slot}/
         /// {address}/{subnet_mask}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
                 rack_id,
-                switch_location,
+                switch_slot,
                 address,
                 subnet_mask,
             } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let switch_slot = switch_slot.map_err(Error::InvalidRequest)?;
             let address = address.map_err(Error::InvalidRequest)?;
             let subnet_mask = subnet_mask.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/loopback-address/{}/{}/{}/{}",
                 client.baseurl,
                 encode_path(&rack_id.to_string()),
-                encode_path(&switch_location.to_string()),
+                encode_path(&switch_slot.to_string()),
                 encode_path(&address.to_string()),
                 encode_path(&subnet_mask.to_string()),
             );

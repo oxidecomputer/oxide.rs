@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2025 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use std::{collections::HashMap, net::IpAddr};
 
@@ -17,9 +17,9 @@ use oxide::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
-        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
-        SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
-        SwitchPortRouteConfig, SwitchPortSettingsCreate,
+        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchPort,
+        SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2, SwitchPortRouteConfig,
+        SwitchPortSettingsCreate, SwitchSlot,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -109,21 +109,22 @@ pub struct CmdLinkAdd {
 #[async_trait]
 impl AuthenticatedCmd for CmdLinkAdd {
     async fn run(&self, client: &Client) -> Result<()> {
-        let mut settings = current_port_settings(client, &self.rack, &self.switch, &self.port)
-            .await
-            .unwrap_or(SwitchPortSettingsCreate {
-                addresses: Default::default(),
-                bgp_peers: Default::default(),
-                description: String::default(),
-                groups: Vec::default(),
-                interfaces: Default::default(),
-                links: Default::default(),
-                name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
-                port_config: SwitchPortConfigCreate {
-                    geometry: SwitchPortGeometry::Qsfp28x1,
-                },
-                routes: Default::default(),
-            });
+        let mut settings =
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port)
+                .await
+                .unwrap_or(SwitchPortSettingsCreate {
+                    addresses: Default::default(),
+                    bgp_peers: Default::default(),
+                    description: String::default(),
+                    groups: Vec::default(),
+                    interfaces: Default::default(),
+                    links: Default::default(),
+                    name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
+                    port_config: SwitchPortConfigCreate {
+                        geometry: SwitchPortGeometry::Qsfp28x1,
+                    },
+                    routes: Default::default(),
+                });
         let link = LinkConfigCreate {
             link_name: PHY0.parse().unwrap(),
             autoneg: self.autoneg,
@@ -184,7 +185,7 @@ pub struct CmdLinkDel {
 impl AuthenticatedCmd for CmdLinkDel {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         settings.links.clear();
         client
             .networking_switch_port_settings_create()
@@ -411,7 +412,7 @@ pub struct CmdBgpFilter {
 impl AuthenticatedCmd for CmdBgpFilter {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         match settings
             .bgp_peers
             .iter_mut()
@@ -492,7 +493,7 @@ pub struct CmdBgpAuth {
 impl AuthenticatedCmd for CmdBgpAuth {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         match settings
             .bgp_peers
             .iter_mut()
@@ -554,7 +555,7 @@ pub struct CmdBgpLocalPref {
 impl AuthenticatedCmd for CmdBgpLocalPref {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         match settings
             .bgp_peers
             .iter_mut()
@@ -651,7 +652,7 @@ pub struct CmdStaticRouteSet {
 impl AuthenticatedCmd for CmdStaticRouteSet {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
 
         match settings
             .routes
@@ -743,7 +744,7 @@ pub struct CmdStaticRouteDelete {
 impl AuthenticatedCmd for CmdStaticRouteDelete {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
 
         match settings
             .routes
@@ -841,7 +842,7 @@ pub struct CmdAddrAdd {
 impl AuthenticatedCmd for CmdAddrAdd {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         let addr = Address {
             address: self.addr.to_string().parse().unwrap(),
             address_lot: self.lot.clone(),
@@ -901,7 +902,7 @@ pub struct CmdAddrDel {
 impl AuthenticatedCmd for CmdAddrDel {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         if let Some(addrs) = settings
             .addresses
             .iter_mut()
@@ -1088,7 +1089,7 @@ pub struct CmdBgpPeerSet {
 impl AuthenticatedCmd for CmdBgpPeerSet {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         let peer = BgpPeer {
             addr: Some(self.addr),
             allowed_import: if self.allowed_imports.is_empty() {
@@ -1184,7 +1185,7 @@ pub struct CmdBgpPeerDel {
 impl AuthenticatedCmd for CmdBgpPeerDel {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+            current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         if let Some(config) = settings
             .bgp_peers
             .iter_mut()
@@ -1266,14 +1267,14 @@ impl AuthenticatedCmd for CmdPortConfig {
 
                 println_nopipe!(
                     "{}{}{}",
-                    p.switch_location.to_string().blue(),
+                    p.switch_slot.to_string().blue(),
                     "/".dimmed(),
                     p.port_name.blue(),
                 );
 
                 println_nopipe!(
                     "{}",
-                    "=".repeat(p.port_name.len() + p.switch_location.to_string().len() + 1)
+                    "=".repeat(p.port_name.len() + p.switch_slot.to_string().len() + 1)
                         .dimmed()
                 );
 
@@ -1439,9 +1440,7 @@ impl AuthenticatedCmd for CmdBgpStatus {
     async fn run(&self, client: &Client) -> Result<()> {
         let status = client.networking_bgp_status().send().await?.into_inner();
 
-        let (sw0, sw1) = status
-            .iter()
-            .partition(|x| x.switch == SwitchLocation::Switch0);
+        let (sw0, sw1) = status.iter().partition(|x| x.switch == SwitchSlot::Switch0);
 
         println_nopipe!("{}", "switch0".dimmed());
         println_nopipe!("{}", "=======".dimmed());
@@ -1508,7 +1507,7 @@ impl AuthenticatedCmd for CmdPortStatus {
 
         let (mut sw0, mut sw1): (Vec<&SwitchPort>, Vec<&SwitchPort>) = ports
             .iter()
-            .partition(|x| x.switch_location.as_str() == "switch0");
+            .partition(|x| x.switch_slot == SwitchSlot::Switch0);
 
         sw0.sort_by_key(|p| port_key(&p.port_name));
         sw1.sort_by_key(|p| port_key(&p.port_name));
@@ -1591,7 +1590,7 @@ impl CmdPortStatus {
                 .networking_switch_port_status()
                 .port(p.port_name.clone())
                 .rack_id(p.rack_id)
-                .switch_location(sw)
+                .switch_slot(sw)
                 .send()
                 .await
                 .ok()
@@ -1837,7 +1836,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
     Ok(create)
 }
 
-#[derive(clap::ValueEnum, Clone, Debug)]
+#[derive(clap::ValueEnum, Clone, Debug, Copy)]
 enum Switch {
     Switch0,
     Switch1,
@@ -1846,6 +1845,15 @@ enum Switch {
 impl std::fmt::Display for Switch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", format!("{self:?}").to_lowercase())
+    }
+}
+
+impl From<Switch> for SwitchSlot {
+    fn from(value: Switch) -> Self {
+        match value {
+            Switch::Switch0 => SwitchSlot::Switch0,
+            Switch::Switch1 => SwitchSlot::Switch1,
+        }
     }
 }
 
@@ -1894,7 +1902,7 @@ impl std::fmt::Display for Port {
 async fn get_port(
     client: &Client,
     rack_id: &Uuid,
-    switch: &Switch,
+    switch_slot: SwitchSlot,
     port: &Port,
 ) -> Result<SwitchPort> {
     let ports = client
@@ -1907,13 +1915,13 @@ async fn get_port(
         .into_iter()
         .find(|x| {
             x.rack_id == *rack_id
-                && x.switch_location == switch.to_string()
+                && x.switch_slot == switch_slot
                 && x.port_name.to_string() == port.to_string()
         })
         .ok_or(anyhow::anyhow!(
             "port {} not found for rack {} switch {}",
             port,
-            switch,
+            switch_slot,
             rack_id
         ))?;
 
@@ -1923,10 +1931,10 @@ async fn get_port(
 async fn get_port_settings_id(
     client: &Client,
     rack_id: &Uuid,
-    switch: &Switch,
+    switch_slot: SwitchSlot,
     port: &Port,
 ) -> Result<Uuid> {
-    let port = get_port(client, rack_id, switch, port).await?;
+    let port = get_port(client, rack_id, switch_slot, port).await?;
     let id = port.port_settings_id.ok_or(anyhow::anyhow!(
         "Port settings uninitialized. Initialize by creating a link."
     ))?;
@@ -1936,10 +1944,10 @@ async fn get_port_settings_id(
 async fn current_port_settings(
     client: &Client,
     rack_id: &Uuid,
-    switch: &Switch,
+    switch_slot: SwitchSlot,
     port: &Port,
 ) -> Result<SwitchPortSettingsCreate> {
-    let id = get_port_settings_id(client, rack_id, switch, port).await?;
+    let id = get_port_settings_id(client, rack_id, switch_slot, port).await?;
     let settings = create_current(id, client).await?;
     Ok(settings)
 }
