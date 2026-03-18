@@ -56,45 +56,6 @@ impl RunnableCmd for CmdAuth {
     }
 }
 
-// Integrate reqwest with oauth2 until oauth2 is updated to support reqwest
-// 0.13.
-struct ReqwestClient<'a>(&'a reqwest::Client);
-
-impl<'a, 'c> oauth2::AsyncHttpClient<'c> for ReqwestClient<'a> {
-    type Error = oauth2::HttpClientError<reqwest::Error>;
-
-    type Future = std::pin::Pin<
-        Box<
-            dyn std::future::Future<Output = Result<oauth2::HttpResponse, Self::Error>>
-                + Send
-                + Sync
-                + 'c,
-        >,
-    >;
-
-    fn call(&'c self, request: oauth2::HttpRequest) -> Self::Future {
-        Box::pin(async move {
-            let response = self
-                .0
-                .execute(request.try_into().map_err(Box::new)?)
-                .await
-                .map_err(Box::new)?;
-
-            let mut builder = http::Response::builder()
-                .status(response.status())
-                .version(response.version());
-
-            for (name, value) in response.headers().iter() {
-                builder = builder.header(name, value);
-            }
-
-            builder
-                .body(response.bytes().await.map_err(Box::new)?.to_vec())
-                .map_err(oauth2::HttpClientError::Http)
-        })
-    }
-}
-
 /// Parse and normalize a given host string as a valid URL.
 ///
 /// http(s) are the only supported schemas. If no schema is specified then
@@ -240,7 +201,7 @@ impl CmdAuthLogin {
         }
 
         // Make the client for use by oauth2
-        let client = &ctx
+        let client = ctx
             .client_config()
             .make_unauthenticated_client_builder()
             .redirect(reqwest::redirect::Policy::none())
@@ -272,7 +233,7 @@ impl CmdAuthLogin {
             request = request.add_extra_param("ttl_seconds", ttl.as_secs().to_string());
         }
 
-        let reqwest_client = ReqwestClient(client);
+        let reqwest_client = oauth2_reqwest::ReqwestClient::from(client);
 
         let details: StandardDeviceAuthorizationResponse =
             request.request_async(&reqwest_client).await?;

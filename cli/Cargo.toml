@@ -38,6 +38,7 @@ indicatif = { workspace = true }
 log = { workspace = true }
 md5 = { workspace = true }
 oauth2 = { workspace = true }
+oauth2-reqwest = { workspace = true }
 open = { workspace = true }
 oxide = { workspace = true, features = ["clap", "extras"] }
 oxnet = { workspace = true }
