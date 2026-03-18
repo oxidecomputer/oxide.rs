@@ -19946,6 +19946,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "description",
+    ///    "has_any_source_member",
     ///    "id",
     ///    "ip_pool_id",
     ///    "multicast_ip",
@@ -19959,6 +19960,12 @@ pub mod types {
     ///    "description": {
     ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
+    ///    },
+    ///    "has_any_source_member": {
+    ///      "description": "True if any member joined without specifying source
+    /// IPs (any-source).\n\nWhen true, at least one member receives traffic
+    /// from any source rather than filtering to specific sources.",
+    ///      "type": "boolean"
     ///    },
     ///    "id": {
     ///      "description": "Unique, immutable, system-controlled identifier for
@@ -19976,16 +19983,6 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
-    ///    "mvlan": {
-    ///      "description": "Multicast VLAN (MVLAN) for egress multicast traffic
-    /// to upstream networks. None means no VLAN tagging on egress.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
     ///    "name": {
     ///      "description": "Unique, mutable, user-controlled identifier for
     /// each resource",
@@ -19996,11 +19993,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "source_ips": {
-    ///      "description": "Union of all member source IP addresses (computed,
-    /// read-only).\n\nThis field shows the combined source IPs across all group
-    /// members. Individual members may subscribe to different sources; this
-    /// union reflects all sources that any member is subscribed to. Empty array
-    /// means no members have source filtering enabled.",
+    ///      "description": "Deduplicated union of source IPs specified by
+    /// members.\n\nContains only sources from members that joined with explicit
+    /// `source_ips`. Members using any-source multicast (empty `source_ips`) do
+    /// not contribute, so a non-empty value does not imply all members use
+    /// source filtering. For SSM addresses (232/8, ff3x::/32), this is always
+    /// non-empty.",
     ///      "type": "array",
     ///      "items": {
     ///        "type": "string",
@@ -20031,24 +20029,27 @@ pub mod types {
     pub struct MulticastGroup {
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
+        /// True if any member joined without specifying source IPs
+        /// (any-source).
+        ///
+        /// When true, at least one member receives traffic from any source
+        /// rather than filtering to specific sources.
+        pub has_any_source_member: bool,
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The ID of the IP pool this resource belongs to.
         pub ip_pool_id: ::uuid::Uuid,
         /// The multicast IP address held by this resource.
         pub multicast_ip: ::std::net::IpAddr,
-        /// Multicast VLAN (MVLAN) for egress multicast traffic to upstream
-        /// networks. None means no VLAN tagging on egress.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub mvlan: ::std::option::Option<u16>,
         /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// Union of all member source IP addresses (computed, read-only).
+        /// Deduplicated union of source IPs specified by members.
         ///
-        /// This field shows the combined source IPs across all group members.
-        /// Individual members may subscribe to different sources; this union
-        /// reflects all sources that any member is subscribed to. Empty array
-        /// means no members have source filtering enabled.
+        /// Contains only sources from members that joined with explicit
+        /// `source_ips`. Members using any-source multicast (empty
+        /// `source_ips`) do not contribute, so a non-empty value does not imply
+        /// all members use source filtering. For SSM addresses (232/8,
+        /// ff3x::/32), this is always non-empty.
         pub source_ips: ::std::vec::Vec<::std::net::IpAddr>,
         /// Current state of the multicast group.
         pub state: ::std::string::String,
@@ -51570,10 +51571,10 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct MulticastGroup {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            has_any_source_member: ::std::result::Result<bool, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ip_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             multicast_ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
-            mvlan: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             source_ips:
                 ::std::result::Result<::std::vec::Vec<::std::net::IpAddr>, ::std::string::String>,
@@ -51592,10 +51593,12 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
+                    has_any_source_member: Err(
+                        "no value supplied for has_any_source_member".to_string()
+                    ),
                     id: Err("no value supplied for id".to_string()),
                     ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
                     multicast_ip: Err("no value supplied for multicast_ip".to_string()),
-                    mvlan: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     source_ips: Err("no value supplied for source_ips".to_string()),
                     state: Err("no value supplied for state".to_string()),
@@ -51614,6 +51617,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn has_any_source_member<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.has_any_source_member = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for has_any_source_member: {e}")
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -51644,16 +51657,6 @@ pub mod types {
                 self.multicast_ip = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for multicast_ip: {e}"));
-                self
-            }
-            pub fn mvlan<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<u16>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.mvlan = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for mvlan: {e}"));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -51715,10 +51718,10 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
+                    has_any_source_member: value.has_any_source_member?,
                     id: value.id?,
                     ip_pool_id: value.ip_pool_id?,
                     multicast_ip: value.multicast_ip?,
-                    mvlan: value.mvlan?,
                     name: value.name?,
                     source_ips: value.source_ips?,
                     state: value.state?,
@@ -51732,10 +51735,10 @@ pub mod types {
             fn from(value: super::MulticastGroup) -> Self {
                 Self {
                     description: Ok(value.description),
+                    has_any_source_member: Ok(value.has_any_source_member),
                     id: Ok(value.id),
                     ip_pool_id: Ok(value.ip_pool_id),
                     multicast_ip: Ok(value.multicast_ip),
-                    mvlan: Ok(value.mvlan),
                     name: Ok(value.name),
                     source_ips: Ok(value.source_ips),
                     state: Ok(value.state),
@@ -65664,7 +65667,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026031200.0.0
+/// Version: 2026031400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65705,7 +65708,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026031200.0.0"
+        "2026031400.0.0"
     }
 
     fn baseurl(&self) -> &str {
