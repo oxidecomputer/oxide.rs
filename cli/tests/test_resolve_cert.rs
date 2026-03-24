@@ -54,9 +54,7 @@ impl TestServer {
         let server = HttpServerStarter::new_with_tls(
             &ConfigDropshot {
                 bind_address: "127.0.0.1:0".parse().unwrap(),
-                default_handler_task_mode: dropshot::HandlerTaskMode::CancelOnDisconnect,
-                log_headers: Default::default(),
-                default_request_body_max_bytes: 1024,
+                ..Default::default()
             },
             api,
             (),
