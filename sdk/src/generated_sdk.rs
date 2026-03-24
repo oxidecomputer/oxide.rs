@@ -34548,6 +34548,35 @@ pub mod types {
     ///          ]
     ///        }
     ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "icmp6"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/VpcFirewallIcmpFilter"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        }
+    ///      }
     ///    }
     ///  ]
     /// }
@@ -34564,14 +34593,8 @@ pub mod types {
         Udp,
         #[serde(rename = "icmp")]
         Icmp(::std::option::Option<VpcFirewallIcmpFilter>),
-    }
-
-    impl ::std::convert::From<::std::option::Option<VpcFirewallIcmpFilter>>
-        for VpcFirewallRuleProtocol
-    {
-        fn from(value: ::std::option::Option<VpcFirewallIcmpFilter>) -> Self {
-            Self::Icmp(value)
-        }
+        #[serde(rename = "icmp6")]
+        Icmp6(::std::option::Option<VpcFirewallIcmpFilter>),
     }
 
     /// `VpcFirewallRuleStatus`
@@ -65667,7 +65690,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026032300.0.0
+/// Version: 2026032400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65708,7 +65731,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026032300.0.0"
+        "2026032400.0.0"
     }
 
     fn baseurl(&self) -> &str {
