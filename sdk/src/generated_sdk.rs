@@ -10247,7 +10247,7 @@ pub mod types {
     /// prefix length.",
     ///      "type": "object",
     ///      "required": [
-    ///        "prefix_len",
+    ///        "prefix_length",
     ///        "type"
     ///      ],
     ///      "properties": {
@@ -10266,7 +10266,7 @@ pub mod types {
     ///            }
     ///          ]
     ///        },
-    ///        "prefix_len": {
+    ///        "prefix_length": {
     ///          "description": "The prefix length for the allocated subnet
     /// (e.g., 24 for a /24).",
     ///          "type": "integer",
@@ -10307,7 +10307,7 @@ pub mod types {
             #[serde(default = "defaults::external_subnet_allocator_auto_pool_selector")]
             pool_selector: PoolSelector,
             /// The prefix length for the allocated subnet (e.g., 24 for a /24).
-            prefix_len: u8,
+            prefix_length: u8,
         },
     }
 
@@ -65667,7 +65667,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026031400.0.0
+/// Version: 2026032300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65708,7 +65708,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026031400.0.0"
+        "2026032300.0.0"
     }
 
     fn baseurl(&self) -> &str {
