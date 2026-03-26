@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2025 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
@@ -17,6 +17,11 @@ use crate::{
     OxideOverride, RunnableCmd,
 };
 use oxide::{types::ByteCount, ClientConfig};
+
+/// API operation ID attached to generated CLI commands via clap's ext API.
+#[derive(Debug, Clone)]
+pub struct OperationId(pub String);
+impl clap::builder::CommandExt for OperationId {}
 
 /// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
@@ -217,6 +222,7 @@ impl Default for NewCli<'_> {
                 _ => cmd,
             };
 
+            let cmd = cmd.add(OperationId(op.operation_id().to_string()));
             parser = parser.add_subcommand(path, cmd);
             // print_cmd(&parser, 0);
         }

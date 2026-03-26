@@ -57,6 +57,7 @@
             {
               "name": "list",
               "about": "List alert classes",
+              "operation_id": "alert_class_list",
               "args": [
                 {
                   "long": "filter",
@@ -88,6 +89,7 @@
             {
               "name": "delete",
               "about": "Delete alert receiver",
+              "operation_id": "alert_receiver_delete",
               "args": [
                 {
                   "long": "profile",
@@ -103,6 +105,7 @@
             {
               "name": "list",
               "about": "List alert receivers",
+              "operation_id": "alert_receiver_list",
               "args": [
                 {
                   "long": "limit",
@@ -127,6 +130,7 @@
               "name": "log",
               "about": "List delivery attempts to alert receiver",
               "long_about": "Optional query parameters to this endpoint may be used to filter deliveries by state. If none of the `failed`, `pending` or `delivered` query parameters are present, all deliveries are returned. If one or more of these parameters are provided, only those which are set to \"true\" are included in the response.",
+              "operation_id": "alert_delivery_list",
               "args": [
                 {
                   "long": "delivered",
@@ -178,6 +182,7 @@
               "name": "probe",
               "about": "Send liveness probe to alert receiver",
               "long_about": "This endpoint synchronously sends a liveness probe to the selected alert receiver. The response message describes the outcome of the probe: either the successful response (as appropriate), or indication of why the probe failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. Details relating to the status of the probe depend on the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` model. For example, webhook receiver liveness probes include the HTTP status code returned by the receiver endpoint.\n\nNote that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If an HTTP-based receiver, such as a webhook, responds to the another status code, including an error, this will be indicated by the response body, *not* the status of the response.\n\nThe `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the liveness probe succeeds, any alerts for which delivery to this receiver has failed will be queued for re-delivery.",
+              "operation_id": "alert_receiver_probe",
               "args": [
                 {
                   "long": "profile",
@@ -201,6 +206,7 @@
             {
               "name": "resend",
               "about": "Request re-delivery of alert",
+              "operation_id": "alert_delivery_resend",
               "args": [
                 {
                   "long": "alert-id",
@@ -220,6 +226,7 @@
             {
               "name": "subscribe",
               "about": "Add alert receiver subscription",
+              "operation_id": "alert_receiver_subscription_add",
               "args": [
                 {
                   "long": "json-body",
@@ -247,6 +254,7 @@
             {
               "name": "unsubscribe",
               "about": "Remove alert receiver subscription",
+              "operation_id": "alert_receiver_subscription_remove",
               "args": [
                 {
                   "long": "profile",
@@ -266,6 +274,7 @@
             {
               "name": "view",
               "about": "Fetch alert receiver",
+              "operation_id": "alert_receiver_view",
               "args": [
                 {
                   "long": "profile",
@@ -291,6 +300,7 @@
                 {
                   "name": "create",
                   "about": "Create webhook receiver",
+                  "operation_id": "webhook_receiver_create",
                   "args": [
                     {
                       "long": "description"
@@ -330,6 +340,7 @@
                     {
                       "name": "add",
                       "about": "Add secret to webhook receiver",
+                      "operation_id": "webhook_secrets_add",
                       "args": [
                         {
                           "long": "json-body",
@@ -357,6 +368,7 @@
                     {
                       "name": "delete",
                       "about": "Remove secret from webhook receiver",
+                      "operation_id": "webhook_secrets_delete",
                       "args": [
                         {
                           "long": "profile",
@@ -372,6 +384,7 @@
                     {
                       "name": "list",
                       "about": "List webhook receiver secret IDs",
+                      "operation_id": "webhook_secrets_list",
                       "args": [
                         {
                           "long": "profile",
@@ -390,6 +403,7 @@
                   "name": "update",
                   "about": "Update webhook receiver",
                   "long_about": "Note that receiver secrets are NOT added or removed using this endpoint. Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.",
+                  "operation_id": "webhook_receiver_update",
                   "args": [
                     {
                       "long": "description"
@@ -493,6 +507,7 @@
           "name": "list",
           "about": "View audit log",
           "long_about": "A single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.\n\nAudit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.",
+          "operation_id": "audit_log_list",
           "args": [
             {
               "long": "end-time",
@@ -612,6 +627,7 @@
         {
           "name": "update",
           "about": "Update current silo's auth settings",
+          "operation_id": "auth_settings_update",
           "args": [
             {
               "long": "device-token-max-ttl-seconds",
@@ -635,6 +651,7 @@
         {
           "name": "view",
           "about": "Fetch current silo's auth settings",
+          "operation_id": "auth_settings_view",
           "args": [
             {
               "long": "profile",
@@ -658,6 +675,7 @@
         {
           "name": "create",
           "about": "Create support bundle",
+          "operation_id": "support_bundle_create",
           "args": [
             {
               "long": "json-body",
@@ -682,6 +700,7 @@
           "name": "delete",
           "about": "Delete support bundle",
           "long_about": "May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.",
+          "operation_id": "support_bundle_delete",
           "args": [
             {
               "long": "bundle-id",
@@ -743,6 +762,7 @@
         {
           "name": "list",
           "about": "List all support bundles",
+          "operation_id": "support_bundle_list",
           "args": [
             {
               "long": "limit",
@@ -765,6 +785,7 @@
         {
           "name": "update",
           "about": "Update support bundle",
+          "operation_id": "support_bundle_update",
           "args": [
             {
               "long": "bundle-id",
@@ -792,6 +813,7 @@
         {
           "name": "view",
           "about": "View support bundle",
+          "operation_id": "support_bundle_view",
           "args": [
             {
               "long": "bundle-id",
@@ -820,6 +842,7 @@
           "name": "create",
           "about": "Create system-wide x.509 certificate",
           "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "operation_id": "certificate_create",
           "args": [
             {
               "long": "cert",
@@ -861,6 +884,7 @@
           "name": "delete",
           "about": "Delete certificate",
           "long_about": "Permanently delete a certificate. This operation cannot be undone.",
+          "operation_id": "certificate_delete",
           "args": [
             {
               "long": "certificate",
@@ -877,6 +901,7 @@
           "name": "list",
           "about": "List certificates for external endpoints",
           "long_about": "Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
+          "operation_id": "certificate_list",
           "args": [
             {
               "long": "limit",
@@ -901,6 +926,7 @@
           "name": "view",
           "about": "Fetch certificate",
           "long_about": "Returns the details of a specific certificate",
+          "operation_id": "certificate_view",
           "args": [
             {
               "long": "certificate",
@@ -963,6 +989,7 @@
               "name": "delete",
               "about": "Delete access token",
               "long_about": "Delete a device access token for the currently authenticated user.",
+              "operation_id": "current_user_access_token_delete",
               "args": [
                 {
                   "long": "profile",
@@ -979,6 +1006,7 @@
               "name": "list",
               "about": "List access tokens",
               "long_about": "List device access tokens for the currently authenticated user.",
+              "operation_id": "current_user_access_token_list",
               "args": [
                 {
                   "long": "limit",
@@ -1002,6 +1030,7 @@
         {
           "name": "groups",
           "about": "Fetch current user's groups",
+          "operation_id": "current_user_groups",
           "args": [
             {
               "long": "limit",
@@ -1034,6 +1063,7 @@
               "name": "create",
               "about": "Create SSH public key",
               "long_about": "Create an SSH public key for the currently authenticated user.",
+              "operation_id": "current_user_ssh_key_create",
               "args": [
                 {
                   "long": "description"
@@ -1064,6 +1094,7 @@
               "name": "delete",
               "about": "Delete SSH public key",
               "long_about": "Delete an SSH public key associated with the currently authenticated user.",
+              "operation_id": "current_user_ssh_key_delete",
               "args": [
                 {
                   "long": "profile",
@@ -1080,6 +1111,7 @@
               "name": "list",
               "about": "List SSH public keys",
               "long_about": "Lists SSH public keys for the currently authenticated user.",
+              "operation_id": "current_user_ssh_key_list",
               "args": [
                 {
                   "long": "limit",
@@ -1104,6 +1136,7 @@
               "name": "view",
               "about": "Fetch SSH public key",
               "long_about": "Fetch SSH public key associated with the currently authenticated user.",
+              "operation_id": "current_user_ssh_key_view",
               "args": [
                 {
                   "long": "profile",
@@ -1121,6 +1154,7 @@
         {
           "name": "view",
           "about": "Fetch user for current session",
+          "operation_id": "current_user_view",
           "args": [
             {
               "long": "profile",
@@ -1144,6 +1178,7 @@
         {
           "name": "create",
           "about": "Create disk",
+          "operation_id": "disk_create",
           "args": [
             {
               "long": "description"
@@ -1177,6 +1212,7 @@
         {
           "name": "delete",
           "about": "Delete disk",
+          "operation_id": "disk_delete",
           "args": [
             {
               "long": "disk",
@@ -1256,6 +1292,7 @@
             {
               "name": "finalize",
               "about": "Confirm disk block import completion",
+              "operation_id": "disk_finalize_import",
               "args": [
                 {
                   "long": "disk",
@@ -1288,6 +1325,7 @@
               "name": "start",
               "about": "Start importing blocks into disk",
               "long_about": "Start the process of importing blocks into a disk",
+              "operation_id": "disk_bulk_write_import_start",
               "args": [
                 {
                   "long": "disk",
@@ -1308,6 +1346,7 @@
               "name": "stop",
               "about": "Stop importing blocks into disk",
               "long_about": "Stop the process of importing blocks into a disk",
+              "operation_id": "disk_bulk_write_import_stop",
               "args": [
                 {
                   "long": "disk",
@@ -1327,6 +1366,7 @@
             {
               "name": "write",
               "about": "Import blocks into disk",
+              "operation_id": "disk_bulk_write_import",
               "args": [
                 {
                   "long": "base64-encoded-data"
@@ -1362,6 +1402,7 @@
         {
           "name": "list",
           "about": "List disks",
+          "operation_id": "disk_list",
           "args": [
             {
               "long": "limit",
@@ -1389,6 +1430,7 @@
         {
           "name": "view",
           "about": "Fetch disk",
+          "operation_id": "disk_view",
           "args": [
             {
               "long": "disk",
@@ -1451,6 +1493,7 @@
                 {
                   "name": "create",
                   "about": "Create affinity group",
+                  "operation_id": "affinity_group_create",
                   "args": [
                     {
                       "long": "description"
@@ -1493,6 +1536,7 @@
                 {
                   "name": "delete",
                   "about": "Delete affinity group",
+                  "operation_id": "affinity_group_delete",
                   "args": [
                     {
                       "long": "affinity-group",
@@ -1512,6 +1556,7 @@
                 {
                   "name": "list",
                   "about": "List affinity groups",
+                  "operation_id": "affinity_group_list",
                   "args": [
                     {
                       "long": "limit",
@@ -1549,6 +1594,7 @@
                     {
                       "name": "add-instance",
                       "about": "Add member to affinity group",
+                      "operation_id": "affinity_group_member_instance_add",
                       "args": [
                         {
                           "long": "affinity-group"
@@ -1570,6 +1616,7 @@
                     {
                       "name": "list",
                       "about": "List affinity group members",
+                      "operation_id": "affinity_group_member_list",
                       "args": [
                         {
                           "long": "affinity-group",
@@ -1601,6 +1648,7 @@
                     {
                       "name": "remove-instance",
                       "about": "Remove member from affinity group",
+                      "operation_id": "affinity_group_member_instance_delete",
                       "args": [
                         {
                           "long": "affinity-group"
@@ -1622,6 +1670,7 @@
                     {
                       "name": "view-instance",
                       "about": "Fetch affinity group member",
+                      "operation_id": "affinity_group_member_instance_view",
                       "args": [
                         {
                           "long": "affinity-group"
@@ -1645,6 +1694,7 @@
                 {
                   "name": "update",
                   "about": "Update affinity group",
+                  "operation_id": "affinity_group_update",
                   "args": [
                     {
                       "long": "affinity-group",
@@ -1678,6 +1728,7 @@
                 {
                   "name": "view",
                   "about": "Fetch affinity group",
+                  "operation_id": "affinity_group_view",
                   "args": [
                     {
                       "long": "affinity-group",
@@ -1710,6 +1761,7 @@
                   "name": "join",
                   "about": "Join multicast group by name, IP address, or UUID",
                   "long_about": "Groups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.\n\nSource IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
+                  "operation_id": "instance_multicast_group_join",
                   "args": [
                     {
                       "long": "instance",
@@ -1749,6 +1801,7 @@
                 {
                   "name": "leave",
                   "about": "Leave multicast group by name, IP address, or UUID",
+                  "operation_id": "instance_multicast_group_leave",
                   "args": [
                     {
                       "long": "instance",
@@ -1772,6 +1825,7 @@
                 {
                   "name": "list",
                   "about": "List multicast groups for an instance",
+                  "operation_id": "instance_multicast_group_list",
                   "args": [
                     {
                       "long": "instance",
@@ -1815,6 +1869,7 @@
             {
               "name": "list",
               "about": "List multicast groups",
+              "operation_id": "multicast_group_list",
               "args": [
                 {
                   "long": "limit",
@@ -1849,6 +1904,7 @@
                   "name": "list",
                   "about": "List members of multicast group",
                   "long_about": "The group can be specified by name, UUID, or multicast IP address.",
+                  "operation_id": "multicast_group_member_list",
                   "args": [
                     {
                       "long": "limit",
@@ -1877,6 +1933,7 @@
               "name": "view",
               "about": "Fetch multicast group",
               "long_about": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
+              "operation_id": "multicast_group_view",
               "args": [
                 {
                   "long": "multicast-group",
@@ -1914,6 +1971,7 @@
                 {
                   "name": "create",
                   "about": "Create instrumentation probe",
+                  "operation_id": "probe_create",
                   "args": [
                     {
                       "long": "description"
@@ -1946,6 +2004,7 @@
                 {
                   "name": "delete",
                   "about": "Delete instrumentation probe",
+                  "operation_id": "probe_delete",
                   "args": [
                     {
                       "long": "probe",
@@ -1965,6 +2024,7 @@
                 {
                   "name": "list",
                   "about": "List instrumentation probes",
+                  "operation_id": "probe_list",
                   "args": [
                     {
                       "long": "limit",
@@ -1992,6 +2052,7 @@
                 {
                   "name": "view",
                   "about": "View instrumentation probe",
+                  "operation_id": "probe_view",
                   "args": [
                     {
                       "long": "probe",
@@ -2024,6 +2085,7 @@
                   "name": "query",
                   "about": "Run timeseries query",
                   "long_about": "Queries are written in OxQL.",
+                  "operation_id": "system_timeseries_query",
                   "args": [
                     {
                       "long": "json-body",
@@ -2057,6 +2119,7 @@
                     {
                       "name": "list",
                       "about": "List timeseries schemas",
+                      "operation_id": "system_timeseries_schema_list",
                       "args": [
                         {
                           "long": "limit",
@@ -2109,6 +2172,7 @@
               "name": "query",
               "about": "Run project-scoped timeseries query",
               "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
+              "operation_id": "timeseries_query",
               "args": [
                 {
                   "long": "json-body",
@@ -2150,6 +2214,7 @@
         {
           "name": "attach",
           "about": "Attach external subnet to instance",
+          "operation_id": "external_subnet_attach",
           "args": [
             {
               "long": "external-subnet",
@@ -2181,6 +2246,7 @@
         {
           "name": "create",
           "about": "Create external subnet",
+          "operation_id": "external_subnet_create",
           "args": [
             {
               "long": "description"
@@ -2210,6 +2276,7 @@
         {
           "name": "delete",
           "about": "Delete external subnet",
+          "operation_id": "external_subnet_delete",
           "args": [
             {
               "long": "external-subnet",
@@ -2229,6 +2296,7 @@
         {
           "name": "detach",
           "about": "Detach external subnet from instance",
+          "operation_id": "external_subnet_detach",
           "args": [
             {
               "long": "external-subnet",
@@ -2248,6 +2316,7 @@
         {
           "name": "list",
           "about": "List external subnets",
+          "operation_id": "external_subnet_list",
           "args": [
             {
               "long": "limit",
@@ -2275,6 +2344,7 @@
         {
           "name": "update",
           "about": "Update external subnet",
+          "operation_id": "external_subnet_update",
           "args": [
             {
               "long": "description"
@@ -2308,6 +2378,7 @@
         {
           "name": "view",
           "about": "Fetch external subnet",
+          "operation_id": "external_subnet_view",
           "args": [
             {
               "long": "external-subnet",
@@ -2340,6 +2411,7 @@
           "name": "attach",
           "about": "Attach floating IP",
           "long_about": "Attach floating IP to an instance or other resource.",
+          "operation_id": "floating_ip_attach",
           "args": [
             {
               "long": "floating-ip",
@@ -2379,6 +2451,7 @@
           "name": "create",
           "about": "Create floating IP",
           "long_about": "A specific IP address can be reserved, or an IP can be auto-allocated from a specific pool or the silo's default pool.",
+          "operation_id": "floating_ip_create",
           "args": [
             {
               "long": "description"
@@ -2408,6 +2481,7 @@
         {
           "name": "delete",
           "about": "Delete floating IP",
+          "operation_id": "floating_ip_delete",
           "args": [
             {
               "long": "floating-ip",
@@ -2427,6 +2501,7 @@
         {
           "name": "detach",
           "about": "Detach floating IP",
+          "operation_id": "floating_ip_detach",
           "args": [
             {
               "long": "floating-ip",
@@ -2446,6 +2521,7 @@
         {
           "name": "list",
           "about": "List floating IPs",
+          "operation_id": "floating_ip_list",
           "args": [
             {
               "long": "limit",
@@ -2473,6 +2549,7 @@
         {
           "name": "update",
           "about": "Update floating IP",
+          "operation_id": "floating_ip_update",
           "args": [
             {
               "long": "description"
@@ -2506,6 +2583,7 @@
         {
           "name": "view",
           "about": "Fetch floating IP",
+          "operation_id": "floating_ip_view",
           "args": [
             {
               "long": "floating-ip",
@@ -2537,6 +2615,7 @@
         {
           "name": "list",
           "about": "List groups",
+          "operation_id": "group_list",
           "args": [
             {
               "long": "limit",
@@ -2571,6 +2650,7 @@
           "name": "create",
           "about": "Create image",
           "long_about": "Create a new image in a project.",
+          "operation_id": "image_create",
           "args": [
             {
               "long": "description"
@@ -2609,6 +2689,7 @@
           "name": "delete",
           "about": "Delete image",
           "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "operation_id": "image_delete",
           "args": [
             {
               "long": "image",
@@ -2629,6 +2710,7 @@
           "name": "demote",
           "about": "Demote silo image",
           "long_about": "Demote silo image to be visible only to a specified project",
+          "operation_id": "image_demote",
           "args": [
             {
               "long": "image",
@@ -2649,6 +2731,7 @@
           "name": "list",
           "about": "List images",
           "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
+          "operation_id": "image_list",
           "args": [
             {
               "long": "limit",
@@ -2677,6 +2760,7 @@
           "name": "promote",
           "about": "Promote project image",
           "long_about": "Promote project image to be visible to all projects in the silo",
+          "operation_id": "image_promote",
           "args": [
             {
               "long": "image",
@@ -2697,6 +2781,7 @@
           "name": "view",
           "about": "Fetch image",
           "long_about": "Fetch the details for a specific image in a project.",
+          "operation_id": "image_view",
           "args": [
             {
               "long": "image",
@@ -2738,6 +2823,7 @@
             {
               "name": "create",
               "about": "Create anti-affinity group",
+              "operation_id": "anti_affinity_group_create",
               "args": [
                 {
                   "long": "description"
@@ -2780,6 +2866,7 @@
             {
               "name": "delete",
               "about": "Delete anti-affinity group",
+              "operation_id": "anti_affinity_group_delete",
               "args": [
                 {
                   "long": "anti-affinity-group",
@@ -2799,6 +2886,7 @@
             {
               "name": "list",
               "about": "List anti-affinity groups",
+              "operation_id": "anti_affinity_group_list",
               "args": [
                 {
                   "long": "limit",
@@ -2836,6 +2924,7 @@
                 {
                   "name": "add-instance",
                   "about": "Add member to anti-affinity group",
+                  "operation_id": "anti_affinity_group_member_instance_add",
                   "args": [
                     {
                       "long": "anti-affinity-group"
@@ -2857,6 +2946,7 @@
                 {
                   "name": "list",
                   "about": "List anti-affinity group members",
+                  "operation_id": "anti_affinity_group_member_list",
                   "args": [
                     {
                       "long": "anti-affinity-group",
@@ -2888,6 +2978,7 @@
                 {
                   "name": "remove-instance",
                   "about": "Remove member from anti-affinity group",
+                  "operation_id": "anti_affinity_group_member_instance_delete",
                   "args": [
                     {
                       "long": "anti-affinity-group"
@@ -2909,6 +3000,7 @@
                 {
                   "name": "view-instance",
                   "about": "Fetch anti-affinity group member",
+                  "operation_id": "anti_affinity_group_member_instance_view",
                   "args": [
                     {
                       "long": "anti-affinity-group"
@@ -2932,6 +3024,7 @@
             {
               "name": "update",
               "about": "Update anti-affinity group",
+              "operation_id": "anti_affinity_group_update",
               "args": [
                 {
                   "long": "anti-affinity-group",
@@ -2965,6 +3058,7 @@
             {
               "name": "view",
               "about": "Fetch anti-affinity group",
+              "operation_id": "anti_affinity_group_view",
               "args": [
                 {
                   "long": "anti-affinity-group",
@@ -2986,6 +3080,7 @@
         {
           "name": "create",
           "about": "Create instance",
+          "operation_id": "instance_create",
           "args": [
             {
               "long": "auto-restart-policy",
@@ -3055,6 +3150,7 @@
         {
           "name": "delete",
           "about": "Delete instance",
+          "operation_id": "instance_delete",
           "args": [
             {
               "long": "instance",
@@ -3084,6 +3180,7 @@
             {
               "name": "attach",
               "about": "Attach disk to instance",
+              "operation_id": "instance_disk_attach",
               "args": [
                 {
                   "long": "disk",
@@ -3115,6 +3212,7 @@
             {
               "name": "detach",
               "about": "Detach disk from instance",
+              "operation_id": "instance_disk_detach",
               "args": [
                 {
                   "long": "disk",
@@ -3146,6 +3244,7 @@
             {
               "name": "list",
               "about": "List disks for instance",
+              "operation_id": "instance_disk_list",
               "args": [
                 {
                   "long": "instance",
@@ -3189,6 +3288,7 @@
             {
               "name": "attach-ephemeral",
               "about": "Allocate and attach ephemeral IP to instance",
+              "operation_id": "instance_ephemeral_ip_attach",
               "args": [
                 {
                   "long": "instance",
@@ -3217,6 +3317,7 @@
               "name": "detach-ephemeral",
               "about": "Detach and deallocate ephemeral IP from instance",
               "long_about": "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.",
+              "operation_id": "instance_ephemeral_ip_detach",
               "args": [
                 {
                   "long": "instance",
@@ -3244,6 +3345,7 @@
             {
               "name": "list",
               "about": "List external IP addresses",
+              "operation_id": "instance_external_ip_list",
               "args": [
                 {
                   "long": "instance",
@@ -3275,6 +3377,7 @@
             {
               "name": "list",
               "about": "List external subnets attached to instance",
+              "operation_id": "instance_external_subnet_list",
               "args": [
                 {
                   "long": "instance",
@@ -3343,6 +3446,7 @@
         {
           "name": "list",
           "about": "List instances",
+          "operation_id": "instance_list",
           "args": [
             {
               "long": "limit",
@@ -3380,6 +3484,7 @@
             {
               "name": "create",
               "about": "Create network interface",
+              "operation_id": "instance_network_interface_create",
               "args": [
                 {
                   "long": "description"
@@ -3422,6 +3527,7 @@
               "name": "delete",
               "about": "Delete network interface",
               "long_about": "Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
+              "operation_id": "instance_network_interface_delete",
               "args": [
                 {
                   "long": "instance",
@@ -3445,6 +3551,7 @@
             {
               "name": "list",
               "about": "List network interfaces",
+              "operation_id": "instance_network_interface_list",
               "args": [
                 {
                   "long": "instance",
@@ -3476,6 +3583,7 @@
             {
               "name": "update",
               "about": "Update network interface",
+              "operation_id": "instance_network_interface_update",
               "args": [
                 {
                   "long": "description"
@@ -3521,6 +3629,7 @@
             {
               "name": "view",
               "about": "Fetch network interface",
+              "operation_id": "instance_network_interface_view",
               "args": [
                 {
                   "long": "instance",
@@ -3556,6 +3665,7 @@
             {
               "name": "affinity",
               "about": "List affinity groups containing instance",
+              "operation_id": "instance_affinity_group_list",
               "args": [
                 {
                   "long": "instance",
@@ -3587,6 +3697,7 @@
             {
               "name": "anti-affinity",
               "about": "List anti-affinity groups containing instance",
+              "operation_id": "instance_anti_affinity_group_list",
               "args": [
                 {
                   "long": "instance",
@@ -3619,6 +3730,7 @@
               "name": "ssh-key",
               "about": "List SSH public keys for instance",
               "long_about": "List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
+              "operation_id": "instance_ssh_public_key_list",
               "args": [
                 {
                   "long": "instance",
@@ -3652,6 +3764,7 @@
         {
           "name": "reboot",
           "about": "Reboot instance",
+          "operation_id": "instance_reboot",
           "args": [
             {
               "long": "instance",
@@ -3762,6 +3875,7 @@
         {
           "name": "start",
           "about": "Boot instance",
+          "operation_id": "instance_start",
           "args": [
             {
               "long": "instance",
@@ -3781,6 +3895,7 @@
         {
           "name": "stop",
           "about": "Stop instance",
+          "operation_id": "instance_stop",
           "args": [
             {
               "long": "instance",
@@ -3800,6 +3915,7 @@
         {
           "name": "update",
           "about": "Update instance",
+          "operation_id": "instance_update",
           "args": [
             {
               "long": "auto-restart-policy",
@@ -3855,6 +3971,7 @@
         {
           "name": "view",
           "about": "Fetch instance",
+          "operation_id": "instance_view",
           "args": [
             {
               "long": "instance",
@@ -3896,6 +4013,7 @@
             {
               "name": "create",
               "about": "Attach IP address to internet gateway",
+              "operation_id": "internet_gateway_ip_address_create",
               "args": [
                 {
                   "long": "address"
@@ -3936,6 +4054,7 @@
             {
               "name": "delete",
               "about": "Detach IP address from internet gateway",
+              "operation_id": "internet_gateway_ip_address_delete",
               "args": [
                 {
                   "long": "address",
@@ -3971,6 +4090,7 @@
             {
               "name": "list",
               "about": "List IP addresses attached to internet gateway",
+              "operation_id": "internet_gateway_ip_address_list",
               "args": [
                 {
                   "long": "gateway",
@@ -4008,6 +4128,7 @@
         {
           "name": "create",
           "about": "Create VPC internet gateway",
+          "operation_id": "internet_gateway_create",
           "args": [
             {
               "long": "description"
@@ -4041,6 +4162,7 @@
         {
           "name": "delete",
           "about": "Delete internet gateway",
+          "operation_id": "internet_gateway_delete",
           "args": [
             {
               "long": "cascade",
@@ -4082,6 +4204,7 @@
             {
               "name": "attach",
               "about": "Attach IP pool to internet gateway",
+              "operation_id": "internet_gateway_ip_pool_create",
               "args": [
                 {
                   "long": "description"
@@ -4122,6 +4245,7 @@
             {
               "name": "detach",
               "about": "Detach IP pool from internet gateway",
+              "operation_id": "internet_gateway_ip_pool_delete",
               "args": [
                 {
                   "long": "cascade",
@@ -4157,6 +4281,7 @@
             {
               "name": "list",
               "about": "List IP pools attached to internet gateway",
+              "operation_id": "internet_gateway_ip_pool_list",
               "args": [
                 {
                   "long": "gateway",
@@ -4194,6 +4319,7 @@
         {
           "name": "list",
           "about": "List internet gateways",
+          "operation_id": "internet_gateway_list",
           "args": [
             {
               "long": "limit",
@@ -4225,6 +4351,7 @@
         {
           "name": "view",
           "about": "Fetch internet gateway",
+          "operation_id": "internet_gateway_view",
           "args": [
             {
               "long": "gateway",
@@ -4260,6 +4387,7 @@
         {
           "name": "list",
           "about": "List IP pools",
+          "operation_id": "ip_pool_list",
           "args": [
             {
               "long": "limit",
@@ -4283,6 +4411,7 @@
         {
           "name": "view",
           "about": "Fetch IP pool",
+          "operation_id": "ip_pool_view",
           "args": [
             {
               "long": "pool",
@@ -4301,6 +4430,7 @@
       "name": "ping",
       "about": "Ping API",
       "long_about": "Always responds with Ok if it responds at all.",
+      "operation_id": "ping",
       "args": [
         {
           "long": "profile",
@@ -4322,6 +4452,7 @@
         {
           "name": "update",
           "about": "Update current silo's IAM policy",
+          "operation_id": "policy_update",
           "args": [
             {
               "long": "json-body",
@@ -4341,6 +4472,7 @@
         {
           "name": "view",
           "about": "Fetch current silo's IAM policy",
+          "operation_id": "policy_view",
           "args": [
             {
               "long": "profile",
@@ -4364,6 +4496,7 @@
         {
           "name": "create",
           "about": "Create project",
+          "operation_id": "project_create",
           "args": [
             {
               "long": "description"
@@ -4389,6 +4522,7 @@
         {
           "name": "delete",
           "about": "Delete project",
+          "operation_id": "project_delete",
           "args": [
             {
               "long": "profile",
@@ -4404,6 +4538,7 @@
         {
           "name": "list",
           "about": "List projects",
+          "operation_id": "project_list",
           "args": [
             {
               "long": "limit",
@@ -4437,6 +4572,7 @@
             {
               "name": "update",
               "about": "Update project's IAM policy",
+              "operation_id": "project_policy_update",
               "args": [
                 {
                   "long": "json-body",
@@ -4460,6 +4596,7 @@
             {
               "name": "view",
               "about": "Fetch project's IAM policy",
+              "operation_id": "project_policy_view",
               "args": [
                 {
                   "long": "profile",
@@ -4477,6 +4614,7 @@
         {
           "name": "update",
           "about": "Update project",
+          "operation_id": "project_update",
           "args": [
             {
               "long": "description"
@@ -4506,6 +4644,7 @@
         {
           "name": "view",
           "about": "Fetch project",
+          "operation_id": "project_view",
           "args": [
             {
               "long": "profile",
@@ -4544,6 +4683,7 @@
               "name": "create",
               "about": "Create SCIM token",
               "long_about": "Specify the silo by name or ID using the `silo` query parameter. Be sure to save the bearer token in the response. It will not be retrievable later through the token view and list endpoints.",
+              "operation_id": "scim_token_create",
               "args": [
                 {
                   "long": "profile",
@@ -4560,6 +4700,7 @@
               "name": "delete",
               "about": "Delete SCIM token",
               "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "operation_id": "scim_token_delete",
               "args": [
                 {
                   "long": "profile",
@@ -4579,6 +4720,7 @@
               "name": "list",
               "about": "List SCIM tokens",
               "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "operation_id": "scim_token_list",
               "args": [
                 {
                   "long": "profile",
@@ -4595,6 +4737,7 @@
               "name": "view",
               "about": "Fetch SCIM token",
               "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "operation_id": "scim_token_view",
               "args": [
                 {
                   "long": "profile",
@@ -4627,6 +4770,7 @@
         {
           "name": "create",
           "about": "Create silo",
+          "operation_id": "silo_create",
           "args": [
             {
               "long": "admin-group-name",
@@ -4672,6 +4816,7 @@
           "name": "delete",
           "about": "Delete silo",
           "long_about": "Delete a silo by name or ID.",
+          "operation_id": "silo_delete",
           "args": [
             {
               "long": "profile",
@@ -4698,6 +4843,7 @@
               "name": "list",
               "about": "List identity providers for silo",
               "long_about": "List identity providers for silo by silo name or ID.",
+              "operation_id": "silo_identity_provider_list",
               "args": [
                 {
                   "long": "limit",
@@ -4746,6 +4892,7 @@
                       "name": "create",
                       "about": "Create user",
                       "long_about": "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
+                      "operation_id": "local_idp_user_create",
                       "args": [
                         {
                           "long": "external-id",
@@ -4773,6 +4920,7 @@
                     {
                       "name": "delete",
                       "about": "Delete user",
+                      "operation_id": "local_idp_user_delete",
                       "args": [
                         {
                           "long": "profile",
@@ -4793,6 +4941,7 @@
                       "name": "set-password",
                       "about": "Set or invalidate user's password",
                       "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
+                      "operation_id": "local_idp_user_set_password",
                       "args": [
                         {
                           "long": "json-body",
@@ -4834,6 +4983,7 @@
                 {
                   "name": "create",
                   "about": "Create SAML identity provider",
+                  "operation_id": "saml_identity_provider_create",
                   "args": [
                     {
                       "long": "acs-url",
@@ -4903,6 +5053,7 @@
                 {
                   "name": "view",
                   "about": "Fetch SAML identity provider",
+                  "operation_id": "saml_identity_provider_view",
                   "args": [
                     {
                       "long": "profile",
@@ -4937,6 +5088,7 @@
               "name": "list",
               "about": "List IP pools linked to silo",
               "long_about": "Linked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
+              "operation_id": "silo_ip_pool_list",
               "args": [
                 {
                   "long": "limit",
@@ -4967,6 +5119,7 @@
           "name": "list",
           "about": "List silos",
           "long_about": "Lists silos that are discoverable based on the current permissions.",
+          "operation_id": "silo_list",
           "args": [
             {
               "long": "limit",
@@ -5000,6 +5153,7 @@
             {
               "name": "update",
               "about": "Update silo IAM policy",
+              "operation_id": "silo_policy_update",
               "args": [
                 {
                   "long": "json-body",
@@ -5023,6 +5177,7 @@
             {
               "name": "view",
               "about": "Fetch silo IAM policy",
+              "operation_id": "silo_policy_view",
               "args": [
                 {
                   "long": "profile",
@@ -5050,6 +5205,7 @@
             {
               "name": "list",
               "about": "List resource quotas for all silos",
+              "operation_id": "system_quotas_list",
               "args": [
                 {
                   "long": "limit",
@@ -5072,6 +5228,7 @@
               "name": "update",
               "about": "Update resource quotas for silo",
               "long_about": "If a quota value is not specified, it will remain unchanged.",
+              "operation_id": "silo_quotas_update",
               "args": [
                 {
                   "long": "cpus",
@@ -5107,6 +5264,7 @@
             {
               "name": "view",
               "about": "Fetch resource quotas for silo",
+              "operation_id": "silo_quotas_view",
               "args": [
                 {
                   "long": "profile",
@@ -5134,6 +5292,7 @@
             {
               "name": "list",
               "about": "List subnet pools linked to a silo",
+              "operation_id": "silo_subnet_pool_list",
               "args": [
                 {
                   "long": "limit",
@@ -5173,6 +5332,7 @@
             {
               "name": "list",
               "about": "List built-in (system) users in silo",
+              "operation_id": "silo_user_list",
               "args": [
                 {
                   "long": "limit",
@@ -5198,6 +5358,7 @@
             {
               "name": "view",
               "about": "Fetch built-in (system) user",
+              "operation_id": "silo_user_view",
               "args": [
                 {
                   "long": "profile",
@@ -5229,6 +5390,7 @@
             {
               "name": "list",
               "about": "List current utilization state for all silos",
+              "operation_id": "silo_utilization_list",
               "args": [
                 {
                   "long": "limit",
@@ -5252,6 +5414,7 @@
             {
               "name": "view",
               "about": "Fetch current utilization for given silo",
+              "operation_id": "silo_utilization_view",
               "args": [
                 {
                   "long": "profile",
@@ -5270,6 +5433,7 @@
           "name": "view",
           "about": "Fetch silo",
           "long_about": "Fetch silo by name or ID.",
+          "operation_id": "silo_view",
           "args": [
             {
               "long": "profile",
@@ -5298,6 +5462,7 @@
           "name": "create",
           "about": "Create snapshot",
           "long_about": "Creates a point-in-time snapshot from a disk.",
+          "operation_id": "snapshot_create",
           "args": [
             {
               "long": "description"
@@ -5331,6 +5496,7 @@
         {
           "name": "delete",
           "about": "Delete snapshot",
+          "operation_id": "snapshot_delete",
           "args": [
             {
               "long": "profile",
@@ -5350,6 +5516,7 @@
         {
           "name": "list",
           "about": "List snapshots",
+          "operation_id": "snapshot_list",
           "args": [
             {
               "long": "limit",
@@ -5377,6 +5544,7 @@
         {
           "name": "view",
           "about": "Fetch snapshot",
+          "operation_id": "snapshot_view",
           "args": [
             {
               "long": "profile",
@@ -5408,6 +5576,7 @@
         {
           "name": "list",
           "about": "List subnet pools",
+          "operation_id": "subnet_pool_list",
           "args": [
             {
               "long": "limit",
@@ -5431,6 +5600,7 @@
         {
           "name": "view",
           "about": "Fetch subnet pool",
+          "operation_id": "subnet_pool_view",
           "args": [
             {
               "long": "pool",
@@ -5478,6 +5648,7 @@
                 {
                   "name": "list",
                   "about": "List physical disks",
+                  "operation_id": "physical_disk_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5499,6 +5670,7 @@
                 {
                   "name": "view",
                   "about": "Get physical disk",
+                  "operation_id": "physical_disk_view",
                   "args": [
                     {
                       "long": "disk-id",
@@ -5526,6 +5698,7 @@
                 {
                   "name": "list",
                   "about": "List racks",
+                  "operation_id": "rack_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5558,6 +5731,7 @@
                       "name": "abort",
                       "about": "Abort the latest rack membership change",
                       "long_about": "This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.",
+                      "operation_id": "rack_membership_abort",
                       "args": [
                         {
                           "long": "profile",
@@ -5573,6 +5747,7 @@
                     {
                       "name": "add",
                       "about": "Add new sleds to rack membership",
+                      "operation_id": "rack_membership_add_sleds",
                       "args": [
                         {
                           "long": "json-body",
@@ -5597,6 +5772,7 @@
                       "name": "status",
                       "about": "Fetch rack cluster membership status",
                       "long_about": "Returns the status for the most recent change, or a specific version if one is specified.",
+                      "operation_id": "rack_membership_status",
                       "args": [
                         {
                           "long": "profile",
@@ -5616,6 +5792,7 @@
                 {
                   "name": "view",
                   "about": "Fetch rack",
+                  "operation_id": "rack_view",
                   "args": [
                     {
                       "long": "profile",
@@ -5643,6 +5820,7 @@
                 {
                   "name": "disk-led",
                   "about": "List physical disks attached to sleds",
+                  "operation_id": "sled_physical_disk_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5668,6 +5846,7 @@
                 {
                   "name": "instance-list",
                   "about": "List instances running on given sled",
+                  "operation_id": "sled_instance_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5693,6 +5872,7 @@
                 {
                   "name": "list",
                   "about": "List sleds",
+                  "operation_id": "sled_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5714,6 +5894,7 @@
                 {
                   "name": "list-uninitialized",
                   "about": "List uninitialized sleds",
+                  "operation_id": "sled_list_uninitialized",
                   "args": [
                     {
                       "long": "limit",
@@ -5729,6 +5910,7 @@
                 {
                   "name": "set-provision-policy",
                   "about": "Set sled provision policy",
+                  "operation_id": "sled_set_provision_policy",
                   "args": [
                     {
                       "long": "json-body",
@@ -5760,6 +5942,7 @@
                 {
                   "name": "view",
                   "about": "Fetch sled",
+                  "operation_id": "sled_view",
                   "args": [
                     {
                       "long": "profile",
@@ -5787,6 +5970,7 @@
                 {
                   "name": "list",
                   "about": "List switches",
+                  "operation_id": "switch_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5808,6 +5992,7 @@
                 {
                   "name": "view",
                   "about": "Fetch switch",
+                  "operation_id": "switch_view",
                   "args": [
                     {
                       "long": "profile",
@@ -5835,6 +6020,7 @@
                 {
                   "name": "apply-settings",
                   "about": "Apply switch port settings",
+                  "operation_id": "networking_switch_port_apply_settings",
                   "args": [
                     {
                       "long": "json-body",
@@ -5874,6 +6060,7 @@
                 {
                   "name": "clear-settings",
                   "about": "Clear switch port settings",
+                  "operation_id": "networking_switch_port_clear_settings",
                   "args": [
                     {
                       "long": "port",
@@ -5901,6 +6088,7 @@
                 {
                   "name": "list",
                   "about": "List switch ports",
+                  "operation_id": "networking_switch_port_list",
                   "args": [
                     {
                       "long": "limit",
@@ -5937,6 +6125,7 @@
                 {
                   "name": "status",
                   "about": "Get switch port status",
+                  "operation_id": "networking_switch_port_status",
                   "args": [
                     {
                       "long": "port",
@@ -6149,6 +6338,7 @@
                     {
                       "name": "list",
                       "about": "List blocks in address lot",
+                      "operation_id": "networking_address_lot_block_list",
                       "args": [
                         {
                           "long": "address-lot",
@@ -6176,6 +6366,7 @@
                 {
                   "name": "create",
                   "about": "Create address lot",
+                  "operation_id": "networking_address_lot_create",
                   "args": [
                     {
                       "long": "description"
@@ -6209,6 +6400,7 @@
                 {
                   "name": "delete",
                   "about": "Delete address lot",
+                  "operation_id": "networking_address_lot_delete",
                   "args": [
                     {
                       "long": "address-lot",
@@ -6224,6 +6416,7 @@
                 {
                   "name": "list",
                   "about": "List address lots",
+                  "operation_id": "networking_address_lot_list",
                   "args": [
                     {
                       "long": "limit",
@@ -6247,6 +6440,7 @@
                 {
                   "name": "view",
                   "about": "Fetch address lot",
+                  "operation_id": "networking_address_lot_view",
                   "args": [
                     {
                       "long": "address-lot",
@@ -6274,6 +6468,7 @@
                 {
                   "name": "update",
                   "about": "Update user-facing services IP allowlist",
+                  "operation_id": "networking_allow_list_update",
                   "args": [
                     {
                       "long": "any"
@@ -6299,6 +6494,7 @@
                 {
                   "name": "view",
                   "about": "Get user-facing services IP allowlist",
+                  "operation_id": "networking_allow_list_view",
                   "args": [
                     {
                       "long": "profile",
@@ -6322,6 +6518,7 @@
                 {
                   "name": "disable",
                   "about": "Disable BFD session",
+                  "operation_id": "networking_bfd_disable",
                   "args": [
                     {
                       "long": "json-body",
@@ -6353,6 +6550,7 @@
                 {
                   "name": "enable",
                   "about": "Enable BFD session",
+                  "operation_id": "networking_bfd_enable",
                   "args": [
                     {
                       "long": "detection-threshold",
@@ -6404,6 +6602,7 @@
                 {
                   "name": "status",
                   "about": "Get BFD status",
+                  "operation_id": "networking_bfd_status",
                   "args": [
                     {
                       "long": "profile",
@@ -6464,6 +6663,7 @@
                     {
                       "name": "delete",
                       "about": "Delete BGP announce set",
+                      "operation_id": "networking_bgp_announce_set_delete",
                       "args": [
                         {
                           "long": "announce-set",
@@ -6479,6 +6679,7 @@
                     {
                       "name": "list",
                       "about": "List BGP announce sets",
+                      "operation_id": "networking_bgp_announce_set_list",
                       "args": [
                         {
                           "long": "limit",
@@ -6507,6 +6708,7 @@
                       "name": "update",
                       "about": "Update BGP announce set",
                       "long_about": "If the announce set exists, this endpoint replaces the existing announce set with the one specified.",
+                      "operation_id": "networking_bgp_announce_set_update",
                       "args": [
                         {
                           "long": "description"
@@ -6544,6 +6746,7 @@
                     {
                       "name": "list",
                       "about": "Get originated routes for a specified BGP announce set",
+                      "operation_id": "networking_bgp_announcement_list",
                       "args": [
                         {
                           "long": "announce-set",
@@ -6641,6 +6844,7 @@
                     {
                       "name": "create",
                       "about": "Create BGP configuration",
+                      "operation_id": "networking_bgp_config_create",
                       "args": [
                         {
                           "long": "asn",
@@ -6681,6 +6885,7 @@
                     {
                       "name": "delete",
                       "about": "Delete BGP configuration",
+                      "operation_id": "networking_bgp_config_delete",
                       "args": [
                         {
                           "long": "name-or-id",
@@ -6696,6 +6901,7 @@
                     {
                       "name": "list",
                       "about": "List BGP configurations",
+                      "operation_id": "networking_bgp_config_list",
                       "args": [
                         {
                           "long": "limit",
@@ -6721,6 +6927,7 @@
                 {
                   "name": "exported",
                   "about": "List BGP exported routes",
+                  "operation_id": "networking_bgp_exported",
                   "args": [
                     {
                       "long": "profile",
@@ -6814,6 +7021,7 @@
                 {
                   "name": "history",
                   "about": "Get BGP router message history",
+                  "operation_id": "networking_bgp_message_history",
                   "args": [
                     {
                       "long": "asn",
@@ -6829,6 +7037,7 @@
                 {
                   "name": "imported",
                   "about": "Get imported IPv4 BGP routes",
+                  "operation_id": "networking_bgp_imported",
                   "args": [
                     {
                       "long": "asn",
@@ -7137,6 +7346,7 @@
                 {
                   "name": "status",
                   "about": "Get BGP peer status",
+                  "operation_id": "networking_bgp_status",
                   "args": [
                     {
                       "long": "profile",
@@ -7180,6 +7390,7 @@
                 {
                   "name": "update",
                   "about": "Set whether API services can receive limited ICMP traffic",
+                  "operation_id": "networking_inbound_icmp_update",
                   "args": [
                     {
                       "long": "enabled",
@@ -7207,6 +7418,7 @@
                 {
                   "name": "view",
                   "about": "Return whether API services can receive limited ICMP traffic",
+                  "operation_id": "networking_inbound_icmp_view",
                   "args": [
                     {
                       "long": "profile",
@@ -7230,6 +7442,7 @@
                 {
                   "name": "create",
                   "about": "Create IP pool",
+                  "operation_id": "system_ip_pool_create",
                   "args": [
                     {
                       "long": "description"
@@ -7271,6 +7484,7 @@
                 {
                   "name": "delete",
                   "about": "Delete IP pool",
+                  "operation_id": "system_ip_pool_delete",
                   "args": [
                     {
                       "long": "pool",
@@ -7286,6 +7500,7 @@
                 {
                   "name": "list",
                   "about": "List IP pools",
+                  "operation_id": "system_ip_pool_list",
                   "args": [
                     {
                       "long": "limit",
@@ -7320,6 +7535,7 @@
                       "name": "add",
                       "about": "Add range to IP pool",
                       "long_about": "For multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+                      "operation_id": "system_ip_pool_range_add",
                       "args": [
                         {
                           "long": "first"
@@ -7350,6 +7566,7 @@
                       "name": "list",
                       "about": "List ranges for IP pool",
                       "long_about": "Ranges are ordered by their first address.",
+                      "operation_id": "system_ip_pool_range_list",
                       "args": [
                         {
                           "long": "limit",
@@ -7369,6 +7586,7 @@
                     {
                       "name": "remove",
                       "about": "Remove range from IP pool",
+                      "operation_id": "system_ip_pool_range_remove",
                       "args": [
                         {
                           "long": "first"
@@ -7421,6 +7639,7 @@
                           "name": "add",
                           "about": "Add IP range to Oxide service pool",
                           "long_about": "IPv6 ranges are not allowed yet.",
+                          "operation_id": "system_ip_pool_service_range_add",
                           "args": [
                             {
                               "long": "first"
@@ -7447,6 +7666,7 @@
                           "name": "list",
                           "about": "List IP ranges for the Oxide service pool",
                           "long_about": "Ranges are ordered by their first address.",
+                          "operation_id": "system_ip_pool_service_range_list",
                           "args": [
                             {
                               "long": "limit",
@@ -7464,6 +7684,7 @@
                     {
                       "name": "remove",
                       "about": "Remove IP range from Oxide service pool",
+                      "operation_id": "system_ip_pool_service_range_remove",
                       "args": [
                         {
                           "long": "first"
@@ -7489,6 +7710,7 @@
                     {
                       "name": "view",
                       "about": "Fetch Oxide service IP pool",
+                      "operation_id": "system_ip_pool_service_view",
                       "args": [
                         {
                           "long": "profile",
@@ -7513,6 +7735,7 @@
                       "name": "link",
                       "about": "Link IP pool to silo",
                       "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
+                      "operation_id": "system_ip_pool_silo_link",
                       "args": [
                         {
                           "long": "is-default",
@@ -7547,6 +7770,7 @@
                     {
                       "name": "list",
                       "about": "List IP pool's linked silos",
+                      "operation_id": "system_ip_pool_silo_list",
                       "args": [
                         {
                           "long": "limit",
@@ -7573,6 +7797,7 @@
                       "name": "unlink",
                       "about": "Unlink IP pool from silo",
                       "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
+                      "operation_id": "system_ip_pool_silo_unlink",
                       "args": [
                         {
                           "long": "pool"
@@ -7591,6 +7816,7 @@
                       "name": "update",
                       "about": "Make IP pool default for silo",
                       "long_about": "When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
+                      "operation_id": "system_ip_pool_silo_update",
                       "args": [
                         {
                           "long": "is-default",
@@ -7626,6 +7852,7 @@
                 {
                   "name": "update",
                   "about": "Update IP pool",
+                  "operation_id": "system_ip_pool_update",
                   "args": [
                     {
                       "long": "description"
@@ -7655,6 +7882,7 @@
                 {
                   "name": "utilization",
                   "about": "Fetch IP pool utilization",
+                  "operation_id": "system_ip_pool_utilization_view",
                   "args": [
                     {
                       "long": "pool",
@@ -7670,6 +7898,7 @@
                 {
                   "name": "view",
                   "about": "Fetch IP pool",
+                  "operation_id": "system_ip_pool_view",
                   "args": [
                     {
                       "long": "pool",
@@ -7865,6 +8094,7 @@
                 {
                   "name": "neighbors",
                   "about": "Fetch LLDP neighbors for switch port",
+                  "operation_id": "networking_switch_port_lldp_neighbors",
                   "args": [
                     {
                       "long": "limit",
@@ -7902,6 +8132,7 @@
                 {
                   "name": "update",
                   "about": "Update LLDP configuration for switch port",
+                  "operation_id": "networking_switch_port_lldp_config_update",
                   "args": [
                     {
                       "long": "chassis-id",
@@ -7973,6 +8204,7 @@
                 {
                   "name": "view",
                   "about": "Fetch LLDP configuration for switch port",
+                  "operation_id": "networking_switch_port_lldp_config_view",
                   "args": [
                     {
                       "long": "port",
@@ -8012,6 +8244,7 @@
                 {
                   "name": "create",
                   "about": "Create loopback address",
+                  "operation_id": "networking_loopback_address_create",
                   "args": [
                     {
                       "long": "address",
@@ -8063,6 +8296,7 @@
                 {
                   "name": "delete",
                   "about": "Delete loopback address",
+                  "operation_id": "networking_loopback_address_delete",
                   "args": [
                     {
                       "long": "address",
@@ -8094,6 +8328,7 @@
                 {
                   "name": "list",
                   "about": "List loopback addresses",
+                  "operation_id": "networking_loopback_address_list",
                   "args": [
                     {
                       "long": "limit",
@@ -8290,6 +8525,7 @@
                 {
                   "name": "create",
                   "about": "Create subnet pool",
+                  "operation_id": "system_subnet_pool_create",
                   "args": [
                     {
                       "long": "description"
@@ -8323,6 +8559,7 @@
                 {
                   "name": "delete",
                   "about": "Delete subnet pool",
+                  "operation_id": "system_subnet_pool_delete",
                   "args": [
                     {
                       "long": "pool",
@@ -8338,6 +8575,7 @@
                 {
                   "name": "list",
                   "about": "List subnet pools",
+                  "operation_id": "system_subnet_pool_list",
                   "args": [
                     {
                       "long": "limit",
@@ -8371,6 +8609,7 @@
                     {
                       "name": "add",
                       "about": "Add member to subnet pool",
+                      "operation_id": "system_subnet_pool_member_add",
                       "args": [
                         {
                           "long": "json-body",
@@ -8406,6 +8645,7 @@
                     {
                       "name": "list",
                       "about": "List members in subnet pool",
+                      "operation_id": "system_subnet_pool_member_list",
                       "args": [
                         {
                           "long": "limit",
@@ -8425,6 +8665,7 @@
                     {
                       "name": "remove",
                       "about": "Remove member from subnet pool",
+                      "operation_id": "system_subnet_pool_member_remove",
                       "args": [
                         {
                           "long": "json-body",
@@ -8464,6 +8705,7 @@
                     {
                       "name": "link",
                       "about": "Link subnet pool to silo",
+                      "operation_id": "system_subnet_pool_silo_link",
                       "args": [
                         {
                           "long": "is-default",
@@ -8499,6 +8741,7 @@
                     {
                       "name": "list",
                       "about": "List silos linked to subnet pool",
+                      "operation_id": "system_subnet_pool_silo_list",
                       "args": [
                         {
                           "long": "limit",
@@ -8524,6 +8767,7 @@
                     {
                       "name": "unlink",
                       "about": "Unlink subnet pool from silo",
+                      "operation_id": "system_subnet_pool_silo_unlink",
                       "args": [
                         {
                           "long": "pool",
@@ -8543,6 +8787,7 @@
                     {
                       "name": "update",
                       "about": "Update subnet pool's link to silo",
+                      "operation_id": "system_subnet_pool_silo_update",
                       "args": [
                         {
                           "long": "is-default",
@@ -8580,6 +8825,7 @@
                 {
                   "name": "update",
                   "about": "Update subnet pool",
+                  "operation_id": "system_subnet_pool_update",
                   "args": [
                     {
                       "long": "description"
@@ -8609,6 +8855,7 @@
                 {
                   "name": "utilization",
                   "about": "Fetch subnet pool utilization",
+                  "operation_id": "system_subnet_pool_utilization_view",
                   "args": [
                     {
                       "long": "pool",
@@ -8624,6 +8871,7 @@
                 {
                   "name": "view",
                   "about": "Fetch subnet pool",
+                  "operation_id": "system_subnet_pool_view",
                   "args": [
                     {
                       "long": "pool",
@@ -8651,6 +8899,7 @@
                 {
                   "name": "create",
                   "about": "Create switch port settings",
+                  "operation_id": "networking_switch_port_settings_create",
                   "args": [
                     {
                       "long": "description"
@@ -8676,6 +8925,7 @@
                 {
                   "name": "delete",
                   "about": "Delete switch port settings",
+                  "operation_id": "networking_switch_port_settings_delete",
                   "args": [
                     {
                       "long": "port-settings",
@@ -8691,6 +8941,7 @@
                 {
                   "name": "list",
                   "about": "List switch port settings",
+                  "operation_id": "networking_switch_port_settings_list",
                   "args": [
                     {
                       "long": "limit",
@@ -8729,6 +8980,7 @@
                 {
                   "name": "view",
                   "about": "Get information about switch port",
+                  "operation_id": "networking_switch_port_settings_view",
                   "args": [
                     {
                       "long": "port",
@@ -8758,6 +9010,7 @@
             {
               "name": "update",
               "about": "Update top-level IAM policy",
+              "operation_id": "system_policy_update",
               "args": [
                 {
                   "long": "json-body",
@@ -8777,6 +9030,7 @@
             {
               "name": "view",
               "about": "Fetch top-level IAM policy",
+              "operation_id": "system_policy_view",
               "args": [
                 {
                   "long": "profile",
@@ -8801,6 +9055,7 @@
               "name": "recovery-finish",
               "about": "Clear system recovery status",
               "long_about": "Instructs the system that a system recovery operation (\"mupdate\") was completed using the software in the specified release.\n\nThe system recovery operation is used to bypass the control plane to deploy known-working software when the control plane itself is not functioning or otherwise unable to update itself.  When the control plane detects this, it stops making any changes to deployed software to avoid reverting the recovery itself.  This operation puts the control plane back in charge of determining what software should be deployed, instructing it that the specified software (which is also what's currently running) is what's supposed to be deployed.\n\nIf the provided version does not match what's currently running, the control plane will continue to avoid changing deployed software until this operation is invoked with the correct version.\n\nThis endpoint should only be called at the direction of Oxide support.",
+              "operation_id": "system_update_recovery_finish",
               "args": [
                 {
                   "long": "json-body",
@@ -8835,6 +9090,7 @@
                   "name": "list",
                   "about": "List all TUF repositories",
                   "long_about": "Returns a paginated list of all TUF repositories ordered by system version (newest first by default).",
+                  "operation_id": "system_update_repository_list",
                   "args": [
                     {
                       "long": "limit",
@@ -8872,6 +9128,7 @@
                 {
                   "name": "view",
                   "about": "Fetch system release repository by version",
+                  "operation_id": "system_update_repository_view",
                   "args": [
                     {
                       "long": "profile",
@@ -8890,6 +9147,7 @@
               "name": "status",
               "about": "Fetch system update status",
               "long_about": "Returns information about the current target release and the progress of system software updates.",
+              "operation_id": "system_update_status",
               "args": [
                 {
                   "long": "profile",
@@ -8912,6 +9170,7 @@
                   "name": "update",
                   "about": "Set target release",
                   "long_about": "Set the current target release of the rack's system software. The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release. Use the update status endpoint to view the current target release.",
+                  "operation_id": "target_release_update",
                   "args": [
                     {
                       "long": "json-body",
@@ -8947,6 +9206,7 @@
                 {
                   "name": "create",
                   "about": "Add trusted root role to updates trust store",
+                  "operation_id": "system_update_trust_root_create",
                   "args": [
                     {
                       "long": "json-body",
@@ -8967,6 +9227,7 @@
                   "name": "delete",
                   "about": "Delete trusted root role",
                   "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
+                  "operation_id": "system_update_trust_root_delete",
                   "args": [
                     {
                       "long": "profile",
@@ -8983,6 +9244,7 @@
                   "name": "list",
                   "about": "List root roles in the updates trust store",
                   "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
+                  "operation_id": "system_update_trust_root_list",
                   "args": [
                     {
                       "long": "limit",
@@ -9004,6 +9266,7 @@
                 {
                   "name": "view",
                   "about": "Fetch trusted root role",
+                  "operation_id": "system_update_trust_root_view",
                   "args": [
                     {
                       "long": "profile",
@@ -9035,6 +9298,7 @@
         {
           "name": "list",
           "about": "List users",
+          "operation_id": "user_list",
           "args": [
             {
               "long": "group"
@@ -9059,6 +9323,7 @@
         {
           "name": "list-sessions",
           "about": "List user's console sessions",
+          "operation_id": "user_session_list",
           "args": [
             {
               "long": "limit",
@@ -9084,6 +9349,7 @@
         {
           "name": "list-tokens",
           "about": "List user's access tokens",
+          "operation_id": "user_token_list",
           "args": [
             {
               "long": "limit",
@@ -9110,6 +9376,7 @@
           "name": "logout",
           "about": "Log user out",
           "long_about": "Silo admins can use this endpoint to log the specified user out by deleting all of their tokens AND sessions. This cannot be undone.",
+          "operation_id": "user_logout",
           "args": [
             {
               "long": "profile",
@@ -9125,6 +9392,7 @@
         {
           "name": "view",
           "about": "Fetch user",
+          "operation_id": "user_view",
           "args": [
             {
               "long": "profile",
@@ -9142,6 +9410,7 @@
     {
       "name": "utilization",
       "about": "Fetch resource utilization for user's current silo",
+      "operation_id": "utilization_view",
       "args": [
         {
           "long": "profile",
@@ -9174,6 +9443,7 @@
         {
           "name": "create",
           "about": "Create VPC",
+          "operation_id": "vpc_create",
           "args": [
             {
               "long": "description"
@@ -9210,6 +9480,7 @@
         {
           "name": "delete",
           "about": "Delete VPC",
+          "operation_id": "vpc_delete",
           "args": [
             {
               "long": "profile",
@@ -9240,6 +9511,7 @@
               "name": "update",
               "about": "Replace firewall rules",
               "long_about": "The maximum number of rules per VPC is 1024.\n\nTargets are used to specify the set of instances to which a firewall rule applies. You can target instances directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic going to all matching instances. Targets are additive: the rule applies to instances matching ANY target. The maximum number of targets is 256.\n\nFilters reduce the scope of a firewall rule. Without filters, the rule applies to all packets to the targets (or from the targets, if it's an outbound rule). With multiple filters, the rule applies only to packets matching ALL filters. The maximum number of each type of filter is 256.",
+              "operation_id": "vpc_firewall_rules_update",
               "args": [
                 {
                   "long": "json-body",
@@ -9267,6 +9539,7 @@
             {
               "name": "view",
               "about": "List firewall rules",
+              "operation_id": "vpc_firewall_rules_view",
               "args": [
                 {
                   "long": "profile",
@@ -9288,6 +9561,7 @@
         {
           "name": "list",
           "about": "List VPCs",
+          "operation_id": "vpc_list",
           "args": [
             {
               "long": "limit",
@@ -9325,6 +9599,7 @@
             {
               "name": "create",
               "about": "Create VPC router",
+              "operation_id": "vpc_router_create",
               "args": [
                 {
                   "long": "description"
@@ -9358,6 +9633,7 @@
             {
               "name": "delete",
               "about": "Delete router",
+              "operation_id": "vpc_router_delete",
               "args": [
                 {
                   "long": "profile",
@@ -9381,6 +9657,7 @@
             {
               "name": "list",
               "about": "List routers",
+              "operation_id": "vpc_router_list",
               "args": [
                 {
                   "long": "limit",
@@ -9422,6 +9699,7 @@
                 {
                   "name": "create",
                   "about": "Create route",
+                  "operation_id": "vpc_router_route_create",
                   "args": [
                     {
                       "long": "description"
@@ -9459,6 +9737,7 @@
                 {
                   "name": "delete",
                   "about": "Delete route",
+                  "operation_id": "vpc_router_route_delete",
                   "args": [
                     {
                       "long": "profile",
@@ -9487,6 +9766,7 @@
                   "name": "list",
                   "about": "List routes",
                   "long_about": "List the routes associated with a router in a particular VPC.",
+                  "operation_id": "vpc_router_route_list",
                   "args": [
                     {
                       "long": "limit",
@@ -9522,6 +9802,7 @@
                 {
                   "name": "update",
                   "about": "Update route",
+                  "operation_id": "vpc_router_route_update",
                   "args": [
                     {
                       "long": "description"
@@ -9563,6 +9844,7 @@
                 {
                   "name": "view",
                   "about": "Fetch route",
+                  "operation_id": "vpc_router_route_view",
                   "args": [
                     {
                       "long": "profile",
@@ -9592,6 +9874,7 @@
             {
               "name": "update",
               "about": "Update router",
+              "operation_id": "vpc_router_update",
               "args": [
                 {
                   "long": "description"
@@ -9629,6 +9912,7 @@
             {
               "name": "view",
               "about": "Fetch router",
+              "operation_id": "vpc_router_view",
               "args": [
                 {
                   "long": "profile",
@@ -9664,6 +9948,7 @@
             {
               "name": "create",
               "about": "Create subnet",
+              "operation_id": "vpc_subnet_create",
               "args": [
                 {
                   "long": "custom-router",
@@ -9709,6 +9994,7 @@
             {
               "name": "delete",
               "about": "Delete subnet",
+              "operation_id": "vpc_subnet_delete",
               "args": [
                 {
                   "long": "profile",
@@ -9732,6 +10018,7 @@
             {
               "name": "list",
               "about": "List subnets",
+              "operation_id": "vpc_subnet_list",
               "args": [
                 {
                   "long": "limit",
@@ -9773,6 +10060,7 @@
                 {
                   "name": "list",
                   "about": "List network interfaces",
+                  "operation_id": "vpc_subnet_list_network_interfaces",
                   "args": [
                     {
                       "long": "limit",
@@ -9810,6 +10098,7 @@
             {
               "name": "update",
               "about": "Update subnet",
+              "operation_id": "vpc_subnet_update",
               "args": [
                 {
                   "long": "custom-router",
@@ -9851,6 +10140,7 @@
             {
               "name": "view",
               "about": "Fetch subnet",
+              "operation_id": "vpc_subnet_view",
               "args": [
                 {
                   "long": "profile",
@@ -9876,6 +10166,7 @@
         {
           "name": "update",
           "about": "Update VPC",
+          "operation_id": "vpc_update",
           "args": [
             {
               "long": "description"
@@ -9912,6 +10203,7 @@
         {
           "name": "view",
           "about": "Fetch VPC",
+          "operation_id": "vpc_view",
           "args": [
             {
               "long": "profile",
