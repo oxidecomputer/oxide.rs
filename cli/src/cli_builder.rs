@@ -18,6 +18,11 @@ use crate::{
 };
 use oxide::{types::ByteCount, ClientConfig};
 
+/// API operation ID attached to generated CLI commands via clap's ext API.
+#[derive(Debug, Clone)]
+pub struct OperationId(pub String);
+impl clap::builder::CommandExt for OperationId {}
+
 /// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
 #[command(name = "oxide", verbatim_doc_comment)]
@@ -217,6 +222,7 @@ impl Default for NewCli<'_> {
                 _ => cmd,
             };
 
+            let cmd = cmd.add(OperationId(op.operation_id().to_string()));
             parser = parser.add_subcommand(path, cmd);
             // print_cmd(&parser, 0);
         }

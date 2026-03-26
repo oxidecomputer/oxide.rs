@@ -4,6 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
+use crate::cli_builder::OperationId;
 use crate::context::Context;
 use crate::{println_nopipe, RunnableCmd};
 
@@ -50,6 +51,8 @@ pub struct JsonDoc {
     about: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     long_about: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    operation_id: Option<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     args: Vec<JsonArg>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -89,12 +92,14 @@ fn to_json(cmd: &Command) -> JsonDoc {
     } else {
         None
     };
+    let operation_id = cmd.get::<OperationId>().map(|id| id.0.clone());
 
     JsonDoc {
         name,
         version,
         about: cmd.get_about().map(ToString::to_string),
         long_about: cmd.get_long_about().map(ToString::to_string),
+        operation_id,
         args,
         subcommands,
     }
