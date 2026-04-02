@@ -28577,26 +28577,39 @@ pub mod types {
         }
     }
 
-    /// Utilization information for a subnet pool
+    /// Utilization of addresses in a subnet pool.
+    ///
+    /// Note that both the count of remaining addresses and the total capacity
+    /// are integers, reported as floating point numbers. This accommodates
+    /// allocations larger than a 64-bit integer, which is common with IPv6
+    /// address spaces. With very large subnet pools (> 2**53 addresses),
+    /// integer precision will be lost, in exchange for representing the entire
+    /// range. In such a case the pool still has many available addresses.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Utilization information for a subnet pool",
+    ///  "description": "Utilization of addresses in a subnet pool.\n\nNote that
+    /// both the count of remaining addresses and the total capacity are
+    /// integers, reported as floating point numbers. This accommodates
+    /// allocations larger than a 64-bit integer, which is common with IPv6
+    /// address spaces. With very large subnet pools (> 2**53 addresses),
+    /// integer precision will be lost, in exchange for representing the entire
+    /// range. In such a case the pool still has many available addresses.",
     ///  "type": "object",
     ///  "required": [
-    ///    "allocated",
-    ///    "capacity"
+    ///    "capacity",
+    ///    "remaining"
     ///  ],
     ///  "properties": {
-    ///    "allocated": {
-    ///      "description": "Number of addresses allocated from this pool",
+    ///    "capacity": {
+    ///      "description": "The total number of addresses in the pool.",
     ///      "type": "number",
     ///      "format": "double"
     ///    },
-    ///    "capacity": {
-    ///      "description": "Total capacity of this pool in addresses",
+    ///    "remaining": {
+    ///      "description": "The number of remaining addresses in the pool.",
     ///      "type": "number",
     ///      "format": "double"
     ///    }
@@ -28608,8 +28621,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SubnetPoolUtilization {
-        pub allocated: f64,
         pub capacity: f64,
+        pub remaining: f64,
     }
 
     impl SubnetPoolUtilization {
@@ -59191,30 +59204,20 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SubnetPoolUtilization {
-            allocated: ::std::result::Result<f64, ::std::string::String>,
             capacity: ::std::result::Result<f64, ::std::string::String>,
+            remaining: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl ::std::default::Default for SubnetPoolUtilization {
             fn default() -> Self {
                 Self {
-                    allocated: Err("no value supplied for allocated".to_string()),
                     capacity: Err("no value supplied for capacity".to_string()),
+                    remaining: Err("no value supplied for remaining".to_string()),
                 }
             }
         }
 
         impl SubnetPoolUtilization {
-            pub fn allocated<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<f64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.allocated = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for allocated: {e}"));
-                self
-            }
             pub fn capacity<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<f64>,
@@ -59225,6 +59228,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for capacity: {e}"));
                 self
             }
+            pub fn remaining<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<f64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.remaining = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remaining: {e}"));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<SubnetPoolUtilization> for super::SubnetPoolUtilization {
@@ -59233,8 +59246,8 @@ pub mod types {
                 value: SubnetPoolUtilization,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    allocated: value.allocated?,
                     capacity: value.capacity?,
+                    remaining: value.remaining?,
                 })
             }
         }
@@ -59242,8 +59255,8 @@ pub mod types {
         impl ::std::convert::From<super::SubnetPoolUtilization> for SubnetPoolUtilization {
             fn from(value: super::SubnetPoolUtilization) -> Self {
                 Self {
-                    allocated: Ok(value.allocated),
                     capacity: Ok(value.capacity),
+                    remaining: Ok(value.remaining),
                 }
             }
         }
@@ -65690,7 +65703,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026032400.0.0
+/// Version: 2026032500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65731,7 +65744,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026032400.0.0"
+        "2026032500.0.0"
     }
 
     fn baseurl(&self) -> &str {
