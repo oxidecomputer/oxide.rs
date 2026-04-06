@@ -1855,9 +1855,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.13.0"
+version = "2.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7714e70437a7dc3ac8eb7e6f8df75fd8eb422675fc7678aff7364301092b1017"
+checksum = "45a8a2b9cb3e0b0c1803dbb0758ffac5de2f425b23c28f518faabd9d805342ff"
 dependencies = [
  "equivalent",
  "hashbrown 0.16.1",
@@ -2974,7 +2974,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.13.0"
-source = "git+https://github.com/oxidecomputer/progenitor#f0b9dbc35214adfdc13eb7deb7884582397ee31d"
+source = "git+https://github.com/oxidecomputer/progenitor#d8748a9426bf121344fa778f0b1ae1b178519146"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2997,7 +2997,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.13.0"
-source = "git+https://github.com/oxidecomputer/progenitor#f0b9dbc35214adfdc13eb7deb7884582397ee31d"
+source = "git+https://github.com/oxidecomputer/progenitor#d8748a9426bf121344fa778f0b1ae1b178519146"
 dependencies = [
  "heck",
  "http 1.4.0",
