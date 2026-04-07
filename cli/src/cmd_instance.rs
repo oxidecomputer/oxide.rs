@@ -8,8 +8,8 @@ use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use oxide::types::{
-    ByteCount, DiskBackend, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment,
-    IpVersion, Name, NameOrId, PoolSelector,
+    ByteCount, DiskBackend, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceCpuPlatform,
+    InstanceDiskAttachment, IpVersion, Name, NameOrId, PoolSelector,
 };
 
 use oxide::ClientInstancesExt;
@@ -237,6 +237,14 @@ pub struct CmdInstanceFromImage {
     #[clap(long)]
     ncpus: InstanceCpuCount,
 
+    /// CPU platform to place the instance
+    #[clap(long)]
+    cpu_platform: Option<InstanceCpuPlatform>,
+
+    /// Anti-affinity group(s) to add the instance to (may be specified multiple times)
+    #[clap(long = "anti-affinity-group")]
+    anti_affinity_groups: Vec<NameOrId>,
+
     /// Source image
     #[clap(long)]
     image: NameOrId,
@@ -286,6 +294,8 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                     .hostname(self.hostname.clone())
                     .memory(self.memory.clone())
                     .ncpus(self.ncpus.clone())
+                    .cpu_platform(self.cpu_platform.clone())
+                    .anti_affinity_groups(self.anti_affinity_groups.clone())
                     .start(self.start)
             })
             .send()
