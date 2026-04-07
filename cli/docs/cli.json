@@ -3401,6 +3401,14 @@
           "about": "Launch an instance from a disk image.",
           "args": [
             {
+              "long": "anti-affinity-group",
+              "help": "Anti-affinity group(s) to add the instance to (may be specified multiple times)"
+            },
+            {
+              "long": "cpu-platform",
+              "help": "CPU platform to place the instance"
+            },
+            {
               "long": "description",
               "help": "Description of the instance"
             },

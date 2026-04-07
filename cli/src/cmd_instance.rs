@@ -294,7 +294,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                     .hostname(self.hostname.clone())
                     .memory(self.memory.clone())
                     .ncpus(self.ncpus.clone())
-                    .cpu_platform(self.cpu_platform.clone())
+                    .cpu_platform(self.cpu_platform)
                     .anti_affinity_groups(self.anti_affinity_groups.clone())
                     .start(self.start)
             })
