@@ -1,0 +1,323 @@
+oxide alert class list — List alert classes
+oxide alert receiver delete — Delete alert receiver
+oxide alert receiver list — List alert receivers
+oxide alert receiver log — List delivery attempts to alert receiver
+oxide alert receiver probe — Send liveness probe to alert receiver
+oxide alert receiver resend — Request re-delivery of alert
+oxide alert receiver subscribe — Add alert receiver subscription
+oxide alert receiver unsubscribe — Remove alert receiver subscription
+oxide alert receiver view — Fetch alert receiver
+oxide alert receiver webhook create — Create webhook receiver
+oxide alert receiver webhook secret add — Add secret to webhook receiver
+oxide alert receiver webhook secret delete — Remove secret from webhook receiver
+oxide alert receiver webhook secret list — List webhook receiver secret IDs
+oxide alert receiver webhook update — Update webhook receiver
+oxide api — Makes an authenticated HTTP request to the Oxide API and prints the response.
+oxide audit-log list — View audit log
+oxide auth login — Authenticate with an Oxide Silo
+oxide auth logout — Removes saved authentication information from profiles.
+oxide auth status — Verifies and displays information about your authentication state.
+oxide auth-settings update — Update current silo's auth settings
+oxide auth-settings view — Fetch current silo's auth settings
+oxide bundle create — Create support bundle
+oxide bundle delete — Delete support bundle
+oxide bundle download — Downloads a support bundle
+oxide bundle inspect — Inspects a support bundle
+oxide bundle list — List all support bundles
+oxide bundle update — Update support bundle
+oxide bundle view — View support bundle
+oxide certificate create — Create system-wide x.509 certificate
+oxide certificate delete — Delete certificate
+oxide certificate list — List certificates for external endpoints
+oxide certificate view — Fetch certificate
+oxide completion — Generate shell completion scripts for Oxide CLI commands.
+oxide current-user access-token delete — Delete access token
+oxide current-user access-token list — List access tokens
+oxide current-user groups — Fetch current user's groups
+oxide current-user ssh-key create — Create SSH public key
+oxide current-user ssh-key delete — Delete SSH public key
+oxide current-user ssh-key list — List SSH public keys
+oxide current-user ssh-key view — Fetch SSH public key
+oxide current-user view — Fetch user for current session
+oxide disk create — Create disk
+oxide disk delete — Delete disk
+oxide disk import — Create a disk from a file upload
+oxide disk import finalize — Confirm disk block import completion
+oxide disk import start — Start importing blocks into disk
+oxide disk import stop — Stop importing blocks into disk
+oxide disk import write — Import blocks into disk
+oxide disk list — List disks
+oxide disk view — Fetch disk
+oxide docs — List all CLI commands
+oxide experimental instance affinity create — Create affinity group
+oxide experimental instance affinity delete — Delete affinity group
+oxide experimental instance affinity list — List affinity groups
+oxide experimental instance affinity member add-instance — Add member to affinity group
+oxide experimental instance affinity member list — List affinity group members
+oxide experimental instance affinity member remove-instance — Remove member from affinity group
+oxide experimental instance affinity member view-instance — Fetch affinity group member
+oxide experimental instance affinity update — Update affinity group
+oxide experimental instance affinity view — Fetch affinity group
+oxide experimental instance multicast-group join — Join multicast group by name, IP address, or UUID
+oxide experimental instance multicast-group leave — Leave multicast group by name, IP address, or UUID
+oxide experimental instance multicast-group list — List multicast groups for an instance
+oxide experimental multicast-group list — List multicast groups
+oxide experimental multicast-group member list — List members of multicast group
+oxide experimental multicast-group view — Fetch multicast group
+oxide experimental system probe create — Create instrumentation probe
+oxide experimental system probe delete — Delete instrumentation probe
+oxide experimental system probe list — List instrumentation probes
+oxide experimental system probe view — View instrumentation probe
+oxide experimental system timeseries query — Run timeseries query
+oxide experimental system timeseries schema list — List timeseries schemas
+oxide experimental timeseries dashboard — Graph the results of an OxQL timeseries query.
+oxide experimental timeseries query — Run project-scoped timeseries query
+oxide external-subnet attach — Attach external subnet to instance
+oxide external-subnet create — Create external subnet
+oxide external-subnet delete — Delete external subnet
+oxide external-subnet detach — Detach external subnet from instance
+oxide external-subnet list — List external subnets
+oxide external-subnet update — Update external subnet
+oxide external-subnet view — Fetch external subnet
+oxide floating-ip attach — Attach floating IP
+oxide floating-ip create — Create floating IP
+oxide floating-ip delete — Delete floating IP
+oxide floating-ip detach — Detach floating IP
+oxide floating-ip list — List floating IPs
+oxide floating-ip update — Update floating IP
+oxide floating-ip view — Fetch floating IP
+oxide group list — List groups
+oxide image create — Create image
+oxide image delete — Delete image
+oxide image demote — Demote silo image
+oxide image list — List images
+oxide image promote — Promote project image
+oxide image view — Fetch image
+oxide instance anti-affinity create — Create anti-affinity group
+oxide instance anti-affinity delete — Delete anti-affinity group
+oxide instance anti-affinity list — List anti-affinity groups
+oxide instance anti-affinity member add-instance — Add member to anti-affinity group
+oxide instance anti-affinity member list — List anti-affinity group members
+oxide instance anti-affinity member remove-instance — Remove member from anti-affinity group
+oxide instance anti-affinity member view-instance — Fetch anti-affinity group member
+oxide instance anti-affinity update — Update anti-affinity group
+oxide instance anti-affinity view — Fetch anti-affinity group
+oxide instance create — Create instance
+oxide instance delete — Delete instance
+oxide instance disk attach — Attach disk to instance
+oxide instance disk detach — Detach disk from instance
+oxide instance disk list — List disks for instance
+oxide instance external-ip attach-ephemeral — Allocate and attach ephemeral IP to instance
+oxide instance external-ip detach-ephemeral — Detach and deallocate ephemeral IP from instance
+oxide instance external-ip list — List external IP addresses
+oxide instance external-subnet list — List external subnets attached to instance
+oxide instance from-image — Launch an instance from a disk image.
+oxide instance list — List instances
+oxide instance nic create — Create network interface
+oxide instance nic delete — Delete network interface
+oxide instance nic list — List network interfaces
+oxide instance nic update — Update network interface
+oxide instance nic view — Fetch network interface
+oxide instance property affinity — List affinity groups containing instance
+oxide instance property anti-affinity — List anti-affinity groups containing instance
+oxide instance property ssh-key — List SSH public keys for instance
+oxide instance reboot — Reboot instance
+oxide instance serial console — Connect to an instance's serial console interactively.
+oxide instance serial history — Fetch an instance's serial console output.
+oxide instance start — Boot instance
+oxide instance stop — Stop instance
+oxide instance update — Update instance
+oxide instance view — Fetch instance
+oxide internet-gateway address create — Attach IP address to internet gateway
+oxide internet-gateway address delete — Detach IP address from internet gateway
+oxide internet-gateway address list — List IP addresses attached to internet gateway
+oxide internet-gateway create — Create VPC internet gateway
+oxide internet-gateway delete — Delete internet gateway
+oxide internet-gateway ip-pool attach — Attach IP pool to internet gateway
+oxide internet-gateway ip-pool detach — Detach IP pool from internet gateway
+oxide internet-gateway ip-pool list — List IP pools attached to internet gateway
+oxide internet-gateway list — List internet gateways
+oxide internet-gateway view — Fetch internet gateway
+oxide ip-pool list — List IP pools
+oxide ip-pool view — Fetch IP pool
+oxide ping — Ping API
+oxide policy update — Update current silo's IAM policy
+oxide policy view — Fetch current silo's IAM policy
+oxide project create — Create project
+oxide project delete — Delete project
+oxide project list — List projects
+oxide project policy update — Update project's IAM policy
+oxide project policy view — Fetch project's IAM policy
+oxide project update — Update project
+oxide project view — Fetch project
+oxide scim token create — Create SCIM token
+oxide scim token delete — Delete SCIM token
+oxide scim token list — List SCIM tokens
+oxide scim token view — Fetch SCIM token
+oxide silo create — Create silo
+oxide silo delete — Delete silo
+oxide silo idp list — List identity providers for silo
+oxide silo idp local user create — Create user
+oxide silo idp local user delete — Delete user
+oxide silo idp local user set-password — Set or invalidate user's password
+oxide silo idp saml create — Create SAML identity provider
+oxide silo idp saml view — Fetch SAML identity provider
+oxide silo ip-pool list — List IP pools linked to silo
+oxide silo list — List silos
+oxide silo policy update — Update silo IAM policy
+oxide silo policy view — Fetch silo IAM policy
+oxide silo quotas list — List resource quotas for all silos
+oxide silo quotas update — Update resource quotas for silo
+oxide silo quotas view — Fetch resource quotas for silo
+oxide silo subnet-pool list — List subnet pools linked to a silo
+oxide silo user list — List built-in (system) users in silo
+oxide silo user view — Fetch built-in (system) user
+oxide silo utilization list — List current utilization state for all silos
+oxide silo utilization view — Fetch current utilization for given silo
+oxide silo view — Fetch silo
+oxide snapshot create — Create snapshot
+oxide snapshot delete — Delete snapshot
+oxide snapshot list — List snapshots
+oxide snapshot view — Fetch snapshot
+oxide subnet-pool list — List subnet pools
+oxide subnet-pool view — Fetch subnet pool
+oxide system hardware disk list — List physical disks
+oxide system hardware disk view — Get physical disk
+oxide system hardware rack list — List racks
+oxide system hardware rack membership abort — Abort the latest rack membership change
+oxide system hardware rack membership add — Add new sleds to rack membership
+oxide system hardware rack membership status — Fetch rack cluster membership status
+oxide system hardware rack view — Fetch rack
+oxide system hardware sled disk-led — List physical disks attached to sleds
+oxide system hardware sled instance-list — List instances running on given sled
+oxide system hardware sled list — List sleds
+oxide system hardware sled list-uninitialized — List uninitialized sleds
+oxide system hardware sled set-provision-policy — Set sled provision policy
+oxide system hardware sled view — Fetch sled
+oxide system hardware switch list — List switches
+oxide system hardware switch view — Fetch switch
+oxide system hardware switch-port apply-settings — Apply switch port settings
+oxide system hardware switch-port clear-settings — Clear switch port settings
+oxide system hardware switch-port list — List switch ports
+oxide system hardware switch-port show-status — Get the status of switch ports.
+oxide system hardware switch-port status — Get switch port status
+oxide system networking addr add — Add an address to a port configuration
+oxide system networking addr delete — Remove an address from a port configuration
+oxide system networking address-lot block list — List blocks in address lot
+oxide system networking address-lot create — Create address lot
+oxide system networking address-lot delete — Delete address lot
+oxide system networking address-lot list — List address lots
+oxide system networking address-lot view — Fetch address lot
+oxide system networking allow-list update — Update user-facing services IP allowlist
+oxide system networking allow-list view — Get user-facing services IP allowlist
+oxide system networking bfd disable — Disable BFD session
+oxide system networking bfd enable — Enable BFD session
+oxide system networking bfd status — Get BFD status
+oxide system networking bgp announce — Announce a prefix over BGP.
+oxide system networking bgp announce-set delete — Delete BGP announce set
+oxide system networking bgp announce-set list — List BGP announce sets
+oxide system networking bgp announce-set update — Update BGP announce set
+oxide system networking bgp announcement list — Get originated routes for a specified BGP announce set
+oxide system networking bgp auth — Set an authentication string.
+oxide system networking bgp config create — Create BGP configuration
+oxide system networking bgp config delete — Delete BGP configuration
+oxide system networking bgp config list — List BGP configurations
+oxide system networking bgp exported — List BGP exported routes
+oxide system networking bgp filter — Add a filtering requirement to a BGP session.
+oxide system networking bgp history — Get BGP router message history
+oxide system networking bgp imported — Get imported IPv4 BGP routes
+oxide system networking bgp peer delete — Remove a BGP from a port configuration
+oxide system networking bgp peer set — Set a BGP peer on a port configuration
+oxide system networking bgp pref — Set a local preference for a peer.
+oxide system networking bgp show-status — Get the status of BGP on the rack.
+oxide system networking bgp status — Get BGP peer status
+oxide system networking bgp withdraw — Withdraw a prefix over BGP.
+oxide system networking inbound-icmp update — Set whether API services can receive limited ICMP traffic
+oxide system networking inbound-icmp view — Return whether API services can receive limited ICMP traffic
+oxide system networking ip-pool create — Create IP pool
+oxide system networking ip-pool delete — Delete IP pool
+oxide system networking ip-pool list — List IP pools
+oxide system networking ip-pool range add — Add range to IP pool
+oxide system networking ip-pool range list — List ranges for IP pool
+oxide system networking ip-pool range remove — Remove range from IP pool
+oxide system networking ip-pool service range add — Add IP range to Oxide service pool
+oxide system networking ip-pool service range list — List IP ranges for the Oxide service pool
+oxide system networking ip-pool service remove — Remove IP range from Oxide service pool
+oxide system networking ip-pool service view — Fetch Oxide service IP pool
+oxide system networking ip-pool silo link — Link IP pool to silo
+oxide system networking ip-pool silo list — List IP pool's linked silos
+oxide system networking ip-pool silo unlink — Unlink IP pool from silo
+oxide system networking ip-pool silo update — Make IP pool default for silo
+oxide system networking ip-pool update — Update IP pool
+oxide system networking ip-pool utilization — Fetch IP pool utilization
+oxide system networking ip-pool view — Fetch IP pool
+oxide system networking link add — Add a link to a port
+oxide system networking link delete — Remove a link from a port
+oxide system networking lldp neighbors — Fetch LLDP neighbors for switch port
+oxide system networking lldp update — Update LLDP configuration for switch port
+oxide system networking lldp view — Fetch LLDP configuration for switch port
+oxide system networking loopback-address create — Create loopback address
+oxide system networking loopback-address delete — Delete loopback address
+oxide system networking loopback-address list — List loopback addresses
+oxide system networking route delete — Delete a static route
+oxide system networking route set — Set a static route
+oxide system networking subnet-pool create — Create subnet pool
+oxide system networking subnet-pool delete — Delete subnet pool
+oxide system networking subnet-pool list — List subnet pools
+oxide system networking subnet-pool member add — Add member to subnet pool
+oxide system networking subnet-pool member list — List members in subnet pool
+oxide system networking subnet-pool member remove — Remove member from subnet pool
+oxide system networking subnet-pool silo link — Link subnet pool to silo
+oxide system networking subnet-pool silo list — List silos linked to subnet pool
+oxide system networking subnet-pool silo unlink — Unlink subnet pool from silo
+oxide system networking subnet-pool silo update — Update subnet pool's link to silo
+oxide system networking subnet-pool update — Update subnet pool
+oxide system networking subnet-pool utilization — Fetch subnet pool utilization
+oxide system networking subnet-pool view — Fetch subnet pool
+oxide system networking switch-port-settings create — Create switch port settings
+oxide system networking switch-port-settings delete — Delete switch port settings
+oxide system networking switch-port-settings list — List switch port settings
+oxide system networking switch-port-settings show — Get the configuration of switch ports.
+oxide system networking switch-port-settings view — Get information about switch port
+oxide system policy update — Update top-level IAM policy
+oxide system policy view — Fetch top-level IAM policy
+oxide system update recovery-finish — Clear system recovery status
+oxide system update repo list — List all TUF repositories
+oxide system update repo upload
+oxide system update repo view — Fetch system release repository by version
+oxide system update status — Fetch system update status
+oxide system update target-release update — Set target release
+oxide system update trust-root create — Add trusted root role to updates trust store
+oxide system update trust-root delete — Delete trusted root role
+oxide system update trust-root list — List root roles in the updates trust store
+oxide system update trust-root view — Fetch trusted root role
+oxide user list — List users
+oxide user list-sessions — List user's console sessions
+oxide user list-tokens — List user's access tokens
+oxide user logout — Log user out
+oxide user view — Fetch user
+oxide utilization — Fetch resource utilization for user's current silo
+oxide version — Prints version information about the CLI.
+oxide vpc create — Create VPC
+oxide vpc delete — Delete VPC
+oxide vpc firewall-rules update — Replace firewall rules
+oxide vpc firewall-rules view — List firewall rules
+oxide vpc list — List VPCs
+oxide vpc router create — Create VPC router
+oxide vpc router delete — Delete router
+oxide vpc router list — List routers
+oxide vpc router route create — Create route
+oxide vpc router route delete — Delete route
+oxide vpc router route list — List routes
+oxide vpc router route update — Update route
+oxide vpc router route view — Fetch route
+oxide vpc router update — Update router
+oxide vpc router view — Fetch router
+oxide vpc subnet create — Create subnet
+oxide vpc subnet delete — Delete subnet
+oxide vpc subnet list — List subnets
+oxide vpc subnet nic list — List network interfaces
+oxide vpc subnet update — Update subnet
+oxide vpc subnet view — Fetch subnet
+oxide vpc update — Update VPC
+oxide vpc view — Fetch VPC

@@ -8,7 +8,18 @@
 fn test_docs_json() {
     assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("docs")
+        .arg("--format")
+        .arg("json")
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic("docs/cli.json"));
+}
+
+#[test]
+fn test_docs_flat() {
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .arg("docs")
+        .assert()
+        .success()
+        .stdout(expectorate::eq_file_or_panic("tests/data/docs-flat.txt"));
 }
