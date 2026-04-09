@@ -1456,7 +1456,7 @@
         {
           "long": "format",
           "values": [
-            "flat",
+            "text",
             "json"
           ],
           "help": "Output format"

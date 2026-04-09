@@ -16,10 +16,10 @@ fn test_docs_json() {
 }
 
 #[test]
-fn test_docs_flat() {
+fn test_docs_text() {
     assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("docs")
         .assert()
         .success()
-        .stdout(expectorate::eq_file_or_panic("tests/data/docs-flat.txt"));
+        .stdout(expectorate::eq_file_or_panic("tests/data/docs-text.txt"));
 }

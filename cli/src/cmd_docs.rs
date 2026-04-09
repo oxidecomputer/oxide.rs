@@ -20,14 +20,14 @@ use serde::Serialize;
 #[command(name = "docs")]
 pub struct CmdDocs {
     /// Output format
-    #[clap(long, default_value = "flat")]
+    #[clap(long, default_value = "text")]
     format: DocsFormat,
 }
 
 #[derive(ValueEnum, Debug, Clone)]
 enum DocsFormat {
-    /// One line per command: full path and description
-    Flat,
+    /// Command and description
+    Text,
     /// Full JSON tree with args and metadata
     Json,
 }
@@ -157,7 +157,7 @@ impl RunnableCmd for CmdDocs {
                 let pretty_json = serde_json::to_string_pretty(&json_doc)?;
                 println_nopipe!("{}", pretty_json);
             }
-            DocsFormat::Flat => {
+            DocsFormat::Text => {
                 print_flat(&app, "");
             }
         }
