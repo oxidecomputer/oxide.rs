@@ -1451,8 +1451,16 @@
     },
     {
       "name": "docs",
-      "about": "Generate CLI docs in JSON format",
+      "about": "List all CLI commands",
       "args": [
+        {
+          "long": "format",
+          "values": [
+            "text",
+            "json"
+          ],
+          "help": "Output format"
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",

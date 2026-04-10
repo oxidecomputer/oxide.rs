@@ -11,14 +11,26 @@ use crate::{println_nopipe, RunnableCmd};
 use super::cmd_version::built_info;
 use anyhow::Result;
 use async_trait::async_trait;
-use clap::{Command, Parser};
+use clap::{Command, Parser, ValueEnum};
 use serde::Serialize;
 
-/// Generate CLI docs in JSON format
+/// List all CLI commands
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "docs")]
-pub struct CmdDocs;
+pub struct CmdDocs {
+    /// Output format
+    #[clap(long, default_value = "text")]
+    format: DocsFormat,
+}
+
+#[derive(ValueEnum, Debug, Clone)]
+enum DocsFormat {
+    /// Command and description
+    Text,
+    /// Full JSON tree with args and metadata
+    Json,
+}
 
 /// Arg to CLI command for the JSON doc
 #[derive(Serialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -105,15 +117,51 @@ fn to_json(cmd: &Command) -> JsonDoc {
     }
 }
 
+fn print_flat(cmd: &Command, prefix: &str) {
+    let name = if prefix.is_empty() {
+        cmd.get_name().to_string()
+    } else {
+        format!("{} {}", prefix, cmd.get_name())
+    };
+
+    let mut subs: Vec<_> = cmd
+        .get_subcommands()
+        .filter(|c| c.get_name() != "help")
+        .collect();
+
+    // Print this command if it's a leaf or if it's runnable on its own
+    // (i.e., subcommands exist but aren't required, like `oxide disk import`)
+    if subs.is_empty() || !cmd.is_subcommand_required_set() {
+        let about = cmd
+            .get_about()
+            .map(|a| format!(" — {a}"))
+            .unwrap_or_default();
+        println_nopipe!("{name}{about}");
+    }
+    subs.sort_by_key(|c| c.get_name().to_owned());
+    for sub in subs {
+        print_flat(sub, &name);
+    }
+}
+
 #[async_trait]
 impl RunnableCmd for CmdDocs {
     async fn run(&self, _ctx: &Context) -> Result<()> {
         let cli = crate::make_cli();
         let mut app = cli.command_take();
         app.build();
-        let json_doc = to_json(&app);
-        let pretty_json = serde_json::to_string_pretty(&json_doc)?;
-        println_nopipe!("{}", pretty_json);
+
+        match self.format {
+            DocsFormat::Json => {
+                let json_doc = to_json(&app);
+                let pretty_json = serde_json::to_string_pretty(&json_doc)?;
+                println_nopipe!("{}", pretty_json);
+            }
+            DocsFormat::Text => {
+                print_flat(&app, "");
+            }
+        }
+
         Ok(())
     }
 }
