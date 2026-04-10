@@ -1,6 +1,6 @@
 {
   "name": "oxide",
-  "version": "0.15.0+2026021301.0.0",
+  "version": "0.16.0+2026032500.0.0",
   "about": "Control an Oxide environment",
   "args": [
     {
@@ -3408,6 +3408,14 @@
           "name": "from-image",
           "about": "Launch an instance from a disk image.",
           "args": [
+            {
+              "long": "anti-affinity-group",
+              "help": "Anti-affinity group(s) to add the instance to (may be specified multiple times)"
+            },
+            {
+              "long": "cpu-platform",
+              "help": "CPU platform to place the instance"
+            },
             {
               "long": "description",
               "help": "Description of the instance"

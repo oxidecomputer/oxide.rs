@@ -34,15 +34,15 @@ http = "1.4.0"
 httpmock = "0.8.3"
 humantime = "2.3.0"
 indicatif = "0.18.4"
-libc = "0.2.183"
+libc = "0.2.184"
 log = "0.4.29"
 md5 = "0.8.0"
 newline-converter = "0.3.0"
 oauth2 = { version = "5.0.0", default-features = false }
 oauth2-reqwest = "0.1.0-alpha.3"
 open = "5.3.3"
-oxide = { path = "sdk", version = "0.15.0" }
-oxide-httpmock = { path = "sdk-httpmock", version = "0.15.0" }
+oxide = { path = "sdk", version = "0.16.0" }
+oxide-httpmock = { path = "sdk-httpmock", version = "0.16.0" }
 oxnet = "0.1.4"
 predicates = "3.1.4"
 pretty_assertions = "1.4.1"
