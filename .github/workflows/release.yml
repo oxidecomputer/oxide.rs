@@ -138,7 +138,7 @@ jobs:
       - name: "Install perl-IPC-Cmd on manylinux"
         if: "contains(matrix.container.image, 'manylinux')"
         run: |
-          yum install -y perl-IPC-Cmd
+          yum install -y perl-IPC-Cmd perl-Time-Piece
           git config --global --add safe.directory /__w/oxide.rs/oxide.rs
       - name: Install dist
         run: ${{ matrix.install_dist.run }}
