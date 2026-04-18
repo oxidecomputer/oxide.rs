@@ -1620,7 +1620,8 @@ impl CmdPortStatus {
 
         writeln!(
             &mut mtw,
-            "{}\t{}\t{}",
+            "{}\t{}\t{}\t{}",
+            "Port".dimmed(),
             "Receiver Power".dimmed(),
             "Transmitter Bias Current".dimmed(),
             "Transmitter Power".dimmed(),
@@ -1637,22 +1638,20 @@ impl CmdPortStatus {
                 .ok()
                 .map(|x| x.into_inner().0);
 
-            let link = status
-                .as_ref()
-                .and_then(|x| {
-                    let value = x.get("link");
-                    if value.is_none() {
-                        eprintln_nopipe!("WARN: expected `link` field of LinkStatus")
-                    }
-                    value
-                })
-                .and_then(|x| match serde_json::from_value::<LinkStatus>(x.clone()) {
+            let link = status.as_ref().and_then(|x| {
+                let Some(value) = x.get("link") else {
+                    eprintln_nopipe!("WARN: expected `link` field of LinkStatus");
+                    return None;
+                };
+
+                match LinkStatus::deserialize(value) {
                     Ok(value) => Some(value),
                     Err(err) => {
                         eprintln_nopipe!("WARN: LinkStatus serialization: {err}");
                         None
                     }
-                });
+                }
+            });
 
             writeln!(
                 &mut ltw,
@@ -1695,7 +1694,8 @@ impl CmdPortStatus {
 
             writeln!(
                 &mut mtw,
-                "{}\t{}\t{}",
+                "{}\t{}\t{}\t{}",
+                *p.port_name,
                 monitors
                     .as_ref()
                     .map_or_else(|| "-".to_string(), |x| format!("{:?}", x.receiver_power)),
