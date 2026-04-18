@@ -1527,6 +1527,16 @@ pub struct MacAddr {
     a: [u8; 6],
 }
 
+impl Display for MacAddr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            self.a[0], self.a[1], self.a[2], self.a[3], self.a[4], self.a[5],
+        )
+    }
+}
+
 // We expect the link_state field to be either a simple string or singular
 // key/value.
 #[derive(Clone, Debug)]
@@ -1638,8 +1648,8 @@ impl CmdPortStatus {
                 .ok()
                 .map(|x| x.into_inner().0);
 
-            let link = status.as_ref().and_then(|x| {
-                let Some(value) = x.get("link") else {
+            let link = status.as_ref().and_then(|status| {
+                let Some(value) = status.get("link") else {
                     eprintln_nopipe!("WARN: expected `link` field of LinkStatus");
                     return None;
                 };
@@ -1647,7 +1657,7 @@ impl CmdPortStatus {
                 match LinkStatus::deserialize(value) {
                     Ok(value) => Some(value),
                     Err(err) => {
-                        eprintln_nopipe!("WARN: LinkStatus serialization: {err}");
+                        eprintln_nopipe!("WARN: LinkStatus deserialization: {err}");
                         None
                     }
                 }
@@ -1660,18 +1670,8 @@ impl CmdPortStatus {
                 p.port_settings_id.is_some(),
                 link.as_ref()
                     .map_or_else(|| "-".to_string(), |x| x.enabled.to_string()),
-                link.as_ref().map_or_else(
-                    || "-".to_string(),
-                    |x| format!(
-                        "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
-                        x.address.a[0],
-                        x.address.a[1],
-                        x.address.a[2],
-                        x.address.a[3],
-                        x.address.a[4],
-                        x.address.a[5]
-                    )
-                ),
+                link.as_ref()
+                    .map_or_else(|| "-".to_string(), |x| x.address.to_string()),
                 link.as_ref()
                     .map_or_else(|| "-".to_string(), |x| x.autoneg.to_string()),
                 link.as_ref()
