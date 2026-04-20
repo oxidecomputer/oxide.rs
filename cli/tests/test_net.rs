@@ -9,9 +9,9 @@ use httpmock::MockServer;
 use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
     BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed,
-    MaxPathConfig, Name, NameOrId, RouterPeerIpAddr, RouterPeerType, SwitchPort,
-    SwitchPortAddressView, SwitchPortConfig, SwitchPortGeometry2, SwitchPortLinkConfig,
-    SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings, SwitchSlot,
+    MaxPathConfig, Name, NameOrId, RouterPeerType, SwitchPort, SwitchPortAddressView,
+    SwitchPortConfig, SwitchPortGeometry2, SwitchPortLinkConfig, SwitchPortResultsPage,
+    SwitchPortRouteConfig, SwitchPortSettings, SwitchSlot,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -131,7 +131,7 @@ fn test_port_config() {
         bgp_peers: vec![
             BgpPeer {
                 addr: RouterPeerType::Numbered {
-                    ip: RouterPeerIpAddr("169.254.10.1".parse().unwrap()),
+                    ip: "169.254.10.1".parse().unwrap(),
                 },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["198.51.100.0/24".parse().unwrap()]),
@@ -152,7 +152,7 @@ fn test_port_config() {
             },
             BgpPeer {
                 addr: RouterPeerType::Numbered {
-                    ip: RouterPeerIpAddr("169.254.30.1".parse().unwrap()),
+                    ip: "169.254.30.1".parse().unwrap(),
                 },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),
@@ -227,7 +227,7 @@ fn test_port_config() {
         bgp_peers: vec![
             BgpPeer {
                 addr: RouterPeerType::Numbered {
-                    ip: RouterPeerIpAddr("169.254.20.1".parse().unwrap()),
+                    ip: "169.254.20.1".parse().unwrap(),
                 },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["198.51.100.0/24".parse().unwrap()]),
@@ -248,7 +248,7 @@ fn test_port_config() {
             },
             BgpPeer {
                 addr: RouterPeerType::Numbered {
-                    ip: RouterPeerIpAddr("169.254.40.1".parse().unwrap()),
+                    ip: "169.254.40.1".parse().unwrap(),
                 },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),

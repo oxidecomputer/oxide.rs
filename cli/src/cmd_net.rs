@@ -16,10 +16,10 @@ use oxide::{
     types::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
-        LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig, RouterPeerIpAddr,
-        RouterPeerType, SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2,
-        SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
-        SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
+        LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig, RouterPeerType,
+        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchPort,
+        SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2, SwitchPortRouteConfig,
+        SwitchPortSettingsCreate, SwitchSlot,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -424,7 +424,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
                     .peers
                     .iter_mut()
                     .find(|x| match &x.addr {
-                        RouterPeerType::Numbered { ip } if **ip == self.peer => true,
+                        RouterPeerType::Numbered { ip } if *ip == self.peer => true,
                         _ => false,
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
@@ -508,7 +508,7 @@ impl AuthenticatedCmd for CmdBgpAuth {
                     .peers
                     .iter_mut()
                     .find(|x| match &x.addr {
-                        RouterPeerType::Numbered { ip } if **ip == self.peer => true,
+                        RouterPeerType::Numbered { ip } if *ip == self.peer => true,
                         _ => false,
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
@@ -573,7 +573,7 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
                     .peers
                     .iter_mut()
                     .find(|x| match &x.addr {
-                        RouterPeerType::Numbered { ip } if **ip == self.peer => true,
+                        RouterPeerType::Numbered { ip } if *ip == self.peer => true,
                         _ => false,
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
@@ -1100,9 +1100,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
         let mut settings =
             current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         let peer = BgpPeer {
-            addr: RouterPeerType::Numbered {
-                ip: RouterPeerIpAddr(self.addr),
-            },
+            addr: RouterPeerType::Numbered { ip: self.addr },
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering
             } else {
@@ -1153,7 +1151,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
                     RouterPeerType::Unnumbered { router_lifetime: b },
                 ) if **a == **b => true,
                 (RouterPeerType::Numbered { ip: a }, RouterPeerType::Numbered { ip: b })
-                    if **a == **b =>
+                    if a == b =>
                 {
                     true
                 }
@@ -1215,7 +1213,7 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
         {
             let before = config.peers.len();
             config.peers.retain(|x| match &x.addr {
-                RouterPeerType::Numbered { ip } if **ip == self.addr => true,
+                RouterPeerType::Numbered { ip } if *ip == self.addr => true,
                 _ => false,
             });
             // != Some(self.addr));
