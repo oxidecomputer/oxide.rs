@@ -423,9 +423,9 @@ impl AuthenticatedCmd for CmdBgpFilter {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| match &x.addr {
-                        RouterPeerType::Numbered { ip } if *ip == self.peer => true,
-                        _ => false,
+                    .find(|x| {
+                        matches!( &x.addr,
+                        RouterPeerType::Numbered { ip } if *ip == self.peer)
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
@@ -507,9 +507,9 @@ impl AuthenticatedCmd for CmdBgpAuth {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| match &x.addr {
-                        RouterPeerType::Numbered { ip } if *ip == self.peer => true,
-                        _ => false,
+                    .find(|x| {
+                        matches!(&x.addr,
+                        RouterPeerType::Numbered { ip } if *ip == self.peer)
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
@@ -572,9 +572,9 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| match &x.addr {
-                        RouterPeerType::Numbered { ip } if *ip == self.peer => true,
-                        _ => false,
+                    .find(|x| {
+                        matches!(&x.addr,
+                        RouterPeerType::Numbered { ip } if *ip == self.peer)
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
@@ -1210,9 +1210,9 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
             .find(|link| *link.link_name == PHY0)
         {
             let before = config.peers.len();
-            config.peers.retain(|x| match &x.addr {
-                RouterPeerType::Numbered { ip } if *ip == self.addr => true,
-                _ => false,
+            config.peers.retain(|x| {
+                matches!(&x.addr,
+                RouterPeerType::Numbered { ip } if *ip == self.addr)
             });
             let after = config.peers.len();
             if before == after {
