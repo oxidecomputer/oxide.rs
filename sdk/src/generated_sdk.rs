@@ -4560,22 +4560,19 @@ pub mod types {
     }
 
     /// A BGP peer configuration for an interface. Includes the set of
-    /// announcements that will be advertised to the peer identified by `addr`.
-    /// The `bgp_config` parameter is a reference to global BGP parameters. The
-    /// `interface_name` indicates what interface the peer should be contacted
-    /// on.
+    /// announcements that will be advertised to the peer. The `bgp_config`
+    /// parameter is a reference to global BGP parameters.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "description": "A BGP peer configuration for an interface. Includes the
-    /// set of announcements that will be advertised to the peer identified by
-    /// `addr`. The `bgp_config` parameter is a reference to global BGP
-    /// parameters. The `interface_name` indicates what interface the peer
-    /// should be contacted on.",
+    /// set of announcements that will be advertised to the peer. The
+    /// `bgp_config` parameter is a reference to global BGP parameters.",
     ///  "type": "object",
     ///  "required": [
+    ///    "addr",
     ///    "allowed_export",
     ///    "allowed_import",
     ///    "bgp_config",
@@ -4585,20 +4582,17 @@ pub mod types {
     ///    "enforce_first_as",
     ///    "hold_time",
     ///    "idle_hold_time",
-    ///    "interface_name",
-    ///    "keepalive",
-    ///    "router_lifetime"
+    ///    "keepalive"
     ///  ],
     ///  "properties": {
     ///    "addr": {
-    ///      "description": "The address of the host to peer with. If not
-    /// provided, this is an unnumbered BGP session that will be established
-    /// over the interface specified by `interface_name`.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
+    ///      "description": "The address of the host to peer with, or specifying
+    /// the configuration of an unnumbered BGP session.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouterPeerType"
+    ///        }
+    ///      ]
     ///    },
     ///    "allowed_export": {
     ///      "description": "Define export policy for a peer.",
@@ -4636,7 +4630,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "connect_retry": {
-    ///      "description": "How long to to wait between TCP connection retries
+    ///      "description": "How long to wait between TCP connection retries
     /// (seconds).",
     ///      "type": "integer",
     ///      "format": "uint32",
@@ -4667,17 +4661,6 @@ pub mod types {
     ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
-    ///    },
-    ///    "interface_name": {
-    ///      "description": "The name of interface to peer on. This is relative
-    /// to the port configuration this BGP peer configuration is a part of. For
-    /// example this value could be phy0 to refer to a primary physical
-    /// interface. Or it could be vlan47 to refer to a VLAN interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
     ///    },
     ///    "keepalive": {
     ///      "description": "How often to send keepalive requests (seconds).",
@@ -4732,13 +4715,6 @@ pub mod types {
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
-    ///    "router_lifetime": {
-    ///      "description": "Router lifetime in seconds for unnumbered BGP
-    /// peers.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
     ///    "vlan_id": {
     ///      "description": "Associate a VLAN ID with a peer.",
     ///      "type": [
@@ -4756,11 +4732,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpPeer {
-        /// The address of the host to peer with. If not provided, this is an
-        /// unnumbered BGP session that will be established over the interface
-        /// specified by `interface_name`.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub addr: ::std::option::Option<::std::net::IpAddr>,
+        /// The address of the host to peer with, or specifying the
+        /// configuration of an unnumbered BGP session.
+        pub addr: RouterPeerType,
         /// Define export policy for a peer.
         pub allowed_export: ImportExportPolicy,
         /// Define import policy for a peer.
@@ -4770,7 +4744,7 @@ pub mod types {
         pub bgp_config: NameOrId,
         /// Include the provided communities in updates sent to the peer.
         pub communities: ::std::vec::Vec<u32>,
-        /// How long to to wait between TCP connection retries (seconds).
+        /// How long to wait between TCP connection retries (seconds).
         pub connect_retry: u32,
         /// How long to delay sending an open request after establishing a TCP
         /// session (seconds).
@@ -4783,11 +4757,6 @@ pub mod types {
         /// How long to hold a peer in idle before attempting a new session
         /// (seconds).
         pub idle_hold_time: u32,
-        /// The name of interface to peer on. This is relative to the port
-        /// configuration this BGP peer configuration is a part of. For example
-        /// this value could be phy0 to refer to a primary physical interface.
-        /// Or it could be vlan47 to refer to a VLAN interface.
-        pub interface_name: Name,
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
         /// Apply a local preference to routes received from this peer.
@@ -4806,8 +4775,6 @@ pub mod types {
         /// Require that a peer has a specified ASN.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub remote_asn: ::std::option::Option<u32>,
-        /// Router lifetime in seconds for unnumbered BGP peers.
-        pub router_lifetime: u16,
         /// Associate a VLAN ID with a peer.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
@@ -24346,6 +24313,143 @@ pub mod types {
         }
     }
 
+    /// Router lifetime in seconds for unnumbered BGP peers
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Router lifetime in seconds for unnumbered BGP peers",
+    ///  "type": "integer",
+    ///  "format": "uint16",
+    ///  "maximum": 9000.0,
+    ///  "minimum": 0.0
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct RouterLifetimeConfig(pub u16);
+    impl ::std::ops::Deref for RouterLifetimeConfig {
+        type Target = u16;
+        fn deref(&self) -> &u16 {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<RouterLifetimeConfig> for u16 {
+        fn from(value: RouterLifetimeConfig) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<u16> for RouterLifetimeConfig {
+        fn from(value: u16) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for RouterLifetimeConfig {
+        type Err = <u16 as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for RouterLifetimeConfig {
+        type Error = <u16 as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for RouterLifetimeConfig {
+        type Error = <u16 as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for RouterLifetimeConfig {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
+    /// `RouterPeerType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "router_lifetime",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "router_lifetime": {
+    ///          "description": "Router lifetime in seconds for unnumbered BGP
+    /// peers.",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/RouterLifetimeConfig"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "unnumbered"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "ip",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "ip": {
+    ///          "description": "IP address for numbered BGP peers.",
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "numbered"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type")]
+    pub enum RouterPeerType {
+        #[serde(rename = "unnumbered")]
+        Unnumbered {
+            /// Router lifetime in seconds for unnumbered BGP peers.
+            router_lifetime: RouterLifetimeConfig,
+        },
+        #[serde(rename = "numbered")]
+        Numbered {
+            /// IP address for numbered BGP peers.
+            ip: ::std::net::IpAddr,
+        },
+    }
+
     /// A route defines a rule that governs where traffic should be sent based
     /// on its destination.
     ///
@@ -40449,10 +40553,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeer {
-            addr: ::std::result::Result<
-                ::std::option::Option<::std::net::IpAddr>,
-                ::std::string::String,
-            >,
+            addr: ::std::result::Result<super::RouterPeerType, ::std::string::String>,
             allowed_export: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
             allowed_import: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
             bgp_config: ::std::result::Result<super::NameOrId, ::std::string::String>,
@@ -40462,7 +40563,6 @@ pub mod types {
             enforce_first_as: ::std::result::Result<bool, ::std::string::String>,
             hold_time: ::std::result::Result<u32, ::std::string::String>,
             idle_hold_time: ::std::result::Result<u32, ::std::string::String>,
-            interface_name: ::std::result::Result<super::Name, ::std::string::String>,
             keepalive: ::std::result::Result<u32, ::std::string::String>,
             local_pref: ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
             md5_auth_key: ::std::result::Result<
@@ -40473,14 +40573,13 @@ pub mod types {
             multi_exit_discriminator:
                 ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
             remote_asn: ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
-            router_lifetime: ::std::result::Result<u16, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpPeer {
             fn default() -> Self {
                 Self {
-                    addr: Ok(Default::default()),
+                    addr: Err("no value supplied for addr".to_string()),
                     allowed_export: Err("no value supplied for allowed_export".to_string()),
                     allowed_import: Err("no value supplied for allowed_import".to_string()),
                     bgp_config: Err("no value supplied for bgp_config".to_string()),
@@ -40490,14 +40589,12 @@ pub mod types {
                     enforce_first_as: Err("no value supplied for enforce_first_as".to_string()),
                     hold_time: Err("no value supplied for hold_time".to_string()),
                     idle_hold_time: Err("no value supplied for idle_hold_time".to_string()),
-                    interface_name: Err("no value supplied for interface_name".to_string()),
                     keepalive: Err("no value supplied for keepalive".to_string()),
                     local_pref: Ok(Default::default()),
                     md5_auth_key: Ok(Default::default()),
                     min_ttl: Ok(Default::default()),
                     multi_exit_discriminator: Ok(Default::default()),
                     remote_asn: Ok(Default::default()),
-                    router_lifetime: Err("no value supplied for router_lifetime".to_string()),
                     vlan_id: Ok(Default::default()),
                 }
             }
@@ -40506,7 +40603,7 @@ pub mod types {
         impl BgpPeer {
             pub fn addr<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
+                T: ::std::convert::TryInto<super::RouterPeerType>,
                 T::Error: ::std::fmt::Display,
             {
                 self.addr = value
@@ -40604,16 +40701,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn interface_name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::Name>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.interface_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_name: {e}")
-                });
-                self
-            }
             pub fn keepalive<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<u32>,
@@ -40674,16 +40761,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for remote_asn: {e}"));
                 self
             }
-            pub fn router_lifetime<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u16>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.router_lifetime = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for router_lifetime: {e}")
-                });
-                self
-            }
             pub fn vlan_id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<u16>>,
@@ -40712,14 +40789,12 @@ pub mod types {
                     enforce_first_as: value.enforce_first_as?,
                     hold_time: value.hold_time?,
                     idle_hold_time: value.idle_hold_time?,
-                    interface_name: value.interface_name?,
                     keepalive: value.keepalive?,
                     local_pref: value.local_pref?,
                     md5_auth_key: value.md5_auth_key?,
                     min_ttl: value.min_ttl?,
                     multi_exit_discriminator: value.multi_exit_discriminator?,
                     remote_asn: value.remote_asn?,
-                    router_lifetime: value.router_lifetime?,
                     vlan_id: value.vlan_id?,
                 })
             }
@@ -40738,14 +40813,12 @@ pub mod types {
                     enforce_first_as: Ok(value.enforce_first_as),
                     hold_time: Ok(value.hold_time),
                     idle_hold_time: Ok(value.idle_hold_time),
-                    interface_name: Ok(value.interface_name),
                     keepalive: Ok(value.keepalive),
                     local_pref: Ok(value.local_pref),
                     md5_auth_key: Ok(value.md5_auth_key),
                     min_ttl: Ok(value.min_ttl),
                     multi_exit_discriminator: Ok(value.multi_exit_discriminator),
                     remote_asn: Ok(value.remote_asn),
-                    router_lifetime: Ok(value.router_lifetime),
                     vlan_id: Ok(value.vlan_id),
                 }
             }
@@ -65703,7 +65776,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026032500.0.0
+/// Version: 2026041900.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65744,7 +65817,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026032500.0.0"
+        "2026041900.0.0"
     }
 
     fn baseurl(&self) -> &str {

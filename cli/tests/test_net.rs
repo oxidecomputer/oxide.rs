@@ -2,16 +2,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2025 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use chrono::prelude::*;
 use httpmock::MockServer;
 use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
     BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed,
-    MaxPathConfig, Name, NameOrId, SwitchPort, SwitchPortAddressView, SwitchPortConfig,
-    SwitchPortGeometry2, SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig,
-    SwitchPortSettings, SwitchSlot,
+    MaxPathConfig, Name, NameOrId, RouterPeerType, SwitchPort, SwitchPortAddressView,
+    SwitchPortConfig, SwitchPortGeometry2, SwitchPortLinkConfig, SwitchPortResultsPage,
+    SwitchPortRouteConfig, SwitchPortSettings, SwitchSlot,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -130,8 +130,9 @@ fn test_port_config() {
         ],
         bgp_peers: vec![
             BgpPeer {
-                interface_name: "phy0".try_into().unwrap(),
-                addr: Some("169.254.10.1".parse().unwrap()),
+                addr: RouterPeerType::Numbered {
+                    ip: "169.254.10.1".parse().unwrap(),
+                },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["198.51.100.0/24".parse().unwrap()]),
                 allowed_import: ImportExportPolicy::NoFiltering,
@@ -148,11 +149,11 @@ fn test_port_config() {
                 multi_exit_discriminator: None,
                 remote_asn: None,
                 vlan_id: None,
-                router_lifetime: 0,
             },
             BgpPeer {
-                interface_name: "phy0".try_into().unwrap(),
-                addr: Some("169.254.30.1".parse().unwrap()),
+                addr: RouterPeerType::Numbered {
+                    ip: "169.254.30.1".parse().unwrap(),
+                },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),
                 allowed_import: ImportExportPolicy::NoFiltering,
@@ -169,7 +170,6 @@ fn test_port_config() {
                 multi_exit_discriminator: None,
                 remote_asn: None,
                 vlan_id: Some(300),
-                router_lifetime: 0,
             },
         ],
         groups: Vec::new(),
@@ -226,8 +226,9 @@ fn test_port_config() {
         ],
         bgp_peers: vec![
             BgpPeer {
-                interface_name: "phy0".try_into().unwrap(),
-                addr: Some("169.254.20.1".parse().unwrap()),
+                addr: RouterPeerType::Numbered {
+                    ip: "169.254.20.1".parse().unwrap(),
+                },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["198.51.100.0/24".parse().unwrap()]),
                 allowed_import: ImportExportPolicy::NoFiltering,
@@ -244,11 +245,11 @@ fn test_port_config() {
                 multi_exit_discriminator: None,
                 remote_asn: None,
                 vlan_id: None,
-                router_lifetime: 0,
             },
             BgpPeer {
-                interface_name: "phy0".try_into().unwrap(),
-                addr: Some("169.254.40.1".parse().unwrap()),
+                addr: RouterPeerType::Numbered {
+                    ip: "169.254.40.1".parse().unwrap(),
+                },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),
                 allowed_import: ImportExportPolicy::NoFiltering,
@@ -265,11 +266,11 @@ fn test_port_config() {
                 multi_exit_discriminator: None,
                 remote_asn: None,
                 vlan_id: Some(400),
-                router_lifetime: 0,
             },
             BgpPeer {
-                interface_name: "phy0".try_into().unwrap(),
-                addr: None,
+                addr: RouterPeerType::Unnumbered {
+                    router_lifetime: 0.into(),
+                },
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),
                 allowed_import: ImportExportPolicy::NoFiltering,
@@ -286,7 +287,6 @@ fn test_port_config() {
                 multi_exit_discriminator: None,
                 remote_asn: None,
                 vlan_id: Some(400),
-                router_lifetime: 0,
             },
         ],
         groups: Vec::new(),

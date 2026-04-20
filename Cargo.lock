@@ -1466,6 +1466,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hashbrown"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4f467dd6dccf739c208452f8014c75c18bb8301b050ad1cfb27153803edb0f51"
+
+[[package]]
 name = "headers"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1855,12 +1861,12 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.13.0"
+version = "2.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7714e70437a7dc3ac8eb7e6f8df75fd8eb422675fc7678aff7364301092b1017"
+checksum = "d466e9454f08e4a911e14806c24e16fba1b4c121d1ea474396f396069cf949d9"
 dependencies = [
  "equivalent",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.0",
  "serde",
  "serde_core",
 ]
@@ -2974,7 +2980,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.13.0"
-source = "git+https://github.com/oxidecomputer/progenitor#f0b9dbc35214adfdc13eb7deb7884582397ee31d"
+source = "git+https://github.com/oxidecomputer/progenitor#0fbc56b6eb4e73e7ffb2bbef5c78c4805948fb9b"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2997,7 +3003,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.13.0"
-source = "git+https://github.com/oxidecomputer/progenitor#f0b9dbc35214adfdc13eb7deb7884582397ee31d"
+source = "git+https://github.com/oxidecomputer/progenitor#0fbc56b6eb4e73e7ffb2bbef5c78c4805948fb9b"
 dependencies = [
  "heck",
  "http 1.4.0",
