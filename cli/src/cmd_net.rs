@@ -16,10 +16,10 @@ use oxide::{
     types::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
-        LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
-        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchPort,
-        SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2, SwitchPortRouteConfig,
-        SwitchPortSettingsCreate, SwitchSlot,
+        LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig, RouterPeerIpAddr,
+        RouterPeerType, SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2,
+        SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
+        SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -423,7 +423,10 @@ impl AuthenticatedCmd for CmdBgpFilter {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == Some(self.peer))
+                    .find(|x| match &x.addr {
+                        RouterPeerType::Numbered { ip } if **ip == self.peer => true,
+                        _ => false,
+                    })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 let list: Vec<IpNet> = self
@@ -504,7 +507,10 @@ impl AuthenticatedCmd for CmdBgpAuth {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == Some(self.peer))
+                    .find(|x| match &x.addr {
+                        RouterPeerType::Numbered { ip } if **ip == self.peer => true,
+                        _ => false,
+                    })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 peer.md5_auth_key = self.authstring.clone();
@@ -566,7 +572,10 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
                 let peer = config
                     .peers
                     .iter_mut()
-                    .find(|x| x.addr == Some(self.peer))
+                    .find(|x| match &x.addr {
+                        RouterPeerType::Numbered { ip } if **ip == self.peer => true,
+                        _ => false,
+                    })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
                 peer.local_pref = self.local_pref
@@ -1091,7 +1100,9 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
         let mut settings =
             current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         let peer = BgpPeer {
-            addr: Some(self.addr),
+            addr: RouterPeerType::Numbered {
+                ip: RouterPeerIpAddr(self.addr),
+            },
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering
             } else {
@@ -1121,7 +1132,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             enforce_first_as: self.enforce_first_as,
             hold_time: self.hold_time,
             idle_hold_time: self.idle_hold_time,
-            interface_name: PHY0.try_into().unwrap(),
+            // interface_name: PHY0.try_into().unwrap(),
             keepalive: self.keepalive,
             local_pref: self.local_pref,
             md5_auth_key: self.authstring.clone(),
@@ -1129,14 +1140,25 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             multi_exit_discriminator: self.multi_exit_discriminator,
             remote_asn: self.remote_asn,
             vlan_id: self.vlan_id,
-            router_lifetime: self.router_lifetime.unwrap_or(0),
+            // router_lifetime: self.router_lifetime.unwrap_or(0),
         };
         match settings
             .bgp_peers
             .iter_mut()
             .find(|link| *link.link_name == PHY0)
         {
-            Some(conf) => match conf.peers.iter_mut().find(|x| x.addr == peer.addr) {
+            Some(conf) => match conf.peers.iter_mut().find(|x| match (&x.addr, &peer.addr) {
+                (
+                    RouterPeerType::Unnumbered { router_lifetime: a },
+                    RouterPeerType::Unnumbered { router_lifetime: b },
+                ) if **a == **b => true,
+                (RouterPeerType::Numbered { ip: a }, RouterPeerType::Numbered { ip: b })
+                    if **a == **b =>
+                {
+                    true
+                }
+                _ => false,
+            }) {
                 Some(p) => *p = peer,
                 None => conf.peers.push(peer),
             },
@@ -1192,7 +1214,11 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
             .find(|link| *link.link_name == PHY0)
         {
             let before = config.peers.len();
-            config.peers.retain(|x| x.addr != Some(self.addr));
+            config.peers.retain(|x| match &x.addr {
+                RouterPeerType::Numbered { ip } if **ip == self.addr => true,
+                _ => false,
+            });
+            // != Some(self.addr));
             let after = config.peers.len();
             if before == after {
                 eprintln_nopipe!("no peers match the provided address");
@@ -1352,7 +1378,11 @@ impl AuthenticatedCmd for CmdPortConfig {
                     writeln!(
                         &mut tw,
                         "{}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
-                        p.addr.map_or("-".to_string(), |a| a.to_string()),
+                        match &p.addr {
+                            RouterPeerType::Unnumbered { router_lifetime } =>
+                                format!("({router_lifetime})"),
+                            RouterPeerType::Numbered { ip } => ip.to_string(),
+                        },
                         match &p.bgp_config {
                             NameOrId::Id(id) => bgp_configs[id].to_string(),
                             NameOrId::Name(name) => name.to_string(),
