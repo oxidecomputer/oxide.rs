@@ -4,9 +4,9 @@
 
 // Copyright 2026 Oxide Computer Company
 
-use std::{collections::HashMap, net::IpAddr};
+use std::{collections::HashMap, fmt::Display, net::IpAddr};
 
-use crate::{eprintln_nopipe, AuthenticatedCmd};
+use crate::{eprintln_nopipe, println_nopipe, AuthenticatedCmd};
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
@@ -23,12 +23,10 @@ use oxide::{
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
-use serde::{Deserialize, Serialize};
+use serde::{de::Error, Deserialize, Serialize};
 use std::io::Write;
 use tabwriter::TabWriter;
 use uuid::Uuid;
-
-use crate::println_nopipe;
 
 // We do not yet support port breakouts, but the API is phrased in terms of
 // ports that can be broken out. The constant phy0 represents the first port
@@ -1554,13 +1552,66 @@ pub struct MacAddr {
     a: [u8; 6],
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+impl Display for MacAddr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            self.a[0], self.a[1], self.a[2], self.a[3], self.a[4], self.a[5],
+        )
+    }
+}
+
+// We expect the link_state field to be either a simple string or singular
+// key/value.
+#[derive(Clone, Debug)]
+enum LinkStatusState {
+    Value(String),
+    KeyValue(String, String),
+}
+
+impl<'de> Deserialize<'de> for LinkStatusState {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let value = serde_json::Value::deserialize(deserializer)?;
+
+        if let Some(s) = value.as_str() {
+            Ok(Self::Value(s.to_string()))
+        } else if let Some(map) = value.as_object() {
+            if map.len() != 1 {
+                return Err(D::Error::custom("too many keys in object"));
+            }
+
+            let (key, value) = map.iter().next().unwrap();
+            let Some(value) = value.as_str() else {
+                return Err(D::Error::custom("value is not a string"));
+            };
+
+            Ok(Self::KeyValue(key.clone(), value.to_string()))
+        } else {
+            Err(D::Error::custom("expected a string or key/value pair"))
+        }
+    }
+}
+
+impl Display for LinkStatusState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LinkStatusState::Value(value) => f.write_str(value),
+            LinkStatusState::KeyValue(key, value) => write!(f, "{key}({value})"),
+        }
+    }
+}
+
+#[derive(Deserialize, Clone, Debug)]
 struct LinkStatus {
     address: MacAddr,
     enabled: bool,
     autoneg: bool,
-    fec: String,
-    link_state: String,
+    fec: Option<String>,
+    link_state: LinkStatusState,
     fsm_state: String,
     media: String,
     speed: String,
@@ -1604,7 +1655,8 @@ impl CmdPortStatus {
 
         writeln!(
             &mut mtw,
-            "{}\t{}\t{}",
+            "{}\t{}\t{}\t{}",
+            "Port".dimmed(),
             "Receiver Power".dimmed(),
             "Transmitter Bias Current".dimmed(),
             "Transmitter Power".dimmed(),
@@ -1621,10 +1673,19 @@ impl CmdPortStatus {
                 .ok()
                 .map(|x| x.into_inner().0);
 
-            let link = status.as_ref().map(|x| {
-                let ls: LinkStatus =
-                    serde_json::from_value(x.get("link").unwrap().clone()).unwrap();
-                ls
+            let link = status.as_ref().and_then(|status| {
+                let Some(value) = status.get("link") else {
+                    eprintln_nopipe!("WARN: expected `link` field of LinkStatus");
+                    return None;
+                };
+
+                match LinkStatus::deserialize(value) {
+                    Ok(value) => Some(value),
+                    Err(err) => {
+                        eprintln_nopipe!("WARN: LinkStatus deserialization: {err}");
+                        None
+                    }
+                }
             });
 
             writeln!(
@@ -1633,34 +1694,22 @@ impl CmdPortStatus {
                 *p.port_name,
                 p.port_settings_id.is_some(),
                 link.as_ref()
-                    .map(|x| x.enabled.to_string())
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| x.enabled.to_string()),
                 link.as_ref()
-                    .map(|x| format!(
-                        "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
-                        x.address.a[0],
-                        x.address.a[1],
-                        x.address.a[2],
-                        x.address.a[3],
-                        x.address.a[4],
-                        x.address.a[5]
-                    ))
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| x.address.to_string()),
                 link.as_ref()
-                    .map(|x| x.autoneg.to_string())
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| x.autoneg.to_string()),
                 link.as_ref()
-                    .map(|x| x.fec.clone())
-                    .unwrap_or("-".to_string()),
+                    .and_then(|x| x.fec.as_ref())
+                    .map_or_else(|| "-", |x| x.as_str()),
+                link.as_ref().map_or_else(
+                    || "-".to_string(),
+                    |x| format!("{}/{}", x.link_state, x.fsm_state)
+                ),
                 link.as_ref()
-                    .map(|x| format!("{}/{}", x.link_state, x.fsm_state))
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| x.media.clone()),
                 link.as_ref()
-                    .map(|x| x.media.clone())
-                    .unwrap_or("-".to_string()),
-                link.as_ref()
-                    .map(|x| x.speed.clone())
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| x.speed.clone()),
             )?;
 
             let monitors = status
@@ -1670,19 +1719,18 @@ impl CmdPortStatus {
 
             writeln!(
                 &mut mtw,
-                "{}\t{}\t{}",
+                "{}\t{}\t{}\t{}",
+                *p.port_name,
                 monitors
                     .as_ref()
-                    .map(|x| format!("{:?}", x.receiver_power))
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| format!("{:?}", x.receiver_power)),
+                monitors.as_ref().map_or_else(
+                    || "-".to_string(),
+                    |x| format!("{:?}", x.transmitter_bias_current)
+                ),
                 monitors
                     .as_ref()
-                    .map(|x| format!("{:?}", x.transmitter_bias_current))
-                    .unwrap_or("-".to_string()),
-                monitors
-                    .as_ref()
-                    .map(|x| format!("{:?}", x.transmitter_power))
-                    .unwrap_or("-".to_string()),
+                    .map_or_else(|| "-".to_string(), |x| format!("{:?}", x.transmitter_power)),
             )?;
         }
 
