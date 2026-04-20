@@ -1130,7 +1130,6 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             enforce_first_as: self.enforce_first_as,
             hold_time: self.hold_time,
             idle_hold_time: self.idle_hold_time,
-            // interface_name: PHY0.try_into().unwrap(),
             keepalive: self.keepalive,
             local_pref: self.local_pref,
             md5_auth_key: self.authstring.clone(),
@@ -1138,7 +1137,6 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             multi_exit_discriminator: self.multi_exit_discriminator,
             remote_asn: self.remote_asn,
             vlan_id: self.vlan_id,
-            // router_lifetime: self.router_lifetime.unwrap_or(0),
         };
         match settings
             .bgp_peers
@@ -1216,7 +1214,6 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
                 RouterPeerType::Numbered { ip } if *ip == self.addr => true,
                 _ => false,
             });
-            // != Some(self.addr));
             let after = config.peers.len();
             if before == after {
                 eprintln_nopipe!("no peers match the provided address");
