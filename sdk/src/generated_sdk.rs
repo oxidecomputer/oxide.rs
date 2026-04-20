@@ -24378,68 +24378,6 @@ pub mod types {
         }
     }
 
-    /// `RouterPeerIpAddr`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "ip"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct RouterPeerIpAddr(pub ::std::net::IpAddr);
-    impl ::std::ops::Deref for RouterPeerIpAddr {
-        type Target = ::std::net::IpAddr;
-        fn deref(&self) -> &::std::net::IpAddr {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<RouterPeerIpAddr> for ::std::net::IpAddr {
-        fn from(value: RouterPeerIpAddr) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<::std::net::IpAddr> for RouterPeerIpAddr {
-        fn from(value: ::std::net::IpAddr) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for RouterPeerIpAddr {
-        type Err = <::std::net::IpAddr as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for RouterPeerIpAddr {
-        type Error = <::std::net::IpAddr as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for RouterPeerIpAddr {
-        type Error = <::std::net::IpAddr as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for RouterPeerIpAddr {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// `RouterPeerType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24480,11 +24418,8 @@ pub mod types {
     ///      "properties": {
     ///        "ip": {
     ///          "description": "IP address for numbered BGP peers.",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/RouterPeerIpAddr"
-    ///            }
-    ///          ]
+    ///          "type": "string",
+    ///          "format": "ip"
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -24511,7 +24446,7 @@ pub mod types {
         #[serde(rename = "numbered")]
         Numbered {
             /// IP address for numbered BGP peers.
-            ip: RouterPeerIpAddr,
+            ip: ::std::net::IpAddr,
         },
     }
 
@@ -65841,7 +65776,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026041600.0.0
+/// Version: 2026041900.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65882,7 +65817,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026041600.0.0"
+        "2026041900.0.0"
     }
 
     fn baseurl(&self) -> &str {
