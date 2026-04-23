@@ -15,7 +15,7 @@ futures = { workspace = true }
 progenitor-client = { workspace = true }
 rand = { workspace = true }
 regress = { workspace = true }
-reqwest = { workspace = true, features = ["native-tls-vendored"] }
+reqwest = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 schemars = { workspace = true }
@@ -41,3 +41,4 @@ tokio = { workspace = true }
 default = []
 clap = ["dep:clap"]
 extras = ["dep:tokio", "dep:flume"]
+native-tls-vendored = ["reqwest/native-tls-vendored"]

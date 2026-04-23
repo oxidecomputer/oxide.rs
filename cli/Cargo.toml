@@ -17,6 +17,9 @@ path = "src/main.rs"
 [package.metadata.dist]
 dist = true
 
+[features]
+native-tls-vendored = ["reqwest/native-tls-vendored"]
+
 [dependencies]
 anyhow = { workspace = true }
 async-trait = { workspace = true }
@@ -44,7 +47,7 @@ oxide = { workspace = true, features = ["clap", "extras"] }
 oxnet = { workspace = true }
 predicates = { workspace = true }
 ratatui = { workspace = true }
-reqwest = { workspace = true, features = ["native-tls-vendored"] }
+reqwest = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
