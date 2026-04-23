@@ -40,7 +40,7 @@ md5 = "0.8.0"
 newline-converter = "0.3.0"
 oauth2 = { version = "5.0.0", default-features = false }
 oauth2-reqwest = "0.1.0-alpha.3"
-open = "5.3.3"
+open = "5.3.4"
 oxide = { path = "sdk", version = "0.16.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.16.0" }
 oxnet = "0.1.4"
