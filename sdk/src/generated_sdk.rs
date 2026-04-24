@@ -12012,7 +12012,9 @@ pub mod types {
     pub struct Histogramdouble {
         /// The bins of the histogram.
         pub bins: ::std::vec::Vec<Bindouble>,
+        /// The maximum value of all samples in the histogram.
         pub max: f64,
+        /// The minimum value of all samples in the histogram.
         pub min: f64,
         /// The total number of samples in the histogram.
         pub n_samples: u64,
@@ -12022,9 +12024,13 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
         pub sum_of_samples: f64,
     }
 
@@ -12144,7 +12150,9 @@ pub mod types {
     pub struct Histogramfloat {
         /// The bins of the histogram.
         pub bins: ::std::vec::Vec<Binfloat>,
+        /// The maximum value of all samples in the histogram.
         pub max: f32,
+        /// The minimum value of all samples in the histogram.
         pub min: f32,
         /// The total number of samples in the histogram.
         pub n_samples: u64,
@@ -12154,9 +12162,13 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
         pub sum_of_samples: f64,
     }
 
@@ -12288,6 +12300,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -12423,6 +12438,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -12558,6 +12576,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -12693,6 +12714,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -12830,6 +12854,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -12967,6 +12994,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -13104,6 +13134,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -13241,6 +13274,9 @@ pub mod types {
         pub p90: Quantile,
         /// p99 Quantile
         pub p99: Quantile,
+        /// M2 for Welford's algorithm for variance calculation.
+        ///
+        /// Read about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.
         pub squared_mean: f64,
         /// The start time of the histogram.
         pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -17758,7 +17794,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolUtilization {
+        /// The total number of addresses in the pool.
         pub capacity: f64,
+        /// The number of remaining addresses in the pool.
         pub remaining: f64,
     }
 
@@ -23506,6 +23544,7 @@ pub mod types {
         /// This does deviate from the paper, but it's a more useful
         /// representation that works according to the paper's algorithm.
         pub marker_positions: [u64; 5usize],
+        /// The p value for the quantile.
         pub p: f64,
     }
 
@@ -28725,7 +28764,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SubnetPoolUtilization {
+        /// The total number of addresses in the pool.
         pub capacity: f64,
+        /// The number of remaining addresses in the pool.
         pub remaining: f64,
     }
 
@@ -65691,14 +65732,6 @@ pub mod types {
     pub mod defaults {
         pub(super) fn default_bool<const V: bool>() -> bool {
             V
-        }
-
-        pub(super) fn default_nzu64<T, const V: u64>() -> T
-        where
-            T: ::std::convert::TryFrom<::std::num::NonZeroU64>,
-            <T as ::std::convert::TryFrom<::std::num::NonZeroU64>>::Error: ::std::fmt::Debug,
-        {
-            T::try_from(::std::num::NonZeroU64::try_from(V).unwrap()).unwrap()
         }
 
         pub(super) fn address_allocator_auto_pool_selector() -> super::PoolSelector {
