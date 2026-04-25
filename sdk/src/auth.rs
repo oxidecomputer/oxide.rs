@@ -264,8 +264,8 @@ impl ClientConfig {
 
         if *insecure {
             client_builder = client_builder
-                .danger_accept_invalid_hostnames(true)
-                .danger_accept_invalid_certs(true);
+                .tls_danger_accept_invalid_hostnames(true)
+                .tls_danger_accept_invalid_certs(true);
         }
 
         client_builder
