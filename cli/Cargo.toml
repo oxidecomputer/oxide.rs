@@ -17,9 +17,6 @@ path = "src/main.rs"
 [package.metadata.dist]
 dist = true
 
-[features]
-native-tls-vendored = ["reqwest/native-tls-vendored"]
-
 [dependencies]
 anyhow = { workspace = true }
 async-trait = { workspace = true }
