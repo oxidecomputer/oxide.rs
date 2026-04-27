@@ -20,7 +20,7 @@ bytes = "1.11.1"
 camino = { version = "1.2", features = ["serde1"] }
 chrono = { version = "0.4.44", features = ["serde"] }
 clap = { version = "4.6.1", features = ["derive", "string", "env", "wrap_help", "unstable-ext"] }
-clap_complete = "4.6.2"
+clap_complete = "4.6.3"
 colored = "3.1.1"
 crossterm = { version = "0.29.0", features = [ "event-stream" ] }
 dialoguer = "0.12.0"
@@ -34,7 +34,7 @@ http = "1.4.0"
 httpmock = "0.8.3"
 humantime = "2.3.0"
 indicatif = "0.18.4"
-libc = "0.2.185"
+libc = "0.2.186"
 log = "0.4.29"
 md5 = "0.8.0"
 newline-converter = "0.3.0"
@@ -47,7 +47,7 @@ oxnet = "0.1.4"
 predicates = "3.1.4"
 pretty_assertions = "1.4.1"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor", default-features = false }
-progenitor-client = "0.13.0"
+progenitor-client = "0.14.0"
 rand = "0.9.3"
 ratatui = "0.30.0"
 rcgen = { version = "0.14.7", features = ["pem"] }
