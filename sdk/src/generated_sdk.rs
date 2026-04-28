@@ -65809,7 +65809,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026041900.0.0
+/// Version: 2026042400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65850,7 +65850,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026041900.0.0"
+        "2026042400.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -83991,7 +83991,7 @@ pub mod builder {
 
         /// Sends a `GET` request to
         /// `/v1/instances/{instance}/serial-console/stream`
-        pub async fn send(self) -> Result<ResponseValue<reqwest::Upgraded>, Error<()>> {
+        pub async fn send(self) -> Result<ResponseValue<reqwest::Upgraded>, Error<types::Error>> {
             let Self {
                 client,
                 instance,
@@ -84041,6 +84041,12 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 101u16 => ResponseValue::upgrade(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
