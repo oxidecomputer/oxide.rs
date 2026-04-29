@@ -32478,7 +32478,8 @@ pub mod types {
     ///        "volts",
     ///        "amps",
     ///        "watts",
-    ///        "degrees_celsius"
+    ///        "degrees_celsius",
+    ///        "joules"
     ///      ]
     ///    },
     ///    {
@@ -32530,6 +32531,8 @@ pub mod types {
         Watts,
         #[serde(rename = "degrees_celsius")]
         DegreesCelsius,
+        #[serde(rename = "joules")]
+        Joules,
         /// No meaningful units, e.g. a dimensionless quanity.
         #[serde(rename = "none")]
         None,
@@ -32549,6 +32552,7 @@ pub mod types {
                 Self::Amps => f.write_str("amps"),
                 Self::Watts => f.write_str("watts"),
                 Self::DegreesCelsius => f.write_str("degrees_celsius"),
+                Self::Joules => f.write_str("joules"),
                 Self::None => f.write_str("none"),
                 Self::Rpm => f.write_str("rpm"),
             }
@@ -32567,6 +32571,7 @@ pub mod types {
                 "amps" => Ok(Self::Amps),
                 "watts" => Ok(Self::Watts),
                 "degrees_celsius" => Ok(Self::DegreesCelsius),
+                "joules" => Ok(Self::Joules),
                 "none" => Ok(Self::None),
                 "rpm" => Ok(Self::Rpm),
                 _ => Err("invalid value".into()),
@@ -65809,7 +65814,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026042400.0.0
+/// Version: 2026042900.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65850,7 +65855,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026042400.0.0"
+        "2026042900.0.0"
     }
 
     fn baseurl(&self) -> &str {
