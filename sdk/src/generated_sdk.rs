@@ -22685,15 +22685,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// A networking probe
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "A networking probe",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -24927,15 +24925,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// A SAML identity provider
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "A SAML identity provider",
     ///  "type": "object",
     ///  "required": [
     ///    "acs_url",
@@ -65814,7 +65810,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026042900.0.0
+/// Version: 2026043000.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65855,7 +65851,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026042900.0.0"
+        "2026043000.0.0"
     }
 
     fn baseurl(&self) -> &str {
