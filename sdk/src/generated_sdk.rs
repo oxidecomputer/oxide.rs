@@ -22685,15 +22685,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// A networking probe
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "A networking probe",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -24927,15 +24925,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// A SAML identity provider
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "A SAML identity provider",
     ///  "type": "object",
     ///  "required": [
     ///    "acs_url",
@@ -32478,7 +32474,8 @@ pub mod types {
     ///        "volts",
     ///        "amps",
     ///        "watts",
-    ///        "degrees_celsius"
+    ///        "degrees_celsius",
+    ///        "joules"
     ///      ]
     ///    },
     ///    {
@@ -32530,6 +32527,8 @@ pub mod types {
         Watts,
         #[serde(rename = "degrees_celsius")]
         DegreesCelsius,
+        #[serde(rename = "joules")]
+        Joules,
         /// No meaningful units, e.g. a dimensionless quanity.
         #[serde(rename = "none")]
         None,
@@ -32549,6 +32548,7 @@ pub mod types {
                 Self::Amps => f.write_str("amps"),
                 Self::Watts => f.write_str("watts"),
                 Self::DegreesCelsius => f.write_str("degrees_celsius"),
+                Self::Joules => f.write_str("joules"),
                 Self::None => f.write_str("none"),
                 Self::Rpm => f.write_str("rpm"),
             }
@@ -32567,6 +32567,7 @@ pub mod types {
                 "amps" => Ok(Self::Amps),
                 "watts" => Ok(Self::Watts),
                 "degrees_celsius" => Ok(Self::DegreesCelsius),
+                "joules" => Ok(Self::Joules),
                 "none" => Ok(Self::None),
                 "rpm" => Ok(Self::Rpm),
                 _ => Err("invalid value".into()),
@@ -65809,7 +65810,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026041900.0.0
+/// Version: 2026043000.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65850,7 +65851,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026041900.0.0"
+        "2026043000.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -83991,7 +83992,7 @@ pub mod builder {
 
         /// Sends a `GET` request to
         /// `/v1/instances/{instance}/serial-console/stream`
-        pub async fn send(self) -> Result<ResponseValue<reqwest::Upgraded>, Error<()>> {
+        pub async fn send(self) -> Result<ResponseValue<reqwest::Upgraded>, Error<types::Error>> {
             let Self {
                 client,
                 instance,
@@ -84041,6 +84042,12 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 101u16 => ResponseValue::upgrade(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
