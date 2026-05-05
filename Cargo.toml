@@ -43,7 +43,7 @@ oauth2-reqwest = "0.1.0-alpha.3"
 open = "5.3.4"
 oxide = { path = "sdk", version = "0.16.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.16.0" }
-oxnet = "0.1.4"
+oxnet = "0.1.5"
 predicates = "3.1.4"
 pretty_assertions = "1.4.1"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor", default-features = false }
