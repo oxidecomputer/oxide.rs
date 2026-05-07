@@ -29254,7 +29254,7 @@ pub mod types {
     ///      "description": "The switch interface kind.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchInterfaceKind2"
+    ///          "$ref": "#/components/schemas/SwitchInterfaceKind"
     ///        }
     ///      ]
     ///    },
@@ -29281,7 +29281,7 @@ pub mod types {
         /// The name of this switch interface.
         pub interface_name: Name,
         /// The switch interface kind.
-        pub kind: SwitchInterfaceKind2,
+        pub kind: SwitchInterfaceKind,
         /// The port settings object this switch interface configuration belongs
         /// to.
         pub port_settings_id: ::uuid::Uuid,
@@ -29447,119 +29447,6 @@ pub mod types {
     impl ::std::convert::From<u16> for SwitchInterfaceKind {
         fn from(value: u16) -> Self {
             Self::Vlan(value)
-        }
-    }
-
-    /// Describes the kind of an switch interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes the kind of an switch interface.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Primary interfaces are associated with physical
-    /// links. There is exactly one primary interface per physical link.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "primary"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "VLAN interfaces allow physical interfaces to be
-    /// multiplexed onto multiple logical links, each distinguished by a 12-bit
-    /// 802.1Q Ethernet tag.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "vlan"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Loopback interfaces are anchors for IP addresses
-    /// that are not specific to any particular port.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "loopback"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum SwitchInterfaceKind2 {
-        /// Primary interfaces are associated with physical links. There is
-        /// exactly one primary interface per physical link.
-        #[serde(rename = "primary")]
-        Primary,
-        /// VLAN interfaces allow physical interfaces to be multiplexed onto
-        /// multiple logical links, each distinguished by a 12-bit 802.1Q
-        /// Ethernet tag.
-        #[serde(rename = "vlan")]
-        Vlan,
-        /// Loopback interfaces are anchors for IP addresses that are not
-        /// specific to any particular port.
-        #[serde(rename = "loopback")]
-        Loopback,
-    }
-
-    impl ::std::fmt::Display for SwitchInterfaceKind2 {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Primary => f.write_str("primary"),
-                Self::Vlan => f.write_str("vlan"),
-                Self::Loopback => f.write_str("loopback"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for SwitchInterfaceKind2 {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "primary" => Ok(Self::Primary),
-                "vlan" => Ok(Self::Vlan),
-                "loopback" => Ok(Self::Loopback),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for SwitchInterfaceKind2 {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for SwitchInterfaceKind2 {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for SwitchInterfaceKind2 {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
         }
     }
 
@@ -29833,7 +29720,7 @@ pub mod types {
     ///      "description": "The physical link geometry of the port.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SwitchPortGeometry2"
+    ///          "$ref": "#/components/schemas/SwitchPortGeometry"
     ///        }
     ///      ]
     ///    },
@@ -29852,7 +29739,7 @@ pub mod types {
     )]
     pub struct SwitchPortConfig {
         /// The physical link geometry of the port.
-        pub geometry: SwitchPortGeometry2,
+        pub geometry: SwitchPortGeometry,
         /// The id of the port settings object this configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
     }
@@ -30009,114 +29896,6 @@ pub mod types {
         }
     }
 
-    /// The link geometry associated with a switch port.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The link geometry associated with a switch port.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The port contains a single QSFP28 link with four
-    /// lanes.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "qsfp28x1"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The port contains two QSFP28 links each with two
-    /// lanes.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "qsfp28x2"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The port contains four SFP28 links each with one
-    /// lane.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "sfp28x4"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum SwitchPortGeometry2 {
-        /// The port contains a single QSFP28 link with four lanes.
-        #[serde(rename = "qsfp28x1")]
-        Qsfp28x1,
-        /// The port contains two QSFP28 links each with two lanes.
-        #[serde(rename = "qsfp28x2")]
-        Qsfp28x2,
-        /// The port contains four SFP28 links each with one lane.
-        #[serde(rename = "sfp28x4")]
-        Sfp28x4,
-    }
-
-    impl ::std::fmt::Display for SwitchPortGeometry2 {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Qsfp28x1 => f.write_str("qsfp28x1"),
-                Self::Qsfp28x2 => f.write_str("qsfp28x2"),
-                Self::Sfp28x4 => f.write_str("sfp28x4"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for SwitchPortGeometry2 {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "qsfp28x1" => Ok(Self::Qsfp28x1),
-                "qsfp28x2" => Ok(Self::Qsfp28x2),
-                "sfp28x4" => Ok(Self::Sfp28x4),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for SwitchPortGeometry2 {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for SwitchPortGeometry2 {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for SwitchPortGeometry2 {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     /// A link configuration for a port settings object.
     ///
     /// <details><summary>JSON schema</summary>
@@ -30208,7 +29987,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/TxEqConfig2"
+    ///              "$ref": "#/components/schemas/TxEqConfig"
     ///            }
     ///          ]
     ///        }
@@ -30243,7 +30022,7 @@ pub mod types {
         pub speed: LinkSpeed,
         /// The tx_eq configuration for this link.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub tx_eq_config: ::std::option::Option<TxEqConfig2>,
+        pub tx_eq_config: ::std::option::Option<TxEqConfig>,
     }
 
     impl SwitchPortLinkConfig {
@@ -30419,8 +30198,7 @@ pub mod types {
     ///    "port",
     ///    "routes",
     ///    "time_created",
-    ///    "time_modified",
-    ///    "vlan_interfaces"
+    ///    "time_modified"
     ///  ],
     ///  "properties": {
     ///    "addresses": {
@@ -30502,13 +30280,6 @@ pub mod types {
     ///      "description": "Timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
-    ///    },
-    ///    "vlan_interfaces": {
-    ///      "description": "Vlan interface settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchVlanInterfaceConfig"
-    ///      }
     ///    }
     ///  }
     /// }
@@ -30543,8 +30314,6 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// Vlan interface settings.
-        pub vlan_interfaces: ::std::vec::Vec<SwitchVlanInterfaceConfig>,
     }
 
     impl SwitchPortSettings {
@@ -30974,57 +30743,6 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
-        }
-    }
-
-    /// A switch port VLAN interface configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A switch port VLAN interface configuration for a port
-    /// settings object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "interface_config_id",
-    ///    "vlan_id"
-    ///  ],
-    ///  "properties": {
-    ///    "interface_config_id": {
-    ///      "description": "The switch interface configuration this VLAN
-    /// interface configuration belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "vlan_id": {
-    ///      "description": "The virtual network id for this interface that is
-    /// used for producing and consuming 802.1Q Ethernet tags. This field has a
-    /// maximum value of 4095 as 802.1Q tags are twelve bits.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct SwitchVlanInterfaceConfig {
-        /// The switch interface configuration this VLAN interface configuration
-        /// belongs to.
-        pub interface_config_id: ::uuid::Uuid,
-        /// The virtual network id for this interface that is used for producing
-        /// and consuming 802.1Q Ethernet tags. This field has a maximum value
-        /// of 4095 as 802.1Q tags are twelve bits.
-        pub vlan_id: u16,
-    }
-
-    impl SwitchVlanInterfaceConfig {
-        pub fn builder() -> builder::SwitchVlanInterfaceConfig {
-            Default::default()
         }
     }
 
@@ -32263,101 +31981,6 @@ pub mod types {
 
     impl TxEqConfig {
         pub fn builder() -> builder::TxEqConfig {
-            Default::default()
-        }
-    }
-
-    /// Per-port tx-eq overrides.  This can be used to fine-tune the transceiver
-    /// equalization settings to improve signal integrity.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Per-port tx-eq overrides.  This can be used to
-    /// fine-tune the transceiver equalization settings to improve signal
-    /// integrity.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "main": {
-    ///      "description": "Main tap",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "post1": {
-    ///      "description": "Post-cursor tap1",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "post2": {
-    ///      "description": "Post-cursor tap2",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "pre1": {
-    ///      "description": "Pre-cursor tap1",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "pre2": {
-    ///      "description": "Pre-cursor tap2",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct TxEqConfig2 {
-        /// Main tap
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub main: ::std::option::Option<i32>,
-        /// Post-cursor tap1
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub post1: ::std::option::Option<i32>,
-        /// Post-cursor tap2
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub post2: ::std::option::Option<i32>,
-        /// Pre-cursor tap1
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub pre1: ::std::option::Option<i32>,
-        /// Pre-cursor tap2
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub pre2: ::std::option::Option<i32>,
-    }
-
-    impl ::std::default::Default for TxEqConfig2 {
-        fn default() -> Self {
-            Self {
-                main: Default::default(),
-                post1: Default::default(),
-                post2: Default::default(),
-                pre1: Default::default(),
-                pre2: Default::default(),
-            }
-        }
-    }
-
-    impl TxEqConfig2 {
-        pub fn builder() -> builder::TxEqConfig2 {
             Default::default()
         }
     }
@@ -59839,7 +59462,7 @@ pub mod types {
         pub struct SwitchInterfaceConfig {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             interface_name: ::std::result::Result<super::Name, ::std::string::String>,
-            kind: ::std::result::Result<super::SwitchInterfaceKind2, ::std::string::String>,
+            kind: ::std::result::Result<super::SwitchInterfaceKind, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             v6_enabled: ::std::result::Result<bool, ::std::string::String>,
         }
@@ -59879,7 +59502,7 @@ pub mod types {
             }
             pub fn kind<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchInterfaceKind2>,
+                T: ::std::convert::TryInto<super::SwitchInterfaceKind>,
                 T::Error: ::std::fmt::Display,
             {
                 self.kind = value
@@ -60289,7 +59912,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortConfig {
-            geometry: ::std::result::Result<super::SwitchPortGeometry2, ::std::string::String>,
+            geometry: ::std::result::Result<super::SwitchPortGeometry, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
@@ -60305,7 +59928,7 @@ pub mod types {
         impl SwitchPortConfig {
             pub fn geometry<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::SwitchPortGeometry2>,
+                T: ::std::convert::TryInto<super::SwitchPortGeometry>,
                 T::Error: ::std::fmt::Display,
             {
                 self.geometry = value
@@ -60405,7 +60028,7 @@ pub mod types {
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             speed: ::std::result::Result<super::LinkSpeed, ::std::string::String>,
             tx_eq_config: ::std::result::Result<
-                ::std::option::Option<super::TxEqConfig2>,
+                ::std::option::Option<super::TxEqConfig>,
                 ::std::string::String,
             >,
         }
@@ -60498,7 +60121,7 @@ pub mod types {
             }
             pub fn tx_eq_config<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::TxEqConfig2>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::TxEqConfig>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.tx_eq_config = value
@@ -60754,10 +60377,6 @@ pub mod types {
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
-            vlan_interfaces: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchVlanInterfaceConfig>,
-                ::std::string::String,
-            >,
         }
 
         impl ::std::default::Default for SwitchPortSettings {
@@ -60775,7 +60394,6 @@ pub mod types {
                     routes: Err("no value supplied for routes".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
-                    vlan_interfaces: Err("no value supplied for vlan_interfaces".to_string()),
                 }
             }
         }
@@ -60901,16 +60519,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
                 self
             }
-            pub fn vlan_interfaces<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchVlanInterfaceConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.vlan_interfaces = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for vlan_interfaces: {e}")
-                });
-                self
-            }
         }
 
         impl ::std::convert::TryFrom<SwitchPortSettings> for super::SwitchPortSettings {
@@ -60931,7 +60539,6 @@ pub mod types {
                     routes: value.routes?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
-                    vlan_interfaces: value.vlan_interfaces?,
                 })
             }
         }
@@ -60951,7 +60558,6 @@ pub mod types {
                     routes: Ok(value.routes),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
-                    vlan_interfaces: Ok(value.vlan_interfaces),
                 }
             }
         }
@@ -61418,67 +61024,6 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SwitchVlanInterfaceConfig {
-            interface_config_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            vlan_id: ::std::result::Result<u16, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for SwitchVlanInterfaceConfig {
-            fn default() -> Self {
-                Self {
-                    interface_config_id: Err(
-                        "no value supplied for interface_config_id".to_string()
-                    ),
-                    vlan_id: Err("no value supplied for vlan_id".to_string()),
-                }
-            }
-        }
-
-        impl SwitchVlanInterfaceConfig {
-            pub fn interface_config_id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.interface_config_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_config_id: {e}")
-                });
-                self
-            }
-            pub fn vlan_id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u16>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.vlan_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for vlan_id: {e}"));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<SwitchVlanInterfaceConfig> for super::SwitchVlanInterfaceConfig {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: SwitchVlanInterfaceConfig,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    interface_config_id: value.interface_config_id?,
-                    vlan_id: value.vlan_id?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::SwitchVlanInterfaceConfig> for SwitchVlanInterfaceConfig {
-            fn from(value: super::SwitchVlanInterfaceConfig) -> Self {
-                Self {
-                    interface_config_id: Ok(value.interface_config_id),
-                    vlan_id: Ok(value.vlan_id),
                 }
             }
         }
@@ -62227,107 +61772,6 @@ pub mod types {
 
         impl ::std::convert::From<super::TxEqConfig> for TxEqConfig {
             fn from(value: super::TxEqConfig) -> Self {
-                Self {
-                    main: Ok(value.main),
-                    post1: Ok(value.post1),
-                    post2: Ok(value.post2),
-                    pre1: Ok(value.pre1),
-                    pre2: Ok(value.pre2),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct TxEqConfig2 {
-            main: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
-            post1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
-            post2: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
-            pre1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
-            pre2: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for TxEqConfig2 {
-            fn default() -> Self {
-                Self {
-                    main: Ok(Default::default()),
-                    post1: Ok(Default::default()),
-                    post2: Ok(Default::default()),
-                    pre1: Ok(Default::default()),
-                    pre2: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl TxEqConfig2 {
-            pub fn main<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<i32>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.main = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for main: {e}"));
-                self
-            }
-            pub fn post1<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<i32>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.post1 = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for post1: {e}"));
-                self
-            }
-            pub fn post2<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<i32>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.post2 = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for post2: {e}"));
-                self
-            }
-            pub fn pre1<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<i32>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pre1 = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pre1: {e}"));
-                self
-            }
-            pub fn pre2<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<i32>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pre2 = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pre2: {e}"));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<TxEqConfig2> for super::TxEqConfig2 {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: TxEqConfig2,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    main: value.main?,
-                    post1: value.post1?,
-                    post2: value.post2?,
-                    pre1: value.pre1?,
-                    pre2: value.pre2?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::TxEqConfig2> for TxEqConfig2 {
-            fn from(value: super::TxEqConfig2) -> Self {
                 Self {
                     main: Ok(value.main),
                     post1: Ok(value.post1),
@@ -65810,7 +65254,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026043000.0.0
+/// Version: 2026050700.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65851,7 +65295,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026043000.0.0"
+        "2026050700.0.0"
     }
 
     fn baseurl(&self) -> &str {
