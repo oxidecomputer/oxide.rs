@@ -21418,6 +21418,165 @@ pub mod types {
         }
     }
 
+    /// A request to adopt a physical disk into the control plane
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A request to adopt a physical disk into the control
+    /// plane",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "disk_id",
+    ///    "id",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "disk_id": {
+    ///      "$ref": "#/components/schemas/PhysicalDiskManufacturerIdentity"
+    ///    },
+    ///    "id": {
+    ///      "$ref": "#/components/schemas/PhysicalDiskAdoptionRequestUuid"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PhysicalDiskAdoptionRequest {
+        pub disk_id: PhysicalDiskManufacturerIdentity,
+        pub id: PhysicalDiskAdoptionRequestUuid,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl PhysicalDiskAdoptionRequest {
+        pub fn builder() -> builder::PhysicalDiskAdoptionRequest {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PhysicalDiskAdoptionRequest"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PhysicalDiskAdoptionRequestResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<PhysicalDiskAdoptionRequest>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl PhysicalDiskAdoptionRequestResultsPage {
+        pub fn builder() -> builder::PhysicalDiskAdoptionRequestResultsPage {
+            Default::default()
+        }
+    }
+
+    /// `PhysicalDiskAdoptionRequestUuid`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid",
+    ///  "x-rust-type": {
+    ///    "crate": "omicron-uuid-kinds",
+    ///    "path": "omicron_uuid_kinds::PhysicalDiskAdoptionRequestUuid",
+    ///    "version": "*"
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct PhysicalDiskAdoptionRequestUuid(pub ::uuid::Uuid);
+    impl ::std::ops::Deref for PhysicalDiskAdoptionRequestUuid {
+        type Target = ::uuid::Uuid;
+        fn deref(&self) -> &::uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PhysicalDiskAdoptionRequestUuid> for ::uuid::Uuid {
+        fn from(value: PhysicalDiskAdoptionRequestUuid) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<::uuid::Uuid> for PhysicalDiskAdoptionRequestUuid {
+        fn from(value: ::uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for PhysicalDiskAdoptionRequestUuid {
+        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PhysicalDiskAdoptionRequestUuid {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for PhysicalDiskAdoptionRequestUuid {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for PhysicalDiskAdoptionRequestUuid {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     /// Describes the form factor of physical disks.
     ///
     /// <details><summary>JSON schema</summary>
@@ -21495,6 +21654,49 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// The unique identity of a physical disk provided by the manufacturer
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The unique identity of a physical disk provided by the
+    /// manufacturer",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "model",
+    ///    "serial",
+    ///    "vendor"
+    ///  ],
+    ///  "properties": {
+    ///    "model": {
+    ///      "type": "string"
+    ///    },
+    ///    "serial": {
+    ///      "type": "string"
+    ///    },
+    ///    "vendor": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PhysicalDiskManufacturerIdentity {
+        pub model: ::std::string::String,
+        pub serial: ::std::string::String,
+        pub vendor: ::std::string::String,
+    }
+
+    impl PhysicalDiskManufacturerIdentity {
+        pub fn builder() -> builder::PhysicalDiskManufacturerIdentity {
+            Default::default()
         }
     }
 
@@ -27589,6 +27791,73 @@ pub mod types {
         }
     }
 
+    /// `SledUuid`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid",
+    ///  "x-rust-type": {
+    ///    "crate": "omicron-uuid-kinds",
+    ///    "path": "omicron_uuid_kinds::SledUuid",
+    ///    "version": "*"
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct SledUuid(pub ::uuid::Uuid);
+    impl ::std::ops::Deref for SledUuid {
+        type Target = ::uuid::Uuid;
+        fn deref(&self) -> &::uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<SledUuid> for ::uuid::Uuid {
+        fn from(value: SledUuid) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<::uuid::Uuid> for SledUuid {
+        fn from(value: ::uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for SledUuid {
+        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SledUuid {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for SledUuid {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for SledUuid {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     /// View of a Snapshot
     ///
     /// <details><summary>JSON schema</summary>
@@ -31981,6 +32250,103 @@ pub mod types {
 
     impl TxEqConfig {
         pub fn builder() -> builder::TxEqConfig {
+            Default::default()
+        }
+    }
+
+    /// A physical disk that has not yet been adopted by the control plane
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A physical disk that has not yet been adopted by the
+    /// control plane",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "disk_id",
+    ///    "sled_id",
+    ///    "slot",
+    ///    "variant"
+    ///  ],
+    ///  "properties": {
+    ///    "disk_id": {
+    ///      "$ref": "#/components/schemas/PhysicalDiskManufacturerIdentity"
+    ///    },
+    ///    "sled_id": {
+    ///      "$ref": "#/components/schemas/SledUuid"
+    ///    },
+    ///    "slot": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "variant": {
+    ///      "$ref": "#/components/schemas/PhysicalDiskKind"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct UnadoptedPhysicalDisk {
+        pub disk_id: PhysicalDiskManufacturerIdentity,
+        pub sled_id: SledUuid,
+        pub slot: i64,
+        pub variant: PhysicalDiskKind,
+    }
+
+    impl UnadoptedPhysicalDisk {
+        pub fn builder() -> builder::UnadoptedPhysicalDisk {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/UnadoptedPhysicalDisk"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct UnadoptedPhysicalDiskResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<UnadoptedPhysicalDisk>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl UnadoptedPhysicalDiskResultsPage {
+        pub fn builder() -> builder::UnadoptedPhysicalDiskResultsPage {
             Default::default()
         }
     }
@@ -52342,6 +52708,234 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct PhysicalDiskAdoptionRequest {
+            disk_id: ::std::result::Result<
+                super::PhysicalDiskManufacturerIdentity,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<
+                super::PhysicalDiskAdoptionRequestUuid,
+                ::std::string::String,
+            >,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for PhysicalDiskAdoptionRequest {
+            fn default() -> Self {
+                Self {
+                    disk_id: Err("no value supplied for disk_id".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                }
+            }
+        }
+
+        impl PhysicalDiskAdoptionRequest {
+            pub fn disk_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PhysicalDiskManufacturerIdentity>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.disk_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for disk_id: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PhysicalDiskAdoptionRequestUuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PhysicalDiskAdoptionRequest> for super::PhysicalDiskAdoptionRequest {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PhysicalDiskAdoptionRequest,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    disk_id: value.disk_id?,
+                    id: value.id?,
+                    time_created: value.time_created?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PhysicalDiskAdoptionRequest> for PhysicalDiskAdoptionRequest {
+            fn from(value: super::PhysicalDiskAdoptionRequest) -> Self {
+                Self {
+                    disk_id: Ok(value.disk_id),
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PhysicalDiskAdoptionRequestResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::PhysicalDiskAdoptionRequest>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for PhysicalDiskAdoptionRequestResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl PhysicalDiskAdoptionRequestResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::PhysicalDiskAdoptionRequest>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PhysicalDiskAdoptionRequestResultsPage>
+            for super::PhysicalDiskAdoptionRequestResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PhysicalDiskAdoptionRequestResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PhysicalDiskAdoptionRequestResultsPage>
+            for PhysicalDiskAdoptionRequestResultsPage
+        {
+            fn from(value: super::PhysicalDiskAdoptionRequestResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PhysicalDiskManufacturerIdentity {
+            model: ::std::result::Result<::std::string::String, ::std::string::String>,
+            serial: ::std::result::Result<::std::string::String, ::std::string::String>,
+            vendor: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PhysicalDiskManufacturerIdentity {
+            fn default() -> Self {
+                Self {
+                    model: Err("no value supplied for model".to_string()),
+                    serial: Err("no value supplied for serial".to_string()),
+                    vendor: Err("no value supplied for vendor".to_string()),
+                }
+            }
+        }
+
+        impl PhysicalDiskManufacturerIdentity {
+            pub fn model<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.model = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for model: {e}"));
+                self
+            }
+            pub fn serial<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.serial = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for serial: {e}"));
+                self
+            }
+            pub fn vendor<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.vendor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vendor: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PhysicalDiskManufacturerIdentity>
+            for super::PhysicalDiskManufacturerIdentity
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PhysicalDiskManufacturerIdentity,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    model: value.model?,
+                    serial: value.serial?,
+                    vendor: value.vendor?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PhysicalDiskManufacturerIdentity>
+            for PhysicalDiskManufacturerIdentity
+        {
+            fn from(value: super::PhysicalDiskManufacturerIdentity) -> Self {
+                Self {
+                    model: Ok(value.model),
+                    serial: Ok(value.serial),
+                    vendor: Ok(value.vendor),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct PhysicalDiskResultsPage {
             items:
                 ::std::result::Result<::std::vec::Vec<super::PhysicalDisk>, ::std::string::String>,
@@ -61783,6 +62377,165 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct UnadoptedPhysicalDisk {
+            disk_id: ::std::result::Result<
+                super::PhysicalDiskManufacturerIdentity,
+                ::std::string::String,
+            >,
+            sled_id: ::std::result::Result<super::SledUuid, ::std::string::String>,
+            slot: ::std::result::Result<i64, ::std::string::String>,
+            variant: ::std::result::Result<super::PhysicalDiskKind, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for UnadoptedPhysicalDisk {
+            fn default() -> Self {
+                Self {
+                    disk_id: Err("no value supplied for disk_id".to_string()),
+                    sled_id: Err("no value supplied for sled_id".to_string()),
+                    slot: Err("no value supplied for slot".to_string()),
+                    variant: Err("no value supplied for variant".to_string()),
+                }
+            }
+        }
+
+        impl UnadoptedPhysicalDisk {
+            pub fn disk_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PhysicalDiskManufacturerIdentity>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.disk_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for disk_id: {e}"));
+                self
+            }
+            pub fn sled_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::SledUuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sled_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled_id: {e}"));
+                self
+            }
+            pub fn slot<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for slot: {e}"));
+                self
+            }
+            pub fn variant<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PhysicalDiskKind>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.variant = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for variant: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<UnadoptedPhysicalDisk> for super::UnadoptedPhysicalDisk {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: UnadoptedPhysicalDisk,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    disk_id: value.disk_id?,
+                    sled_id: value.sled_id?,
+                    slot: value.slot?,
+                    variant: value.variant?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::UnadoptedPhysicalDisk> for UnadoptedPhysicalDisk {
+            fn from(value: super::UnadoptedPhysicalDisk) -> Self {
+                Self {
+                    disk_id: Ok(value.disk_id),
+                    sled_id: Ok(value.sled_id),
+                    slot: Ok(value.slot),
+                    variant: Ok(value.variant),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct UnadoptedPhysicalDiskResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::UnadoptedPhysicalDisk>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for UnadoptedPhysicalDiskResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl UnadoptedPhysicalDiskResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::UnadoptedPhysicalDisk>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<UnadoptedPhysicalDiskResultsPage>
+            for super::UnadoptedPhysicalDiskResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: UnadoptedPhysicalDiskResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::UnadoptedPhysicalDiskResultsPage>
+            for UnadoptedPhysicalDiskResultsPage
+        {
+            fn from(value: super::UnadoptedPhysicalDiskResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct UninitializedSled {
             baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
             cubby: ::std::result::Result<u16, ::std::string::String>,
@@ -65254,7 +66007,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026050700.0.0
+/// Version: 2026050800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -65295,7 +66048,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026050700.0.0"
+        "2026050800.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -68800,6 +69553,52 @@ impl ClientSystemAuditLogExt for Client {
 /// unit of expansion of an Oxide deployment. Racks are in turn composed of
 /// sleds, switches, power supplies, and a cabled backplane.
 pub trait ClientSystemHardwareExt {
+    /// Enable adoption of a physical disk for general use
+    ///
+    /// Sends a `PUT` request to `/v1/system/hardware/disk-adoption-request`
+    ///
+    /// ```ignore
+    /// let response = client.physical_disk_enable_adoption()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn physical_disk_enable_adoption(&self) -> builder::PhysicalDiskEnableAdoption<'_>;
+    /// Disable adoption of a physical disk for general use
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/hardware/disk-adoption-request/
+    /// {physical_disk_adoption_req_id}`
+    ///
+    /// Arguments:
+    /// - `physical_disk_adoption_req_id`: ID of the physical disk adoption
+    ///   request
+    /// ```ignore
+    /// let response = client.physical_disk_disable_adoption()
+    ///    .physical_disk_adoption_req_id(physical_disk_adoption_req_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn physical_disk_disable_adoption(&self) -> builder::PhysicalDiskDisableAdoption<'_>;
+    /// List physical disk adoption requests
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/disk-adoption-requests`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.physical_disk_list_adoption_requests()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn physical_disk_list_adoption_requests(&self)
+        -> builder::PhysicalDiskListAdoptionRequests<'_>;
     /// List physical disks
     ///
     /// Sends a `GET` request to `/v1/system/hardware/disks`
@@ -68831,6 +69630,22 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn physical_disk_view(&self) -> builder::PhysicalDiskView<'_>;
+    /// List physical disks that have not yet been adopted for use
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/disks-unadopted`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// ```ignore
+    /// let response = client.physical_disk_list_unadopted()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn physical_disk_list_unadopted(&self) -> builder::PhysicalDiskListUnadopted<'_>;
     /// List racks
     ///
     /// Sends a `GET` request to `/v1/system/hardware/racks`
@@ -69082,12 +69897,30 @@ pub trait ClientSystemHardwareExt {
 }
 
 impl ClientSystemHardwareExt for Client {
+    fn physical_disk_enable_adoption(&self) -> builder::PhysicalDiskEnableAdoption<'_> {
+        builder::PhysicalDiskEnableAdoption::new(self)
+    }
+
+    fn physical_disk_disable_adoption(&self) -> builder::PhysicalDiskDisableAdoption<'_> {
+        builder::PhysicalDiskDisableAdoption::new(self)
+    }
+
+    fn physical_disk_list_adoption_requests(
+        &self,
+    ) -> builder::PhysicalDiskListAdoptionRequests<'_> {
+        builder::PhysicalDiskListAdoptionRequests::new(self)
+    }
+
     fn physical_disk_list(&self) -> builder::PhysicalDiskList<'_> {
         builder::PhysicalDiskList::new(self)
     }
 
     fn physical_disk_view(&self) -> builder::PhysicalDiskView<'_> {
         builder::PhysicalDiskView::new(self)
+    }
+
+    fn physical_disk_list_unadopted(&self) -> builder::PhysicalDiskListUnadopted<'_> {
+        builder::PhysicalDiskListUnadopted::new(self)
     }
 
     fn rack_list(&self) -> builder::RackList<'_> {
@@ -89566,6 +90399,341 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemHardwareExt::physical_disk_enable_adoption`]
+    ///
+    /// [`ClientSystemHardwareExt::physical_disk_enable_adoption`]: super::ClientSystemHardwareExt::physical_disk_enable_adoption
+    #[derive(Debug, Clone)]
+    pub struct PhysicalDiskEnableAdoption<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::PhysicalDiskManufacturerIdentity, String>,
+    }
+
+    impl<'a> PhysicalDiskEnableAdoption<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::PhysicalDiskManufacturerIdentity>,
+            <V as std::convert::TryInto<types::PhysicalDiskManufacturerIdentity>>::Error:
+                std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `PhysicalDiskManufacturerIdentity` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::PhysicalDiskManufacturerIdentity,
+            ) -> types::builder::PhysicalDiskManufacturerIdentity,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/hardware/disk-adoption-request`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PhysicalDiskAdoptionRequest>, Error<types::Error>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| {
+                    types::PhysicalDiskManufacturerIdentity::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/disk-adoption-request",
+                client.baseurl,
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "physical_disk_enable_adoption",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::physical_disk_disable_adoption`]
+    ///
+    /// [`ClientSystemHardwareExt::physical_disk_disable_adoption`]: super::ClientSystemHardwareExt::physical_disk_disable_adoption
+    #[derive(Debug, Clone)]
+    pub struct PhysicalDiskDisableAdoption<'a> {
+        client: &'a super::Client,
+        physical_disk_adoption_req_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> PhysicalDiskDisableAdoption<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                physical_disk_adoption_req_id: Err("physical_disk_adoption_req_id was not \
+                                                    initialized"
+                    .to_string()),
+            }
+        }
+
+        pub fn physical_disk_adoption_req_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.physical_disk_adoption_req_id = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for physical_disk_adoption_req_id failed"
+                    .to_string()
+            });
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/hardware/disk-adoption-request/
+        /// {physical_disk_adoption_req_id}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                physical_disk_adoption_req_id,
+            } = self;
+            let physical_disk_adoption_req_id =
+                physical_disk_adoption_req_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/disk-adoption-request/{}",
+                client.baseurl,
+                encode_path(&physical_disk_adoption_req_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "physical_disk_disable_adoption",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemHardwareExt::physical_disk_list_adoption_requests`]
+    ///
+    /// [`ClientSystemHardwareExt::physical_disk_list_adoption_requests`]: super::ClientSystemHardwareExt::physical_disk_list_adoption_requests
+    #[derive(Debug, Clone)]
+    pub struct PhysicalDiskListAdoptionRequests<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> PhysicalDiskListAdoptionRequests<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/hardware/disk-adoption-requests`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PhysicalDiskAdoptionRequestResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/disk-adoption-requests",
+                client.baseurl,
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "physical_disk_list_adoption_requests",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/system/hardware/disk-adoption-requests`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<
+            Item = Result<types::PhysicalDiskAdoptionRequest, Error<types::Error>>,
+        > + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::physical_disk_list`]
     ///
     /// [`ClientSystemHardwareExt::physical_disk_list`]: super::ClientSystemHardwareExt::physical_disk_list
@@ -89787,6 +90955,144 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::physical_disk_list_unadopted`]
+    ///
+    /// [`ClientSystemHardwareExt::physical_disk_list_unadopted`]: super::ClientSystemHardwareExt::physical_disk_list_unadopted
+    #[derive(Debug, Clone)]
+    pub struct PhysicalDiskListUnadopted<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> PhysicalDiskListUnadopted<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/disks-unadopted`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UnadoptedPhysicalDiskResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/hardware/disks-unadopted", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "physical_disk_list_unadopted",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/hardware/disks-unadopted`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::UnadoptedPhysicalDisk, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
         }
     }
 

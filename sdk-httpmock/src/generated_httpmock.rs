@@ -11592,6 +11592,206 @@ pub mod operations {
         }
     }
 
+    pub struct PhysicalDiskEnableAdoptionWhen(::httpmock::When);
+    impl PhysicalDiskEnableAdoptionWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::PUT).path_matches(
+                regex::Regex::new("^/v1/system/hardware/disk-adoption-request$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::PhysicalDiskManufacturerIdentity) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct PhysicalDiskEnableAdoptionThen(::httpmock::Then);
+    impl PhysicalDiskEnableAdoptionThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::PhysicalDiskAdoptionRequest) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct PhysicalDiskDisableAdoptionWhen(::httpmock::When);
+    impl PhysicalDiskDisableAdoptionWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/system/hardware/disk-adoption-request/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn physical_disk_adoption_req_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/disk-adoption-request/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct PhysicalDiskDisableAdoptionThen(::httpmock::Then);
+    impl PhysicalDiskDisableAdoptionThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct PhysicalDiskListAdoptionRequestsWhen(::httpmock::When);
+    impl PhysicalDiskListAdoptionRequestsWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/disk-adoption-requests$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct PhysicalDiskListAdoptionRequestsThen(::httpmock::Then);
+    impl PhysicalDiskListAdoptionRequestsThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::PhysicalDiskAdoptionRequestResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct PhysicalDiskListWhen(::httpmock::When);
     impl PhysicalDiskListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -11715,6 +11915,83 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::PhysicalDisk) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct PhysicalDiskListUnadoptedWhen(::httpmock::When);
+    impl PhysicalDiskListUnadoptedWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/hardware/disks-unadopted$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+    }
+
+    pub struct PhysicalDiskListUnadoptedThen(::httpmock::Then);
+    impl PhysicalDiskListUnadoptedThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UnadoptedPhysicalDiskResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -23633,12 +23910,36 @@ pub trait MockServerExt {
     fn audit_log_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::AuditLogListWhen, operations::AuditLogListThen);
+    fn physical_disk_enable_adoption<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskEnableAdoptionWhen,
+            operations::PhysicalDiskEnableAdoptionThen,
+        );
+    fn physical_disk_disable_adoption<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskDisableAdoptionWhen,
+            operations::PhysicalDiskDisableAdoptionThen,
+        );
+    fn physical_disk_list_adoption_requests<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskListAdoptionRequestsWhen,
+            operations::PhysicalDiskListAdoptionRequestsThen,
+        );
     fn physical_disk_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen);
     fn physical_disk_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::PhysicalDiskViewWhen, operations::PhysicalDiskViewThen);
+    fn physical_disk_list_unadopted<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskListUnadoptedWhen,
+            operations::PhysicalDiskListUnadoptedThen,
+        );
     fn networking_switch_port_lldp_neighbors<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -26204,6 +26505,51 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn physical_disk_enable_adoption<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskEnableAdoptionWhen,
+            operations::PhysicalDiskEnableAdoptionThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::PhysicalDiskEnableAdoptionWhen::new(when),
+                operations::PhysicalDiskEnableAdoptionThen::new(then),
+            )
+        })
+    }
+
+    fn physical_disk_disable_adoption<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskDisableAdoptionWhen,
+            operations::PhysicalDiskDisableAdoptionThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::PhysicalDiskDisableAdoptionWhen::new(when),
+                operations::PhysicalDiskDisableAdoptionThen::new(then),
+            )
+        })
+    }
+
+    fn physical_disk_list_adoption_requests<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskListAdoptionRequestsWhen,
+            operations::PhysicalDiskListAdoptionRequestsThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::PhysicalDiskListAdoptionRequestsWhen::new(when),
+                operations::PhysicalDiskListAdoptionRequestsThen::new(then),
+            )
+        })
+    }
+
     fn physical_disk_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen),
@@ -26224,6 +26570,21 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::PhysicalDiskViewWhen::new(when),
                 operations::PhysicalDiskViewThen::new(then),
+            )
+        })
+    }
+
+    fn physical_disk_list_unadopted<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::PhysicalDiskListUnadoptedWhen,
+            operations::PhysicalDiskListUnadoptedThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::PhysicalDiskListUnadoptedWhen::new(when),
+                operations::PhysicalDiskListUnadoptedThen::new(then),
             )
         })
     }
