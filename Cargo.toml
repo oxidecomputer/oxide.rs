@@ -12,7 +12,7 @@ resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1.0.102"
-assert_cmd = "2.2.1"
+assert_cmd = "2.2.2"
 async-trait = "0.1.89"
 base64 = "0.22.1"
 built = { version = "0.8.0", features = ["git2"] }
@@ -20,7 +20,7 @@ bytes = "1.11.1"
 camino = { version = "1.2", features = ["serde1"] }
 chrono = { version = "0.4.44", features = ["serde"] }
 clap = { version = "4.6.1", features = ["derive", "string", "env", "wrap_help", "unstable-ext"] }
-clap_complete = "4.6.3"
+clap_complete = "4.6.5"
 colored = "3.1.1"
 crossterm = { version = "0.29.0", features = [ "event-stream" ] }
 dialoguer = "0.12.0"
@@ -40,7 +40,7 @@ md5 = "0.8.0"
 newline-converter = "0.3.0"
 oauth2 = { version = "5.0.0", default-features = false }
 oauth2-reqwest = "0.1.0-alpha.3"
-open = "5.3.4"
+open = "5.3.5"
 oxide = { path = "sdk", version = "0.16.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.16.0" }
 oxnet = "0.1.5"
@@ -50,7 +50,7 @@ progenitor = { git = "https://github.com/oxidecomputer/progenitor", default-feat
 progenitor-client = "0.14.0"
 rand = "0.9.3"
 ratatui = "0.30.0"
-rcgen = { version = "0.14.7", features = ["pem"] }
+rcgen = { version = "0.14.8", features = ["pem"] }
 regex = "1.12.3"
 regress = "0.11.1"
 reqwest = "0.13.2"
@@ -66,7 +66,7 @@ thiserror = "2.0.18"
 tempfile = "3.27.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
-tokio = { version = "1.52.2", features = ["full"] }
+tokio = { version = "1.52.3", features = ["full"] }
 tokio-util = "0.7.18"
 toml = "1.0.7"
 toml_edit = "0.25.8"
