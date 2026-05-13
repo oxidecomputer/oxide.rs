@@ -14,12 +14,11 @@ use colored::*;
 use futures::TryStreamExt;
 use oxide::{
     types::{
-        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
+        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpConfig, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig, RouterPeerType,
-        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchPort,
-        SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2, SwitchPortRouteConfig,
-        SwitchPortSettingsCreate, SwitchSlot,
+        SwitchInterfaceConfigCreate, SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry,
+        SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -1275,14 +1274,12 @@ impl AuthenticatedCmd for CmdPortConfig {
                     .await?
                     .into_inner();
 
-                let bgp_configs: HashMap<Uuid, Name> = client
+                let bgp_configs = client
                     .networking_bgp_config_list()
                     .stream()
-                    .try_collect::<Vec<_>>()
-                    .await?
-                    .into_iter()
-                    .map(|x| (x.id, x.name))
-                    .collect();
+                    .map_ok(|BgpConfig { id, name, .. }| (id, name))
+                    .try_collect::<HashMap<_, _>>()
+                    .await?;
 
                 println_nopipe!(
                     "{}{}{}",
@@ -1769,24 +1766,21 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         .unwrap()
         .into_inner();
 
-    let mut block_to_lot = HashMap::new();
-    let lots = client
+    let block_to_lot = client
         .networking_address_lot_list()
         .stream()
-        .try_collect::<Vec<_>>()
-        .await?;
+        .map_ok(|lot| {
+            let lot_blocks = client
+                .networking_address_lot_block_list()
+                .address_lot(lot.id)
+                .stream()
+                .map_ok(move |block| (block.id, lot.id));
 
-    for lot in lots.iter() {
-        let lot_blocks = client
-            .networking_address_lot_block_list()
-            .address_lot(lot.id)
-            .stream()
-            .try_collect::<Vec<_>>()
-            .await?;
-        for block in lot_blocks.iter() {
-            block_to_lot.insert(block.id, lot.id);
-        }
-    }
+            lot_blocks
+        })
+        .try_flatten_unordered(None)
+        .try_collect::<HashMap<_, _>>()
+        .await?;
 
     let addrs: Vec<Address> = current
         .addresses
@@ -1815,29 +1809,15 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         .map(|x| NameOrId::Id(x.port_settings_group_id))
         .collect();
 
-    let mut interfaces = current
+    let interfaces = current
         .interfaces
-        .iter()
+        .into_iter()
         .map(|x| SwitchInterfaceConfigCreate {
-            link_name: x.interface_name.parse().unwrap(),
-            kind: match x.kind {
-                SwitchInterfaceKind2::Primary => SwitchInterfaceKind::Primary,
-                SwitchInterfaceKind2::Loopback => SwitchInterfaceKind::Loopback,
-                SwitchInterfaceKind2::Vlan => {
-                    todo!("vlan interface outside vlan interfaces?")
-                }
-            },
+            link_name: x.interface_name,
+            kind: x.kind,
             v6_enabled: x.v6_enabled,
         })
         .collect::<Vec<_>>();
-
-    for v in current.vlan_interfaces.iter() {
-        interfaces.push(SwitchInterfaceConfigCreate {
-            link_name: format!("vlan-{}", v.vlan_id).parse().unwrap(),
-            kind: SwitchInterfaceKind::Vlan(v.vlan_id),
-            v6_enabled: false,
-        });
-    }
 
     let links = current
         .links
@@ -1863,11 +1843,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         .collect();
 
     let port_config = SwitchPortConfigCreate {
-        geometry: match current.port.geometry {
-            SwitchPortGeometry2::Qsfp28x1 => SwitchPortGeometry::Qsfp28x1,
-            SwitchPortGeometry2::Qsfp28x2 => SwitchPortGeometry::Qsfp28x2,
-            SwitchPortGeometry2::Sfp28x4 => SwitchPortGeometry::Sfp28x4,
-        },
+        geometry: current.port.geometry,
     };
 
     let route_config = RouteConfig {
