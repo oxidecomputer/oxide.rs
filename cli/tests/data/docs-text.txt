@@ -181,7 +181,11 @@ oxide snapshot list — List snapshots
 oxide snapshot view — Fetch snapshot
 oxide subnet-pool list — List subnet pools
 oxide subnet-pool view — Fetch subnet pool
+oxide system hardware disk adoption-requests — List physical disk adoption requests
+oxide system hardware disk disable-adoption — Disable adoption of a physical disk for general use
+oxide system hardware disk enable-adoption — Enable adoption of a physical disk for general use
 oxide system hardware disk list — List physical disks
+oxide system hardware disk list-unadopted — List physical disks that have not yet been adopted for use
 oxide system hardware disk view — Get physical disk
 oxide system hardware rack list — List racks
 oxide system hardware rack membership abort — Abort the latest rack membership change

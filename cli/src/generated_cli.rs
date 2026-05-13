@@ -196,8 +196,14 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SubnetPoolList => Self::cli_subnet_pool_list(),
             CliCommand::SubnetPoolView => Self::cli_subnet_pool_view(),
             CliCommand::AuditLogList => Self::cli_audit_log_list(),
+            CliCommand::PhysicalDiskEnableAdoption => Self::cli_physical_disk_enable_adoption(),
+            CliCommand::PhysicalDiskDisableAdoption => Self::cli_physical_disk_disable_adoption(),
+            CliCommand::PhysicalDiskListAdoptionRequests => {
+                Self::cli_physical_disk_list_adoption_requests()
+            }
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
+            CliCommand::PhysicalDiskListUnadopted => Self::cli_physical_disk_list_unadopted(),
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 Self::cli_networking_switch_port_lldp_neighbors()
             }
@@ -5058,6 +5064,78 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
+    pub fn cli_physical_disk_enable_adoption() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("model")
+                    .long("model")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("serial")
+                    .long("serial")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("vendor")
+                    .long("vendor")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Enable adoption of a physical disk for general use")
+    }
+
+    pub fn cli_physical_disk_disable_adoption() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("physical-disk-adoption-req-id")
+                    .long("physical-disk-adoption-req-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the physical disk adoption request"),
+            )
+            .about("Disable adoption of a physical disk for general use")
+    }
+
+    pub fn cli_physical_disk_list_adoption_requests() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List physical disk adoption requests")
+    }
+
     pub fn cli_physical_disk_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -5091,6 +5169,18 @@ impl<T: CliConfig> Cli<T> {
                     .help("ID of the physical disk"),
             )
             .about("Get physical disk")
+    }
+
+    pub fn cli_physical_disk_list_unadopted() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List physical disks that have not yet been adopted for use")
     }
 
     pub fn cli_networking_switch_port_lldp_neighbors() -> ::clap::Command {
@@ -9948,8 +10038,21 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SubnetPoolList => self.execute_subnet_pool_list(matches).await,
             CliCommand::SubnetPoolView => self.execute_subnet_pool_view(matches).await,
             CliCommand::AuditLogList => self.execute_audit_log_list(matches).await,
+            CliCommand::PhysicalDiskEnableAdoption => {
+                self.execute_physical_disk_enable_adoption(matches).await
+            }
+            CliCommand::PhysicalDiskDisableAdoption => {
+                self.execute_physical_disk_disable_adoption(matches).await
+            }
+            CliCommand::PhysicalDiskListAdoptionRequests => {
+                self.execute_physical_disk_list_adoption_requests(matches)
+                    .await
+            }
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
             CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
+            CliCommand::PhysicalDiskListUnadopted => {
+                self.execute_physical_disk_list_unadopted(matches).await
+            }
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 self.execute_networking_switch_port_lldp_neighbors(matches)
                     .await
@@ -15587,6 +15690,112 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_physical_disk_enable_adoption(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.physical_disk_enable_adoption();
+        if let Some(value) = matches.get_one::<::std::string::String>("model") {
+            request = request.body_map(|body| body.model(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("serial") {
+            request = request.body_map(|body| body.serial(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("vendor") {
+            request = request.body_map(|body| body.vendor(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value =
+                serde_json::from_str::<types::PhysicalDiskManufacturerIdentity>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_physical_disk_enable_adoption(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_physical_disk_disable_adoption(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.physical_disk_disable_adoption();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("physical-disk-adoption-req-id") {
+            request = request.physical_disk_adoption_req_id(value.clone());
+        }
+
+        self.config
+            .execute_physical_disk_disable_adoption(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_physical_disk_list_adoption_requests(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.physical_disk_list_adoption_requests();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_physical_disk_list_adoption_requests(matches, &mut request)?;
+        self.config
+            .list_start::<types::PhysicalDiskAdoptionRequestResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::PhysicalDiskAdoptionRequestResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_physical_disk_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -15647,6 +15856,43 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_physical_disk_list_unadopted(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.physical_disk_list_unadopted();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.config
+            .execute_physical_disk_list_unadopted(matches, &mut request)?;
+        self.config
+            .list_start::<types::UnadoptedPhysicalDiskResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::UnadoptedPhysicalDiskResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -22291,6 +22537,30 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_physical_disk_enable_adoption(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::PhysicalDiskEnableAdoption,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_physical_disk_disable_adoption(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::PhysicalDiskDisableAdoption,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_physical_disk_list_adoption_requests(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::PhysicalDiskListAdoptionRequests,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_physical_disk_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -22303,6 +22573,14 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::PhysicalDiskView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_physical_disk_list_unadopted(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::PhysicalDiskListUnadopted,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -23718,8 +23996,12 @@ pub enum CliCommand {
     SubnetPoolList,
     SubnetPoolView,
     AuditLogList,
+    PhysicalDiskEnableAdoption,
+    PhysicalDiskDisableAdoption,
+    PhysicalDiskListAdoptionRequests,
     PhysicalDiskList,
     PhysicalDiskView,
+    PhysicalDiskListUnadopted,
     NetworkingSwitchPortLldpNeighbors,
     RackList,
     RackView,
@@ -24034,8 +24316,12 @@ impl CliCommand {
             CliCommand::SubnetPoolList,
             CliCommand::SubnetPoolView,
             CliCommand::AuditLogList,
+            CliCommand::PhysicalDiskEnableAdoption,
+            CliCommand::PhysicalDiskDisableAdoption,
+            CliCommand::PhysicalDiskListAdoptionRequests,
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
+            CliCommand::PhysicalDiskListUnadopted,
             CliCommand::NetworkingSwitchPortLldpNeighbors,
             CliCommand::RackList,
             CliCommand::RackView,
@@ -24359,8 +24645,12 @@ impl CliCommand {
             CliCommand::SubnetPoolList => "subnet_pool_list",
             CliCommand::SubnetPoolView => "subnet_pool_view",
             CliCommand::AuditLogList => "audit_log_list",
+            CliCommand::PhysicalDiskEnableAdoption => "physical_disk_enable_adoption",
+            CliCommand::PhysicalDiskDisableAdoption => "physical_disk_disable_adoption",
+            CliCommand::PhysicalDiskListAdoptionRequests => "physical_disk_list_adoption_requests",
             CliCommand::PhysicalDiskList => "physical_disk_list",
             CliCommand::PhysicalDiskView => "physical_disk_view",
+            CliCommand::PhysicalDiskListUnadopted => "physical_disk_list_unadopted",
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 "networking_switch_port_lldp_neighbors"
             }

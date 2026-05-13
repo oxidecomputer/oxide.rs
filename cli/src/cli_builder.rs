@@ -721,6 +721,12 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
         CliCommand::PhysicalDiskView => Some("system hardware disk view"),
+        CliCommand::PhysicalDiskDisableAdoption => Some("system hardware disk disable-adoption"),
+        CliCommand::PhysicalDiskEnableAdoption => Some("system hardware disk enable-adoption"),
+        CliCommand::PhysicalDiskListAdoptionRequests => {
+            Some("system hardware disk adoption-requests")
+        }
+        CliCommand::PhysicalDiskListUnadopted => Some("system hardware disk list-unadopted"),
         CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
 
         CliCommand::SystemPolicyView => Some("system policy view"),

@@ -5662,6 +5662,73 @@
               ],
               "subcommands": [
                 {
+                  "name": "adoption-requests",
+                  "about": "List physical disk adoption requests",
+                  "operation_id": "physical_disk_list_adoption_requests",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "disable-adoption",
+                  "about": "Disable adoption of a physical disk for general use",
+                  "operation_id": "physical_disk_disable_adoption",
+                  "args": [
+                    {
+                      "long": "physical-disk-adoption-req-id",
+                      "help": "ID of the physical disk adoption request"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "enable-adoption",
+                  "about": "Enable adoption of a physical disk for general use",
+                  "operation_id": "physical_disk_enable_adoption",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "model"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "serial"
+                    },
+                    {
+                      "long": "vendor"
+                    }
+                  ]
+                },
+                {
                   "name": "list",
                   "about": "List physical disks",
                   "operation_id": "physical_disk_list",
@@ -5680,6 +5747,22 @@
                       "values": [
                         "id_ascending"
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "list-unadopted",
+                  "about": "List physical disks that have not yet been adopted for use",
+                  "operation_id": "physical_disk_list_unadopted",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },

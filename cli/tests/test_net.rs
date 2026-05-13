@@ -10,7 +10,7 @@ use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
     BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed,
     MaxPathConfig, Name, NameOrId, RouterPeerType, SwitchPort, SwitchPortAddressView,
-    SwitchPortConfig, SwitchPortGeometry2, SwitchPortLinkConfig, SwitchPortResultsPage,
+    SwitchPortConfig, SwitchPortGeometry, SwitchPortLinkConfig, SwitchPortResultsPage,
     SwitchPortRouteConfig, SwitchPortSettings, SwitchSlot,
 };
 use oxide_httpmock::MockServerExt;
@@ -185,7 +185,7 @@ fn test_port_config() {
             tx_eq_config: None,
         }],
         port: SwitchPortConfig {
-            geometry: SwitchPortGeometry2::Qsfp28x1,
+            geometry: SwitchPortGeometry::Qsfp28x1,
             port_settings_id: switch1_qsfp0_settings_id,
         },
         routes: vec![SwitchPortRouteConfig {
@@ -196,7 +196,6 @@ fn test_port_config() {
             port_settings_id: Uuid::new_v4(),
             vlan_id: Some(1701),
         }],
-        vlan_interfaces: Vec::new(),
     };
     let switch1_qsfp0_view = SwitchPortSettings {
         description: String::from("default uplink 1 switch port settings"),
@@ -302,11 +301,10 @@ fn test_port_config() {
             tx_eq_config: None,
         }],
         port: SwitchPortConfig {
-            geometry: SwitchPortGeometry2::Qsfp28x1,
+            geometry: SwitchPortGeometry::Qsfp28x1,
             port_settings_id: switch1_qsfp0_settings_id,
         },
         routes: Vec::new(),
-        vlan_interfaces: Vec::new(),
     };
 
     let mock_switch0_qsfp0_settings_view =
