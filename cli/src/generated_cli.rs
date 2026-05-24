@@ -304,6 +304,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingLoopbackAddressDelete => {
                 Self::cli_networking_loopback_address_delete()
             }
+            CliCommand::SystemNetworkingSettingsView => Self::cli_system_networking_settings_view(),
+            CliCommand::SystemNetworkingSettingsUpdate => {
+                Self::cli_system_networking_settings_update()
+            }
             CliCommand::NetworkingSwitchPortSettingsList => {
                 Self::cli_networking_switch_port_settings_list()
             }
@@ -2758,6 +2762,18 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
+                ::clap::Arg::new("enable-jumbo-frames")
+                    .long("enable-jumbo-frames")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE \
+                         interface. Requires the fleet-wide jumbo-frames opt-in to be enabled by \
+                         an operator; otherwise this field must be `false`. Changes only take \
+                         effect on the next instance restart.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("hostname")
                     .long("hostname")
                     .value_parser(::clap::value_parser!(types::Hostname))
@@ -2858,36 +2874,14 @@ impl<T: CliConfig> Cli<T> {
                         |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
-                    .help(
-                        "The auto-restart policy for this instance.\n\nThis policy determines \
-                         whether the instance should be automatically restarted by the control \
-                         plane on failure. If this is `null`, any explicitly configured \
-                         auto-restart policy will be unset, and the control plane will select the \
-                         default policy when determining whether the instance can be \
-                         automatically restarted.\n\nCurrently, the global default auto-restart \
-                         policy is \"best-effort\", so instances with `null` auto-restart \
-                         policies will be automatically restarted. However, in the future, the \
-                         default policy may be configurable through other mechanisms, such as on \
-                         a per-project basis. In that case, any configured default policy will be \
-                         used if this is `null`.",
-                    ),
+                    .help("The auto-restart policy for this instance."),
             )
             .arg(
                 ::clap::Arg::new("boot-disk")
                     .long("boot-disk")
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
-                    .help(
-                        "The disk the instance is configured to boot from.\n\nSetting a boot disk \
-                         is optional but recommended to ensure predictable boot behavior. The \
-                         boot disk can be set during instance creation or later if the instance \
-                         is stopped. The boot disk counts against the disk attachment \
-                         limit.\n\nAn instance that does not have a boot disk set will use the \
-                         boot options specified in its UEFI settings, which are controlled by \
-                         both the instance's UEFI firmware and the guest operating system. Boot \
-                         options can change as disks are attached and detached, which may result \
-                         in an instance that only boots to the EFI shell until a boot disk is set.",
-                    ),
+                    .help("The disk the instance is configured to boot from."),
             )
             .arg(
                 ::clap::Arg::new("cpu-platform")
@@ -2900,11 +2894,17 @@ impl<T: CliConfig> Cli<T> {
                         |s| types::InstanceCpuPlatform::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
+                    .help("The CPU platform to be used for this instance."),
+            )
+            .arg(
+                ::clap::Arg::new("enable-jumbo-frames")
+                    .long("enable-jumbo-frames")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
                     .help(
-                        "The CPU platform to be used for this instance. If this is `null`, the \
-                         instance requires no particular CPU platform; when it is started the \
-                         instance will have the most general CPU platform supported by the sled \
-                         it is initially placed on.",
+                        "Update the per-instance jumbo-frames opt-in. Setting this to `true` \
+                         requires the fleet-wide jumbo-frames opt-in to be enabled. Changes only \
+                         take effect on the next instance restart.",
                     ),
             )
             .arg(
@@ -7230,6 +7230,39 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete loopback address")
     }
 
+    pub fn cli_system_networking_settings_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch fleet-wide networking settings")
+    }
+
+    pub fn cli_system_networking_settings_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("external-jumbo-frames-opt-in-enabled")
+                    .long("external-jumbo-frames-opt-in-enabled")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Toggle the fleet-wide external jumbo-frames opt-in. Omit to leave the \
+                         current value unchanged.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update fleet-wide networking settings")
+    }
+
     pub fn cli_networking_switch_port_settings_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -10231,6 +10264,13 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_networking_loopback_address_delete(matches)
                     .await
             }
+            CliCommand::SystemNetworkingSettingsView => {
+                self.execute_system_networking_settings_view(matches).await
+            }
+            CliCommand::SystemNetworkingSettingsUpdate => {
+                self.execute_system_networking_settings_update(matches)
+                    .await
+            }
             CliCommand::NetworkingSwitchPortSettingsList => {
                 self.execute_networking_switch_port_settings_list(matches)
                     .await
@@ -13171,6 +13211,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<bool>("enable-jumbo-frames") {
+            request = request.body_map(|body| body.enable_jumbo_frames(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Hostname>("hostname") {
             request = request.body_map(|body| body.hostname(value.clone()))
         }
@@ -13262,6 +13306,10 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::InstanceCpuPlatform>("cpu-platform") {
             request = request.body_map(|body| body.cpu_platform(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("enable-jumbo-frames") {
+            request = request.body_map(|body| body.enable_jumbo_frames(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -18302,6 +18350,60 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_networking_settings_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_networking_settings_view();
+        self.config
+            .execute_system_networking_settings_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_networking_settings_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_networking_settings_update();
+        if let Some(value) = matches.get_one::<bool>("external-jumbo-frames-opt-in-enabled") {
+            request =
+                request.body_map(|body| body.external_jumbo_frames_opt_in_enabled(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value =
+                serde_json::from_str::<types::SystemNetworkingSettingsUpdate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_system_networking_settings_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_switch_port_settings_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23145,6 +23247,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_networking_settings_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemNetworkingSettingsView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_networking_settings_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemNetworkingSettingsUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_switch_port_settings_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -24072,6 +24190,8 @@ pub enum CliCommand {
     NetworkingLoopbackAddressList,
     NetworkingLoopbackAddressCreate,
     NetworkingLoopbackAddressDelete,
+    SystemNetworkingSettingsView,
+    SystemNetworkingSettingsUpdate,
     NetworkingSwitchPortSettingsList,
     NetworkingSwitchPortSettingsCreate,
     NetworkingSwitchPortSettingsDelete,
@@ -24392,6 +24512,8 @@ impl CliCommand {
             CliCommand::NetworkingLoopbackAddressList,
             CliCommand::NetworkingLoopbackAddressCreate,
             CliCommand::NetworkingLoopbackAddressDelete,
+            CliCommand::SystemNetworkingSettingsView,
+            CliCommand::SystemNetworkingSettingsUpdate,
             CliCommand::NetworkingSwitchPortSettingsList,
             CliCommand::NetworkingSwitchPortSettingsCreate,
             CliCommand::NetworkingSwitchPortSettingsDelete,
@@ -24731,6 +24853,8 @@ impl CliCommand {
             CliCommand::NetworkingLoopbackAddressList => "networking_loopback_address_list",
             CliCommand::NetworkingLoopbackAddressCreate => "networking_loopback_address_create",
             CliCommand::NetworkingLoopbackAddressDelete => "networking_loopback_address_delete",
+            CliCommand::SystemNetworkingSettingsView => "system_networking_settings_view",
+            CliCommand::SystemNetworkingSettingsUpdate => "system_networking_settings_update",
             CliCommand::NetworkingSwitchPortSettingsList => "networking_switch_port_settings_list",
             CliCommand::NetworkingSwitchPortSettingsCreate => {
                 "networking_switch_port_settings_create"

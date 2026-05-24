@@ -14348,17 +14348,19 @@ pub mod types {
         }
     }
 
-    /// View of an Instance
+    /// View of an Instance, including the per-instance jumbo-frames opt-in.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "View of an Instance",
+    ///  "description": "View of an Instance, including the per-instance
+    /// jumbo-frames opt-in.",
     ///  "type": "object",
     ///  "required": [
     ///    "auto_restart_enabled",
     ///    "description",
+    ///    "enable_jumbo_frames",
     ///    "hostname",
     ///    "id",
     ///    "memory",
@@ -14442,6 +14444,14 @@ pub mod types {
     ///    "description": {
     ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
+    ///    },
+    ///    "enable_jumbo_frames": {
+    ///      "description": "When true, this instance has opted in to jumbo
+    /// frames (8500 byte MTU) on its primary network interface. The effective
+    /// MTU also depends on the fleet-wide jumbo-frames opt-in; if that is
+    /// disabled, the primary interface uses the default MTU regardless of this
+    /// value. Changes only take effect on the next instance restart.",
+    ///      "type": "boolean"
     ///    },
     ///    "hostname": {
     ///      "description": "RFC1035-compliant hostname for the instance",
@@ -14555,6 +14565,12 @@ pub mod types {
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
+        /// When true, this instance has opted in to jumbo frames (8500 byte
+        /// MTU) on its primary network interface. The effective MTU also
+        /// depends on the fleet-wide jumbo-frames opt-in; if that is disabled,
+        /// the primary interface uses the default MTU regardless of this value.
+        /// Changes only take effect on the next instance restart.
+        pub enable_jumbo_frames: bool,
         /// RFC1035-compliant hostname for the instance
         pub hostname: ::std::string::String,
         /// Unique, immutable, system-controlled identifier for each resource
@@ -15005,6 +15021,14 @@ pub mod types {
     ///        "$ref": "#/components/schemas/InstanceDiskAttachment"
     ///      }
     ///    },
+    ///    "enable_jumbo_frames": {
+    ///      "description": "Enable jumbo frames (8500 byte MTU) on the
+    /// instance's primary OPTE interface. Requires the fleet-wide jumbo-frames
+    /// opt-in to be enabled by an operator; otherwise this field must be
+    /// `false`. Changes only take effect on the next instance restart.",
+    ///      "default": false,
+    ///      "type": "boolean"
+    ///    },
     ///    "external_ips": {
     ///      "description": "The external IP addresses provided to this
     /// instance.\n\nBy default, all instances have outbound connectivity, but
@@ -15161,6 +15185,12 @@ pub mod types {
         /// limit.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub disks: ::std::vec::Vec<InstanceDiskAttachment>,
+        /// Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE
+        /// interface. Requires the fleet-wide jumbo-frames opt-in to be enabled
+        /// by an operator; otherwise this field must be `false`. Changes only
+        /// take effect on the next instance restart.
+        #[serde(default)]
+        pub enable_jumbo_frames: bool,
         /// The external IP addresses provided to this instance.
         ///
         /// By default, all instances have outbound connectivity, but no inbound
@@ -16218,17 +16248,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "auto_restart_policy": {
-    ///      "description": "The auto-restart policy for this instance.\n\nThis
-    /// policy determines whether the instance should be automatically restarted
-    /// by the control plane on failure. If this is `null`, any explicitly
-    /// configured auto-restart policy will be unset, and the control plane will
-    /// select the default policy when determining whether the instance can be
-    /// automatically restarted.\n\nCurrently, the global default auto-restart
-    /// policy is \"best-effort\", so instances with `null` auto-restart
-    /// policies will be automatically restarted. However, in the future, the
-    /// default policy may be configurable through other mechanisms, such as on
-    /// a per-project basis. In that case, any configured default policy will be
-    /// used if this is `null`.",
+    ///      "description": "The auto-restart policy for this instance.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16243,16 +16263,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "boot_disk": {
-    ///      "description": "The disk the instance is configured to boot
-    /// from.\n\nSetting a boot disk is optional but recommended to ensure
-    /// predictable boot behavior. The boot disk can be set during instance
-    /// creation or later if the instance is stopped. The boot disk counts
-    /// against the disk attachment limit.\n\nAn instance that does not have a
-    /// boot disk set will use the boot options specified in its UEFI settings,
-    /// which are controlled by both the instance's UEFI firmware and the guest
-    /// operating system. Boot options can change as disks are attached and
-    /// detached, which may result in an instance that only boots to the EFI
-    /// shell until a boot disk is set.",
+    ///      "description": "The disk the instance is configured to boot from.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16267,10 +16278,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "cpu_platform": {
-    ///      "description": "The CPU platform to be used for this instance. If
-    /// this is `null`, the instance requires no particular CPU platform; when
-    /// it is started the instance will have the most general CPU platform
-    /// supported by the sled it is initially placed on.",
+    ///      "description": "The CPU platform to be used for this instance.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16284,6 +16292,15 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "enable_jumbo_frames": {
+    ///      "description": "Update the per-instance jumbo-frames opt-in.
+    /// Setting this to `true` requires the fleet-wide jumbo-frames opt-in to be
+    /// enabled. Changes only take effect on the next instance restart.",
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "memory": {
     ///      "description": "The amount of RAM (in bytes) to be allocated to the
     /// instance",
@@ -16294,16 +16311,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "multicast_groups": {
-    ///      "description": "Multicast groups this instance should join.\n\nWhen
-    /// specified, this replaces the instance's current multicast group
-    /// membership with the new set of groups. The instance will leave any
-    /// groups not listed here and join any new groups that are
-    /// specified.\n\nEach entry can specify the group by name, UUID, or IP
-    /// address, along with optional source IP filtering for SSM
-    /// (Source-Specific Multicast). When a group doesn't exist, it will be
-    /// implicitly created using the default multicast pool (or you can specify
-    /// `ip_version` to disambiguate if needed).\n\nIf not provided, the
-    /// instance's multicast group membership will not be changed.",
+    ///      "description": "Multicast groups this instance should join.",
     ///      "type": [
     ///        "array",
     ///        "null"
@@ -16330,55 +16338,19 @@ pub mod types {
     )]
     pub struct InstanceUpdate {
         /// The auto-restart policy for this instance.
-        ///
-        /// This policy determines whether the instance should be automatically
-        /// restarted by the control plane on failure. If this is `null`, any
-        /// explicitly configured auto-restart policy will be unset, and the
-        /// control plane will select the default policy when determining
-        /// whether the instance can be automatically restarted.
-        ///
-        /// Currently, the global default auto-restart policy is "best-effort",
-        /// so instances with `null` auto-restart policies will be automatically
-        /// restarted. However, in the future, the default policy may be
-        /// configurable through other mechanisms, such as on a per-project
-        /// basis. In that case, any configured default policy will be used if
-        /// this is `null`.
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// The disk the instance is configured to boot from.
-        ///
-        /// Setting a boot disk is optional but recommended to ensure
-        /// predictable boot behavior. The boot disk can be set during instance
-        /// creation or later if the instance is stopped. The boot disk counts
-        /// against the disk attachment limit.
-        ///
-        /// An instance that does not have a boot disk set will use the boot
-        /// options specified in its UEFI settings, which are controlled by both
-        /// the instance's UEFI firmware and the guest operating system. Boot
-        /// options can change as disks are attached and detached, which may
-        /// result in an instance that only boots to the EFI shell until a boot
-        /// disk is set.
         pub boot_disk: ::std::option::Option<NameOrId>,
-        /// The CPU platform to be used for this instance. If this is `null`,
-        /// the instance requires no particular CPU platform; when it is started
-        /// the instance will have the most general CPU platform supported by
-        /// the sled it is initially placed on.
+        /// The CPU platform to be used for this instance.
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
+        /// Update the per-instance jumbo-frames opt-in. Setting this to `true`
+        /// requires the fleet-wide jumbo-frames opt-in to be enabled. Changes
+        /// only take effect on the next instance restart.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub enable_jumbo_frames: ::std::option::Option<bool>,
         /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
         /// Multicast groups this instance should join.
-        ///
-        /// When specified, this replaces the instance's current multicast group
-        /// membership with the new set of groups. The instance will leave any
-        /// groups not listed here and join any new groups that are specified.
-        ///
-        /// Each entry can specify the group by name, UUID, or IP address, along
-        /// with optional source IP filtering for SSM (Source-Specific
-        /// Multicast). When a group doesn't exist, it will be implicitly
-        /// created using the default multicast pool (or you can specify
-        /// `ip_version` to disambiguate if needed).
-        ///
-        /// If not provided, the instance's multicast group membership will not
-        /// be changed.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub multicast_groups: ::std::option::Option<::std::vec::Vec<MulticastGroupJoinSpec>>,
         /// The number of vCPUs to be allocated to the instance
@@ -31096,6 +31068,93 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Fleet-wide networking settings. Only fleet admins may view or modify
+    /// these settings.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Fleet-wide networking settings. Only fleet admins may
+    /// view or modify these settings.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "external_jumbo_frames_opt_in_enabled"
+    ///  ],
+    ///  "properties": {
+    ///    "external_jumbo_frames_opt_in_enabled": {
+    ///      "description": "When true, end users may opt in to jumbo frames
+    /// (8500 byte MTU) on the primary interface of an instance. When false,
+    /// instance-level opt-in is ignored and OPTE ports are created with the
+    /// default MTU.",
+    ///      "type": "boolean"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SystemNetworkingSettings {
+        /// When true, end users may opt in to jumbo frames (8500 byte MTU) on
+        /// the primary interface of an instance. When false, instance-level
+        /// opt-in is ignored and OPTE ports are created with the default MTU.
+        pub external_jumbo_frames_opt_in_enabled: bool,
+    }
+
+    impl SystemNetworkingSettings {
+        pub fn builder() -> builder::SystemNetworkingSettings {
+            Default::default()
+        }
+    }
+
+    /// Parameters for updating the fleet-wide networking settings.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for updating the fleet-wide networking
+    /// settings.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "external_jumbo_frames_opt_in_enabled": {
+    ///      "description": "Toggle the fleet-wide external jumbo-frames opt-in.
+    /// Omit to leave the current value unchanged.",
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SystemNetworkingSettingsUpdate {
+        /// Toggle the fleet-wide external jumbo-frames opt-in. Omit to leave
+        /// the current value unchanged.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub external_jumbo_frames_opt_in_enabled: ::std::option::Option<bool>,
+    }
+
+    impl ::std::default::Default for SystemNetworkingSettingsUpdate {
+        fn default() -> Self {
+            Self {
+                external_jumbo_frames_opt_in_enabled: Default::default(),
+            }
+        }
+    }
+
+    impl SystemNetworkingSettingsUpdate {
+        pub fn builder() -> builder::SystemNetworkingSettingsUpdate {
+            Default::default()
         }
     }
 
@@ -47414,6 +47473,7 @@ pub mod types {
                 ::std::string::String,
             >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            enable_jumbo_frames: ::std::result::Result<bool, ::std::string::String>,
             hostname: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
@@ -47450,6 +47510,9 @@ pub mod types {
                     boot_disk_id: Ok(Default::default()),
                     cpu_platform: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
+                    enable_jumbo_frames: Err(
+                        "no value supplied for enable_jumbo_frames".to_string()
+                    ),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     memory: Err("no value supplied for memory".to_string()),
@@ -47530,6 +47593,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn enable_jumbo_frames<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.enable_jumbo_frames = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for enable_jumbo_frames: {e}")
+                });
                 self
             }
             pub fn hostname<T>(mut self, value: T) -> Self
@@ -47658,6 +47731,7 @@ pub mod types {
                     boot_disk_id: value.boot_disk_id?,
                     cpu_platform: value.cpu_platform?,
                     description: value.description?,
+                    enable_jumbo_frames: value.enable_jumbo_frames?,
                     hostname: value.hostname?,
                     id: value.id?,
                     memory: value.memory?,
@@ -47682,6 +47756,7 @@ pub mod types {
                     boot_disk_id: Ok(value.boot_disk_id),
                     cpu_platform: Ok(value.cpu_platform),
                     description: Ok(value.description),
+                    enable_jumbo_frames: Ok(value.enable_jumbo_frames),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
                     memory: Ok(value.memory),
@@ -47718,6 +47793,7 @@ pub mod types {
                 ::std::vec::Vec<super::InstanceDiskAttachment>,
                 ::std::string::String,
             >,
+            enable_jumbo_frames: ::std::result::Result<bool, ::std::string::String>,
             external_ips: ::std::result::Result<
                 ::std::vec::Vec<super::ExternalIpCreate>,
                 ::std::string::String,
@@ -47751,6 +47827,7 @@ pub mod types {
                     cpu_platform: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
+                    enable_jumbo_frames: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     memory: Err("no value supplied for memory".to_string()),
@@ -47824,6 +47901,16 @@ pub mod types {
                 self.disks = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for disks: {e}"));
+                self
+            }
+            pub fn enable_jumbo_frames<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.enable_jumbo_frames = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for enable_jumbo_frames: {e}")
+                });
                 self
             }
             pub fn external_ips<T>(mut self, value: T) -> Self
@@ -47940,6 +48027,7 @@ pub mod types {
                     cpu_platform: value.cpu_platform?,
                     description: value.description?,
                     disks: value.disks?,
+                    enable_jumbo_frames: value.enable_jumbo_frames?,
                     external_ips: value.external_ips?,
                     hostname: value.hostname?,
                     memory: value.memory?,
@@ -47963,6 +48051,7 @@ pub mod types {
                     cpu_platform: Ok(value.cpu_platform),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
+                    enable_jumbo_frames: Ok(value.enable_jumbo_frames),
                     external_ips: Ok(value.external_ips),
                     hostname: Ok(value.hostname),
                     memory: Ok(value.memory),
@@ -48639,6 +48728,8 @@ pub mod types {
                 ::std::option::Option<super::InstanceCpuPlatform>,
                 ::std::string::String,
             >,
+            enable_jumbo_frames:
+                ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
             multicast_groups: ::std::result::Result<
                 ::std::option::Option<::std::vec::Vec<super::MulticastGroupJoinSpec>>,
@@ -48655,6 +48746,7 @@ pub mod types {
                     ),
                     boot_disk: Err("no value supplied for boot_disk".to_string()),
                     cpu_platform: Err("no value supplied for cpu_platform".to_string()),
+                    enable_jumbo_frames: Ok(Default::default()),
                     memory: Err("no value supplied for memory".to_string()),
                     multicast_groups: Ok(Default::default()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
@@ -48691,6 +48783,16 @@ pub mod types {
                 self.cpu_platform = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for cpu_platform: {e}"));
+                self
+            }
+            pub fn enable_jumbo_frames<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.enable_jumbo_frames = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for enable_jumbo_frames: {e}")
+                });
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -48736,6 +48838,7 @@ pub mod types {
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
                     cpu_platform: value.cpu_platform?,
+                    enable_jumbo_frames: value.enable_jumbo_frames?,
                     memory: value.memory?,
                     multicast_groups: value.multicast_groups?,
                     ncpus: value.ncpus?,
@@ -48749,6 +48852,7 @@ pub mod types {
                     auto_restart_policy: Ok(value.auto_restart_policy),
                     boot_disk: Ok(value.boot_disk),
                     cpu_platform: Ok(value.cpu_platform),
+                    enable_jumbo_frames: Ok(value.enable_jumbo_frames),
                     memory: Ok(value.memory),
                     multicast_groups: Ok(value.multicast_groups),
                     ncpus: Ok(value.ncpus),
@@ -61623,6 +61727,116 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SystemNetworkingSettings {
+            external_jumbo_frames_opt_in_enabled:
+                ::std::result::Result<bool, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SystemNetworkingSettings {
+            fn default() -> Self {
+                Self {
+                    external_jumbo_frames_opt_in_enabled: Err(
+                        "no value supplied for external_jumbo_frames_opt_in_enabled".to_string(),
+                    ),
+                }
+            }
+        }
+
+        impl SystemNetworkingSettings {
+            pub fn external_jumbo_frames_opt_in_enabled<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.external_jumbo_frames_opt_in_enabled = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for \
+                         external_jumbo_frames_opt_in_enabled: {e}"
+                    )
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SystemNetworkingSettings> for super::SystemNetworkingSettings {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SystemNetworkingSettings,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    external_jumbo_frames_opt_in_enabled: value
+                        .external_jumbo_frames_opt_in_enabled?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SystemNetworkingSettings> for SystemNetworkingSettings {
+            fn from(value: super::SystemNetworkingSettings) -> Self {
+                Self {
+                    external_jumbo_frames_opt_in_enabled: Ok(
+                        value.external_jumbo_frames_opt_in_enabled
+                    ),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SystemNetworkingSettingsUpdate {
+            external_jumbo_frames_opt_in_enabled:
+                ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SystemNetworkingSettingsUpdate {
+            fn default() -> Self {
+                Self {
+                    external_jumbo_frames_opt_in_enabled: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SystemNetworkingSettingsUpdate {
+            pub fn external_jumbo_frames_opt_in_enabled<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.external_jumbo_frames_opt_in_enabled = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for \
+                         external_jumbo_frames_opt_in_enabled: {e}"
+                    )
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SystemNetworkingSettingsUpdate>
+            for super::SystemNetworkingSettingsUpdate
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SystemNetworkingSettingsUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    external_jumbo_frames_opt_in_enabled: value
+                        .external_jumbo_frames_opt_in_enabled?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SystemNetworkingSettingsUpdate>
+            for SystemNetworkingSettingsUpdate
+        {
+            fn from(value: super::SystemNetworkingSettingsUpdate) -> Self {
+                Self {
+                    external_jumbo_frames_opt_in_enabled: Ok(
+                        value.external_jumbo_frames_opt_in_enabled
+                    ),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct TargetRelease {
             time_requested: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
@@ -66007,7 +66221,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026050800.0.0
+/// Version: 2026052000.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66048,7 +66262,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026050800.0.0"
+        "2026052000.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -70830,6 +71044,27 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete<'_>;
+    /// Fetch fleet-wide networking settings
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/settings`
+    ///
+    /// ```ignore
+    /// let response = client.system_networking_settings_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_networking_settings_view(&self) -> builder::SystemNetworkingSettingsView<'_>;
+    /// Update fleet-wide networking settings
+    ///
+    /// Sends a `PUT` request to `/v1/system/networking/settings`
+    ///
+    /// ```ignore
+    /// let response = client.system_networking_settings_update()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_networking_settings_update(&self) -> builder::SystemNetworkingSettingsUpdate<'_>;
     /// List switch port settings
     ///
     /// Sends a `GET` request to `/v1/system/networking/switch-port-settings`
@@ -71020,6 +71255,14 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete<'_> {
         builder::NetworkingLoopbackAddressDelete::new(self)
+    }
+
+    fn system_networking_settings_view(&self) -> builder::SystemNetworkingSettingsView<'_> {
+        builder::SystemNetworkingSettingsView::new(self)
+    }
+
+    fn system_networking_settings_update(&self) -> builder::SystemNetworkingSettingsUpdate<'_> {
+        builder::SystemNetworkingSettingsUpdate::new(self)
     }
 
     fn networking_switch_port_settings_list(
@@ -98500,6 +98743,151 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::system_networking_settings_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::system_networking_settings_view`]: super::ClientSystemNetworkingExt::system_networking_settings_view
+    #[derive(Debug, Clone)]
+    pub struct SystemNetworkingSettingsView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> SystemNetworkingSettingsView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/settings`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SystemNetworkingSettings>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/settings", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_networking_settings_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::system_networking_settings_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::system_networking_settings_update`]: super::ClientSystemNetworkingExt::system_networking_settings_update
+    #[derive(Debug, Clone)]
+    pub struct SystemNetworkingSettingsUpdate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SystemNetworkingSettingsUpdate, String>,
+    }
+
+    impl<'a> SystemNetworkingSettingsUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SystemNetworkingSettingsUpdate>,
+            <V as std::convert::TryInto<types::SystemNetworkingSettingsUpdate>>::Error:
+                std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `SystemNetworkingSettingsUpdate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SystemNetworkingSettingsUpdate,
+            ) -> types::builder::SystemNetworkingSettingsUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/networking/settings`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SystemNetworkingSettings>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| {
+                    types::SystemNetworkingSettingsUpdate::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/settings", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_networking_settings_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

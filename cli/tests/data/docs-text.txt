@@ -265,6 +265,8 @@ oxide system networking loopback-address delete — Delete loopback address
 oxide system networking loopback-address list — List loopback addresses
 oxide system networking route delete — Delete a static route
 oxide system networking route set — Set a static route
+oxide system networking settings update — Update fleet-wide networking settings
+oxide system networking settings view — Fetch fleet-wide networking settings
 oxide system networking subnet-pool create — Create subnet pool
 oxide system networking subnet-pool delete — Delete subnet pool
 oxide system networking subnet-pool list — List subnet pools

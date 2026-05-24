@@ -472,6 +472,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ImagePromote => Some("image promote"),
         CliCommand::ImageDemote => Some("image demote"),
 
+        CliCommand::SystemNetworkingSettingsView => Some("system networking settings view"),
+        CliCommand::SystemNetworkingSettingsUpdate => Some("system networking settings update"),
         CliCommand::SystemIpPoolList => Some("system networking ip-pool list"),
         CliCommand::SystemIpPoolView => Some("system networking ip-pool view"),
         CliCommand::SystemIpPoolCreate => Some("system networking ip-pool create"),
