@@ -3009,7 +3009,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#bc1602b4ca413c342ac2b8fdbc33bc19eba4d053"
+source = "git+https://github.com/oxidecomputer/progenitor#3b8b6a77432b105939cdb8aa56796ef33cbf0bfc"
 dependencies = [
  "progenitor-impl",
 ]
@@ -3032,7 +3032,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#bc1602b4ca413c342ac2b8fdbc33bc19eba4d053"
+source = "git+https://github.com/oxidecomputer/progenitor#3b8b6a77432b105939cdb8aa56796ef33cbf0bfc"
 dependencies = [
  "heck",
  "http 1.4.0",
@@ -3741,9 +3741,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.149"
+version = "1.0.150"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86"
+checksum = "e8014e44b4736ed0538adeecded0fce2a272f22dc9578a7eb6b2d9993c74cfb9"
 dependencies = [
  "itoa",
  "memchr",
