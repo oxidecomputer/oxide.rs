@@ -32598,6 +32598,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "components_by_release_version",
+    ///    "contact_support",
     ///    "suspended",
     ///    "target_release",
     ///    "time_last_step_planned"
@@ -32615,6 +32616,15 @@ pub mod types {
     ///        "format": "uint",
     ///        "minimum": 0.0
     ///      }
+    ///    },
+    ///    "contact_support": {
+    ///      "description": "If true, the system has detected one or more known
+    /// conditions that require Oxide support to resolve\n\nYou should contact
+    /// support to resolve these issues before proceeding with an update, or
+    /// after one has completed. The checks underlying this field are not
+    /// exhaustive, so this being `false` does not mean the entire system is
+    /// completely healthy.",
+    ///      "type": "boolean"
     ///    },
     ///    "suspended": {
     ///      "description": "Whether automatic update is suspended due to manual
@@ -32664,6 +32674,14 @@ pub mod types {
         ///   "unknown", which means there is no TUF repo uploaded that matches
         ///   the software running on the component)
         pub components_by_release_version: ::std::collections::HashMap<::std::string::String, u32>,
+        /// If true, the system has detected one or more known conditions that
+        /// require Oxide support to resolve
+        ///
+        /// You should contact support to resolve these issues before proceeding
+        /// with an update, or after one has completed. The checks underlying
+        /// this field are not exhaustive, so this being `false` does not mean
+        /// the entire system is completely healthy.
+        pub contact_support: bool,
         /// Whether automatic update is suspended due to manual update activity
         ///
         /// After a manual support procedure that changes the system software,
@@ -62679,6 +62697,7 @@ pub mod types {
                 ::std::collections::HashMap<::std::string::String, u32>,
                 ::std::string::String,
             >,
+            contact_support: ::std::result::Result<bool, ::std::string::String>,
             suspended: ::std::result::Result<bool, ::std::string::String>,
             target_release: ::std::result::Result<
                 ::std::option::Option<super::TargetRelease>,
@@ -62696,6 +62715,7 @@ pub mod types {
                     components_by_release_version: Err("no value supplied for \
                                                         components_by_release_version"
                         .to_string()),
+                    contact_support: Err("no value supplied for contact_support".to_string()),
                     suspended: Err("no value supplied for suspended".to_string()),
                     target_release: Err("no value supplied for target_release".to_string()),
                     time_last_step_planned: Err(
@@ -62715,6 +62735,16 @@ pub mod types {
                     format!(
                         "error converting supplied value for components_by_release_version: {e}"
                     )
+                });
+                self
+            }
+            pub fn contact_support<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.contact_support = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for contact_support: {e}")
                 });
                 self
             }
@@ -62757,6 +62787,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     components_by_release_version: value.components_by_release_version?,
+                    contact_support: value.contact_support?,
                     suspended: value.suspended?,
                     target_release: value.target_release?,
                     time_last_step_planned: value.time_last_step_planned?,
@@ -62768,6 +62799,7 @@ pub mod types {
             fn from(value: super::UpdateStatus) -> Self {
                 Self {
                     components_by_release_version: Ok(value.components_by_release_version),
+                    contact_support: Ok(value.contact_support),
                     suspended: Ok(value.suspended),
                     target_release: Ok(value.target_release),
                     time_last_step_planned: Ok(value.time_last_step_planned),
@@ -66007,7 +66039,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026050800.0.0
+/// Version: 2026052000.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66048,7 +66080,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026050800.0.0"
+        "2026052000.0.0"
     }
 
     fn baseurl(&self) -> &str {
