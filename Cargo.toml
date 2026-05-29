@@ -30,12 +30,12 @@ env_logger = "0.11.10"
 expectorate = { version = "1.2.0", features = ["predicates"] }
 flume = "0.12.0"
 futures = "0.3.32"
-http = "1.4.0"
+http = "1.4.1"
 httpmock = "0.8.3"
 humantime = "2.3.0"
 indicatif = "0.18.4"
 libc = "0.2.186"
-log = "0.4.29"
+log = "0.4.30"
 md5 = "0.8.0"
 newline-converter = "0.3.0"
 oauth2 = { version = "5.0.0", default-features = false }
@@ -58,7 +58,7 @@ rustc_version = "0.4.1"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.219", features = ["derive"] }
-serde_json = "1.0.149"
+serde_json = "1.0.150"
 similar = "3.1.0"
 support-bundle-viewer = "0.1.2"
 tabwriter = "1.4.1"
