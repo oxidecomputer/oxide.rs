@@ -6635,13 +6635,14 @@ pub mod types {
         }
     }
 
-    /// `BlockSize`
+    /// Valid values are: 512, 2048, or 4096.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "title": "Disk block size in bytes",
+    ///  "description": "Valid values are: 512, 2048, or 4096.",
     ///  "type": "integer",
     ///  "enum": [
     ///    512,
@@ -8617,7 +8618,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "block_size": {
-    ///      "$ref": "#/components/schemas/ByteCount"
+    ///      "$ref": "#/components/schemas/BlockSize"
     ///    },
     ///    "description": {
     ///      "description": "Human-readable free-form text about a resource",
@@ -8693,7 +8694,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Disk {
-        pub block_size: ByteCount,
+        pub block_size: BlockSize,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub device_path: ::std::string::String,
@@ -42880,7 +42881,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Disk {
-            block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            block_size: ::std::result::Result<super::BlockSize, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             device_path: ::std::result::Result<::std::string::String, ::std::string::String>,
             disk_type: ::std::result::Result<super::DiskType, ::std::string::String>,
@@ -42928,7 +42929,7 @@ pub mod types {
         impl Disk {
             pub fn block_size<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::ByteCount>,
+                T: ::std::convert::TryInto<super::BlockSize>,
                 T::Error: ::std::fmt::Display,
             {
                 self.block_size = value
@@ -66039,7 +66040,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026052000.0.0
+/// Version: 2026060300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66080,7 +66081,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026052000.0.0"
+        "2026060300.0.0"
     }
 
     fn baseurl(&self) -> &str {
