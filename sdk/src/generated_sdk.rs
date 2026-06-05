@@ -6641,7 +6641,7 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "title": "Disk block size in bytes",
+    ///  "title": "Block size in bytes",
     ///  "description": "Valid values are: 512, 2048, or 4096.",
     ///  "type": "integer",
     ///  "enum": [
@@ -13971,7 +13971,7 @@ pub mod types {
     ///      "description": "Size of blocks in bytes",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
+    ///          "$ref": "#/components/schemas/BlockSize"
     ///        }
     ///      ]
     ///    },
@@ -14054,7 +14054,7 @@ pub mod types {
     )]
     pub struct Image {
         /// Size of blocks in bytes
-        pub block_size: ByteCount,
+        pub block_size: BlockSize,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Hash of the image contents, if applicable
@@ -46999,7 +46999,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Image {
-            block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            block_size: ::std::result::Result<super::BlockSize, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             digest:
                 ::std::result::Result<::std::option::Option<super::Digest>, ::std::string::String>,
@@ -47041,7 +47041,7 @@ pub mod types {
         impl Image {
             pub fn block_size<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::ByteCount>,
+                T: ::std::convert::TryInto<super::BlockSize>,
                 T::Error: ::std::fmt::Display,
             {
                 self.block_size = value
@@ -66040,7 +66040,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026060300.0.0
+/// Version: 2026060400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66081,7 +66081,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026060300.0.0"
+        "2026060400.0.0"
     }
 
     fn baseurl(&self) -> &str {
