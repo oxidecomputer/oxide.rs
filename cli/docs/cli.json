@@ -3110,6 +3110,14 @@
               "long": "description"
             },
             {
+              "long": "enable-jumbo-frames",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE interface. Requires the fleet-wide jumbo-frames opt-in to be enabled by an operator; otherwise this field must be `false`. Changes only take effect on the next instance restart."
+            },
+            {
               "long": "hostname",
               "help": "The hostname to be assigned to the instance"
             },
@@ -3952,6 +3960,14 @@
                 "amd_turin"
               ],
               "help": "The CPU platform to be used for this instance. If this is `null`, the instance requires no particular CPU platform; when it is started the instance will have the most general CPU platform supported by the sled it is initially placed on."
+            },
+            {
+              "long": "enable-jumbo-frames",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Update the per-instance jumbo-frames opt-in. Setting this to `true` requires the fleet-wide jumbo-frames opt-in to be enabled. Changes only take effect on the next instance restart."
             },
             {
               "long": "instance",
@@ -8606,6 +8622,58 @@
                     {
                       "long": "vlan-id",
                       "help": "The route vlan id"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "settings",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "update",
+                  "about": "Update fleet-wide networking settings",
+                  "operation_id": "system_networking_settings_update",
+                  "args": [
+                    {
+                      "long": "external-jumbo-frames-opt-in-enabled",
+                      "values": [
+                        "true",
+                        "false"
+                      ],
+                      "help": "Toggle the fleet-wide external jumbo-frames opt-in."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch fleet-wide networking settings",
+                  "operation_id": "system_networking_settings_view",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
