@@ -18,7 +18,7 @@ base64 = "0.22.1"
 built = { version = "0.8.1", features = ["git2"] }
 bytes = "1.11.1"
 camino = { version = "1.2", features = ["serde1"] }
-chrono = { version = "0.4.44", features = ["serde"] }
+chrono = { version = "0.4.45", features = ["serde"] }
 clap = { version = "4.6.1", features = ["derive", "string", "env", "wrap_help", "unstable-ext"] }
 clap_complete = "4.6.5"
 colored = "3.1.1"
