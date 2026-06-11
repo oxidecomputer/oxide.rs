@@ -2744,6 +2744,7 @@ impl<T: CliConfig> Cli<T> {
                         ::clap::builder::PossibleValuesParser::new([
                             types::InstanceCpuPlatform::AmdMilan.to_string(),
                             types::InstanceCpuPlatform::AmdTurin.to_string(),
+                            types::InstanceCpuPlatform::AmdTurinV2.to_string(),
                         ]),
                         |s| types::InstanceCpuPlatform::try_from(s).unwrap(),
                     ))
@@ -2912,6 +2913,7 @@ impl<T: CliConfig> Cli<T> {
                         ::clap::builder::PossibleValuesParser::new([
                             types::InstanceCpuPlatform::AmdMilan.to_string(),
                             types::InstanceCpuPlatform::AmdTurin.to_string(),
+                            types::InstanceCpuPlatform::AmdTurinV2.to_string(),
                         ]),
                         |s| types::InstanceCpuPlatform::try_from(s).unwrap(),
                     ))

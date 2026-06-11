@@ -3102,7 +3102,8 @@
               "long": "cpu-platform",
               "values": [
                 "amd_milan",
-                "amd_turin"
+                "amd_turin",
+                "amd_turin_v2"
               ],
               "help": "The CPU platform to be used for this instance. If this is `null`, the instance requires no particular CPU platform; when it is started the instance will have the most general CPU platform supported by the sled it is initially placed on."
             },
@@ -3957,7 +3958,8 @@
               "long": "cpu-platform",
               "values": [
                 "amd_milan",
-                "amd_turin"
+                "amd_turin",
+                "amd_turin_v2"
               ],
               "help": "The CPU platform to be used for this instance. If this is `null`, the instance requires no particular CPU platform; when it is started the instance will have the most general CPU platform supported by the sled it is initially placed on."
             },

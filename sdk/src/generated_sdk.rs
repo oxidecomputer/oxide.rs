@@ -14819,8 +14819,7 @@ pub mod types {
     /// In all cases, the CPU features presented by a given CPU platform are a
     /// subset of what the corresponding hardware may actually support; features
     /// which cannot be used from a virtual environment or do not have full
-    /// hypervisor support may be masked off. See RFD 314 for specific CPU
-    /// features in a CPU platform.
+    /// hypervisor support may be masked off.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14844,8 +14843,7 @@ pub mod types {
     /// another host.\n\nIn all cases, the CPU features presented by a given CPU
     /// platform are a subset of what the corresponding hardware may actually
     /// support; features which cannot be used from a virtual environment or do
-    /// not have full hypervisor support may be masked off. See RFD 314 for
-    /// specific CPU features in a CPU platform.",
+    /// not have full hypervisor support may be masked off.",
     ///  "oneOf": [
     ///    {
     ///      "description": "An AMD Milan-like CPU platform.",
@@ -14855,10 +14853,20 @@ pub mod types {
     ///      ]
     ///    },
     ///    {
-    ///      "description": "An AMD Turin-like CPU platform.",
+    ///      "description": "An AMD Turin-like CPU platform. Prefer `amd_turin_v2` over this; this CPU platform is retained for instances that specifically requested it before `amd_turin_v2` was added.\n\nThis initial version of the Turin CPU platform includes no cache or TLB information in CPUID leaf `8000_0006`. While this was intentional, Oxide later discovered some guest software interprets the zeroed leaves as reporting cache sizes of 0 bytes and behaves incorrectly and unpredictably as a result (see [Propolis#1152](https://github.com/oxidecomputer/propolis/issues/1152)).",
     ///      "type": "string",
     ///      "enum": [
     ///        "amd_turin"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "An AMD Turin-like CPU platform.\n\nThis version of
+    /// the Turin CPU platform includes cache and TLB information in CPUID leaf
+    /// `8000_0006`, similar to the cache information included in the initial
+    /// Milan-like CPU platform.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "amd_turin_v2"
     ///      ]
     ///    }
     ///  ]
@@ -14882,9 +14890,20 @@ pub mod types {
         /// An AMD Milan-like CPU platform.
         #[serde(rename = "amd_milan")]
         AmdMilan,
-        /// An AMD Turin-like CPU platform.
+        /// An AMD Turin-like CPU platform. Prefer `amd_turin_v2` over this;
+        /// this CPU platform is retained for instances that specifically
+        /// requested it before `amd_turin_v2` was added.
+        ///
+        /// This initial version of the Turin CPU platform includes no cache or TLB information in CPUID leaf `8000_0006`. While this was intentional, Oxide later discovered some guest software interprets the zeroed leaves as reporting cache sizes of 0 bytes and behaves incorrectly and unpredictably as a result (see [Propolis#1152](https://github.com/oxidecomputer/propolis/issues/1152)).
         #[serde(rename = "amd_turin")]
         AmdTurin,
+        /// An AMD Turin-like CPU platform.
+        ///
+        /// This version of the Turin CPU platform includes cache and TLB
+        /// information in CPUID leaf `8000_0006`, similar to the cache
+        /// information included in the initial Milan-like CPU platform.
+        #[serde(rename = "amd_turin_v2")]
+        AmdTurinV2,
     }
 
     impl ::std::fmt::Display for InstanceCpuPlatform {
@@ -14892,6 +14911,7 @@ pub mod types {
             match *self {
                 Self::AmdMilan => f.write_str("amd_milan"),
                 Self::AmdTurin => f.write_str("amd_turin"),
+                Self::AmdTurinV2 => f.write_str("amd_turin_v2"),
             }
         }
     }
@@ -14902,6 +14922,7 @@ pub mod types {
             match value {
                 "amd_milan" => Ok(Self::AmdMilan),
                 "amd_turin" => Ok(Self::AmdTurin),
+                "amd_turin_v2" => Ok(Self::AmdTurinV2),
                 _ => Err("invalid value".into()),
             }
         }
@@ -66340,7 +66361,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026060500.0.0
+/// Version: 2026060800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66381,7 +66402,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026060500.0.0"
+        "2026060800.0.0"
     }
 
     fn baseurl(&self) -> &str {
