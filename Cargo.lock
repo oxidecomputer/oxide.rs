@@ -2619,10 +2619,12 @@ dependencies = [
  "oxnet",
  "predicates",
  "pretty_assertions",
+ "progenitor-client",
  "rand 0.9.4",
  "ratatui",
  "rcgen",
  "reqwest",
+ "schema-tui",
  "schemars",
  "serde",
  "serde_json",
@@ -2939,7 +2941,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#5750f354a90412e075e7e06087591ec0c1511f43"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=skaram%2Fjson-body-template#90154aa17dacfee46e5190ab2c40d07c1221f480"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2947,13 +2949,13 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e8a874cf25a33cac7a01b9c1de87bcfbc8aea93f3156d09dcc3bee516a78926"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=skaram%2Fjson-body-template#90154aa17dacfee46e5190ab2c40d07c1221f480"
 dependencies = [
  "bytes",
  "futures-core",
  "percent-encoding",
  "reqwest",
+ "schema-doc",
  "serde",
  "serde_json",
  "serde_urlencoded",
@@ -2962,7 +2964,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#5750f354a90412e075e7e06087591ec0c1511f43"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=skaram%2Fjson-body-template#90154aa17dacfee46e5190ab2c40d07c1221f480"
 dependencies = [
  "heck",
  "http",
@@ -3505,6 +3507,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "891d81b926048e76efe18581bf793546b4c0eaf8448d72be8de2bbee5fd166e1"
 dependencies = [
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "schema-doc"
+version = "0.1.0"
+source = "git+https://github.com/oxidecomputer/json-schema-tools#36ea0d96002b3c05b1857f4c3c4f8892b2568396"
+dependencies = [
+ "schemars",
+ "serde_json",
+]
+
+[[package]]
+name = "schema-tui"
+version = "0.1.0"
+source = "git+https://github.com/oxidecomputer/json-schema-tools#36ea0d96002b3c05b1857f4c3c4f8892b2568396"
+dependencies = [
+ "anyhow",
+ "crossterm",
+ "ratatui",
+ "schema-doc",
+ "schemars",
+ "serde_json",
 ]
 
 [[package]]

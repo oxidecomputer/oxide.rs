@@ -221,6 +221,32 @@ impl CliConfig for OxideOverride {
         self.list_end_success::<T>()
     }
 
+    /// `--json-body-template`: launch the interactive accordion builder. It
+    /// needs a terminal; piped/scripted callers should use `--json-body-schema`
+    /// for a body reference, or pass `--json-body` directly.
+    fn build_body_template(
+        &self,
+        schema: &schemars::schema::RootSchema,
+    ) -> anyhow::Result<Option<serde_json::Value>> {
+        use std::io::IsTerminal as _;
+        if !std::io::stderr().is_terminal() {
+            anyhow::bail!(
+                "--json-body-template launches an interactive builder and needs a terminal; \
+                 use --json-body-schema for a non-interactive body reference, or pass --json-body"
+            );
+        }
+        let title = schema
+            .schema
+            .metadata
+            .as_ref()
+            .and_then(|m| m.title.clone())
+            .unwrap_or_else(|| "request body".to_string());
+        match schema_tui::run_tui(schema.clone(), title)? {
+            schema_tui::Outcome::Export(body) => Ok(Some(body)),
+            schema_tui::Outcome::Cancel => Ok(None),
+        }
+    }
+
     // Deal with all the operations that require an `IpPool` as input
     fn execute_system_ip_pool_range_add(
         &self,
@@ -440,11 +466,21 @@ mod tests {
                 })
                 .collect::<Vec<_>>();
 
+            // When the body can't be expressed as individual arguments,
+            // `--json-body` is `.required_unless_present_any(["json-body-template",
+            // "json-body-schema"])`, which clap doesn't surface through
+            // `is_required_set`. Probe by parsing the bare command and checking
+            // whether clap reports `--json-body` as missing.
             if cmd
                 .get_arguments()
-                .any(|arg| arg.get_long() == Some("json-body") && arg.is_required_set())
+                .any(|arg| arg.get_long() == Some("json-body"))
             {
-                ret.push(path);
+                match cmd.clone().try_get_matches_from([cmd.get_name().to_string()]) {
+                    Err(err) if err.to_string().contains("--json-body <JSON-FILE>") => {
+                        ret.push(path);
+                    }
+                    _ => {}
+                }
             }
 
             ret

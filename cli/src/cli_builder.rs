@@ -124,7 +124,7 @@ impl Default for NewCli<'_> {
                 | CliCommand::SystemIpPoolRangeRemove
                 | CliCommand::SystemIpPoolServiceRangeAdd
                 | CliCommand::SystemIpPoolServiceRangeRemove => cmd
-                    .mut_arg("json-body", |arg| arg.required(false))
+                    .mut_group("body-source", |g| g.required(false))
                     .arg(
                         clap::Arg::new("first")
                             .long("first")
@@ -154,7 +154,7 @@ impl Default for NewCli<'_> {
                     }),
 
                 CliCommand::SamlIdentityProviderCreate => cmd
-                    .mut_arg("json-body", |arg| arg.required(false))
+                    .mut_group("body-source", |g| g.required(false))
                     .arg(
                         clap::Arg::new("metadata-url")
                             .long("metadata-url")
@@ -197,7 +197,7 @@ impl Default for NewCli<'_> {
                     ),
 
                 CliCommand::NetworkingAllowListUpdate => cmd
-                    .mut_arg("json-body", |arg| arg.required(false))
+                    .mut_group("body-source", |g| g.required(false))
                     .arg(
                         clap::Arg::new("any")
                             .long("any")

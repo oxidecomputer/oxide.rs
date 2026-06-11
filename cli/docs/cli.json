@@ -233,8 +233,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -314,8 +318,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -347,8 +355,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "profile",
@@ -417,8 +429,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -638,8 +654,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "profile",
@@ -682,8 +702,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "profile",
@@ -796,8 +820,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "profile",
@@ -856,8 +884,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "key",
@@ -1073,8 +1105,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -1188,8 +1224,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -1303,8 +1343,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -1380,8 +1424,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "offset"
@@ -1517,8 +1565,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -1716,8 +1768,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -1788,8 +1844,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "multicast-group",
@@ -1989,8 +2049,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -2100,8 +2164,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -2187,8 +2255,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -2237,8 +2309,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "profile",
@@ -2264,8 +2340,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -2366,8 +2446,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -2430,8 +2514,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "kind",
@@ -2469,8 +2557,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -2571,8 +2663,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -2668,8 +2764,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -2847,8 +2947,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -3046,8 +3150,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -3126,8 +3234,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "memory",
@@ -3211,8 +3323,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -3243,8 +3359,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -3315,8 +3435,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -3522,8 +3646,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -3625,8 +3753,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -3978,8 +4110,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "memory",
@@ -4062,8 +4198,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -4170,8 +4310,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -4253,8 +4397,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -4491,8 +4639,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "profile",
@@ -4538,8 +4690,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -4611,8 +4767,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -4656,8 +4816,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -4831,8 +4995,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -4935,8 +5103,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "profile",
@@ -4980,8 +5152,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "profile",
@@ -5037,8 +5213,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "metadata-url",
@@ -5192,8 +5372,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -5271,8 +5455,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "memory",
@@ -5508,8 +5696,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -5725,8 +5917,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "model"
@@ -5869,8 +6065,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "profile",
@@ -6032,8 +6232,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -6142,8 +6346,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "port",
@@ -6491,8 +6699,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "kind",
@@ -6596,8 +6808,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -6640,8 +6856,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -6676,8 +6896,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "local",
@@ -6833,8 +7057,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "name"
@@ -6976,8 +7204,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "max-paths",
@@ -7520,8 +7752,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -7575,8 +7811,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -7660,8 +7900,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "last"
@@ -7711,8 +7955,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "last"
@@ -7764,8 +8012,12 @@
                               "help": "Path to a file that contains the full json body."
                             },
                             {
+                              "long": "json-body-schema",
+                              "help": "Output a grammar reference for the request body and exit"
+                            },
+                            {
                               "long": "json-body-template",
-                              "help": "XXX"
+                              "help": "Build a JSON request-body template and exit"
                             },
                             {
                               "long": "last"
@@ -7809,8 +8061,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "last"
@@ -7865,8 +8121,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "pool",
@@ -7946,8 +8206,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "pool"
@@ -7977,8 +8241,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -8270,8 +8538,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "link-description",
@@ -8382,8 +8654,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "mask",
@@ -8655,8 +8931,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -8710,8 +8990,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -8783,8 +9067,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "max-prefix-length",
@@ -8839,8 +9127,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "pool",
@@ -8887,8 +9179,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "pool",
@@ -8969,8 +9265,12 @@
                           "help": "Path to a file that contains the full json body."
                         },
                         {
+                          "long": "json-body-schema",
+                          "help": "Output a grammar reference for the request body and exit"
+                        },
+                        {
                           "long": "json-body-template",
-                          "help": "XXX"
+                          "help": "Build a JSON request-body template and exit"
                         },
                         {
                           "long": "pool",
@@ -9002,8 +9302,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -9076,8 +9380,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -9184,8 +9492,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -9229,8 +9541,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -9344,8 +9660,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -9380,8 +9700,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "profile",
@@ -9627,8 +9951,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"
@@ -9685,8 +10013,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "profile",
@@ -9776,8 +10108,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -9876,8 +10212,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -9979,8 +10319,12 @@
                       "help": "Path to a file that contains the full json body."
                     },
                     {
+                      "long": "json-body-schema",
+                      "help": "Output a grammar reference for the request body and exit"
+                    },
+                    {
                       "long": "json-body-template",
-                      "help": "XXX"
+                      "help": "Build a JSON request-body template and exit"
                     },
                     {
                       "long": "name"
@@ -10051,8 +10395,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -10137,8 +10485,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -10279,8 +10631,12 @@
                   "help": "Path to a file that contains the full json body."
                 },
                 {
+                  "long": "json-body-schema",
+                  "help": "Output a grammar reference for the request body and exit"
+                },
+                {
                   "long": "json-body-template",
-                  "help": "XXX"
+                  "help": "Build a JSON request-body template and exit"
                 },
                 {
                   "long": "name"
@@ -10346,8 +10702,12 @@
               "help": "Path to a file that contains the full json body."
             },
             {
+              "long": "json-body-schema",
+              "help": "Output a grammar reference for the request body and exit"
+            },
+            {
               "long": "json-body-template",
-              "help": "XXX"
+              "help": "Build a JSON request-body template and exit"
             },
             {
               "long": "name"

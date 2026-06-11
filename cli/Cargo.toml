@@ -43,8 +43,10 @@ open = { workspace = true }
 oxide = { workspace = true, features = ["clap", "extras"] }
 oxnet = { workspace = true }
 predicates = { workspace = true }
+progenitor-client = { workspace = true, features = ["cli"] }
 ratatui = { workspace = true }
 reqwest = { workspace = true, features = ["gzip"] }
+schema-tui = { git = "https://github.com/oxidecomputer/json-schema-tools" }
 schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
