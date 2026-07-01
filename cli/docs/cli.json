@@ -128,8 +128,7 @@
             },
             {
               "name": "log",
-              "about": "List delivery attempts to alert receiver",
-              "long_about": "Optional query parameters to this endpoint may be used to filter deliveries by state. If none of the `failed`, `pending` or `delivered` query parameters are present, all deliveries are returned. If one or more of these parameters are provided, only those which are set to \"true\" are included in the response.",
+              "about": "List delivery attempts to alert receiver\n\nOptional query parameters to this endpoint may be used to filter deliveries by state. If none of the `failed`, `pending` or `delivered` query parameters are present, all deliveries are returned. If one or more of these parameters are provided, only those which are set to \"true\" are included in the response.",
               "operation_id": "alert_delivery_list",
               "args": [
                 {
@@ -180,8 +179,7 @@
             },
             {
               "name": "probe",
-              "about": "Send liveness probe to alert receiver",
-              "long_about": "This endpoint synchronously sends a liveness probe to the selected alert receiver. The response message describes the outcome of the probe: either the successful response (as appropriate), or indication of why the probe failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. Details relating to the status of the probe depend on the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` model. For example, webhook receiver liveness probes include the HTTP status code returned by the receiver endpoint.\n\nNote that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If an HTTP-based receiver, such as a webhook, responds to the another status code, including an error, this will be indicated by the response body, *not* the status of the response.\n\nThe `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the liveness probe succeeds, any alerts for which delivery to this receiver has failed will be queued for re-delivery.",
+              "about": "Send liveness probe to alert receiver\n\nThis endpoint synchronously sends a liveness probe to the selected alert receiver. The response message describes the outcome of the probe: either the successful response (as appropriate), or indication of why the probe failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. Details relating to the status of the probe depend on the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` model. For example, webhook receiver liveness probes include the HTTP status code returned by the receiver endpoint.\n\nNote that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If an HTTP-based receiver, such as a webhook, responds to the another status code, including an error, this will be indicated by the response body, *not* the status of the response.\n\nThe `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the liveness probe succeeds, any alerts for which delivery to this receiver has failed will be queued for re-delivery.",
               "operation_id": "alert_receiver_probe",
               "args": [
                 {
@@ -401,8 +399,7 @@
                 },
                 {
                   "name": "update",
-                  "about": "Update webhook receiver",
-                  "long_about": "Note that receiver secrets are NOT added or removed using this endpoint. Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.",
+                  "about": "Update webhook receiver\n\nNote that receiver secrets are NOT added or removed using this endpoint. Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.",
                   "operation_id": "webhook_receiver_update",
                   "args": [
                     {
@@ -505,8 +502,7 @@
       "subcommands": [
         {
           "name": "list",
-          "about": "View audit log",
-          "long_about": "A single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.\n\nAudit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.",
+          "about": "View audit log\n\nA single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.\n\nAudit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.",
           "operation_id": "audit_log_list",
           "args": [
             {
@@ -698,8 +694,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete support bundle",
-          "long_about": "May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.",
+          "about": "Delete support bundle\n\nMay also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.",
           "operation_id": "support_bundle_delete",
           "args": [
             {
@@ -840,8 +835,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create system-wide x.509 certificate",
-          "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "about": "Create system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
           "operation_id": "certificate_create",
           "args": [
             {
@@ -882,8 +876,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete certificate",
-          "long_about": "Permanently delete a certificate. This operation cannot be undone.",
+          "about": "Delete certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
           "operation_id": "certificate_delete",
           "args": [
             {
@@ -899,8 +892,7 @@
         },
         {
           "name": "list",
-          "about": "List certificates for external endpoints",
-          "long_about": "Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
+          "about": "List certificates for external endpoints\n\nReturns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
           "operation_id": "certificate_list",
           "args": [
             {
@@ -924,8 +916,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch certificate",
-          "long_about": "Returns the details of a specific certificate",
+          "about": "Fetch certificate\n\nReturns the details of a specific certificate",
           "operation_id": "certificate_view",
           "args": [
             {
@@ -987,8 +978,7 @@
           "subcommands": [
             {
               "name": "delete",
-              "about": "Delete access token",
-              "long_about": "Delete a device access token for the currently authenticated user.",
+              "about": "Delete access token\n\nDelete a device access token for the currently authenticated user.",
               "operation_id": "current_user_access_token_delete",
               "args": [
                 {
@@ -1004,8 +994,7 @@
             },
             {
               "name": "list",
-              "about": "List access tokens",
-              "long_about": "List device access tokens for the currently authenticated user.",
+              "about": "List access tokens\n\nList device access tokens for the currently authenticated user.",
               "operation_id": "current_user_access_token_list",
               "args": [
                 {
@@ -1061,8 +1050,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create SSH public key",
-              "long_about": "Create an SSH public key for the currently authenticated user.",
+              "about": "Create SSH public key\n\nCreate an SSH public key for the currently authenticated user.",
               "operation_id": "current_user_ssh_key_create",
               "args": [
                 {
@@ -1092,8 +1080,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete SSH public key",
-              "long_about": "Delete an SSH public key associated with the currently authenticated user.",
+              "about": "Delete SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
               "operation_id": "current_user_ssh_key_delete",
               "args": [
                 {
@@ -1109,8 +1096,7 @@
             },
             {
               "name": "list",
-              "about": "List SSH public keys",
-              "long_about": "Lists SSH public keys for the currently authenticated user.",
+              "about": "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.",
               "operation_id": "current_user_ssh_key_list",
               "args": [
                 {
@@ -1134,8 +1120,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch SSH public key",
-              "long_about": "Fetch SSH public key associated with the currently authenticated user.",
+              "about": "Fetch SSH public key\n\nFetch SSH public key associated with the currently authenticated user.",
               "operation_id": "current_user_ssh_key_view",
               "args": [
                 {
@@ -1323,8 +1308,7 @@
             },
             {
               "name": "start",
-              "about": "Start importing blocks into disk",
-              "long_about": "Start the process of importing blocks into a disk",
+              "about": "Start importing blocks into disk\n\nStart the process of importing blocks into a disk",
               "operation_id": "disk_bulk_write_import_start",
               "args": [
                 {
@@ -1344,8 +1328,7 @@
             },
             {
               "name": "stop",
-              "about": "Stop importing blocks into disk",
-              "long_about": "Stop the process of importing blocks into a disk",
+              "about": "Stop importing blocks into disk\n\nStop the process of importing blocks into a disk",
               "operation_id": "disk_bulk_write_import_stop",
               "args": [
                 {
@@ -1767,8 +1750,7 @@
               "subcommands": [
                 {
                   "name": "join",
-                  "about": "Join multicast group by name, IP address, or UUID",
-                  "long_about": "Groups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.\n\nSource IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
+                  "about": "Join multicast group by name, IP address, or UUID\n\nGroups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.\n\nSource IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
                   "operation_id": "instance_multicast_group_join",
                   "args": [
                     {
@@ -1910,8 +1892,7 @@
               "subcommands": [
                 {
                   "name": "list",
-                  "about": "List members of multicast group",
-                  "long_about": "The group can be specified by name, UUID, or multicast IP address.",
+                  "about": "List members of multicast group\n\nThe group can be specified by name, UUID, or multicast IP address.",
                   "operation_id": "multicast_group_member_list",
                   "args": [
                     {
@@ -1939,8 +1920,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch multicast group",
-              "long_about": "The group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
+              "about": "Fetch multicast group\n\nThe group can be specified by name, UUID, or multicast IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
               "operation_id": "multicast_group_view",
               "args": [
                 {
@@ -2091,8 +2071,7 @@
               "subcommands": [
                 {
                   "name": "query",
-                  "about": "Run timeseries query",
-                  "long_about": "Queries are written in OxQL.",
+                  "about": "Run timeseries query\n\nQueries are written in OxQL.",
                   "operation_id": "system_timeseries_query",
                   "args": [
                     {
@@ -2178,8 +2157,7 @@
             },
             {
               "name": "query",
-              "about": "Run project-scoped timeseries query",
-              "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
+              "about": "Run project-scoped timeseries query\n\nQueries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "operation_id": "timeseries_query",
               "args": [
                 {
@@ -2417,8 +2395,7 @@
       "subcommands": [
         {
           "name": "attach",
-          "about": "Attach floating IP",
-          "long_about": "Attach floating IP to an instance or other resource.",
+          "about": "Attach floating IP\n\nAttach floating IP to an instance or other resource.",
           "operation_id": "floating_ip_attach",
           "args": [
             {
@@ -2457,8 +2434,7 @@
         },
         {
           "name": "create",
-          "about": "Create floating IP",
-          "long_about": "A specific IP address can be reserved, or an IP can be auto-allocated from a specific pool or the silo's default pool.",
+          "about": "Create floating IP\n\nA specific IP address can be reserved, or an IP can be auto-allocated from a specific pool or the silo's default pool.",
           "operation_id": "floating_ip_create",
           "args": [
             {
@@ -2656,8 +2632,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create image",
-          "long_about": "Create a new image in a project.",
+          "about": "Create image\n\nCreate a new image in a project.",
           "operation_id": "image_create",
           "args": [
             {
@@ -2695,8 +2670,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete image",
-          "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "about": "Delete image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "operation_id": "image_delete",
           "args": [
             {
@@ -2716,8 +2690,7 @@
         },
         {
           "name": "demote",
-          "about": "Demote silo image",
-          "long_about": "Demote silo image to be visible only to a specified project",
+          "about": "Demote silo image\n\nDemote silo image to be visible only to a specified project",
           "operation_id": "image_demote",
           "args": [
             {
@@ -2737,8 +2710,7 @@
         },
         {
           "name": "list",
-          "about": "List images",
-          "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
+          "about": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "operation_id": "image_list",
           "args": [
             {
@@ -2766,8 +2738,7 @@
         },
         {
           "name": "promote",
-          "about": "Promote project image",
-          "long_about": "Promote project image to be visible to all projects in the silo",
+          "about": "Promote project image\n\nPromote project image to be visible to all projects in the silo",
           "operation_id": "image_promote",
           "args": [
             {
@@ -2787,8 +2758,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch image",
-          "long_about": "Fetch the details for a specific image in a project.",
+          "about": "Fetch image\n\nFetch the details for a specific image in a project.",
           "operation_id": "image_view",
           "args": [
             {
@@ -3332,8 +3302,7 @@
             },
             {
               "name": "detach-ephemeral",
-              "about": "Detach and deallocate ephemeral IP from instance",
-              "long_about": "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.",
+              "about": "Detach and deallocate ephemeral IP from instance\n\nWhen an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.",
               "operation_id": "instance_ephemeral_ip_detach",
               "args": [
                 {
@@ -3550,8 +3519,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete network interface",
-              "long_about": "Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
+              "about": "Delete network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "operation_id": "instance_network_interface_delete",
               "args": [
                 {
@@ -3753,8 +3721,7 @@
             },
             {
               "name": "ssh-key",
-              "about": "List SSH public keys for instance",
-              "long_about": "List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
+              "about": "List SSH public keys for instance\n\nList SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
               "operation_id": "instance_ssh_public_key_list",
               "args": [
                 {
@@ -4462,8 +4429,7 @@
     },
     {
       "name": "ping",
-      "about": "Ping API",
-      "long_about": "Always responds with Ok if it responds at all.",
+      "about": "Ping API\n\nAlways responds with Ok if it responds at all.",
       "operation_id": "ping",
       "args": [
         {
@@ -4715,8 +4681,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create SCIM token",
-              "long_about": "Specify the silo by name or ID using the `silo` query parameter. Be sure to save the bearer token in the response. It will not be retrievable later through the token view and list endpoints.",
+              "about": "Create SCIM token\n\nSpecify the silo by name or ID using the `silo` query parameter. Be sure to save the bearer token in the response. It will not be retrievable later through the token view and list endpoints.",
               "operation_id": "scim_token_create",
               "args": [
                 {
@@ -4732,8 +4697,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete SCIM token",
-              "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "about": "Delete SCIM token\n\nSpecify the silo by name or ID using the `silo` query parameter.",
               "operation_id": "scim_token_delete",
               "args": [
                 {
@@ -4752,8 +4716,7 @@
             },
             {
               "name": "list",
-              "about": "List SCIM tokens",
-              "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "about": "List SCIM tokens\n\nSpecify the silo by name or ID using the `silo` query parameter.",
               "operation_id": "scim_token_list",
               "args": [
                 {
@@ -4769,8 +4732,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch SCIM token",
-              "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "about": "Fetch SCIM token\n\nSpecify the silo by name or ID using the `silo` query parameter.",
               "operation_id": "scim_token_view",
               "args": [
                 {
@@ -4848,8 +4810,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete silo",
-          "long_about": "Delete a silo by name or ID.",
+          "about": "Delete silo\n\nDelete a silo by name or ID.",
           "operation_id": "silo_delete",
           "args": [
             {
@@ -4875,8 +4836,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List identity providers for silo",
-              "long_about": "List identity providers for silo by silo name or ID.",
+              "about": "List identity providers for silo\n\nList identity providers for silo by silo name or ID.",
               "operation_id": "silo_identity_provider_list",
               "args": [
                 {
@@ -4924,8 +4884,7 @@
                   "subcommands": [
                     {
                       "name": "create",
-                      "about": "Create user",
-                      "long_about": "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
+                      "about": "Create user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
                       "operation_id": "local_idp_user_create",
                       "args": [
                         {
@@ -4973,8 +4932,7 @@
                     },
                     {
                       "name": "set-password",
-                      "about": "Set or invalidate user's password",
-                      "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
+                      "about": "Set or invalidate user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "operation_id": "local_idp_user_set_password",
                       "args": [
                         {
@@ -5120,8 +5078,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List IP pools linked to silo",
-              "long_about": "Linked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
+              "about": "List IP pools linked to silo\n\nLinked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "operation_id": "silo_ip_pool_list",
               "args": [
                 {
@@ -5151,8 +5108,7 @@
         },
         {
           "name": "list",
-          "about": "List silos",
-          "long_about": "Lists silos that are discoverable based on the current permissions.",
+          "about": "List silos\n\nLists silos that are discoverable based on the current permissions.",
           "operation_id": "silo_list",
           "args": [
             {
@@ -5260,8 +5216,7 @@
             },
             {
               "name": "update",
-              "about": "Update resource quotas for silo",
-              "long_about": "If a quota value is not specified, it will remain unchanged.",
+              "about": "Update resource quotas for silo\n\nIf a quota value is not specified, it will remain unchanged.",
               "operation_id": "silo_quotas_update",
               "args": [
                 {
@@ -5465,8 +5420,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch silo",
-          "long_about": "Fetch silo by name or ID.",
+          "about": "Fetch silo\n\nFetch silo by name or ID.",
           "operation_id": "silo_view",
           "args": [
             {
@@ -5494,8 +5448,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create snapshot",
-          "long_about": "Creates a point-in-time snapshot from a disk.",
+          "about": "Create snapshot\n\nCreates a point-in-time snapshot from a disk.",
           "operation_id": "snapshot_create",
           "args": [
             {
@@ -5846,8 +5799,7 @@
                   "subcommands": [
                     {
                       "name": "abort",
-                      "about": "Abort the latest rack membership change",
-                      "long_about": "This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.",
+                      "about": "Abort the latest rack membership change\n\nThis operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.",
                       "operation_id": "rack_membership_abort",
                       "args": [
                         {
@@ -5887,8 +5839,7 @@
                     },
                     {
                       "name": "status",
-                      "about": "Fetch rack cluster membership status",
-                      "long_about": "Returns the status for the most recent change, or a specific version if one is specified.",
+                      "about": "Fetch rack cluster membership status\n\nReturns the status for the most recent change, or a specific version if one is specified.",
                       "operation_id": "rack_membership_status",
                       "args": [
                         {
@@ -6823,8 +6774,7 @@
                     },
                     {
                       "name": "update",
-                      "about": "Update BGP announce set",
-                      "long_about": "If the announce set exists, this endpoint replaces the existing announce set with the one specified.",
+                      "about": "Update BGP announce set\n\nIf the announce set exists, this endpoint replaces the existing announce set with the one specified.",
                       "operation_id": "networking_bgp_announce_set_update",
                       "args": [
                         {
@@ -7650,8 +7600,7 @@
                   "subcommands": [
                     {
                       "name": "add",
-                      "about": "Add range to IP pool",
-                      "long_about": "For multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+                      "about": "Add range to IP pool\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
                       "operation_id": "system_ip_pool_range_add",
                       "args": [
                         {
@@ -7681,8 +7630,7 @@
                     },
                     {
                       "name": "list",
-                      "about": "List ranges for IP pool",
-                      "long_about": "Ranges are ordered by their first address.",
+                      "about": "List ranges for IP pool\n\nRanges are ordered by their first address.",
                       "operation_id": "system_ip_pool_range_list",
                       "args": [
                         {
@@ -7754,8 +7702,7 @@
                       "subcommands": [
                         {
                           "name": "add",
-                          "about": "Add IP range to Oxide service pool",
-                          "long_about": "IPv6 ranges are not allowed yet.",
+                          "about": "Add IP range to Oxide service pool\n\nIPv6 ranges are not allowed yet.",
                           "operation_id": "system_ip_pool_service_range_add",
                           "args": [
                             {
@@ -7781,8 +7728,7 @@
                         },
                         {
                           "name": "list",
-                          "about": "List IP ranges for the Oxide service pool",
-                          "long_about": "Ranges are ordered by their first address.",
+                          "about": "List IP ranges for the Oxide service pool\n\nRanges are ordered by their first address.",
                           "operation_id": "system_ip_pool_service_range_list",
                           "args": [
                             {
@@ -7850,8 +7796,7 @@
                   "subcommands": [
                     {
                       "name": "link",
-                      "about": "Link IP pool to silo",
-                      "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
+                      "about": "Link IP pool to silo\n\nUsers in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
                       "operation_id": "system_ip_pool_silo_link",
                       "args": [
                         {
@@ -7912,8 +7857,7 @@
                     },
                     {
                       "name": "unlink",
-                      "about": "Unlink IP pool from silo",
-                      "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
+                      "about": "Unlink IP pool from silo\n\nWill fail if there are any outstanding IPs allocated in the silo.",
                       "operation_id": "system_ip_pool_silo_unlink",
                       "args": [
                         {
@@ -7931,8 +7875,7 @@
                     },
                     {
                       "name": "update",
-                      "about": "Make IP pool default for silo",
-                      "long_about": "When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
+                      "about": "Make IP pool default for silo\n\nWhen a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
                       "operation_id": "system_ip_pool_silo_update",
                       "args": [
                         {
@@ -9222,8 +9165,7 @@
           "subcommands": [
             {
               "name": "recovery-finish",
-              "about": "Clear system recovery status",
-              "long_about": "Instructs the system that a system recovery operation (\"mupdate\") was completed using the software in the specified release.\n\nThe system recovery operation is used to bypass the control plane to deploy known-working software when the control plane itself is not functioning or otherwise unable to update itself.  When the control plane detects this, it stops making any changes to deployed software to avoid reverting the recovery itself.  This operation puts the control plane back in charge of determining what software should be deployed, instructing it that the specified software (which is also what's currently running) is what's supposed to be deployed.\n\nIf the provided version does not match what's currently running, the control plane will continue to avoid changing deployed software until this operation is invoked with the correct version.\n\nThis endpoint should only be called at the direction of Oxide support.",
+              "about": "Clear system recovery status\n\nInstructs the system that a system recovery operation (\"mupdate\") was completed using the software in the specified release.\n\nThe system recovery operation is used to bypass the control plane to deploy known-working software when the control plane itself is not functioning or otherwise unable to update itself.  When the control plane detects this, it stops making any changes to deployed software to avoid reverting the recovery itself.  This operation puts the control plane back in charge of determining what software should be deployed, instructing it that the specified software (which is also what's currently running) is what's supposed to be deployed.\n\nIf the provided version does not match what's currently running, the control plane will continue to avoid changing deployed software until this operation is invoked with the correct version.\n\nThis endpoint should only be called at the direction of Oxide support.",
               "operation_id": "system_update_recovery_finish",
               "args": [
                 {
@@ -9257,8 +9199,7 @@
               "subcommands": [
                 {
                   "name": "list",
-                  "about": "List all TUF repositories",
-                  "long_about": "Returns a paginated list of all TUF repositories ordered by system version (newest first by default).",
+                  "about": "List all TUF repositories\n\nReturns a paginated list of all TUF repositories ordered by system version (newest first by default).",
                   "operation_id": "system_update_repository_list",
                   "args": [
                     {
@@ -9314,8 +9255,7 @@
             },
             {
               "name": "status",
-              "about": "Fetch system update status",
-              "long_about": "Returns information about the current target release and the progress of system software updates.",
+              "about": "Fetch system update status\n\nReturns information about the current target release and the progress of system software updates.",
               "operation_id": "system_update_status",
               "args": [
                 {
@@ -9337,8 +9277,7 @@
               "subcommands": [
                 {
                   "name": "update",
-                  "about": "Set target release",
-                  "long_about": "Set the current target release of the rack's system software. The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release. Use the update status endpoint to view the current target release.",
+                  "about": "Set target release\n\nSet the current target release of the rack's system software. The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release. Use the update status endpoint to view the current target release.",
                   "operation_id": "target_release_update",
                   "args": [
                     {
@@ -9394,8 +9333,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete trusted root role",
-                  "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
+                  "about": "Delete trusted root role\n\nNote that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
                   "operation_id": "system_update_trust_root_delete",
                   "args": [
                     {
@@ -9411,8 +9349,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List root roles in the updates trust store",
-                  "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
+                  "about": "List root roles in the updates trust store\n\nA root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
                   "operation_id": "system_update_trust_root_list",
                   "args": [
                     {
@@ -9543,8 +9480,7 @@
         },
         {
           "name": "logout",
-          "about": "Log user out",
-          "long_about": "Silo admins can use this endpoint to log the specified user out by deleting all of their tokens AND sessions. This cannot be undone.",
+          "about": "Log user out\n\nSilo admins can use this endpoint to log the specified user out by deleting all of their tokens AND sessions. This cannot be undone.",
           "operation_id": "user_logout",
           "args": [
             {
@@ -9678,8 +9614,7 @@
           "subcommands": [
             {
               "name": "update",
-              "about": "Replace firewall rules",
-              "long_about": "The maximum number of rules per VPC is 1024.\n\nTargets are used to specify the set of instances to which a firewall rule applies. You can target instances directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic going to all matching instances. Targets are additive: the rule applies to instances matching ANY target. The maximum number of targets is 256.\n\nFilters reduce the scope of a firewall rule. Without filters, the rule applies to all packets to the targets (or from the targets, if it's an outbound rule). With multiple filters, the rule applies only to packets matching ALL filters. The maximum number of each type of filter is 256.",
+              "about": "Replace firewall rules\n\nThe maximum number of rules per VPC is 1024.\n\nTargets are used to specify the set of instances to which a firewall rule applies. You can target instances directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic going to all matching instances. Targets are additive: the rule applies to instances matching ANY target. The maximum number of targets is 256.\n\nFilters reduce the scope of a firewall rule. Without filters, the rule applies to all packets to the targets (or from the targets, if it's an outbound rule). With multiple filters, the rule applies only to packets matching ALL filters. The maximum number of each type of filter is 256.",
               "operation_id": "vpc_firewall_rules_update",
               "args": [
                 {
@@ -9933,8 +9868,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List routes",
-                  "long_about": "List the routes associated with a router in a particular VPC.",
+                  "about": "List routes\n\nList the routes associated with a router in a particular VPC.",
                   "operation_id": "vpc_router_route_list",
                   "args": [
                     {
