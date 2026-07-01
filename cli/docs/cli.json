@@ -5935,7 +5935,7 @@
               ],
               "subcommands": [
                 {
-                  "name": "disk-led",
+                  "name": "disk-list",
                   "about": "List physical disks attached to sleds",
                   "operation_id": "sled_physical_disk_list",
                   "args": [
