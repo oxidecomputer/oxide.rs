@@ -192,7 +192,7 @@ oxide system hardware rack membership abort — Abort the latest rack membership
 oxide system hardware rack membership add — Add new sleds to rack membership
 oxide system hardware rack membership status — Fetch rack cluster membership status
 oxide system hardware rack view — Fetch rack
-oxide system hardware sled disk-led — List physical disks attached to sleds
+oxide system hardware sled disk-list — List physical disks attached to sleds
 oxide system hardware sled instance-list — List instances running on given sled
 oxide system hardware sled list — List sleds
 oxide system hardware sled list-uninitialized — List uninitialized sleds

@@ -730,7 +730,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("system hardware disk adoption-requests")
         }
         CliCommand::PhysicalDiskListUnadopted => Some("system hardware disk list-unadopted"),
-        CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
+        CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-list"),
 
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
