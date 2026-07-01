@@ -2,7 +2,17 @@ oxide alert class list — List alert classes
 oxide alert receiver delete — Delete alert receiver
 oxide alert receiver list — List alert receivers
 oxide alert receiver log — List delivery attempts to alert receiver
+
+Optional query parameters to this endpoint may be used to filter deliveries by state. If none of the `failed`, `pending` or `delivered` query parameters are present, all deliveries are returned. If one or more of these parameters are provided, only those which are set to "true" are included in the response.
 oxide alert receiver probe — Send liveness probe to alert receiver
+
+This endpoint synchronously sends a liveness probe to the selected alert receiver. The response message describes the outcome of the probe: either the successful response (as appropriate), or indication of why the probe failed.
+
+The result of the probe is represented as an `AlertDelivery` model. Details relating to the status of the probe depend on the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` model. For example, webhook receiver liveness probes include the HTTP status code returned by the receiver endpoint.
+
+Note that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If an HTTP-based receiver, such as a webhook, responds to the another status code, including an error, this will be indicated by the response body, *not* the status of the response.
+
+The `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the liveness probe succeeds, any alerts for which delivery to this receiver has failed will be queued for re-delivery.
 oxide alert receiver resend — Request re-delivery of alert
 oxide alert receiver subscribe — Add alert receiver subscription
 oxide alert receiver unsubscribe — Remove alert receiver subscription
@@ -12,8 +22,14 @@ oxide alert receiver webhook secret add — Add secret to webhook receiver
 oxide alert receiver webhook secret delete — Remove secret from webhook receiver
 oxide alert receiver webhook secret list — List webhook receiver secret IDs
 oxide alert receiver webhook update — Update webhook receiver
+
+Note that receiver secrets are NOT added or removed using this endpoint. Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.
 oxide api — Makes an authenticated HTTP request to the Oxide API and prints the response.
 oxide audit-log list — View audit log
+
+A single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.
+
+Audit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.
 oxide auth login — Authenticate with an Oxide Silo
 oxide auth logout — Removes saved authentication information from profiles.
 oxide auth status — Verifies and displays information about your authentication state.
@@ -21,30 +37,56 @@ oxide auth-settings update — Update current silo's auth settings
 oxide auth-settings view — Fetch current silo's auth settings
 oxide bundle create — Create support bundle
 oxide bundle delete — Delete support bundle
+
+May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.
 oxide bundle download — Downloads a support bundle
 oxide bundle inspect — Inspects a support bundle
 oxide bundle list — List all support bundles
 oxide bundle update — Update support bundle
 oxide bundle view — View support bundle
 oxide certificate create — Create system-wide x.509 certificate
+
+This certificate is automatically used by the Oxide Control plane to serve external connections.
 oxide certificate delete — Delete certificate
+
+Permanently delete a certificate. This operation cannot be undone.
 oxide certificate list — List certificates for external endpoints
+
+Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.
 oxide certificate view — Fetch certificate
+
+Returns the details of a specific certificate
 oxide completion — Generate shell completion scripts for Oxide CLI commands.
 oxide current-user access-token delete — Delete access token
+
+Delete a device access token for the currently authenticated user.
 oxide current-user access-token list — List access tokens
+
+List device access tokens for the currently authenticated user.
 oxide current-user groups — Fetch current user's groups
 oxide current-user ssh-key create — Create SSH public key
+
+Create an SSH public key for the currently authenticated user.
 oxide current-user ssh-key delete — Delete SSH public key
+
+Delete an SSH public key associated with the currently authenticated user.
 oxide current-user ssh-key list — List SSH public keys
+
+Lists SSH public keys for the currently authenticated user.
 oxide current-user ssh-key view — Fetch SSH public key
+
+Fetch SSH public key associated with the currently authenticated user.
 oxide current-user view — Fetch user for current session
 oxide disk create — Create disk
 oxide disk delete — Delete disk
 oxide disk import — Create a disk from a file upload
 oxide disk import finalize — Confirm disk block import completion
 oxide disk import start — Start importing blocks into disk
+
+Start the process of importing blocks into a disk
 oxide disk import stop — Stop importing blocks into disk
+
+Stop the process of importing blocks into a disk
 oxide disk import write — Import blocks into disk
 oxide disk list — List disks
 oxide disk view — Fetch disk
@@ -59,19 +101,31 @@ oxide experimental instance affinity member view-instance — Fetch affinity gro
 oxide experimental instance affinity update — Update affinity group
 oxide experimental instance affinity view — Fetch affinity group
 oxide experimental instance multicast-group join — Join multicast group by name, IP address, or UUID
+
+Groups can be referenced by name, IP address, or UUID. If the group doesn't exist, it's implicitly created with an auto-allocated IP from a multicast pool linked to the caller's silo. When referencing by UUID, the group must already exist.
+
+Source IPs are optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the request are automatically deduplicated, with a maximum of 64 source IPs allowed.
 oxide experimental instance multicast-group leave — Leave multicast group by name, IP address, or UUID
 oxide experimental instance multicast-group list — List multicast groups for an instance
 oxide experimental multicast-group list — List multicast groups
 oxide experimental multicast-group member list — List members of multicast group
+
+The group can be specified by name, UUID, or multicast IP address.
 oxide experimental multicast-group view — Fetch multicast group
+
+The group can be specified by name, UUID, or multicast IP address. (e.g., "224.1.2.3" or "ff38::1").
 oxide experimental system probe create — Create instrumentation probe
 oxide experimental system probe delete — Delete instrumentation probe
 oxide experimental system probe list — List instrumentation probes
 oxide experimental system probe view — View instrumentation probe
 oxide experimental system timeseries query — Run timeseries query
+
+Queries are written in OxQL.
 oxide experimental system timeseries schema list — List timeseries schemas
 oxide experimental timeseries dashboard — Graph the results of an OxQL timeseries query.
 oxide experimental timeseries query — Run project-scoped timeseries query
+
+Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.
 oxide external-subnet attach — Attach external subnet to instance
 oxide external-subnet create — Create external subnet
 oxide external-subnet delete — Delete external subnet
@@ -80,7 +134,11 @@ oxide external-subnet list — List external subnets
 oxide external-subnet update — Update external subnet
 oxide external-subnet view — Fetch external subnet
 oxide floating-ip attach — Attach floating IP
+
+Attach floating IP to an instance or other resource.
 oxide floating-ip create — Create floating IP
+
+A specific IP address can be reserved, or an IP can be auto-allocated from a specific pool or the silo's default pool.
 oxide floating-ip delete — Delete floating IP
 oxide floating-ip detach — Detach floating IP
 oxide floating-ip list — List floating IPs
@@ -88,11 +146,23 @@ oxide floating-ip update — Update floating IP
 oxide floating-ip view — Fetch floating IP
 oxide group list — List groups
 oxide image create — Create image
+
+Create a new image in a project.
 oxide image delete — Delete image
+
+Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.
 oxide image demote — Demote silo image
+
+Demote silo image to be visible only to a specified project
 oxide image list — List images
+
+List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.
 oxide image promote — Promote project image
+
+Promote project image to be visible to all projects in the silo
 oxide image view — Fetch image
+
+Fetch the details for a specific image in a project.
 oxide instance anti-affinity create — Create anti-affinity group
 oxide instance anti-affinity delete — Delete anti-affinity group
 oxide instance anti-affinity list — List anti-affinity groups
@@ -109,18 +179,24 @@ oxide instance disk detach — Detach disk from instance
 oxide instance disk list — List disks for instance
 oxide instance external-ip attach-ephemeral — Allocate and attach ephemeral IP to instance
 oxide instance external-ip detach-ephemeral — Detach and deallocate ephemeral IP from instance
+
+When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.
 oxide instance external-ip list — List external IP addresses
 oxide instance external-subnet list — List external subnets attached to instance
 oxide instance from-image — Launch an instance from a disk image.
 oxide instance list — List instances
 oxide instance nic create — Create network interface
 oxide instance nic delete — Delete network interface
+
+Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.
 oxide instance nic list — List network interfaces
 oxide instance nic update — Update network interface
 oxide instance nic view — Fetch network interface
 oxide instance property affinity — List affinity groups containing instance
 oxide instance property anti-affinity — List anti-affinity groups containing instance
 oxide instance property ssh-key — List SSH public keys for instance
+
+List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.
 oxide instance reboot — Reboot instance
 oxide instance serial console — Connect to an instance's serial console interactively.
 oxide instance serial history — Fetch an instance's serial console output.
@@ -141,6 +217,8 @@ oxide internet-gateway view — Fetch internet gateway
 oxide ip-pool list — List IP pools
 oxide ip-pool view — Fetch IP pool
 oxide ping — Ping API
+
+Always responds with Ok if it responds at all.
 oxide policy update — Update current silo's IAM policy
 oxide policy view — Fetch current silo's IAM policy
 oxide project create — Create project
@@ -151,23 +229,45 @@ oxide project policy view — Fetch project's IAM policy
 oxide project update — Update project
 oxide project view — Fetch project
 oxide scim token create — Create SCIM token
+
+Specify the silo by name or ID using the `silo` query parameter. Be sure to save the bearer token in the response. It will not be retrievable later through the token view and list endpoints.
 oxide scim token delete — Delete SCIM token
+
+Specify the silo by name or ID using the `silo` query parameter.
 oxide scim token list — List SCIM tokens
+
+Specify the silo by name or ID using the `silo` query parameter.
 oxide scim token view — Fetch SCIM token
+
+Specify the silo by name or ID using the `silo` query parameter.
 oxide silo create — Create silo
 oxide silo delete — Delete silo
+
+Delete a silo by name or ID.
 oxide silo idp list — List identity providers for silo
+
+List identity providers for silo by silo name or ID.
 oxide silo idp local user create — Create user
+
+Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.
 oxide silo idp local user delete — Delete user
 oxide silo idp local user set-password — Set or invalidate user's password
+
+Passwords can only be updated for users in Silos with identity mode `LocalOnly`.
 oxide silo idp saml create — Create SAML identity provider
 oxide silo idp saml view — Fetch SAML identity provider
 oxide silo ip-pool list — List IP pools linked to silo
+
+Linked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.
 oxide silo list — List silos
+
+Lists silos that are discoverable based on the current permissions.
 oxide silo policy update — Update silo IAM policy
 oxide silo policy view — Fetch silo IAM policy
 oxide silo quotas list — List resource quotas for all silos
 oxide silo quotas update — Update resource quotas for silo
+
+If a quota value is not specified, it will remain unchanged.
 oxide silo quotas view — Fetch resource quotas for silo
 oxide silo subnet-pool list — List subnet pools linked to a silo
 oxide silo user list — List built-in (system) users in silo
@@ -175,7 +275,11 @@ oxide silo user view — Fetch built-in (system) user
 oxide silo utilization list — List current utilization state for all silos
 oxide silo utilization view — Fetch current utilization for given silo
 oxide silo view — Fetch silo
+
+Fetch silo by name or ID.
 oxide snapshot create — Create snapshot
+
+Creates a point-in-time snapshot from a disk.
 oxide snapshot delete — Delete snapshot
 oxide snapshot list — List snapshots
 oxide snapshot view — Fetch snapshot
@@ -189,8 +293,12 @@ oxide system hardware disk list-unadopted — List physical disks that have not 
 oxide system hardware disk view — Get physical disk
 oxide system hardware rack list — List racks
 oxide system hardware rack membership abort — Abort the latest rack membership change
+
+This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.
 oxide system hardware rack membership add — Add new sleds to rack membership
 oxide system hardware rack membership status — Fetch rack cluster membership status
+
+Returns the status for the most recent change, or a specific version if one is specified.
 oxide system hardware rack view — Fetch rack
 oxide system hardware sled disk-list — List physical disks attached to sleds
 oxide system hardware sled instance-list — List instances running on given sled
@@ -221,6 +329,8 @@ oxide system networking bgp announce — Announce a prefix over BGP.
 oxide system networking bgp announce-set delete — Delete BGP announce set
 oxide system networking bgp announce-set list — List BGP announce sets
 oxide system networking bgp announce-set update — Update BGP announce set
+
+If the announce set exists, this endpoint replaces the existing announce set with the one specified.
 oxide system networking bgp announcement list — Get originated routes for a specified BGP announce set
 oxide system networking bgp auth — Set an authentication string.
 oxide system networking bgp config create — Create BGP configuration
@@ -242,16 +352,32 @@ oxide system networking ip-pool create — Create IP pool
 oxide system networking ip-pool delete — Delete IP pool
 oxide system networking ip-pool list — List IP pools
 oxide system networking ip-pool range add — Add range to IP pool
+
+For multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.
+
+ASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3
 oxide system networking ip-pool range list — List ranges for IP pool
+
+Ranges are ordered by their first address.
 oxide system networking ip-pool range remove — Remove range from IP pool
 oxide system networking ip-pool service range add — Add IP range to Oxide service pool
+
+IPv6 ranges are not allowed yet.
 oxide system networking ip-pool service range list — List IP ranges for the Oxide service pool
+
+Ranges are ordered by their first address.
 oxide system networking ip-pool service remove — Remove IP range from Oxide service pool
 oxide system networking ip-pool service view — Fetch Oxide service IP pool
 oxide system networking ip-pool silo link — Link IP pool to silo
+
+Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.
 oxide system networking ip-pool silo list — List IP pool's linked silos
 oxide system networking ip-pool silo unlink — Unlink IP pool from silo
+
+Will fail if there are any outstanding IPs allocated in the silo.
 oxide system networking ip-pool silo update — Make IP pool default for silo
+
+When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.
 oxide system networking ip-pool update — Update IP pool
 oxide system networking ip-pool utilization — Fetch IP pool utilization
 oxide system networking ip-pool view — Fetch IP pool
@@ -288,25 +414,51 @@ oxide system networking switch-port-settings view — Get information about swit
 oxide system policy update — Update top-level IAM policy
 oxide system policy view — Fetch top-level IAM policy
 oxide system update recovery-finish — Clear system recovery status
+
+Instructs the system that a system recovery operation ("mupdate") was completed using the software in the specified release.
+
+The system recovery operation is used to bypass the control plane to deploy known-working software when the control plane itself is not functioning or otherwise unable to update itself.  When the control plane detects this, it stops making any changes to deployed software to avoid reverting the recovery itself.  This operation puts the control plane back in charge of determining what software should be deployed, instructing it that the specified software (which is also what's currently running) is what's supposed to be deployed.
+
+If the provided version does not match what's currently running, the control plane will continue to avoid changing deployed software until this operation is invoked with the correct version.
+
+This endpoint should only be called at the direction of Oxide support.
 oxide system update repo list — List all TUF repositories
+
+Returns a paginated list of all TUF repositories ordered by system version (newest first by default).
 oxide system update repo upload
 oxide system update repo view — Fetch system release repository by version
 oxide system update status — Fetch system update status
+
+Returns information about the current target release and the progress of system software updates.
 oxide system update target-release update — Set target release
+
+Set the current target release of the rack's system software. The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release. Use the update status endpoint to view the current target release.
 oxide system update trust-root create — Add trusted root role to updates trust store
 oxide system update trust-root delete — Delete trusted root role
+
+Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.
 oxide system update trust-root list — List root roles in the updates trust store
+
+A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.
 oxide system update trust-root view — Fetch trusted root role
 oxide user list — List users
 oxide user list-sessions — List user's console sessions
 oxide user list-tokens — List user's access tokens
 oxide user logout — Log user out
+
+Silo admins can use this endpoint to log the specified user out by deleting all of their tokens AND sessions. This cannot be undone.
 oxide user view — Fetch user
 oxide utilization — Fetch resource utilization for user's current silo
 oxide version — Prints version information about the CLI.
 oxide vpc create — Create VPC
 oxide vpc delete — Delete VPC
 oxide vpc firewall-rules update — Replace firewall rules
+
+The maximum number of rules per VPC is 1024.
+
+Targets are used to specify the set of instances to which a firewall rule applies. You can target instances directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic going to all matching instances. Targets are additive: the rule applies to instances matching ANY target. The maximum number of targets is 256.
+
+Filters reduce the scope of a firewall rule. Without filters, the rule applies to all packets to the targets (or from the targets, if it's an outbound rule). With multiple filters, the rule applies only to packets matching ALL filters. The maximum number of each type of filter is 256.
 oxide vpc firewall-rules view — List firewall rules
 oxide vpc list — List VPCs
 oxide vpc router create — Create VPC router
@@ -315,6 +467,8 @@ oxide vpc router list — List routers
 oxide vpc router route create — Create route
 oxide vpc router route delete — Delete route
 oxide vpc router route list — List routes
+
+List the routes associated with a router in a particular VPC.
 oxide vpc router route update — Update route
 oxide vpc router route view — Fetch route
 oxide vpc router update — Update router
