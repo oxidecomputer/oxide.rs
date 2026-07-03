@@ -4405,6 +4405,106 @@ pub mod types {
         }
     }
 
+    /// Parameters for updating a BGP configuration
+    ///
+    /// If a value is not specified, it will remain unchanged.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for updating a BGP configuration\n\nIf a
+    /// value is not specified, it will remain unchanged.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "bgp_announce_set_id": {
+    ///      "description": "Update the BGP announce set associated with this
+    /// configuration.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "max_paths": {
+    ///      "description": "Update the maximum number of equal-cost paths.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/MaxPathConfig"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct BgpConfigUpdate {
+        /// Update the BGP announce set associated with this configuration.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub bgp_announce_set_id: ::std::option::Option<NameOrId>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        /// Update the maximum number of equal-cost paths.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_paths: ::std::option::Option<MaxPathConfig>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::default::Default for BgpConfigUpdate {
+        fn default() -> Self {
+            Self {
+                bgp_announce_set_id: Default::default(),
+                description: Default::default(),
+                max_paths: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    impl BgpConfigUpdate {
+        pub fn builder() -> builder::BgpConfigUpdate {
+            Default::default()
+        }
+    }
+
     /// Route exported to a peer.
     ///
     /// <details><summary>JSON schema</summary>
@@ -40607,6 +40707,102 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BgpConfigUpdate {
+            bgp_announce_set_id: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            max_paths: ::std::result::Result<
+                ::std::option::Option<super::MaxPathConfig>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for BgpConfigUpdate {
+            fn default() -> Self {
+                Self {
+                    bgp_announce_set_id: Ok(Default::default()),
+                    description: Ok(Default::default()),
+                    max_paths: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl BgpConfigUpdate {
+            pub fn bgp_announce_set_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.bgp_announce_set_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for bgp_announce_set_id: {e}")
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn max_paths<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::MaxPathConfig>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_paths = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max_paths: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<BgpConfigUpdate> for super::BgpConfigUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BgpConfigUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bgp_announce_set_id: value.bgp_announce_set_id?,
+                    description: value.description?,
+                    max_paths: value.max_paths?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::BgpConfigUpdate> for BgpConfigUpdate {
+            fn from(value: super::BgpConfigUpdate) -> Self {
+                Self {
+                    bgp_announce_set_id: Ok(value.bgp_announce_set_id),
+                    description: Ok(value.description),
+                    max_paths: Ok(value.max_paths),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BgpExported {
             peer_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
@@ -66361,7 +66557,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026060800.0.0
+/// Version: 2026061000.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66402,7 +66598,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026060800.0.0"
+        "2026061000.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -70980,6 +71176,24 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList<'_>;
+    /// Update the mutable fields of an existing BGP configuration
+    ///
+    /// The asn field is not updatable; to change the autonomous system number,
+    /// create a new BGP configuration object.
+    ///
+    /// Sends a `PUT` request to `/v1/system/networking/bgp`
+    ///
+    /// Arguments:
+    /// - `name_or_id`: A name or id to use when selecting BGP config.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_bgp_config_update()
+    ///    .name_or_id(name_or_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_config_update(&self) -> builder::NetworkingBgpConfigUpdate<'_>;
     /// Create BGP configuration
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp`
@@ -71335,6 +71549,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList<'_> {
         builder::NetworkingBgpConfigList::new(self)
+    }
+
+    fn networking_bgp_config_update(&self) -> builder::NetworkingBgpConfigUpdate<'_> {
+        builder::NetworkingBgpConfigUpdate::new(self)
     }
 
     fn networking_bgp_config_create(&self) -> builder::NetworkingBgpConfigCreate<'_> {
@@ -97634,6 +97852,107 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_config_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_config_update`]: super::ClientSystemNetworkingExt::networking_bgp_config_update
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpConfigUpdate<'a> {
+        client: &'a super::Client,
+        name_or_id: Result<types::NameOrId, String>,
+        body: Result<types::builder::BgpConfigUpdate, String>,
+    }
+
+    impl<'a> NetworkingBgpConfigUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name_or_id: Err("name_or_id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BgpConfigUpdate>,
+            <V as std::convert::TryInto<types::BgpConfigUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BgpConfigUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BgpConfigUpdate) -> types::builder::BgpConfigUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/networking/bgp`
+        pub async fn send(self) -> Result<ResponseValue<types::BgpConfig>, Error<types::Error>> {
+            let Self {
+                client,
+                name_or_id,
+                body,
+            } = self;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::BgpConfigUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new(
+                    "name_or_id",
+                    &name_or_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_config_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 

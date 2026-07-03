@@ -275,6 +275,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBfdEnable => Self::cli_networking_bfd_enable(),
             CliCommand::NetworkingBfdStatus => Self::cli_networking_bfd_status(),
             CliCommand::NetworkingBgpConfigList => Self::cli_networking_bgp_config_list(),
+            CliCommand::NetworkingBgpConfigUpdate => Self::cli_networking_bgp_config_update(),
             CliCommand::NetworkingBgpConfigCreate => Self::cli_networking_bgp_config_create(),
             CliCommand::NetworkingBgpConfigDelete => Self::cli_networking_bgp_config_delete(),
             CliCommand::NetworkingBgpAnnounceSetList => {
@@ -6879,6 +6880,62 @@ impl<T: CliConfig> Cli<T> {
             .about("List BGP configurations")
     }
 
+    pub fn cli_networking_bgp_config_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("bgp-announce-set-id")
+                    .long("bgp-announce-set-id")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Update the BGP announce set associated with this configuration."),
+            )
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("max-paths")
+                    .long("max-paths")
+                    .value_parser(::clap::value_parser!(types::MaxPathConfig))
+                    .required(false)
+                    .help("Update the maximum number of equal-cost paths."),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting BGP config."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about(
+                "Update the mutable fields of an existing BGP configuration\n\nThe asn field is \
+                 not updatable; to change the autonomous system number, create a new BGP \
+                 configuration object.",
+            )
+    }
+
     pub fn cli_networking_bgp_config_create() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -10240,6 +10297,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBfdStatus => self.execute_networking_bfd_status(matches).await,
             CliCommand::NetworkingBgpConfigList => {
                 self.execute_networking_bgp_config_list(matches).await
+            }
+            CliCommand::NetworkingBgpConfigUpdate => {
+                self.execute_networking_bgp_config_update(matches).await
             }
             CliCommand::NetworkingBgpConfigCreate => {
                 self.execute_networking_bgp_config_create(matches).await
@@ -17913,6 +17973,54 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_bgp_config_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_bgp_config_update();
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-announce-set-id") {
+            request = request.body_map(|body| body.bgp_announce_set_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::MaxPathConfig>("max-paths") {
+            request = request.body_map(|body| body.max_paths(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BgpConfigUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_bgp_config_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_bgp_config_create(
         &self,
         matches: &::clap::ArgMatches,
@@ -23151,6 +23259,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_bgp_config_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingBgpConfigUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_bgp_config_create(
         &self,
         matches: &::clap::ArgMatches,
@@ -24199,6 +24315,7 @@ pub enum CliCommand {
     NetworkingBfdEnable,
     NetworkingBfdStatus,
     NetworkingBgpConfigList,
+    NetworkingBgpConfigUpdate,
     NetworkingBgpConfigCreate,
     NetworkingBgpConfigDelete,
     NetworkingBgpAnnounceSetList,
@@ -24521,6 +24638,7 @@ impl CliCommand {
             CliCommand::NetworkingBfdEnable,
             CliCommand::NetworkingBfdStatus,
             CliCommand::NetworkingBgpConfigList,
+            CliCommand::NetworkingBgpConfigUpdate,
             CliCommand::NetworkingBgpConfigCreate,
             CliCommand::NetworkingBgpConfigDelete,
             CliCommand::NetworkingBgpAnnounceSetList,
@@ -24862,6 +24980,7 @@ impl CliCommand {
             CliCommand::NetworkingBfdEnable => "networking_bfd_enable",
             CliCommand::NetworkingBfdStatus => "networking_bfd_status",
             CliCommand::NetworkingBgpConfigList => "networking_bgp_config_list",
+            CliCommand::NetworkingBgpConfigUpdate => "networking_bgp_config_update",
             CliCommand::NetworkingBgpConfigCreate => "networking_bgp_config_create",
             CliCommand::NetworkingBgpConfigDelete => "networking_bgp_config_delete",
             CliCommand::NetworkingBgpAnnounceSetList => "networking_bgp_announce_set_list",
