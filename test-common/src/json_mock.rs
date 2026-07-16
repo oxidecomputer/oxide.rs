@@ -29,7 +29,7 @@
 use std::fmt::Display;
 
 use chrono::{NaiveDate, NaiveTime, Utc};
-use rand::Rng;
+use rand::{Rng, RngExt};
 use schemars::{
     schema::{
         ArrayValidation, InstanceType, NumberValidation, ObjectValidation, Schema, SchemaObject,

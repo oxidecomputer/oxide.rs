@@ -12,7 +12,7 @@ use oxide::types::Snapshot;
 use oxide_httpmock::MockServerExt;
 use predicates::prelude::*;
 use rand::SeedableRng;
-use rand::{rng, Rng};
+use rand::{rng, RngExt};
 use std::fs::File;
 use std::io::Seek;
 use std::io::SeekFrom;
