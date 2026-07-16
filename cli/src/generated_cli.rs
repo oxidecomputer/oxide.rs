@@ -245,6 +245,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemIpPoolView => Self::cli_system_ip_pool_view(),
             CliCommand::SystemIpPoolUpdate => Self::cli_system_ip_pool_update(),
             CliCommand::SystemIpPoolDelete => Self::cli_system_ip_pool_delete(),
+            CliCommand::SystemIpPoolAssign => Self::cli_system_ip_pool_assign(),
             CliCommand::SystemIpPoolRangeList => Self::cli_system_ip_pool_range_list(),
             CliCommand::SystemIpPoolRangeAdd => Self::cli_system_ip_pool_range_add(),
             CliCommand::SystemIpPoolRangeRemove => Self::cli_system_ip_pool_range_remove(),
@@ -253,14 +254,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemIpPoolSiloUpdate => Self::cli_system_ip_pool_silo_update(),
             CliCommand::SystemIpPoolSiloUnlink => Self::cli_system_ip_pool_silo_unlink(),
             CliCommand::SystemIpPoolUtilizationView => Self::cli_system_ip_pool_utilization_view(),
-            CliCommand::SystemIpPoolServiceView => Self::cli_system_ip_pool_service_view(),
-            CliCommand::SystemIpPoolServiceRangeList => {
-                Self::cli_system_ip_pool_service_range_list()
-            }
-            CliCommand::SystemIpPoolServiceRangeAdd => Self::cli_system_ip_pool_service_range_add(),
-            CliCommand::SystemIpPoolServiceRangeRemove => {
-                Self::cli_system_ip_pool_service_range_remove()
-            }
             CliCommand::SystemMetric => Self::cli_system_metric(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
@@ -4090,11 +4083,35 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_ip_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
                     .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pool-type")
+                    .long("pool-type")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolType::Unicast.to_string(),
+                            types::IpPoolType::Multicast.to_string(),
+                        ]),
+                        |s| types::IpPoolType::try_from(s).unwrap(),
+                    ))
+                    .required(false),
             )
             .arg(
                 ::clap::Arg::new("sort-by")
@@ -6080,11 +6097,47 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_system_ip_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("assignment")
+                    .long("assignment")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolAssignment::Silos.to_string(),
+                            types::IpPoolAssignment::SystemServices.to_string(),
+                        ]),
+                        |s| types::IpPoolAssignment::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
                     .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pool-type")
+                    .long("pool-type")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolType::Unicast.to_string(),
+                            types::IpPoolType::Multicast.to_string(),
+                        ]),
+                        |s| types::IpPoolType::try_from(s).unwrap(),
+                    ))
+                    .required(false),
             )
             .arg(
                 ::clap::Arg::new("sort-by")
@@ -6104,6 +6157,19 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_system_ip_pool_create() -> ::clap::Command {
         ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("assignment")
+                    .long("assignment")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolAssignment::Silos.to_string(),
+                            types::IpPoolAssignment::SystemServices.to_string(),
+                        ]),
+                        |s| types::IpPoolAssignment::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("What this pool is assigned to (defaults to Silos)."),
+            )
             .arg(
                 ::clap::Arg::new("description")
                     .long("description")
@@ -6219,6 +6285,44 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the IP pool"),
             )
             .about("Delete IP pool")
+    }
+
+    pub fn cli_system_ip_pool_assign() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("assignment")
+                    .long("assignment")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolAssignment::Silos.to_string(),
+                            types::IpPoolAssignment::SystemServices.to_string(),
+                        ]),
+                        |s| types::IpPoolAssignment::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Assign IP pool")
     }
 
     pub fn cli_system_ip_pool_range_list() -> ::clap::Command {
@@ -6458,63 +6562,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the IP pool"),
             )
             .about("Fetch IP pool utilization")
-    }
-
-    pub fn cli_system_ip_pool_service_view() -> ::clap::Command {
-        ::clap::Command::new("").about("Fetch Oxide service IP pool")
-    }
-
-    pub fn cli_system_ip_pool_service_range_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about(
-                "List IP ranges for the Oxide service pool\n\nRanges are ordered by their first \
-                 address.",
-            )
-    }
-
-    pub fn cli_system_ip_pool_service_range_add() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Add IP range to Oxide service pool\n\nIPv6 ranges are not allowed yet.")
-    }
-
-    pub fn cli_system_ip_pool_service_range_remove() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Remove IP range from Oxide service pool")
     }
 
     pub fn cli_system_metric() -> ::clap::Command {
@@ -10231,6 +10278,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemIpPoolView => self.execute_system_ip_pool_view(matches).await,
             CliCommand::SystemIpPoolUpdate => self.execute_system_ip_pool_update(matches).await,
             CliCommand::SystemIpPoolDelete => self.execute_system_ip_pool_delete(matches).await,
+            CliCommand::SystemIpPoolAssign => self.execute_system_ip_pool_assign(matches).await,
             CliCommand::SystemIpPoolRangeList => {
                 self.execute_system_ip_pool_range_list(matches).await
             }
@@ -10254,20 +10302,6 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemIpPoolUtilizationView => {
                 self.execute_system_ip_pool_utilization_view(matches).await
-            }
-            CliCommand::SystemIpPoolServiceView => {
-                self.execute_system_ip_pool_service_view(matches).await
-            }
-            CliCommand::SystemIpPoolServiceRangeList => {
-                self.execute_system_ip_pool_service_range_list(matches)
-                    .await
-            }
-            CliCommand::SystemIpPoolServiceRangeAdd => {
-                self.execute_system_ip_pool_service_range_add(matches).await
-            }
-            CliCommand::SystemIpPoolServiceRangeRemove => {
-                self.execute_system_ip_pool_service_range_remove(matches)
-                    .await
             }
             CliCommand::SystemMetric => self.execute_system_metric(matches).await,
             CliCommand::NetworkingAddressLotList => {
@@ -14581,8 +14615,16 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_list();
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.ip_version(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
+            request = request.pool_type(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
@@ -16990,8 +17032,20 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_ip_pool_list();
+        if let Some(value) = matches.get_one::<types::IpPoolAssignment>("assignment") {
+            request = request.assignment(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.ip_version(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
+            request = request.pool_type(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
@@ -17029,6 +17083,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_ip_pool_create();
+        if let Some(value) = matches.get_one::<types::IpPoolAssignment>("assignment") {
+            request = request.body_map(|body| body.assignment(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -17147,6 +17205,42 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_ip_pool_assign(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_assign();
+        if let Some(value) = matches.get_one::<types::IpPoolAssignment>("assignment") {
+            request = request.body_map(|body| body.assignment(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolAssignParam>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_system_ip_pool_assign(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -17427,118 +17521,6 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_view(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_view();
-        self.config
-            .execute_system_ip_pool_service_view(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_range_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_range_list();
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.config
-            .execute_system_ip_pool_service_range_list(matches, &mut request)?;
-        self.config.list_start::<types::IpPoolRangeResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::IpPoolRangeResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_range_add(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_range_add();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_system_ip_pool_service_range_add(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_range_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_range_remove();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_system_ip_pool_service_range_remove(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -23067,6 +23049,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_ip_pool_assign(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemIpPoolAssign,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_system_ip_pool_range_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23127,38 +23117,6 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::SystemIpPoolUtilizationView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_view(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_range_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceRangeList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_range_add(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceRangeAdd,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_range_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceRangeRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -24291,6 +24249,7 @@ pub enum CliCommand {
     SystemIpPoolView,
     SystemIpPoolUpdate,
     SystemIpPoolDelete,
+    SystemIpPoolAssign,
     SystemIpPoolRangeList,
     SystemIpPoolRangeAdd,
     SystemIpPoolRangeRemove,
@@ -24299,10 +24258,6 @@ pub enum CliCommand {
     SystemIpPoolSiloUpdate,
     SystemIpPoolSiloUnlink,
     SystemIpPoolUtilizationView,
-    SystemIpPoolServiceView,
-    SystemIpPoolServiceRangeList,
-    SystemIpPoolServiceRangeAdd,
-    SystemIpPoolServiceRangeRemove,
     SystemMetric,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
@@ -24614,6 +24569,7 @@ impl CliCommand {
             CliCommand::SystemIpPoolView,
             CliCommand::SystemIpPoolUpdate,
             CliCommand::SystemIpPoolDelete,
+            CliCommand::SystemIpPoolAssign,
             CliCommand::SystemIpPoolRangeList,
             CliCommand::SystemIpPoolRangeAdd,
             CliCommand::SystemIpPoolRangeRemove,
@@ -24622,10 +24578,6 @@ impl CliCommand {
             CliCommand::SystemIpPoolSiloUpdate,
             CliCommand::SystemIpPoolSiloUnlink,
             CliCommand::SystemIpPoolUtilizationView,
-            CliCommand::SystemIpPoolServiceView,
-            CliCommand::SystemIpPoolServiceRangeList,
-            CliCommand::SystemIpPoolServiceRangeAdd,
-            CliCommand::SystemIpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
@@ -24956,6 +24908,7 @@ impl CliCommand {
             CliCommand::SystemIpPoolView => "system_ip_pool_view",
             CliCommand::SystemIpPoolUpdate => "system_ip_pool_update",
             CliCommand::SystemIpPoolDelete => "system_ip_pool_delete",
+            CliCommand::SystemIpPoolAssign => "system_ip_pool_assign",
             CliCommand::SystemIpPoolRangeList => "system_ip_pool_range_list",
             CliCommand::SystemIpPoolRangeAdd => "system_ip_pool_range_add",
             CliCommand::SystemIpPoolRangeRemove => "system_ip_pool_range_remove",
@@ -24964,10 +24917,6 @@ impl CliCommand {
             CliCommand::SystemIpPoolSiloUpdate => "system_ip_pool_silo_update",
             CliCommand::SystemIpPoolSiloUnlink => "system_ip_pool_silo_unlink",
             CliCommand::SystemIpPoolUtilizationView => "system_ip_pool_utilization_view",
-            CliCommand::SystemIpPoolServiceView => "system_ip_pool_service_view",
-            CliCommand::SystemIpPoolServiceRangeList => "system_ip_pool_service_range_list",
-            CliCommand::SystemIpPoolServiceRangeAdd => "system_ip_pool_service_range_add",
-            CliCommand::SystemIpPoolServiceRangeRemove => "system_ip_pool_service_range_remove",
             CliCommand::SystemMetric => "system_metric",
             CliCommand::NetworkingAddressLotList => "networking_address_lot_list",
             CliCommand::NetworkingAddressLotCreate => "networking_address_lot_create",
