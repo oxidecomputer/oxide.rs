@@ -2993,7 +2993,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#c847eb88f2840558e2954bbc299d4d4ad2d7720f"
+source = "git+https://github.com/oxidecomputer/progenitor#f2c209c77f5772afaf72d0fe18cb2c165c8df221"
 dependencies = [
  "progenitor-impl",
 ]
@@ -3016,7 +3016,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#c847eb88f2840558e2954bbc299d4d4ad2d7720f"
+source = "git+https://github.com/oxidecomputer/progenitor#f2c209c77f5772afaf72d0fe18cb2c165c8df221"
 dependencies = [
  "heck",
  "http",
@@ -4131,7 +4131,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.3.4",
+ "getrandom 0.4.1",
  "once_cell",
  "rustix 1.1.4",
  "windows-sys 0.52.0",
