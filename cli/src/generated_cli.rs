@@ -245,6 +245,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemIpPoolView => Self::cli_system_ip_pool_view(),
             CliCommand::SystemIpPoolUpdate => Self::cli_system_ip_pool_update(),
             CliCommand::SystemIpPoolDelete => Self::cli_system_ip_pool_delete(),
+            CliCommand::SystemIpPoolAssign => Self::cli_system_ip_pool_assign(),
             CliCommand::SystemIpPoolRangeList => Self::cli_system_ip_pool_range_list(),
             CliCommand::SystemIpPoolRangeAdd => Self::cli_system_ip_pool_range_add(),
             CliCommand::SystemIpPoolRangeRemove => Self::cli_system_ip_pool_range_remove(),
@@ -253,14 +254,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemIpPoolSiloUpdate => Self::cli_system_ip_pool_silo_update(),
             CliCommand::SystemIpPoolSiloUnlink => Self::cli_system_ip_pool_silo_unlink(),
             CliCommand::SystemIpPoolUtilizationView => Self::cli_system_ip_pool_utilization_view(),
-            CliCommand::SystemIpPoolServiceView => Self::cli_system_ip_pool_service_view(),
-            CliCommand::SystemIpPoolServiceRangeList => {
-                Self::cli_system_ip_pool_service_range_list()
-            }
-            CliCommand::SystemIpPoolServiceRangeAdd => Self::cli_system_ip_pool_service_range_add(),
-            CliCommand::SystemIpPoolServiceRangeRemove => {
-                Self::cli_system_ip_pool_service_range_remove()
-            }
             CliCommand::SystemMetric => Self::cli_system_metric(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
@@ -275,6 +268,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBfdEnable => Self::cli_networking_bfd_enable(),
             CliCommand::NetworkingBfdStatus => Self::cli_networking_bfd_status(),
             CliCommand::NetworkingBgpConfigList => Self::cli_networking_bgp_config_list(),
+            CliCommand::NetworkingBgpConfigUpdate => Self::cli_networking_bgp_config_update(),
             CliCommand::NetworkingBgpConfigCreate => Self::cli_networking_bgp_config_create(),
             CliCommand::NetworkingBgpConfigDelete => Self::cli_networking_bgp_config_delete(),
             CliCommand::NetworkingBgpAnnounceSetList => {
@@ -452,11 +446,11 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Start an OAuth 2.0 Device Authorization Grant")
-            .long_about(
-                "This endpoint is designed to be accessed from an *unauthenticated* API client. \
-                 It generates and records a `device_code` and `user_code` which must be verified \
-                 and confirmed prior to a token being granted.",
+            .about(
+                "Start an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to be \
+                 accessed from an *unauthenticated* API client. It generates and records a \
+                 `device_code` and `user_code` which must be verified and confirmed prior to a \
+                 token being granted.",
             )
     }
 
@@ -482,17 +476,17 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Confirm an OAuth 2.0 Device Authorization Grant")
-            .long_about(
-                "This endpoint is designed to be accessed by the user agent (browser), not the \
-                 client requesting the token. So we do not actually return the token here; it \
-                 will be returned in response to the poll on `/device/token`.\n\nSome special \
-                 logic applies when authenticating this request with an existing device token \
-                 instead of a console session: the requested TTL must not produce an expiration \
-                 time later than the authenticating token's expiration. If no TTL was specified \
-                 in the initial grant request, the expiration will be the lesser of the silo max \
-                 and the authenticating token's expiration time. To get the longest allowed \
-                 lifetime, omit the TTL and authenticate with a web console session.",
+            .about(
+                "Confirm an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to \
+                 be accessed by the user agent (browser), not the client requesting the token. So \
+                 we do not actually return the token here; it will be returned in response to the \
+                 poll on `/device/token`.\n\nSome special logic applies when authenticating this \
+                 request with an existing device token instead of a console session: the \
+                 requested TTL must not produce an expiration time later than the authenticating \
+                 token's expiration. If no TTL was specified in the initial grant request, the \
+                 expiration will be the lesser of the silo max and the authenticating token's \
+                 expiration time. To get the longest allowed lifetime, omit the TTL and \
+                 authenticate with a web console session.",
             )
     }
 
@@ -530,10 +524,9 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Request a device access token")
-            .long_about(
-                "This endpoint should be polled by the client until the user code is verified and \
-                 the grant is confirmed.",
+            .about(
+                "Request a device access token\n\nThis endpoint should be polled by the client \
+                 until the user code is verified and the grant is confirmed.",
             )
     }
 
@@ -755,10 +748,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the support bundle"),
             )
-            .about("Delete support bundle")
-            .long_about(
-                "May also be used to cancel a support bundle which is currently being collected, \
-                 or to remove metadata for a support bundle that has failed.",
+            .about(
+                "Delete support bundle\n\nMay also be used to cancel a support bundle which is \
+                 currently being collected, or to remove metadata for a support bundle that has \
+                 failed.",
             )
     }
 
@@ -1228,12 +1221,12 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List delivery attempts to alert receiver")
-            .long_about(
-                "Optional query parameters to this endpoint may be used to filter deliveries by \
-                 state. If none of the `failed`, `pending` or `delivered` query parameters are \
-                 present, all deliveries are returned. If one or more of these parameters are \
-                 provided, only those which are set to \"true\" are included in the response.",
+            .about(
+                "List delivery attempts to alert receiver\n\nOptional query parameters to this \
+                 endpoint may be used to filter deliveries by state. If none of the `failed`, \
+                 `pending` or `delivered` query parameters are present, all deliveries are \
+                 returned. If one or more of these parameters are provided, only those which are \
+                 set to \"true\" are included in the response.",
             )
     }
 
@@ -1256,23 +1249,22 @@ impl<T: CliConfig> Cli<T> {
                          the probe request succeeds.",
                     ),
             )
-            .about("Send liveness probe to alert receiver")
-            .long_about(
-                "This endpoint synchronously sends a liveness probe to the selected alert \
-                 receiver. The response message describes the outcome of the probe: either the \
-                 successful response (as appropriate), or indication of why the probe \
-                 failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. \
-                 Details relating to the status of the probe depend on the alert delivery \
-                 mechanism, and are included in the `AlertDeliveryAttempts` model. For example, \
-                 webhook receiver liveness probes include the HTTP status code returned by the \
-                 receiver endpoint.\n\nNote that the response status is `200 OK` as long as a \
-                 probe request was able to be sent to the receiver endpoint. If an HTTP-based \
-                 receiver, such as a webhook, responds to the another status code, including an \
-                 error, this will be indicated by the response body, *not* the status of the \
-                 response.\n\nThe `resend` query parameter can be used to request re-delivery of \
-                 failed events if the liveness probe succeeds. If it is set to true and the \
-                 liveness probe succeeds, any alerts for which delivery to this receiver has \
-                 failed will be queued for re-delivery.",
+            .about(
+                "Send liveness probe to alert receiver\n\nThis endpoint synchronously sends a \
+                 liveness probe to the selected alert receiver. The response message describes \
+                 the outcome of the probe: either the successful response (as appropriate), or \
+                 indication of why the probe failed.\n\nThe result of the probe is represented as \
+                 an `AlertDelivery` model. Details relating to the status of the probe depend on \
+                 the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` \
+                 model. For example, webhook receiver liveness probes include the HTTP status \
+                 code returned by the receiver endpoint.\n\nNote that the response status is `200 \
+                 OK` as long as a probe request was able to be sent to the receiver endpoint. If \
+                 an HTTP-based receiver, such as a webhook, responds to the another status code, \
+                 including an error, this will be indicated by the response body, *not* the \
+                 status of the response.\n\nThe `resend` query parameter can be used to request \
+                 re-delivery of failed events if the liveness probe succeeds. If it is set to \
+                 true and the liveness probe succeeds, any alerts for which delivery to this \
+                 receiver has failed will be queued for re-delivery.",
             )
     }
 
@@ -1689,11 +1681,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List certificates for external endpoints")
-            .long_about(
-                "Returns a list of TLS certificates used for the external API (for the current \
-                 Silo).  These are sorted by creation date, with the most recent certificates \
-                 appearing first.",
+            .about(
+                "List certificates for external endpoints\n\nReturns a list of TLS certificates \
+                 used for the external API (for the current Silo).  These are sorted by creation \
+                 date, with the most recent certificates appearing first.",
             )
     }
 
@@ -1751,10 +1742,9 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create system-wide x.509 certificate")
-            .long_about(
-                "This certificate is automatically used by the Oxide Control plane to serve \
-                 external connections.",
+            .about(
+                "Create system-wide x.509 certificate\n\nThis certificate is automatically used \
+                 by the Oxide Control plane to serve external connections.",
             )
     }
 
@@ -1767,8 +1757,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
-            .about("Fetch certificate")
-            .long_about("Returns the details of a specific certificate")
+            .about("Fetch certificate\n\nReturns the details of a specific certificate")
     }
 
     pub fn cli_certificate_delete() -> ::clap::Command {
@@ -1780,8 +1769,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
-            .about("Delete certificate")
-            .long_about("Permanently delete a certificate. This operation cannot be undone.")
+            .about(
+                "Delete certificate\n\nPermanently delete a certificate. This operation cannot be \
+                 undone.",
+            )
     }
 
     pub fn cli_disk_list() -> ::clap::Command {
@@ -1960,8 +1951,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Start importing blocks into disk")
-            .long_about("Start the process of importing blocks into a disk")
+            .about(
+                "Start importing blocks into disk\n\nStart the process of importing blocks into a \
+                 disk",
+            )
     }
 
     pub fn cli_disk_bulk_write_import_stop() -> ::clap::Command {
@@ -1980,8 +1973,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Stop importing blocks into disk")
-            .long_about("Stop the process of importing blocks into a disk")
+            .about(
+                "Stop importing blocks into disk\n\nStop the process of importing blocks into a \
+                 disk",
+            )
     }
 
     pub fn cli_disk_finalize_import() -> ::clap::Command {
@@ -2308,10 +2303,9 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create floating IP")
-            .long_about(
-                "A specific IP address can be reserved, or an IP can be auto-allocated from a \
-                 specific pool or the silo's default pool.",
+            .about(
+                "Create floating IP\n\nA specific IP address can be reserved, or an IP can be \
+                 auto-allocated from a specific pool or the silo's default pool.",
             )
     }
 
@@ -2447,8 +2441,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach floating IP")
-            .long_about("Attach floating IP to an instance or other resource.")
+            .about("Attach floating IP\n\nAttach floating IP to an instance or other resource.")
     }
 
     pub fn cli_floating_ip_detach() -> ::clap::Command {
@@ -2534,10 +2527,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List images")
-            .long_about(
-                "List images which are global or scoped to the specified project. The images are \
-                 returned sorted by creation date, with the most recent images appearing first.",
+            .about(
+                "List images\n\nList images which are global or scoped to the specified project. \
+                 The images are returned sorted by creation date, with the most recent images \
+                 appearing first.",
             )
     }
 
@@ -2590,8 +2583,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create image")
-            .long_about("Create a new image in a project.")
+            .about("Create image\n\nCreate a new image in a project.")
     }
 
     pub fn cli_image_view() -> ::clap::Command {
@@ -2610,8 +2602,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch image")
-            .long_about("Fetch the details for a specific image in a project.")
+            .about("Fetch image\n\nFetch the details for a specific image in a project.")
     }
 
     pub fn cli_image_delete() -> ::clap::Command {
@@ -2630,11 +2621,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete image")
-            .long_about(
-                "Permanently delete an image from a project. This operation cannot be undone. Any \
-                 instances in the project using the image will continue to run, however new \
-                 instances can not be created with this image.",
+            .about(
+                "Delete image\n\nPermanently delete an image from a project. This operation \
+                 cannot be undone. Any instances in the project using the image will continue to \
+                 run, however new instances can not be created with this image.",
             )
     }
 
@@ -2654,8 +2644,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Demote silo image")
-            .long_about("Demote silo image to be visible only to a specified project")
+            .about(
+                "Demote silo image\n\nDemote silo image to be visible only to a specified project",
+            )
     }
 
     pub fn cli_image_promote() -> ::clap::Command {
@@ -2674,8 +2665,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Promote project image")
-            .long_about("Promote project image to be visible to all projects in the silo")
+            .about(
+                "Promote project image\n\nPromote project image to be visible to all projects in \
+                 the silo",
+            )
     }
 
     pub fn cli_instance_list() -> ::clap::Command {
@@ -3282,10 +3275,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Detach and deallocate ephemeral IP from instance")
-            .long_about(
-                "When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query \
-                 parameter must be specified to identify which IP to detach.",
+            .about(
+                "Detach and deallocate ephemeral IP from instance\n\nWhen an instance has both \
+                 IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified \
+                 to identify which IP to detach.",
             )
     }
 
@@ -3398,14 +3391,14 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Join multicast group by name, IP address, or UUID")
-            .long_about(
-                "Groups can be referenced by name, IP address, or UUID. If the group doesn't \
-                 exist, it's implicitly created with an auto-allocated IP from a multicast pool \
-                 linked to the caller's silo. When referencing by UUID, the group must already \
-                 exist.\n\nSource IPs are optional for ASM addresses but required for SSM \
-                 addresses (232.0.0.0/8 for IPv4, ff3x::/32 for IPv6). Duplicate IPs in the \
-                 request are automatically deduplicated, with a maximum of 64 source IPs allowed.",
+            .about(
+                "Join multicast group by name, IP address, or UUID\n\nGroups can be referenced by \
+                 name, IP address, or UUID. If the group doesn't exist, it's implicitly created \
+                 with an auto-allocated IP from a multicast pool linked to the caller's silo. \
+                 When referencing by UUID, the group must already exist.\n\nSource IPs are \
+                 optional for ASM addresses but required for SSM addresses (232.0.0.0/8 for IPv4, \
+                 ff3x::/32 for IPv6). Duplicate IPs in the request are automatically \
+                 deduplicated, with a maximum of 64 source IPs allowed.",
             )
     }
 
@@ -3579,11 +3572,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List SSH public keys for instance")
-            .long_about(
-                "List SSH public keys injected via cloud-init during instance creation. Note that \
-                 this list is a snapshot in time and will not reflect updates made after the \
-                 instance is created.",
+            .about(
+                "List SSH public keys for instance\n\nList SSH public keys injected via \
+                 cloud-init during instance creation. Note that this list is a snapshot in time \
+                 and will not reflect updates made after the instance is created.",
             )
     }
 
@@ -4091,11 +4083,35 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_ip_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
                     .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pool-type")
+                    .long("pool-type")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolType::Unicast.to_string(),
+                            types::IpPoolType::Multicast.to_string(),
+                        ]),
+                        |s| types::IpPoolType::try_from(s).unwrap(),
+                    ))
+                    .required(false),
             )
             .arg(
                 ::clap::Arg::new("sort-by")
@@ -4191,8 +4207,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List access tokens")
-            .long_about("List device access tokens for the currently authenticated user.")
+            .about(
+                "List access tokens\n\nList device access tokens for the currently authenticated \
+                 user.",
+            )
     }
 
     pub fn cli_current_user_access_token_delete() -> ::clap::Command {
@@ -4204,8 +4222,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the token"),
             )
-            .about("Delete access token")
-            .long_about("Delete a device access token for the currently authenticated user.")
+            .about(
+                "Delete access token\n\nDelete a device access token for the currently \
+                 authenticated user.",
+            )
     }
 
     pub fn cli_current_user_groups() -> ::clap::Command {
@@ -4253,8 +4273,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List SSH public keys")
-            .long_about("Lists SSH public keys for the currently authenticated user.")
+            .about(
+                "List SSH public keys\n\nLists SSH public keys for the currently authenticated \
+                 user.",
+            )
     }
 
     pub fn cli_current_user_ssh_key_create() -> ::clap::Command {
@@ -4292,8 +4314,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create SSH public key")
-            .long_about("Create an SSH public key for the currently authenticated user.")
+            .about(
+                "Create SSH public key\n\nCreate an SSH public key for the currently \
+                 authenticated user.",
+            )
     }
 
     pub fn cli_current_user_ssh_key_view() -> ::clap::Command {
@@ -4305,8 +4329,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about("Fetch SSH public key")
-            .long_about("Fetch SSH public key associated with the currently authenticated user.")
+            .about(
+                "Fetch SSH public key\n\nFetch SSH public key associated with the currently \
+                 authenticated user.",
+            )
     }
 
     pub fn cli_current_user_ssh_key_delete() -> ::clap::Command {
@@ -4318,9 +4344,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about("Delete SSH public key")
-            .long_about(
-                "Delete an SSH public key associated with the currently authenticated user.",
+            .about(
+                "Delete SSH public key\n\nDelete an SSH public key associated with the currently \
+                 authenticated user.",
             )
     }
 
@@ -4384,9 +4410,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
-            .about("View metrics")
-            .long_about(
-                "View CPU, memory, or storage utilization metrics at the silo or project level.",
+            .about(
+                "View metrics\n\nView CPU, memory, or storage utilization metrics at the silo or \
+                 project level.",
             )
     }
 
@@ -4424,10 +4450,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name, ID, or IP address of the multicast group"),
             )
-            .about("Fetch multicast group")
-            .long_about(
-                "The group can be specified by name, UUID, or multicast IP address. (e.g., \
-                 \"224.1.2.3\" or \"ff38::1\").",
+            .about(
+                "Fetch multicast group\n\nThe group can be specified by name, UUID, or multicast \
+                 IP address. (e.g., \"224.1.2.3\" or \"ff38::1\").",
             )
     }
 
@@ -4458,8 +4483,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List members of multicast group")
-            .long_about("The group can be specified by name, UUID, or multicast IP address.")
+            .about(
+                "List members of multicast group\n\nThe group can be specified by name, UUID, or \
+                 multicast IP address.",
+            )
     }
 
     pub fn cli_instance_network_interface_list() -> ::clap::Command {
@@ -4692,18 +4719,16 @@ impl<T: CliConfig> Cli<T> {
                          `Name`",
                     ),
             )
-            .about("Delete network interface")
-            .long_about(
-                "Note that the primary interface for an instance cannot be deleted if there are \
-                 any secondary interfaces. A new primary interface must be designated first. The \
-                 primary interface can be deleted if there are no secondary interfaces.",
+            .about(
+                "Delete network interface\n\nNote that the primary interface for an instance \
+                 cannot be deleted if there are any secondary interfaces. A new primary interface \
+                 must be designated first. The primary interface can be deleted if there are no \
+                 secondary interfaces.",
             )
     }
 
     pub fn cli_ping() -> ::clap::Command {
-        ::clap::Command::new("")
-            .about("Ping API")
-            .long_about("Always responds with Ok if it responds at all.")
+        ::clap::Command::new("").about("Ping API\n\nAlways responds with Ok if it responds at all.")
     }
 
     pub fn cli_policy_view() -> ::clap::Command {
@@ -4959,8 +4984,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create snapshot")
-            .long_about("Creates a point-in-time snapshot from a disk.")
+            .about("Create snapshot\n\nCreates a point-in-time snapshot from a disk.")
     }
 
     pub fn cli_snapshot_view() -> ::clap::Command {
@@ -5077,19 +5101,18 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Required, inclusive"),
             )
-            .about("View audit log")
-            .long_about(
-                "A single item in the audit log represents both the beginning and end of the \
-                 logged operation (represented by `time_started` and `time_completed`) so that \
-                 clients do not have to find multiple entries and match them up by request ID to \
-                 get the full picture of an operation. Because timestamps may not be unique, \
-                 entries have also have a unique `id` that can be used to deduplicate items \
-                 fetched from overlapping time intervals.\n\nAudit log entries are designed to be \
-                 immutable: once you see an entry, fetching it again will never get you a \
-                 different result. The list is ordered by `time_completed`, not `time_started`. \
-                 If you fetch the audit log for a time range that is fully in the past, the \
-                 resulting list is guaranteed to be complete, i.e., fetching the same timespan \
-                 again later will always produce the same set of entries.",
+            .about(
+                "View audit log\n\nA single item in the audit log represents both the beginning \
+                 and end of the logged operation (represented by `time_started` and \
+                 `time_completed`) so that clients do not have to find multiple entries and match \
+                 them up by request ID to get the full picture of an operation. Because \
+                 timestamps may not be unique, entries have also have a unique `id` that can be \
+                 used to deduplicate items fetched from overlapping time intervals.\n\nAudit log \
+                 entries are designed to be immutable: once you see an entry, fetching it again \
+                 will never get you a different result. The list is ordered by `time_completed`, \
+                 not `time_started`. If you fetch the audit log for a time range that is fully in \
+                 the past, the resulting list is guaranteed to be complete, i.e., fetching the \
+                 same timespan again later will always produce the same set of entries.",
             )
     }
 
@@ -5314,10 +5337,9 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::RackMembershipVersion))
                     .required(false),
             )
-            .about("Fetch rack cluster membership status")
-            .long_about(
-                "Returns the status for the most recent change, or a specific version if one is \
-                 specified.",
+            .about(
+                "Fetch rack cluster membership status\n\nReturns the status for the most recent \
+                 change, or a specific version if one is specified.",
             )
     }
 
@@ -5330,13 +5352,12 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the rack"),
             )
-            .about("Abort the latest rack membership change")
-            .long_about(
-                "This operation is synchronous. Upon returning from the API call, a success \
-                 response indicates that the prior membership change was aborted. An error \
-                 response indicates that there is no active membership change in progress \
-                 (previous changes have completed) or that the current membership change could \
-                 not be aborted.",
+            .about(
+                "Abort the latest rack membership change\n\nThis operation is synchronous. Upon \
+                 returning from the API call, a success response indicates that the prior \
+                 membership change was aborted. An error response indicates that there is no \
+                 active membership change in progress (previous changes have completed) or that \
+                 the current membership change could not be aborted.",
             )
     }
 
@@ -5872,8 +5893,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List identity providers for silo")
-            .long_about("List identity providers for silo by silo name or ID.")
+            .about(
+                "List identity providers for silo\n\nList identity providers for silo by silo \
+                 name or ID.",
+            )
     }
 
     pub fn cli_local_idp_user_create() -> ::clap::Command {
@@ -5906,11 +5929,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create user")
-            .long_about(
-                "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, \
-                 Silo users are just-in-time (JIT) provisioned when a user first logs in using an \
-                 external Identity Provider.",
+            .about(
+                "Create user\n\nUsers can only be created in Silos with `provision_type` == \
+                 `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user \
+                 first logs in using an external Identity Provider.",
             )
     }
 
@@ -5963,9 +5985,9 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set or invalidate user's password")
-            .long_about(
-                "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
+            .about(
+                "Set or invalidate user's password\n\nPasswords can only be updated for users in \
+                 Silos with identity mode `LocalOnly`.",
             )
     }
 
@@ -6075,11 +6097,47 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_system_ip_pool_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("assignment")
+                    .long("assignment")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolAssignment::Silos.to_string(),
+                            types::IpPoolAssignment::SystemServices.to_string(),
+                        ]),
+                        |s| types::IpPoolAssignment::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
                     .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pool-type")
+                    .long("pool-type")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolType::Unicast.to_string(),
+                            types::IpPoolType::Multicast.to_string(),
+                        ]),
+                        |s| types::IpPoolType::try_from(s).unwrap(),
+                    ))
+                    .required(false),
             )
             .arg(
                 ::clap::Arg::new("sort-by")
@@ -6099,6 +6157,19 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_system_ip_pool_create() -> ::clap::Command {
         ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("assignment")
+                    .long("assignment")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolAssignment::Silos.to_string(),
+                            types::IpPoolAssignment::SystemServices.to_string(),
+                        ]),
+                        |s| types::IpPoolAssignment::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("What this pool is assigned to (defaults to Silos)."),
+            )
             .arg(
                 ::clap::Arg::new("description")
                     .long("description")
@@ -6216,6 +6287,44 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete IP pool")
     }
 
+    pub fn cli_system_ip_pool_assign() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("assignment")
+                    .long("assignment")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolAssignment::Silos.to_string(),
+                            types::IpPoolAssignment::SystemServices.to_string(),
+                        ]),
+                        |s| types::IpPoolAssignment::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Assign IP pool")
+    }
+
     pub fn cli_system_ip_pool_range_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -6232,8 +6341,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("List ranges for IP pool")
-            .long_about("Ranges are ordered by their first address.")
+            .about("List ranges for IP pool\n\nRanges are ordered by their first address.")
     }
 
     pub fn cli_system_ip_pool_range_add() -> ::clap::Command {
@@ -6259,13 +6367,12 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add range to IP pool")
-            .long_about(
-                "For multicast pools, all ranges must be either Any-Source Multicast (ASM) or \
-                 Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the \
-                 same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 \
-                 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 \
-                 addresses with flag field = 3",
+            .about(
+                "Add range to IP pool\n\nFor multicast pools, all ranges must be either \
+                 Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. \
+                 Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 \
+                 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 \
+                 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
             )
     }
 
@@ -6367,11 +6474,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Link IP pool to silo")
-            .long_about(
-                "Users in linked silos can allocate external IPs from this pool for their \
-                 instances. A silo can have at most one default pool. IPs are allocated from the \
-                 default pool when users ask for one without specifying a pool.",
+            .about(
+                "Link IP pool to silo\n\nUsers in linked silos can allocate external IPs from \
+                 this pool for their instances. A silo can have at most one default pool. IPs are \
+                 allocated from the default pool when users ask for one without specifying a pool.",
             )
     }
 
@@ -6418,12 +6524,11 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Make IP pool default for silo")
-            .long_about(
-                "When a user asks for an IP (e.g., at instance create time) without specifying a \
-                 pool, the IP comes from the default pool if a default is configured. When a pool \
-                 is made the default for a silo, any existing default will remain linked to the \
-                 silo, but will no longer be the default.",
+            .about(
+                "Make IP pool default for silo\n\nWhen a user asks for an IP (e.g., at instance \
+                 create time) without specifying a pool, the IP comes from the default pool if a \
+                 default is configured. When a pool is made the default for a silo, any existing \
+                 default will remain linked to the silo, but will no longer be the default.",
             )
     }
 
@@ -6441,8 +6546,10 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Unlink IP pool from silo")
-            .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
+            .about(
+                "Unlink IP pool from silo\n\nWill fail if there are any outstanding IPs allocated \
+                 in the silo.",
+            )
     }
 
     pub fn cli_system_ip_pool_utilization_view() -> ::clap::Command {
@@ -6455,62 +6562,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the IP pool"),
             )
             .about("Fetch IP pool utilization")
-    }
-
-    pub fn cli_system_ip_pool_service_view() -> ::clap::Command {
-        ::clap::Command::new("").about("Fetch Oxide service IP pool")
-    }
-
-    pub fn cli_system_ip_pool_service_range_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List IP ranges for the Oxide service pool")
-            .long_about("Ranges are ordered by their first address.")
-    }
-
-    pub fn cli_system_ip_pool_service_range_add() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Add IP range to Oxide service pool")
-            .long_about("IPv6 ranges are not allowed yet.")
-    }
-
-    pub fn cli_system_ip_pool_service_range_remove() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Remove IP range from Oxide service pool")
     }
 
     pub fn cli_system_metric() -> ::clap::Command {
@@ -6573,9 +6624,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
-            .about("View metrics")
-            .long_about(
-                "View CPU, memory, or storage utilization metrics at the fleet or silo level.",
+            .about(
+                "View metrics\n\nView CPU, memory, or storage utilization metrics at the fleet or \
+                 silo level.",
             )
     }
 
@@ -6876,6 +6927,62 @@ impl<T: CliConfig> Cli<T> {
             .about("List BGP configurations")
     }
 
+    pub fn cli_networking_bgp_config_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("bgp-announce-set-id")
+                    .long("bgp-announce-set-id")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Update the BGP announce set associated with this configuration."),
+            )
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("max-paths")
+                    .long("max-paths")
+                    .value_parser(::clap::value_parser!(types::MaxPathConfig))
+                    .required(false)
+                    .help("Update the maximum number of equal-cost paths."),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting BGP config."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about(
+                "Update the mutable fields of an existing BGP configuration\n\nThe asn field is \
+                 not updatable; to change the autonomous system number, create a new BGP \
+                 configuration object.",
+            )
+    }
+
     pub fn cli_networking_bgp_config_create() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -7009,10 +7116,9 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update BGP announce set")
-            .long_about(
-                "If the announce set exists, this endpoint replaces the existing announce set \
-                 with the one specified.",
+            .about(
+                "Update BGP announce set\n\nIf the announce set exists, this endpoint replaces \
+                 the existing announce set with the one specified.",
             )
     }
 
@@ -7408,8 +7514,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("List SCIM tokens")
-            .long_about("Specify the silo by name or ID using the `silo` query parameter.")
+            .about(
+                "List SCIM tokens\n\nSpecify the silo by name or ID using the `silo` query \
+                 parameter.",
+            )
     }
 
     pub fn cli_scim_token_create() -> ::clap::Command {
@@ -7421,11 +7529,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Create SCIM token")
-            .long_about(
-                "Specify the silo by name or ID using the `silo` query parameter. Be sure to save \
-                 the bearer token in the response. It will not be retrievable later through the \
-                 token view and list endpoints.",
+            .about(
+                "Create SCIM token\n\nSpecify the silo by name or ID using the `silo` query \
+                 parameter. Be sure to save the bearer token in the response. It will not be \
+                 retrievable later through the token view and list endpoints.",
             )
     }
 
@@ -7444,8 +7551,10 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true),
             )
-            .about("Fetch SCIM token")
-            .long_about("Specify the silo by name or ID using the `silo` query parameter.")
+            .about(
+                "Fetch SCIM token\n\nSpecify the silo by name or ID using the `silo` query \
+                 parameter.",
+            )
     }
 
     pub fn cli_scim_token_delete() -> ::clap::Command {
@@ -7463,8 +7572,10 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true),
             )
-            .about("Delete SCIM token")
-            .long_about("Specify the silo by name or ID using the `silo` query parameter.")
+            .about(
+                "Delete SCIM token\n\nSpecify the silo by name or ID using the `silo` query \
+                 parameter.",
+            )
     }
 
     pub fn cli_system_quotas_list() -> ::clap::Command {
@@ -7512,8 +7623,9 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List silos")
-            .long_about("Lists silos that are discoverable based on the current permissions.")
+            .about(
+                "List silos\n\nLists silos that are discoverable based on the current permissions.",
+            )
     }
 
     pub fn cli_silo_create() -> ::clap::Command {
@@ -7589,8 +7701,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch silo")
-            .long_about("Fetch silo by name or ID.")
+            .about("Fetch silo\n\nFetch silo by name or ID.")
     }
 
     pub fn cli_silo_delete() -> ::clap::Command {
@@ -7602,8 +7713,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Delete silo")
-            .long_about("Delete a silo by name or ID.")
+            .about("Delete silo\n\nDelete a silo by name or ID.")
     }
 
     pub fn cli_silo_ip_pool_list() -> ::clap::Command {
@@ -7635,11 +7745,10 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List IP pools linked to silo")
-            .long_about(
-                "Linked IP pools are available to users in the specified silo. A silo can have at \
-                 most one default pool. IPs are allocated from the default pool when users ask \
-                 for one without specifying a pool.",
+            .about(
+                "List IP pools linked to silo\n\nLinked IP pools are available to users in the \
+                 specified silo. A silo can have at most one default pool. IPs are allocated from \
+                 the default pool when users ask for one without specifying a pool.",
             )
     }
 
@@ -7739,8 +7848,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update resource quotas for silo")
-            .long_about("If a quota value is not specified, it will remain unchanged.")
+            .about(
+                "Update resource quotas for silo\n\nIf a quota value is not specified, it will \
+                 remain unchanged.",
+            )
     }
 
     pub fn cli_silo_subnet_pool_list() -> ::clap::Command {
@@ -8188,8 +8299,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Run timeseries query")
-            .long_about("Queries are written in OxQL.")
+            .about("Run timeseries query\n\nQueries are written in OxQL.")
     }
 
     pub fn cli_system_timeseries_schema_list() -> ::clap::Command {
@@ -8229,21 +8339,20 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Clear system recovery status")
-            .long_about(
-                "Instructs the system that a system recovery operation (\"mupdate\") was \
-                 completed using the software in the specified release.\n\nThe system recovery \
-                 operation is used to bypass the control plane to deploy known-working software \
-                 when the control plane itself is not functioning or otherwise unable to update \
-                 itself.  When the control plane detects this, it stops making any changes to \
-                 deployed software to avoid reverting the recovery itself.  This operation puts \
-                 the control plane back in charge of determining what software should be \
-                 deployed, instructing it that the specified software (which is also what's \
-                 currently running) is what's supposed to be deployed.\n\nIf the provided version \
-                 does not match what's currently running, the control plane will continue to \
-                 avoid changing deployed software until this operation is invoked with the \
-                 correct version.\n\nThis endpoint should only be called at the direction of \
-                 Oxide support.",
+            .about(
+                "Clear system recovery status\n\nInstructs the system that a system recovery \
+                 operation (\"mupdate\") was completed using the software in the specified \
+                 release.\n\nThe system recovery operation is used to bypass the control plane to \
+                 deploy known-working software when the control plane itself is not functioning \
+                 or otherwise unable to update itself.  When the control plane detects this, it \
+                 stops making any changes to deployed software to avoid reverting the recovery \
+                 itself.  This operation puts the control plane back in charge of determining \
+                 what software should be deployed, instructing it that the specified software \
+                 (which is also what's currently running) is what's supposed to be \
+                 deployed.\n\nIf the provided version does not match what's currently running, \
+                 the control plane will continue to avoid changing deployed software until this \
+                 operation is invoked with the correct version.\n\nThis endpoint should only be \
+                 called at the direction of Oxide support.",
             )
     }
 
@@ -8268,10 +8377,9 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List all TUF repositories")
-            .long_about(
-                "Returns a paginated list of all TUF repositories ordered by system version \
-                 (newest first by default).",
+            .about(
+                "List all TUF repositories\n\nReturns a paginated list of all TUF repositories \
+                 ordered by system version (newest first by default).",
             )
     }
 
@@ -8284,8 +8392,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The name of the uploaded file."),
             )
-            .about("Upload system release repository")
-            .long_about("System release repositories are verified by the updates trust store.")
+            .about(
+                "Upload system release repository\n\nSystem release repositories are verified by \
+                 the updates trust store.",
+            )
     }
 
     pub fn cli_system_update_repository_view() -> ::clap::Command {
@@ -8303,12 +8413,10 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_system_update_status() -> ::clap::Command {
-        ::clap::Command::new("")
-            .about("Fetch system update status")
-            .long_about(
-                "Returns information about the current target release and the progress of system \
-                 software updates.",
-            )
+        ::clap::Command::new("").about(
+            "Fetch system update status\n\nReturns information about the current target release \
+             and the progress of system software updates.",
+        )
     }
 
     pub fn cli_target_release_update() -> ::clap::Command {
@@ -8336,12 +8444,11 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set target release")
-            .long_about(
-                "Set the current target release of the rack's system software. The rack \
-                 reconfigurator will treat the software specified here as a goal state for the \
-                 rack's software, and attempt to asynchronously update to that release. Use the \
-                 update status endpoint to view the current target release.",
+            .about(
+                "Set target release\n\nSet the current target release of the rack's system \
+                 software. The rack reconfigurator will treat the software specified here as a \
+                 goal state for the rack's software, and attempt to asynchronously update to that \
+                 release. Use the update status endpoint to view the current target release.",
             )
     }
 
@@ -8365,12 +8472,11 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List root roles in the updates trust store")
-            .long_about(
-                "A root role is a JSON document describing the cryptographic keys that are \
-                 trusted to sign system release repositories, as described by The Update \
-                 Framework. Uploading a repository requires its metadata to be signed by keys \
-                 trusted by the trust store.",
+            .about(
+                "List root roles in the updates trust store\n\nA root role is a JSON document \
+                 describing the cryptographic keys that are trusted to sign system release \
+                 repositories, as described by The Update Framework. Uploading a repository \
+                 requires its metadata to be signed by keys trusted by the trust store.",
             )
     }
 
@@ -8414,10 +8520,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the trust root"),
             )
-            .about("Delete trusted root role")
-            .long_about(
-                "Note that this method does not currently check for any uploaded system release \
-                 repositories that would become untrusted after deleting the root role.",
+            .about(
+                "Delete trusted root role\n\nNote that this method does not currently check for \
+                 any uploaded system release repositories that would become untrusted after \
+                 deleting the root role.",
             )
     }
 
@@ -8571,11 +8677,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Run project-scoped timeseries query")
-            .long_about(
-                "Queries are written in OxQL. Project must be specified by name or ID in URL \
-                 query parameter. The OxQL query will only return timeseries data from the \
-                 specified project.",
+            .about(
+                "Run project-scoped timeseries query\n\nQueries are written in OxQL. Project must \
+                 be specified by name or ID in URL query parameter. The OxQL query will only \
+                 return timeseries data from the specified project.",
             )
     }
 
@@ -8659,10 +8764,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the user"),
             )
-            .about("Log user out")
-            .long_about(
-                "Silo admins can use this endpoint to log the specified user out by deleting all \
-                 of their tokens AND sessions. This cannot be undone.",
+            .about(
+                "Log user out\n\nSilo admins can use this endpoint to log the specified user out \
+                 by deleting all of their tokens AND sessions. This cannot be undone.",
             )
     }
 
@@ -8753,17 +8857,17 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Replace firewall rules")
-            .long_about(
-                "The maximum number of rules per VPC is 1024.\n\nTargets are used to specify the \
-                 set of instances to which a firewall rule applies. You can target instances \
-                 directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which will \
-                 apply the rule to traffic going to all matching instances. Targets are additive: \
-                 the rule applies to instances matching ANY target. The maximum number of targets \
-                 is 256.\n\nFilters reduce the scope of a firewall rule. Without filters, the \
-                 rule applies to all packets to the targets (or from the targets, if it's an \
-                 outbound rule). With multiple filters, the rule applies only to packets matching \
-                 ALL filters. The maximum number of each type of filter is 256.",
+            .about(
+                "Replace firewall rules\n\nThe maximum number of rules per VPC is \
+                 1024.\n\nTargets are used to specify the set of instances to which a firewall \
+                 rule applies. You can target instances directly by name, or specify a VPC, VPC \
+                 subnet, IP, or IP subnet, which will apply the rule to traffic going to all \
+                 matching instances. Targets are additive: the rule applies to instances matching \
+                 ANY target. The maximum number of targets is 256.\n\nFilters reduce the scope of \
+                 a firewall rule. Without filters, the rule applies to all packets to the targets \
+                 (or from the targets, if it's an outbound rule). With multiple filters, the rule \
+                 applies only to packets matching ALL filters. The maximum number of each type of \
+                 filter is 256.",
             )
     }
 
@@ -8814,8 +8918,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
-            .about("List routes")
-            .long_about("List the routes associated with a router in a particular VPC.")
+            .about("List routes\n\nList the routes associated with a router in a particular VPC.")
     }
 
     pub fn cli_vpc_router_route_create() -> ::clap::Command {
@@ -9757,11 +9860,10 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update webhook receiver")
-            .long_about(
-                "Note that receiver secrets are NOT added or removed using this endpoint. \
-                 Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add \
-                 and remove secrets.",
+            .about(
+                "Update webhook receiver\n\nNote that receiver secrets are NOT added or removed \
+                 using this endpoint. Instead, use the \
+                 `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.",
             )
     }
 
@@ -10176,6 +10278,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemIpPoolView => self.execute_system_ip_pool_view(matches).await,
             CliCommand::SystemIpPoolUpdate => self.execute_system_ip_pool_update(matches).await,
             CliCommand::SystemIpPoolDelete => self.execute_system_ip_pool_delete(matches).await,
+            CliCommand::SystemIpPoolAssign => self.execute_system_ip_pool_assign(matches).await,
             CliCommand::SystemIpPoolRangeList => {
                 self.execute_system_ip_pool_range_list(matches).await
             }
@@ -10199,20 +10302,6 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemIpPoolUtilizationView => {
                 self.execute_system_ip_pool_utilization_view(matches).await
-            }
-            CliCommand::SystemIpPoolServiceView => {
-                self.execute_system_ip_pool_service_view(matches).await
-            }
-            CliCommand::SystemIpPoolServiceRangeList => {
-                self.execute_system_ip_pool_service_range_list(matches)
-                    .await
-            }
-            CliCommand::SystemIpPoolServiceRangeAdd => {
-                self.execute_system_ip_pool_service_range_add(matches).await
-            }
-            CliCommand::SystemIpPoolServiceRangeRemove => {
-                self.execute_system_ip_pool_service_range_remove(matches)
-                    .await
             }
             CliCommand::SystemMetric => self.execute_system_metric(matches).await,
             CliCommand::NetworkingAddressLotList => {
@@ -10242,6 +10331,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBfdStatus => self.execute_networking_bfd_status(matches).await,
             CliCommand::NetworkingBgpConfigList => {
                 self.execute_networking_bgp_config_list(matches).await
+            }
+            CliCommand::NetworkingBgpConfigUpdate => {
+                self.execute_networking_bgp_config_update(matches).await
             }
             CliCommand::NetworkingBgpConfigCreate => {
                 self.execute_networking_bgp_config_create(matches).await
@@ -14523,8 +14615,16 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_list();
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.ip_version(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
+            request = request.pool_type(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
@@ -16932,8 +17032,20 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_ip_pool_list();
+        if let Some(value) = matches.get_one::<types::IpPoolAssignment>("assignment") {
+            request = request.assignment(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.ip_version(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
+            request = request.pool_type(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
@@ -16971,6 +17083,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_ip_pool_create();
+        if let Some(value) = matches.get_one::<types::IpPoolAssignment>("assignment") {
+            request = request.body_map(|body| body.assignment(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -17089,6 +17205,42 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_ip_pool_assign(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_ip_pool_assign();
+        if let Some(value) = matches.get_one::<types::IpPoolAssignment>("assignment") {
+            request = request.body_map(|body| body.assignment(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolAssignParam>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_system_ip_pool_assign(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -17369,118 +17521,6 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_view(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_view();
-        self.config
-            .execute_system_ip_pool_service_view(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_range_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_range_list();
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.config
-            .execute_system_ip_pool_service_range_list(matches, &mut request)?;
-        self.config.list_start::<types::IpPoolRangeResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::IpPoolRangeResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_range_add(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_range_add();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_system_ip_pool_service_range_add(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_system_ip_pool_service_range_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.system_ip_pool_service_range_remove();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value)
-                .with_context(|| format!("failed to read {}", value.display()))?;
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
-                .with_context(|| format!("failed to parse {}", value.display()))?;
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_system_ip_pool_service_range_remove(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -17911,6 +17951,54 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_config_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_bgp_config_update();
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-announce-set-id") {
+            request = request.body_map(|body| body.bgp_announce_set_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::MaxPathConfig>("max-paths") {
+            request = request.body_map(|body| body.max_paths(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BgpConfigUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_bgp_config_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -22961,6 +23049,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_ip_pool_assign(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemIpPoolAssign,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_system_ip_pool_range_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -23021,38 +23117,6 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::SystemIpPoolUtilizationView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_view(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_range_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceRangeList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_range_add(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceRangeAdd,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_system_ip_pool_service_range_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::SystemIpPoolServiceRangeRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -23149,6 +23213,14 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_config_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingBgpConfigUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -24177,6 +24249,7 @@ pub enum CliCommand {
     SystemIpPoolView,
     SystemIpPoolUpdate,
     SystemIpPoolDelete,
+    SystemIpPoolAssign,
     SystemIpPoolRangeList,
     SystemIpPoolRangeAdd,
     SystemIpPoolRangeRemove,
@@ -24185,10 +24258,6 @@ pub enum CliCommand {
     SystemIpPoolSiloUpdate,
     SystemIpPoolSiloUnlink,
     SystemIpPoolUtilizationView,
-    SystemIpPoolServiceView,
-    SystemIpPoolServiceRangeList,
-    SystemIpPoolServiceRangeAdd,
-    SystemIpPoolServiceRangeRemove,
     SystemMetric,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
@@ -24201,6 +24270,7 @@ pub enum CliCommand {
     NetworkingBfdEnable,
     NetworkingBfdStatus,
     NetworkingBgpConfigList,
+    NetworkingBgpConfigUpdate,
     NetworkingBgpConfigCreate,
     NetworkingBgpConfigDelete,
     NetworkingBgpAnnounceSetList,
@@ -24499,6 +24569,7 @@ impl CliCommand {
             CliCommand::SystemIpPoolView,
             CliCommand::SystemIpPoolUpdate,
             CliCommand::SystemIpPoolDelete,
+            CliCommand::SystemIpPoolAssign,
             CliCommand::SystemIpPoolRangeList,
             CliCommand::SystemIpPoolRangeAdd,
             CliCommand::SystemIpPoolRangeRemove,
@@ -24507,10 +24578,6 @@ impl CliCommand {
             CliCommand::SystemIpPoolSiloUpdate,
             CliCommand::SystemIpPoolSiloUnlink,
             CliCommand::SystemIpPoolUtilizationView,
-            CliCommand::SystemIpPoolServiceView,
-            CliCommand::SystemIpPoolServiceRangeList,
-            CliCommand::SystemIpPoolServiceRangeAdd,
-            CliCommand::SystemIpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
@@ -24523,6 +24590,7 @@ impl CliCommand {
             CliCommand::NetworkingBfdEnable,
             CliCommand::NetworkingBfdStatus,
             CliCommand::NetworkingBgpConfigList,
+            CliCommand::NetworkingBgpConfigUpdate,
             CliCommand::NetworkingBgpConfigCreate,
             CliCommand::NetworkingBgpConfigDelete,
             CliCommand::NetworkingBgpAnnounceSetList,
@@ -24840,6 +24908,7 @@ impl CliCommand {
             CliCommand::SystemIpPoolView => "system_ip_pool_view",
             CliCommand::SystemIpPoolUpdate => "system_ip_pool_update",
             CliCommand::SystemIpPoolDelete => "system_ip_pool_delete",
+            CliCommand::SystemIpPoolAssign => "system_ip_pool_assign",
             CliCommand::SystemIpPoolRangeList => "system_ip_pool_range_list",
             CliCommand::SystemIpPoolRangeAdd => "system_ip_pool_range_add",
             CliCommand::SystemIpPoolRangeRemove => "system_ip_pool_range_remove",
@@ -24848,10 +24917,6 @@ impl CliCommand {
             CliCommand::SystemIpPoolSiloUpdate => "system_ip_pool_silo_update",
             CliCommand::SystemIpPoolSiloUnlink => "system_ip_pool_silo_unlink",
             CliCommand::SystemIpPoolUtilizationView => "system_ip_pool_utilization_view",
-            CliCommand::SystemIpPoolServiceView => "system_ip_pool_service_view",
-            CliCommand::SystemIpPoolServiceRangeList => "system_ip_pool_service_range_list",
-            CliCommand::SystemIpPoolServiceRangeAdd => "system_ip_pool_service_range_add",
-            CliCommand::SystemIpPoolServiceRangeRemove => "system_ip_pool_service_range_remove",
             CliCommand::SystemMetric => "system_metric",
             CliCommand::NetworkingAddressLotList => "networking_address_lot_list",
             CliCommand::NetworkingAddressLotCreate => "networking_address_lot_create",
@@ -24864,6 +24929,7 @@ impl CliCommand {
             CliCommand::NetworkingBfdEnable => "networking_bfd_enable",
             CliCommand::NetworkingBfdStatus => "networking_bfd_status",
             CliCommand::NetworkingBgpConfigList => "networking_bgp_config_list",
+            CliCommand::NetworkingBgpConfigUpdate => "networking_bgp_config_update",
             CliCommand::NetworkingBgpConfigCreate => "networking_bgp_config_create",
             CliCommand::NetworkingBgpConfigDelete => "networking_bgp_config_delete",
             CliCommand::NetworkingBgpAnnounceSetList => "networking_bgp_announce_set_list",

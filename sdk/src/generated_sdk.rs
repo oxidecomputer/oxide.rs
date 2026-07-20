@@ -4405,6 +4405,106 @@ pub mod types {
         }
     }
 
+    /// Parameters for updating a BGP configuration
+    ///
+    /// If a value is not specified, it will remain unchanged.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for updating a BGP configuration\n\nIf a
+    /// value is not specified, it will remain unchanged.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "bgp_announce_set_id": {
+    ///      "description": "Update the BGP announce set associated with this
+    /// configuration.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "max_paths": {
+    ///      "description": "Update the maximum number of equal-cost paths.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/MaxPathConfig"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct BgpConfigUpdate {
+        /// Update the BGP announce set associated with this configuration.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub bgp_announce_set_id: ::std::option::Option<NameOrId>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        /// Update the maximum number of equal-cost paths.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_paths: ::std::option::Option<MaxPathConfig>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::default::Default for BgpConfigUpdate {
+        fn default() -> Self {
+            Self {
+                bgp_announce_set_id: Default::default(),
+                description: Default::default(),
+                max_paths: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    impl BgpConfigUpdate {
+        pub fn builder() -> builder::BgpConfigUpdate {
+            Default::default()
+        }
+    }
+
     /// Route exported to a peer.
     ///
     /// <details><summary>JSON schema</summary>
@@ -17159,16 +17259,16 @@ pub mod types {
         }
     }
 
-    /// A collection of IP ranges. If a pool is linked to a silo, IP addresses
-    /// from the pool can be allocated within that silo.
+    /// A collection of IP ranges.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A collection of IP ranges. If a pool is linked to a silo, IP addresses from the pool can be allocated within that silo.",
+    ///  "description": "A collection of IP ranges.",
     ///  "type": "object",
     ///  "required": [
+    ///    "assignment",
     ///    "description",
     ///    "id",
     ///    "ip_version",
@@ -17178,6 +17278,14 @@ pub mod types {
     ///    "time_modified"
     ///  ],
     ///  "properties": {
+    ///    "assignment": {
+    ///      "description": "What this pool is currently assigned to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpPoolAssignment"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
@@ -17231,6 +17339,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPool {
+        /// What this pool is currently assigned to.
+        pub assignment: IpPoolAssignment,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Unique, immutable, system-controlled identifier for each resource
@@ -17250,6 +17360,132 @@ pub mod types {
     impl IpPool {
         pub fn builder() -> builder::IpPool {
             Default::default()
+        }
+    }
+
+    /// Body parameters for reassigning an IP pool.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Body parameters for reassigning an IP pool.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "assignment"
+    ///  ],
+    ///  "properties": {
+    ///    "assignment": {
+    ///      "$ref": "#/components/schemas/IpPoolAssignment"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct IpPoolAssignParam {
+        pub assignment: IpPoolAssignment,
+    }
+
+    impl IpPoolAssignParam {
+        pub fn builder() -> builder::IpPoolAssignParam {
+            Default::default()
+        }
+    }
+
+    /// Assignment of an IP pool to resources and services.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Assignment of an IP pool to resources and services.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Pool is available to be linked to customer silos.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "silos"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Pool is reserved for Oxide-operated rack services
+    /// (NTP, DNS, etc.).",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "system_services"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum IpPoolAssignment {
+        /// Pool is available to be linked to customer silos.
+        #[serde(rename = "silos")]
+        Silos,
+        /// Pool is reserved for Oxide-operated rack services (NTP, DNS, etc.).
+        #[serde(rename = "system_services")]
+        SystemServices,
+    }
+
+    impl ::std::fmt::Display for IpPoolAssignment {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Silos => f.write_str("silos"),
+                Self::SystemServices => f.write_str("system_services"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for IpPoolAssignment {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "silos" => Ok(Self::Silos),
+                "system_services" => Ok(Self::SystemServices),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for IpPoolAssignment {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for IpPoolAssignment {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for IpPoolAssignment {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -17279,6 +17515,16 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
+    ///    "assignment": {
+    ///      "description": "What this pool is assigned to (defaults to
+    /// Silos).",
+    ///      "default": "silos",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpPoolAssignment"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -17312,6 +17558,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolCreate {
+        /// What this pool is assigned to (defaults to Silos).
+        #[serde(default = "defaults::ip_pool_create_assignment")]
+        pub assignment: IpPoolAssignment,
         pub description: ::std::string::String,
         /// The IP version of the pool.
         ///
@@ -40607,6 +40856,102 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BgpConfigUpdate {
+            bgp_announce_set_id: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            max_paths: ::std::result::Result<
+                ::std::option::Option<super::MaxPathConfig>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for BgpConfigUpdate {
+            fn default() -> Self {
+                Self {
+                    bgp_announce_set_id: Ok(Default::default()),
+                    description: Ok(Default::default()),
+                    max_paths: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl BgpConfigUpdate {
+            pub fn bgp_announce_set_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.bgp_announce_set_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for bgp_announce_set_id: {e}")
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn max_paths<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::MaxPathConfig>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_paths = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max_paths: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<BgpConfigUpdate> for super::BgpConfigUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BgpConfigUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bgp_announce_set_id: value.bgp_announce_set_id?,
+                    description: value.description?,
+                    max_paths: value.max_paths?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::BgpConfigUpdate> for BgpConfigUpdate {
+            fn from(value: super::BgpConfigUpdate) -> Self {
+                Self {
+                    bgp_announce_set_id: Ok(value.bgp_announce_set_id),
+                    description: Ok(value.description),
+                    max_paths: Ok(value.max_paths),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BgpExported {
             peer_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             prefix: ::std::result::Result<super::IpNet, ::std::string::String>,
@@ -49795,6 +50140,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPool {
+            assignment: ::std::result::Result<super::IpPoolAssignment, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
@@ -49813,6 +50159,7 @@ pub mod types {
         impl ::std::default::Default for IpPool {
             fn default() -> Self {
                 Self {
+                    assignment: Err("no value supplied for assignment".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     ip_version: Err("no value supplied for ip_version".to_string()),
@@ -49825,6 +50172,16 @@ pub mod types {
         }
 
         impl IpPool {
+            pub fn assignment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolAssignment>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.assignment = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for assignment: {e}"));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -49903,6 +50260,7 @@ pub mod types {
                 value: IpPool,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    assignment: value.assignment?,
                     description: value.description?,
                     id: value.id?,
                     ip_version: value.ip_version?,
@@ -49917,6 +50275,7 @@ pub mod types {
         impl ::std::convert::From<super::IpPool> for IpPool {
             fn from(value: super::IpPool) -> Self {
                 Self {
+                    assignment: Ok(value.assignment),
                     description: Ok(value.description),
                     id: Ok(value.id),
                     ip_version: Ok(value.ip_version),
@@ -49929,7 +50288,53 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct IpPoolAssignParam {
+            assignment: ::std::result::Result<super::IpPoolAssignment, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for IpPoolAssignParam {
+            fn default() -> Self {
+                Self {
+                    assignment: Err("no value supplied for assignment".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolAssignParam {
+            pub fn assignment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolAssignment>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.assignment = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for assignment: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<IpPoolAssignParam> for super::IpPoolAssignParam {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: IpPoolAssignParam,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    assignment: value.assignment?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::IpPoolAssignParam> for IpPoolAssignParam {
+            fn from(value: super::IpPoolAssignParam) -> Self {
+                Self {
+                    assignment: Ok(value.assignment),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct IpPoolCreate {
+            assignment: ::std::result::Result<super::IpPoolAssignment, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
@@ -49939,6 +50344,7 @@ pub mod types {
         impl ::std::default::Default for IpPoolCreate {
             fn default() -> Self {
                 Self {
+                    assignment: Ok(super::defaults::ip_pool_create_assignment()),
                     description: Err("no value supplied for description".to_string()),
                     ip_version: Ok(super::defaults::ip_pool_create_ip_version()),
                     name: Err("no value supplied for name".to_string()),
@@ -49948,6 +50354,16 @@ pub mod types {
         }
 
         impl IpPoolCreate {
+            pub fn assignment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolAssignment>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.assignment = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for assignment: {e}"));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -49996,6 +50412,7 @@ pub mod types {
                 value: IpPoolCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    assignment: value.assignment?,
                     description: value.description?,
                     ip_version: value.ip_version?,
                     name: value.name?,
@@ -50007,6 +50424,7 @@ pub mod types {
         impl ::std::convert::From<super::IpPoolCreate> for IpPoolCreate {
             fn from(value: super::IpPoolCreate) -> Self {
                 Self {
+                    assignment: Ok(value.assignment),
                     description: Ok(value.description),
                     ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
@@ -66340,6 +66758,10 @@ pub mod types {
             }
         }
 
+        pub(super) fn ip_pool_create_assignment() -> super::IpPoolAssignment {
+            super::IpPoolAssignment::Silos
+        }
+
         pub(super) fn ip_pool_create_ip_version() -> super::IpVersion {
             super::IpVersion::V4
         }
@@ -66361,7 +66783,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026060800.0.0
+/// Version: 2026061100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66402,7 +66824,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026060800.0.0"
+        "2026061100.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -68792,14 +69214,18 @@ pub trait ClientIpPoolsExt {
     /// Sends a `GET` request to `/v1/ip-pools`
     ///
     /// Arguments:
+    /// - `ip_version`
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
+    /// - `pool_type`
     /// - `sort_by`
     /// ```ignore
     /// let response = client.ip_pool_list()
+    ///    .ip_version(ip_version)
     ///    .limit(limit)
     ///    .page_token(page_token)
+    ///    .pool_type(pool_type)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
@@ -70346,14 +70772,20 @@ pub trait ClientSystemIpPoolsExt {
     /// Sends a `GET` request to `/v1/system/ip-pools`
     ///
     /// Arguments:
+    /// - `assignment`
+    /// - `ip_version`
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
+    /// - `pool_type`
     /// - `sort_by`
     /// ```ignore
     /// let response = client.system_ip_pool_list()
+    ///    .assignment(assignment)
+    ///    .ip_version(ip_version)
     ///    .limit(limit)
     ///    .page_token(page_token)
+    ///    .pool_type(pool_type)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
@@ -70411,6 +70843,21 @@ pub trait ClientSystemIpPoolsExt {
     ///    .await;
     /// ```
     fn system_ip_pool_delete(&self) -> builder::SystemIpPoolDelete<'_>;
+    /// Assign IP pool
+    ///
+    /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/assignment`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// - `body`
+    /// ```ignore
+    /// let response = client.system_ip_pool_assign()
+    ///    .pool(pool)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_ip_pool_assign(&self) -> builder::SystemIpPoolAssign<'_>;
     /// List ranges for IP pool
     ///
     /// Ranges are ordered by their first address.
@@ -70554,58 +71001,6 @@ pub trait ClientSystemIpPoolsExt {
     ///    .await;
     /// ```
     fn system_ip_pool_utilization_view(&self) -> builder::SystemIpPoolUtilizationView<'_>;
-    /// Fetch Oxide service IP pool
-    ///
-    /// Sends a `GET` request to `/v1/system/ip-pools-service`
-    ///
-    /// ```ignore
-    /// let response = client.system_ip_pool_service_view()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_ip_pool_service_view(&self) -> builder::SystemIpPoolServiceView<'_>;
-    /// List IP ranges for the Oxide service pool
-    ///
-    /// Ranges are ordered by their first address.
-    ///
-    /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// ```ignore
-    /// let response = client.system_ip_pool_service_range_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_ip_pool_service_range_list(&self) -> builder::SystemIpPoolServiceRangeList<'_>;
-    /// Add IP range to Oxide service pool
-    ///
-    /// IPv6 ranges are not allowed yet.
-    ///
-    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
-    ///
-    /// ```ignore
-    /// let response = client.system_ip_pool_service_range_add()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_ip_pool_service_range_add(&self) -> builder::SystemIpPoolServiceRangeAdd<'_>;
-    /// Remove IP range from Oxide service pool
-    ///
-    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
-    ///
-    /// ```ignore
-    /// let response = client.system_ip_pool_service_range_remove()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_ip_pool_service_range_remove(&self) -> builder::SystemIpPoolServiceRangeRemove<'_>;
 }
 
 impl ClientSystemIpPoolsExt for Client {
@@ -70627,6 +71022,10 @@ impl ClientSystemIpPoolsExt for Client {
 
     fn system_ip_pool_delete(&self) -> builder::SystemIpPoolDelete<'_> {
         builder::SystemIpPoolDelete::new(self)
+    }
+
+    fn system_ip_pool_assign(&self) -> builder::SystemIpPoolAssign<'_> {
+        builder::SystemIpPoolAssign::new(self)
     }
 
     fn system_ip_pool_range_list(&self) -> builder::SystemIpPoolRangeList<'_> {
@@ -70659,22 +71058,6 @@ impl ClientSystemIpPoolsExt for Client {
 
     fn system_ip_pool_utilization_view(&self) -> builder::SystemIpPoolUtilizationView<'_> {
         builder::SystemIpPoolUtilizationView::new(self)
-    }
-
-    fn system_ip_pool_service_view(&self) -> builder::SystemIpPoolServiceView<'_> {
-        builder::SystemIpPoolServiceView::new(self)
-    }
-
-    fn system_ip_pool_service_range_list(&self) -> builder::SystemIpPoolServiceRangeList<'_> {
-        builder::SystemIpPoolServiceRangeList::new(self)
-    }
-
-    fn system_ip_pool_service_range_add(&self) -> builder::SystemIpPoolServiceRangeAdd<'_> {
-        builder::SystemIpPoolServiceRangeAdd::new(self)
-    }
-
-    fn system_ip_pool_service_range_remove(&self) -> builder::SystemIpPoolServiceRangeRemove<'_> {
-        builder::SystemIpPoolServiceRangeRemove::new(self)
     }
 }
 
@@ -70980,6 +71363,24 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList<'_>;
+    /// Update the mutable fields of an existing BGP configuration
+    ///
+    /// The asn field is not updatable; to change the autonomous system number,
+    /// create a new BGP configuration object.
+    ///
+    /// Sends a `PUT` request to `/v1/system/networking/bgp`
+    ///
+    /// Arguments:
+    /// - `name_or_id`: A name or id to use when selecting BGP config.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_bgp_config_update()
+    ///    .name_or_id(name_or_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_config_update(&self) -> builder::NetworkingBgpConfigUpdate<'_>;
     /// Create BGP configuration
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp`
@@ -71335,6 +71736,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList<'_> {
         builder::NetworkingBgpConfigList::new(self)
+    }
+
+    fn networking_bgp_config_update(&self) -> builder::NetworkingBgpConfigUpdate<'_> {
+        builder::NetworkingBgpConfigUpdate::new(self)
     }
 
     fn networking_bgp_config_create(&self) -> builder::NetworkingBgpConfigCreate<'_> {
@@ -86591,8 +86996,10 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
+        ip_version: Result<Option<types::IpVersion>, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
+        pool_type: Result<Option<types::IpPoolType>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -86600,10 +87007,23 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
+                ip_version: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
+                pool_type: Ok(None),
                 sort_by: Ok(None),
             }
+        }
+
+        pub fn ip_version<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpVersion>,
+        {
+            self.ip_version = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpVersion` for ip_version failed".to_string());
+            self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
@@ -86626,6 +87046,17 @@ pub mod builder {
             self
         }
 
+        pub fn pool_type<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolType>,
+        {
+            self.pool_type = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpPoolType` for pool_type failed".to_string());
+            self
+        }
+
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrIdSortMode>,
@@ -86643,12 +87074,16 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SiloIpPoolResultsPage>, Error<types::Error>> {
             let Self {
                 client,
+                ip_version,
                 limit,
                 page_token,
+                pool_type,
                 sort_by,
             } = self;
+            let ip_version = ip_version.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let pool_type = pool_type.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/ip-pools", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -86664,11 +87099,16 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new(
+                    "ip_version",
+                    &ip_version,
+                ))
                 .query(&progenitor_client::QueryParam::new("limit", &limit))
                 .query(&progenitor_client::QueryParam::new(
                     "page_token",
                     &page_token,
                 ))
+                .query(&progenitor_client::QueryParam::new("pool_type", &pool_type))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
@@ -86700,7 +87140,9 @@ pub mod builder {
             use ::futures::TryFutureExt;
             use ::futures::TryStreamExt;
             let next = Self {
+                ip_version: Ok(None),
                 page_token: Ok(None),
+                pool_type: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
             };
@@ -94675,8 +95117,11 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SystemIpPoolList<'a> {
         client: &'a super::Client,
+        assignment: Result<Option<types::IpPoolAssignment>, String>,
+        ip_version: Result<Option<types::IpVersion>, String>,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
+        pool_type: Result<Option<types::IpPoolType>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -94684,10 +95129,35 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
+                assignment: Ok(None),
+                ip_version: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
+                pool_type: Ok(None),
                 sort_by: Ok(None),
             }
+        }
+
+        pub fn assignment<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolAssignment>,
+        {
+            self.assignment = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpPoolAssignment` for assignment failed".to_string());
+            self
+        }
+
+        pub fn ip_version<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpVersion>,
+        {
+            self.ip_version = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpVersion` for ip_version failed".to_string());
+            self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
@@ -94710,6 +95180,17 @@ pub mod builder {
             self
         }
 
+        pub fn pool_type<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolType>,
+        {
+            self.pool_type = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IpPoolType` for pool_type failed".to_string());
+            self
+        }
+
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrIdSortMode>,
@@ -94727,12 +95208,18 @@ pub mod builder {
         ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
             let Self {
                 client,
+                assignment,
+                ip_version,
                 limit,
                 page_token,
+                pool_type,
                 sort_by,
             } = self;
+            let assignment = assignment.map_err(Error::InvalidRequest)?;
+            let ip_version = ip_version.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let pool_type = pool_type.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/ip-pools", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -94748,11 +95235,20 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new(
+                    "assignment",
+                    &assignment,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "ip_version",
+                    &ip_version,
+                ))
                 .query(&progenitor_client::QueryParam::new("limit", &limit))
                 .query(&progenitor_client::QueryParam::new(
                     "page_token",
                     &page_token,
                 ))
+                .query(&progenitor_client::QueryParam::new("pool_type", &pool_type))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
@@ -94784,7 +95280,10 @@ pub mod builder {
             use ::futures::TryFutureExt;
             use ::futures::TryStreamExt;
             let next = Self {
+                assignment: Ok(None),
+                ip_version: Ok(None),
                 page_token: Ok(None),
+                pool_type: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
             };
@@ -95130,6 +95629,105 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_assign`]
+    ///
+    /// [`ClientSystemIpPoolsExt::system_ip_pool_assign`]: super::ClientSystemIpPoolsExt::system_ip_pool_assign
+    #[derive(Debug, Clone)]
+    pub struct SystemIpPoolAssign<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::builder::IpPoolAssignParam, String>,
+    }
+
+    impl<'a> SystemIpPoolAssign<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolAssignParam>,
+            <V as std::convert::TryInto<types::IpPoolAssignParam>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `IpPoolAssignParam` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::IpPoolAssignParam,
+            ) -> types::builder::IpPoolAssignParam,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/assignment`
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::IpPoolAssignParam::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/assignment",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_ip_pool_assign",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -96003,336 +96601,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_service_view`]
-    ///
-    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_view`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_view
-    #[derive(Debug, Clone)]
-    pub struct SystemIpPoolServiceView<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> SystemIpPoolServiceView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
-        }
-
-        /// Sends a `GET` request to `/v1/system/ip-pools-service`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "system_ip_pool_service_view",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_list`]
-    ///
-    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_list`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_range_list
-    #[derive(Debug, Clone)]
-    pub struct SystemIpPoolServiceRangeList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<::std::num::NonZeroU32>, String>,
-        page_token: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> SystemIpPoolServiceRangeList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.page_token = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for page_token failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("limit", &limit))
-                .query(&progenitor_client::QueryParam::new(
-                    "page_token",
-                    &page_token,
-                ))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "system_ip_pool_service_range_list",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/ip-pools-service/ranges`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
-        {
-            use ::futures::StreamExt;
-            use ::futures::TryFutureExt;
-            use ::futures::TryStreamExt;
-            let next = Self {
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemIpPoolsExt::system_ip_pool_service_range_add`]
-    ///
-    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_add`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_range_add
-    #[derive(Debug, Clone)]
-    pub struct SystemIpPoolServiceRangeAdd<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> SystemIpPoolServiceRangeAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "system_ip_pool_service_range_add",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_remove`]
-    ///
-    /// [`ClientSystemIpPoolsExt::system_ip_pool_service_range_remove`]: super::ClientSystemIpPoolsExt::system_ip_pool_service_range_remove
-    #[derive(Debug, Clone)]
-    pub struct SystemIpPoolServiceRangeRemove<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> SystemIpPoolServiceRangeRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/ip-pools-service/ranges/remove`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/ip-pools-service/ranges/remove",
-                client.baseurl,
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "system_ip_pool_service_range_remove",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -97634,6 +97902,107 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_config_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_config_update`]: super::ClientSystemNetworkingExt::networking_bgp_config_update
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpConfigUpdate<'a> {
+        client: &'a super::Client,
+        name_or_id: Result<types::NameOrId, String>,
+        body: Result<types::builder::BgpConfigUpdate, String>,
+    }
+
+    impl<'a> NetworkingBgpConfigUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name_or_id: Err("name_or_id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BgpConfigUpdate>,
+            <V as std::convert::TryInto<types::BgpConfigUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BgpConfigUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BgpConfigUpdate) -> types::builder::BgpConfigUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/networking/bgp`
+        pub async fn send(self) -> Result<ResponseValue<types::BgpConfig>, Error<types::Error>> {
+            let Self {
+                client,
+                name_or_id,
+                body,
+            } = self;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::BgpConfigUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new(
+                    "name_or_id",
+                    &name_or_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_config_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
