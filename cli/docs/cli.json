@@ -4391,8 +4391,22 @@
           "operation_id": "ip_pool_list",
           "args": [
             {
+              "long": "ip-version",
+              "values": [
+                "v4",
+                "v6"
+              ]
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "pool-type",
+              "values": [
+                "unicast",
+                "multicast"
+              ]
             },
             {
               "long": "profile",
@@ -6988,6 +7002,44 @@
                           ]
                         }
                       ]
+                    },
+                    {
+                      "name": "update",
+                      "about": "Update the mutable fields of an existing BGP configuration\n\nThe asn field is not updatable; to change the autonomous system number, create a new BGP configuration object.",
+                      "operation_id": "networking_bgp_config_update",
+                      "args": [
+                        {
+                          "long": "bgp-announce-set-id",
+                          "help": "Update the BGP announce set associated with this configuration."
+                        },
+                        {
+                          "long": "description"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "max-paths",
+                          "help": "Update the maximum number of equal-cost paths."
+                        },
+                        {
+                          "long": "name"
+                        },
+                        {
+                          "long": "name-or-id",
+                          "help": "A name or id to use when selecting BGP config."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
                     }
                   ]
                 },
@@ -7507,10 +7559,49 @@
               ],
               "subcommands": [
                 {
+                  "name": "assign",
+                  "about": "Assign IP pool",
+                  "operation_id": "system_ip_pool_assign",
+                  "args": [
+                    {
+                      "long": "assignment",
+                      "values": [
+                        "silos",
+                        "system_services"
+                      ]
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "pool",
+                      "help": "Name or ID of the IP pool"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
                   "name": "create",
                   "about": "Create IP pool",
                   "operation_id": "system_ip_pool_create",
                   "args": [
+                    {
+                      "long": "assignment",
+                      "values": [
+                        "silos",
+                        "system_services"
+                      ],
+                      "help": "What this pool is assigned to (defaults to Silos)."
+                    },
                     {
                       "long": "description"
                     },
@@ -7570,8 +7661,29 @@
                   "operation_id": "system_ip_pool_list",
                   "args": [
                     {
+                      "long": "assignment",
+                      "values": [
+                        "silos",
+                        "system_services"
+                      ]
+                    },
+                    {
+                      "long": "ip-version",
+                      "values": [
+                        "v4",
+                        "v6"
+                      ]
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "pool-type",
+                      "values": [
+                        "unicast",
+                        "multicast"
+                      ]
                     },
                     {
                       "long": "profile",
@@ -7671,110 +7783,6 @@
                           "long": "pool",
                           "help": "Name or ID of the IP pool"
                         },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "service",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ],
-                  "subcommands": [
-                    {
-                      "name": "range",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ],
-                      "subcommands": [
-                        {
-                          "name": "add",
-                          "about": "Add IP range to Oxide service pool\n\nIPv6 ranges are not allowed yet.",
-                          "operation_id": "system_ip_pool_service_range_add",
-                          "args": [
-                            {
-                              "long": "first"
-                            },
-                            {
-                              "long": "json-body",
-                              "help": "Path to a file that contains the full json body."
-                            },
-                            {
-                              "long": "json-body-template",
-                              "help": "XXX"
-                            },
-                            {
-                              "long": "last"
-                            },
-                            {
-                              "long": "profile",
-                              "help": "Configuration profile to use for commands",
-                              "global": true
-                            }
-                          ]
-                        },
-                        {
-                          "name": "list",
-                          "about": "List IP ranges for the Oxide service pool\n\nRanges are ordered by their first address.",
-                          "operation_id": "system_ip_pool_service_range_list",
-                          "args": [
-                            {
-                              "long": "limit",
-                              "help": "Maximum number of items returned by a single call"
-                            },
-                            {
-                              "long": "profile",
-                              "help": "Configuration profile to use for commands",
-                              "global": true
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "name": "remove",
-                      "about": "Remove IP range from Oxide service pool",
-                      "operation_id": "system_ip_pool_service_range_remove",
-                      "args": [
-                        {
-                          "long": "first"
-                        },
-                        {
-                          "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
-                        },
-                        {
-                          "long": "json-body-template",
-                          "help": "XXX"
-                        },
-                        {
-                          "long": "last"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
-                    },
-                    {
-                      "name": "view",
-                      "about": "Fetch Oxide service IP pool",
-                      "operation_id": "system_ip_pool_service_view",
-                      "args": [
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",

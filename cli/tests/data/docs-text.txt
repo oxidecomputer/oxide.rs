@@ -336,6 +336,9 @@ oxide system networking bgp auth — Set an authentication string.
 oxide system networking bgp config create — Create BGP configuration
 oxide system networking bgp config delete — Delete BGP configuration
 oxide system networking bgp config list — List BGP configurations
+oxide system networking bgp config update — Update the mutable fields of an existing BGP configuration
+
+The asn field is not updatable; to change the autonomous system number, create a new BGP configuration object.
 oxide system networking bgp exported — List BGP exported routes
 oxide system networking bgp filter — Add a filtering requirement to a BGP session.
 oxide system networking bgp history — Get BGP router message history
@@ -348,6 +351,7 @@ oxide system networking bgp status — Get BGP peer status
 oxide system networking bgp withdraw — Withdraw a prefix over BGP.
 oxide system networking inbound-icmp update — Set whether API services can receive limited ICMP traffic
 oxide system networking inbound-icmp view — Return whether API services can receive limited ICMP traffic
+oxide system networking ip-pool assign — Assign IP pool
 oxide system networking ip-pool create — Create IP pool
 oxide system networking ip-pool delete — Delete IP pool
 oxide system networking ip-pool list — List IP pools
@@ -360,14 +364,6 @@ oxide system networking ip-pool range list — List ranges for IP pool
 
 Ranges are ordered by their first address.
 oxide system networking ip-pool range remove — Remove range from IP pool
-oxide system networking ip-pool service range add — Add IP range to Oxide service pool
-
-IPv6 ranges are not allowed yet.
-oxide system networking ip-pool service range list — List IP ranges for the Oxide service pool
-
-Ranges are ordered by their first address.
-oxide system networking ip-pool service remove — Remove IP range from Oxide service pool
-oxide system networking ip-pool service view — Fetch Oxide service IP pool
 oxide system networking ip-pool silo link — Link IP pool to silo
 
 Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.

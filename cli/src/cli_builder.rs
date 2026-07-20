@@ -122,8 +122,7 @@ impl Default for NewCli<'_> {
             let cmd = match op {
                 CliCommand::SystemIpPoolRangeAdd
                 | CliCommand::SystemIpPoolRangeRemove
-                | CliCommand::SystemIpPoolServiceRangeAdd
-                | CliCommand::SystemIpPoolServiceRangeRemove => cmd
+                => cmd
                     .mut_arg("json-body", |arg| arg.required(false))
                     .arg(
                         clap::Arg::new("first")
@@ -480,19 +479,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SystemIpPoolCreate => Some("system networking ip-pool create"),
         CliCommand::SystemIpPoolUpdate => Some("system networking ip-pool update"),
         CliCommand::SystemIpPoolDelete => Some("system networking ip-pool delete"),
+        CliCommand::SystemIpPoolAssign => Some("system networking ip-pool assign"),
         CliCommand::SystemIpPoolRangeList => Some("system networking ip-pool range list"),
         CliCommand::SystemIpPoolRangeAdd => Some("system networking ip-pool range add"),
         CliCommand::SystemIpPoolRangeRemove => Some("system networking ip-pool range remove"),
-        CliCommand::SystemIpPoolServiceView => Some("system networking ip-pool service view"),
-        CliCommand::SystemIpPoolServiceRangeList => {
-            Some("system networking ip-pool service range list")
-        }
-        CliCommand::SystemIpPoolServiceRangeAdd => {
-            Some("system networking ip-pool service range add")
-        }
-        CliCommand::SystemIpPoolServiceRangeRemove => {
-            Some("system networking ip-pool service remove")
-        }
         CliCommand::SystemIpPoolSiloList => Some("system networking ip-pool silo list"),
         CliCommand::SystemIpPoolSiloLink => Some("system networking ip-pool silo link"),
         CliCommand::SystemIpPoolSiloUpdate => Some("system networking ip-pool silo update"),
@@ -637,6 +627,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingBgpMessageHistory => Some("system networking bgp history"),
         CliCommand::NetworkingBgpConfigCreate => Some("system networking bgp config create"),
         CliCommand::NetworkingBgpConfigDelete => Some("system networking bgp config delete"),
+        CliCommand::NetworkingBgpConfigUpdate => Some("system networking bgp config update"),
         CliCommand::NetworkingBgpConfigList => Some("system networking bgp config list"),
         CliCommand::NetworkingBgpAnnounceSetUpdate => {
             Some("system networking bgp announce-set update")
