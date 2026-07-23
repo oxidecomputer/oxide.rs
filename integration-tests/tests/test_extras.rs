@@ -10,7 +10,7 @@ use oxide::extras::ClientExtraDiskExt;
 use oxide::types::Disk;
 use oxide::{Client, ClientConfig};
 use oxide_httpmock::MockServerExt;
-use rand::{rng, Rng, SeedableRng};
+use rand::{rng, RngExt, SeedableRng};
 use std::fs;
 use tempfile::TempDir;
 use test_common::JsonMock;

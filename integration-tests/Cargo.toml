@@ -11,5 +11,5 @@ oxide-httpmock = { workspace = true }
 tempfile = { workspace = true }
 test-common = { workspace = true }
 tokio = { workspace = true }
-rand = { workspace = true, features = ["small_rng"] }
+rand = { workspace = true }
 uuid = { workspace = true }
