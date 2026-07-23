@@ -2,22 +2,19 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2025 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use anyhow::Result;
 use httpmock::MockServer;
-use oxide::types::Disk;
-use oxide::types::Image;
-use oxide::types::Snapshot;
+use oxide::types::{Disk, Image, Snapshot};
 use oxide_httpmock::MockServerExt;
 use predicates::prelude::*;
-use rand::SeedableRng;
-use rand::{rng, Rng};
-use std::fs::File;
-use std::io::Seek;
-use std::io::SeekFrom;
-use std::io::Write;
-use std::path::PathBuf;
+use rand::{rng, RngExt, SeedableRng};
+use std::{
+    fs::File,
+    io::{Seek, SeekFrom, Write},
+    path::PathBuf,
+};
 use tempfile::TempDir;
 use test_common::JsonMock;
 use uuid::Uuid;
