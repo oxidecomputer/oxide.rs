@@ -48,7 +48,7 @@ predicates = "3.1.4"
 pretty_assertions = "1.4.1"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor", default-features = false }
 progenitor-client = "0.14.0"
-rand = "0.9.3"
+rand = "0.10.2"
 ratatui = "0.30.0"
 rcgen = { version = "0.14.8", features = ["pem"] }
 regex = "1.12.3"
