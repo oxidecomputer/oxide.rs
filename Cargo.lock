@@ -3011,7 +3011,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#577de74376d39a4615c9f2cfae44af45394b5385"
+source = "git+https://github.com/oxidecomputer/progenitor#1b6e28b7cde1c4db7b422fc9cc533621fd8bb7c9"
 dependencies = [
  "progenitor-impl",
 ]
@@ -3034,7 +3034,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#577de74376d39a4615c9f2cfae44af45394b5385"
+source = "git+https://github.com/oxidecomputer/progenitor#1b6e28b7cde1c4db7b422fc9cc533621fd8bb7c9"
 dependencies = [
  "heck",
  "http",
@@ -3046,7 +3046,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "syn 2.0.117",
+ "syn 3.0.2",
  "thiserror 2.0.19",
  "typify",
  "unicode-ident",
