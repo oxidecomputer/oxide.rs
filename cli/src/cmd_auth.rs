@@ -18,7 +18,7 @@ use oauth2::{
     StandardDeviceAuthorizationResponse, StandardTokenResponse, TokenResponse, TokenUrl,
 };
 use oxide::types::CurrentUser;
-use oxide::{Client, ClientConfig, ClientCurrentUserExt};
+use oxide::{Client, ClientCurrentUserExt};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use toml_edit::{Item, Table};
@@ -498,7 +498,9 @@ impl CmdAuthStatus {
             (std::env::var("OXIDE_HOST"), std::env::var("OXIDE_TOKEN"))
         {
             let client = Client::new_authenticated_config(
-                &ClientConfig::default().with_host_and_token(&host_env, &token_env),
+                &ctx.client_config()
+                    .clone()
+                    .with_host_and_token(&host_env, &token_env),
             )?;
 
             spinner.set_message(format!("Checking {}...", host_env));
@@ -520,7 +522,8 @@ impl CmdAuthStatus {
         } else {
             for (profile_name, profile_info) in &ctx.cred_file().profile {
                 let client = Client::new_authenticated_config(
-                    &ClientConfig::default()
+                    &ctx.client_config()
+                        .clone()
                         .with_host_and_token(&profile_info.host, &profile_info.token),
                 )?;
 
