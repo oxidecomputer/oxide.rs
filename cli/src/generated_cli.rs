@@ -3743,7 +3743,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("cascade")
                     .value_parser(::clap::value_parser!(bool))
                     .required(false)
-                    .help("Also delete routes targeting this gateway element."),
+                    .help(
+                        "Detach attached IP pools/addresses and delete any routes targeting this \
+                         gateway. Without `cascade`, delete fails if the gateway has any IP pools \
+                         or IP addresses attached.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("gateway")
@@ -3892,7 +3896,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("cascade")
                     .value_parser(::clap::value_parser!(bool))
                     .required(false)
-                    .help("Also delete routes targeting this gateway element."),
+                    .help(
+                        "Detach attached IP pools/addresses and delete any routes targeting this \
+                         gateway. Without `cascade`, delete fails if the gateway has any IP pools \
+                         or IP addresses attached.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("gateway")
@@ -4052,7 +4060,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("cascade")
                     .value_parser(::clap::value_parser!(bool))
                     .required(false)
-                    .help("Also delete routes targeting this gateway."),
+                    .help(
+                        "Detach attached IP pools/addresses and delete any routes targeting this \
+                         gateway. Without `cascade`, delete fails if the gateway has any IP pools \
+                         or IP addresses attached.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("gateway")

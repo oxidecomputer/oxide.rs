@@ -66783,7 +66783,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026061100.0.0
+/// Version: 2026072800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66824,7 +66824,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026061100.0.0"
+        "2026072800.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -73008,7 +73008,9 @@ pub trait ClientVpcsExt {
     ///
     /// Arguments:
     /// - `address`: Name or ID of the IP address
-    /// - `cascade`: Also delete routes targeting this gateway element.
+    /// - `cascade`: Detach attached IP pools/addresses and delete any routes
+    ///   targeting this gateway. Without `cascade`, delete fails if the gateway
+    ///   has any IP pools or IP addresses attached.
     /// - `gateway`: Name or ID of the internet gateway
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
@@ -73078,7 +73080,9 @@ pub trait ClientVpcsExt {
     ///
     /// Arguments:
     /// - `pool`: Name or ID of the IP pool
-    /// - `cascade`: Also delete routes targeting this gateway element.
+    /// - `cascade`: Detach attached IP pools/addresses and delete any routes
+    ///   targeting this gateway. Without `cascade`, delete fails if the gateway
+    ///   has any IP pools or IP addresses attached.
     /// - `gateway`: Name or ID of the internet gateway
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
@@ -73160,7 +73164,9 @@ pub trait ClientVpcsExt {
     ///
     /// Arguments:
     /// - `gateway`: Name or ID of the gateway
-    /// - `cascade`: Also delete routes targeting this gateway.
+    /// - `cascade`: Detach attached IP pools/addresses and delete any routes
+    ///   targeting this gateway. Without `cascade`, delete fails if the gateway
+    ///   has any IP pools or IP addresses attached.
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
