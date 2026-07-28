@@ -630,6 +630,82 @@ fn test_cmd_auth_status_env() {
     oxide_mock.assert();
 }
 
+// Validate custom client options.
+#[test]
+fn test_cmd_auth_status_honors_client_config() {
+    let server = MockServer::start();
+
+    let oxide_mock = server.current_user_view(|when, then| {
+        when.into_inner()
+            .header("authorization", "Bearer oxide-token-good");
+
+        then.ok(&oxide::types::CurrentUser {
+            display_name: "privileged".to_string(),
+            id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
+            silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
+            silo_name: "funky-town".parse().unwrap(),
+            fleet_viewer: false,
+            silo_admin: false,
+            time_created: "1985-10-26T01:20:00-07:00".parse().unwrap(),
+            time_modified: "2015-10-21T16:29:00-07:00".parse().unwrap(),
+        });
+    });
+
+    // A hostname that DNS will never resolve; reachable only via `--resolve`.
+    let host = format!("http://fake.oxide.internal:{}", server.port());
+    let resolve = format!(
+        "fake.oxide.internal:{}:{}",
+        server.port(),
+        server.address().ip()
+    );
+
+    // Creds set via env vars.
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .arg("--resolve")
+        .arg(&resolve)
+        .arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", &host)
+        .env("OXIDE_TOKEN", "oxide-token-good")
+        .assert()
+        .success()
+        .stdout(format!(
+            "Logged in to {} as 001de000-05e4-4000-8000-000000004007\n",
+            host
+        ));
+
+    let temp_dir = tempfile::tempdir().unwrap();
+    write_creds(
+        temp_dir.path(),
+        &format!(
+            "\
+        [profile.funky-town]\n\
+        host = \"{}\"\n\
+        token = \"oxide-token-good\"\n\
+        user = \"00000000-0000-0000-0000-000000000000\"\n\
+    ",
+            host
+        ),
+    );
+
+    // Creds set via config.
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .arg("--resolve")
+        .arg(&resolve)
+        .arg("--config-dir")
+        .arg(temp_dir.path().as_os_str())
+        .arg("auth")
+        .arg("status")
+        .assert()
+        .success()
+        .stdout(format!(
+            "Profile \"funky-town\" ({}) status: Authenticated\n",
+            host
+        ));
+
+    oxide_mock.assert_calls(2);
+}
+
 #[test]
 fn test_cmd_auth_debug_logging() {
     let server = MockServer::start();
