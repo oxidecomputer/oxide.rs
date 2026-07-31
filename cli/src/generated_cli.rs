@@ -8361,10 +8361,15 @@ impl<T: CliConfig> Cli<T> {
                  itself.  This operation puts the control plane back in charge of determining \
                  what software should be deployed, instructing it that the specified software \
                  (which is also what's currently running) is what's supposed to be \
-                 deployed.\n\nIf the provided version does not match what's currently running, \
-                 the control plane will continue to avoid changing deployed software until this \
-                 operation is invoked with the correct version.\n\nThis endpoint should only be \
-                 called at the direction of Oxide support.",
+                 deployed.\n\nIf the control plane knows the version of all running software \
+                 (e.g., a single sled was recovered to the same version as the rest of the rack), \
+                 requests where the provided version does not match what's currently running will \
+                 fail. If the control plane does not know the version of all running software \
+                 (e.g., the entire rack was mupdated to a new release), requests with an \
+                 incorrect provided version will succeed, but the control plane will continue to \
+                 avoid changing deployed software until this operation is invoked with the \
+                 correct version.\n\nThis endpoint should only be called at the direction of \
+                 Oxide support.",
             )
     }
 
