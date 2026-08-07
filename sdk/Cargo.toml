@@ -42,3 +42,6 @@ default = []
 clap = ["dep:clap"]
 extras = ["dep:tokio", "dep:flume"]
 native-tls-vendored = ["reqwest/native-tls-vendored"]
+
+[package.metadata.docs.rs]
+features = ["extras", "clap"]

@@ -45,7 +45,7 @@ impl AuthenticatedCmd for CmdUpload {
         let _pb = start_progress_bar(
             progress_rx,
             len,
-            &format!("Uploading {}...", &self.path.to_string_lossy()),
+            &format!("Uploading {}...", self.path.to_string_lossy()),
         );
 
         let body = reqwest::Body::wrap_stream(file_stream);

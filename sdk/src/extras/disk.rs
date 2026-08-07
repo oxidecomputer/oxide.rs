@@ -567,7 +567,7 @@ pub mod types {
 
         async fn check_for_existing_disk(&self) -> Result<(), DiskImportError> {
             err_if_object_exists(
-                format!("disk \"{}\" exists already", &*self.disk),
+                format!("disk \"{}\" exists already", *self.disk),
                 self.client
                     .disk_view()
                     .project(self.project.clone())
@@ -578,7 +578,7 @@ pub mod types {
 
             if let Some(image_info) = &self.image_info {
                 err_if_object_exists(
-                    format!("snapshot \"{}\" exists already", &*image_info.snapshot),
+                    format!("snapshot \"{}\" exists already", *image_info.snapshot),
                     self.client
                         .snapshot_view()
                         .project(self.project.clone())
@@ -588,7 +588,7 @@ pub mod types {
                 )?;
 
                 err_if_object_exists(
-                    format!("image \"{}\" exists already", &*image_info.image),
+                    format!("image \"{}\" exists already", *image_info.image),
                     self.client
                         .image_view()
                         .project(self.project.clone())
@@ -645,7 +645,7 @@ pub mod types {
                 .await
                 .map_err(|e| {
                     DiskImportError::context(
-                        format!("trying to unwind, deleting \"{}\" failed", &*self.disk),
+                        format!("trying to unwind, deleting \"{}\" failed", *self.disk),
                         e,
                     )
                 })?;
@@ -662,7 +662,7 @@ pub mod types {
                 .await
                 .map_err(|e| {
                     DiskImportError::context(
-                        format!("trying to unwind, finalizing \"{}\" failed", &*self.disk),
+                        format!("trying to unwind, finalizing \"{}\" failed", *self.disk),
                         e,
                     )
                 })?;
@@ -681,7 +681,7 @@ pub mod types {
                     DiskImportError::context(
                         format!(
                             "trying to unwind, stopping the bulk write process for \"{}\"",
-                            &*self.disk
+                            *self.disk,
                         ),
                         e,
                     )
@@ -821,7 +821,7 @@ pub mod types {
             let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(&chunk.data);
             self.client
                 .disk_bulk_write_import()
-                .disk(&*self.disk)
+                .disk(NameOrId::from(self.disk.clone()))
                 .project(self.project.clone())
                 .body(ImportBlocksBulkWrite {
                     offset: chunk.offset,

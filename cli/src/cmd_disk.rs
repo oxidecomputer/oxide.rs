@@ -95,8 +95,9 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             self.disk_block_size.as_ref(),
         )?;
 
-        // Default to 8 upload tasks - this evenly divides all block sizes, and we know
-        // that the file size is evenly divided by the selected block size.
+        // Default to 8 upload tasks - this evenly divides all block sizes, and
+        // we know that the file size is evenly divided by the selected block
+        // size.
         let mut builder = client
             .disk_import()
             .project(self.project.clone())
