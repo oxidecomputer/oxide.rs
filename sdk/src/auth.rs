@@ -201,7 +201,7 @@ impl Client {
         let mut client_builder = config.make_unauthenticated_client_builder();
 
         let mut bearer =
-            reqwest::header::HeaderValue::from_str(format!("Bearer {}", &token).as_str())
+            reqwest::header::HeaderValue::from_str(format!("Bearer {}", token).as_str())
                 .expect("failed to construct the auth header");
         bearer.set_sensitive(true);
         client_builder = client_builder.default_headers(
