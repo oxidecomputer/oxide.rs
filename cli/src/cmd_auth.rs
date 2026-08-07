@@ -193,7 +193,7 @@ impl CmdAuthLogin {
                 "The profile \"{}\" {} {}. {}",
                 existing_profile,
                 "is already authenticated with host",
-                &self.host,
+                self.host,
                 "Do you want to proceed?"
             ))? {
                 return Ok(());
@@ -208,7 +208,7 @@ impl CmdAuthLogin {
             .build()?;
 
         // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
-        let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
+        let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", self.host))?;
         // The client ID is intended to be an identifier issued to clients;
         // since we're not doing that and this ID would be public if it were
         // static, we just generate a random one each time we authenticate.
@@ -223,8 +223,8 @@ impl CmdAuthLogin {
             oauth2::StandardRevocableToken,
             oauth2::basic::BasicRevocationErrorResponse,
         >::new(ClientId::new(client_id.to_string()))
-        .set_auth_uri(AuthUrl::new(format!("{}authorize", &self.host))?)
-        .set_token_uri(TokenUrl::new(format!("{}device/token", &self.host))?)
+        .set_auth_uri(AuthUrl::new(format!("{}authorize", self.host))?)
+        .set_token_uri(TokenUrl::new(format!("{}device/token", self.host))?)
         .set_auth_type(AuthType::RequestBody)
         .set_device_authorization_url(device_auth_url);
         let mut request = auth_client.exchange_device_code();
@@ -528,7 +528,7 @@ impl CmdAuthStatus {
                 )?;
 
                 spinner.reset();
-                spinner.set_message(format!("Checking {}...", &profile_info.host));
+                spinner.set_message(format!("Checking {}...", profile_info.host));
                 spinner.enable_steady_tick(Duration::from_millis(100));
 
                 let result = client.current_user_view().send().await;
