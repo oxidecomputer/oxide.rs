@@ -821,7 +821,7 @@ pub mod types {
             let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(&chunk.data);
             self.client
                 .disk_bulk_write_import()
-                .disk(&*self.disk)
+                .disk(NameOrId::from(self.disk.clone()))
                 .project(self.project.clone())
                 .body(ImportBlocksBulkWrite {
                     offset: chunk.offset,
