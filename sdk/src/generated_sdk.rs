@@ -66783,7 +66783,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026072800.0.0
+/// Version: 2026073100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66824,7 +66824,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026072800.0.0"
+        "2026073100.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -72696,7 +72696,12 @@ pub trait ClientSystemUpdateExt {
     /// instructing it that the specified software (which is also what's
     /// currently running) is what's supposed to be deployed.
     ///
-    /// If the provided version does not match what's currently running, the
+    /// If the control plane knows the version of all running software (e.g., a
+    /// single sled was recovered to the same version as the rest of the rack),
+    /// requests where the provided version does not match what's currently
+    /// running will fail. If the control plane does not know the version of all
+    /// running software (e.g., the entire rack was mupdated to a new release),
+    /// requests with an incorrect provided version will succeed, but the
     /// control plane will continue to avoid changing deployed software until
     /// this operation is invoked with the correct version.
     ///
