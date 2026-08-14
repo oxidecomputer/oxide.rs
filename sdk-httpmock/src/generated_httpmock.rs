@@ -2482,6 +2482,187 @@ pub mod operations {
         }
     }
 
+    pub struct AlertListWhen(::httpmock::When);
+    impl AlertListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alerts$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn alert_class<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::AlertSubscription>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("alert_class", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("alert_class"))
+            }
+        }
+
+        pub fn end_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("end_time", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("end_time"))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::TimeAndIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+
+        pub fn start_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("start_time", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("start_time"))
+            }
+        }
+    }
+
+    pub struct AlertListThen(::httpmock::Then);
+    impl AlertListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertViewWhen(::httpmock::When);
+    impl AlertViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alerts/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn alert_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/alerts/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertViewThen(::httpmock::Then);
+    impl AlertViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Alert) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct AlertDeliveryResendWhen(::httpmock::When);
     impl AlertDeliveryResendWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -23531,6 +23712,12 @@ pub trait MockServerExt {
             operations::AlertReceiverSubscriptionRemoveWhen,
             operations::AlertReceiverSubscriptionRemoveThen,
         );
+    fn alert_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::AlertListWhen, operations::AlertListThen);
+    fn alert_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::AlertViewWhen, operations::AlertViewThen);
     fn alert_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::AlertDeliveryResendWhen, operations::AlertDeliveryResendThen);
@@ -25069,6 +25256,30 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::AlertReceiverSubscriptionRemoveWhen::new(when),
                 operations::AlertReceiverSubscriptionRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn alert_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::AlertListWhen, operations::AlertListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertListWhen::new(when),
+                operations::AlertListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::AlertViewWhen, operations::AlertViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertViewWhen::new(when),
+                operations::AlertViewThen::new(then),
             )
         })
     }

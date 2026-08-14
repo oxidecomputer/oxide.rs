@@ -57,6 +57,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::AlertReceiverSubscriptionRemove => {
                 Self::cli_alert_receiver_subscription_remove()
             }
+            CliCommand::AlertList => Self::cli_alert_list(),
+            CliCommand::AlertView => Self::cli_alert_view(),
             CliCommand::AlertDeliveryResend => Self::cli_alert_delivery_resend(),
             CliCommand::AntiAffinityGroupList => Self::cli_anti_affinity_group_list(),
             CliCommand::AntiAffinityGroupCreate => Self::cli_anti_affinity_group_create(),
@@ -1318,6 +1320,82 @@ impl<T: CliConfig> Cli<T> {
                     .help("The event class subscription itself."),
             )
             .about("Remove alert receiver subscription")
+    }
+
+    pub fn cli_alert_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("alert-class")
+                    .long("alert-class")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required(false)
+                    .help(
+                        "Optional alert class or glob pattern used to filter alerts.\n\nIf this \
+                         is included, only alerts with the specified class or matching the glob \
+                         pattern (as appropriate) will be returned. Otherwise, alerts of all \
+                         classes will be returned.\n\nSee the guide-level documentation on alerts \
+                         for details on alert classes and alert class glob patterns.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("end-time")
+                    .long("end-time")
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
+                    .required(false)
+                    .help(
+                        "Inclusive upper bound on the alert creation time\n\nIf this is included, \
+                         only alerts created at or before this time will be returned.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("start-time")
+                    .long("start-time")
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
+                    .required(false)
+                    .help(
+                        "Inclusive lower bound on the alert creation time.\n\nIf this is \
+                         included, only alerts created at or after this time will be returned.",
+                    ),
+            )
+            .about(
+                "List alerts\n\nAlerts may be filtered by alert class or alert class glob and by \
+                 an inclusive creation time range.",
+            )
+    }
+
+    pub fn cli_alert_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("alert-id")
+                    .long("alert-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("UUID of the alert"),
+            )
+            .about("Fetch alert")
     }
 
     pub fn cli_alert_delivery_resend() -> ::clap::Command {
@@ -10004,6 +10082,8 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_alert_receiver_subscription_remove(matches)
                     .await
             }
+            CliCommand::AlertList => self.execute_alert_list(matches).await,
+            CliCommand::AlertView => self.execute_alert_view(matches).await,
             CliCommand::AlertDeliveryResend => self.execute_alert_delivery_resend(matches).await,
             CliCommand::AntiAffinityGroupList => {
                 self.execute_anti_affinity_group_list(matches).await
@@ -11714,6 +11794,77 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.alert_list();
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("alert-class") {
+            request = request.alert_class(value.clone());
+        }
+
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
+        {
+            request = request.end_time(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
+        {
+            request = request.start_time(value.clone());
+        }
+
+        self.config.execute_alert_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config.list_end_success::<types::AlertResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.alert_view();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("alert-id") {
+            request = request.alert_id(value.clone());
+        }
+
+        self.config.execute_alert_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -21834,6 +21985,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_alert_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_alert_delivery_resend(
         &self,
         matches: &::clap::ArgMatches,
@@ -24112,6 +24279,8 @@ pub enum CliCommand {
     AlertReceiverProbe,
     AlertReceiverSubscriptionAdd,
     AlertReceiverSubscriptionRemove,
+    AlertList,
+    AlertView,
     AlertDeliveryResend,
     AntiAffinityGroupList,
     AntiAffinityGroupCreate,
@@ -24432,6 +24601,8 @@ impl CliCommand {
             CliCommand::AlertReceiverProbe,
             CliCommand::AlertReceiverSubscriptionAdd,
             CliCommand::AlertReceiverSubscriptionRemove,
+            CliCommand::AlertList,
+            CliCommand::AlertView,
             CliCommand::AlertDeliveryResend,
             CliCommand::AntiAffinityGroupList,
             CliCommand::AntiAffinityGroupCreate,
@@ -24755,6 +24926,8 @@ impl CliCommand {
             CliCommand::AlertReceiverProbe => "alert_receiver_probe",
             CliCommand::AlertReceiverSubscriptionAdd => "alert_receiver_subscription_add",
             CliCommand::AlertReceiverSubscriptionRemove => "alert_receiver_subscription_remove",
+            CliCommand::AlertList => "alert_list",
+            CliCommand::AlertView => "alert_view",
             CliCommand::AlertDeliveryResend => "alert_delivery_resend",
             CliCommand::AntiAffinityGroupList => "anti_affinity_group_list",
             CliCommand::AntiAffinityGroupCreate => "anti_affinity_group_create",

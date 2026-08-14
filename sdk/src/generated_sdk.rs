@@ -1269,6 +1269,107 @@ pub mod types {
         }
     }
 
+    /// An alert.
+    ///
+    /// Alerts provide notifications about events that occurred in the system at
+    /// a point in time. See the guide-level documentation on alerts for
+    /// details.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An alert.\n\nAlerts provide notifications about events
+    /// that occurred in the system at a point in time. See the guide-level
+    /// documentation on alerts for details.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "alert",
+    ///    "class",
+    ///    "id",
+    ///    "time_created",
+    ///    "time_modified",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "alert": {
+    ///      "description": "The alert's data payload.\n\nThe schema for this
+    /// object depends on the alert class and version."
+    ///    },
+    ///    "class": {
+    ///      "description": "The alert's class.\n\nSee the guide-level
+    /// documentation on alerts for details on alert classes.",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "Unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "description": "The schema version of this alert's data
+    /// payload.\n\nAlert schemas are versioned on a per-alert-class basis. The
+    /// schema version for a particular alert class does not correspond to an
+    /// Oxide API version. Clients should expect to encounter earlier schema
+    /// versions when retrieving alerts recorded by an earlier version of the
+    /// system software.\n\nSee the guide-level documentation on alerts for
+    /// details.",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct Alert {
+        /// The alert's data payload.
+        ///
+        /// The schema for this object depends on the alert class and version.
+        pub alert: ::serde_json::Value,
+        /// The alert's class.
+        ///
+        /// See the guide-level documentation on alerts for details on alert
+        /// classes.
+        pub class: ::std::string::String,
+        /// Unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// Timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// The schema version of this alert's data payload.
+        ///
+        /// Alert schemas are versioned on a per-alert-class basis. The schema
+        /// version for a particular alert class does not correspond to an Oxide
+        /// API version. Clients should expect to encounter earlier schema
+        /// versions when retrieving alerts recorded by an earlier version of
+        /// the system software.
+        ///
+        /// See the guide-level documentation on alerts for details.
+        pub version: u32,
+    }
+
+    impl Alert {
+        pub fn builder() -> builder::Alert {
+            Default::default()
+        }
+    }
+
     /// An alert class.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2075,6 +2176,54 @@ pub mod types {
 
     impl AlertReceiverResultsPage {
         pub fn builder() -> builder::AlertReceiverResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Alert"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<Alert>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl AlertResultsPage {
+        pub fn builder() -> builder::AlertResultsPage {
             Default::default()
         }
     }
@@ -38221,6 +38370,127 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Alert {
+            alert: ::std::result::Result<::serde_json::Value, ::std::string::String>,
+            class: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            version: ::std::result::Result<u32, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for Alert {
+            fn default() -> Self {
+                Self {
+                    alert: Err("no value supplied for alert".to_string()),
+                    class: Err("no value supplied for class".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+
+        impl Alert {
+            pub fn alert<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::serde_json::Value>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.alert = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for alert: {e}"));
+                self
+            }
+            pub fn class<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.class = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for class: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<Alert> for super::Alert {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: Alert,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    alert: value.alert?,
+                    class: value.class?,
+                    id: value.id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                    version: value.version?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::Alert> for Alert {
+            fn from(value: super::Alert) -> Self {
+                Self {
+                    alert: Ok(value.alert),
+                    class: Ok(value.class),
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct AlertClass {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             name: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -38849,6 +39119,68 @@ pub mod types {
 
         impl ::std::convert::From<super::AlertReceiverResultsPage> for AlertReceiverResultsPage {
             fn from(value: super::AlertReceiverResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertResultsPage {
+            items: ::std::result::Result<::std::vec::Vec<super::Alert>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AlertResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AlertResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Alert>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertResultsPage> for super::AlertResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertResultsPage> for AlertResultsPage {
+            fn from(value: super::AlertResultsPage) -> Self {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
@@ -66812,7 +67144,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026081200.0.0
+/// Version: 2026081400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66853,7 +67185,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026081200.0.0"
+        "2026081400.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -70165,6 +70497,60 @@ pub trait ClientSystemAlertsExt {
     ///    .await;
     /// ```
     fn alert_receiver_subscription_remove(&self) -> builder::AlertReceiverSubscriptionRemove<'_>;
+    /// List alerts
+    ///
+    /// Alerts may be filtered by alert class or alert class glob and by an
+    /// inclusive creation time range.
+    ///
+    /// Sends a `GET` request to `/v1/alerts`
+    ///
+    /// Arguments:
+    /// - `alert_class`: Optional alert class or glob pattern used to filter
+    ///   alerts.
+    ///
+    /// If this is included, only alerts with the specified class or matching
+    /// the glob pattern (as appropriate) will be returned. Otherwise, alerts of
+    /// all classes will be returned.
+    ///
+    /// See the guide-level documentation on alerts for details on alert classes
+    /// and alert class glob patterns.
+    /// - `end_time`: Inclusive upper bound on the alert creation time
+    ///
+    /// If this is included, only alerts created at or before this time will be
+    /// returned.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `start_time`: Inclusive lower bound on the alert creation time.
+    ///
+    /// If this is included, only alerts created at or after this time will be
+    /// returned. 
+    /// ```ignore
+    /// let response = client.alert_list()
+    ///    .alert_class(alert_class)
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_list(&self) -> builder::AlertList<'_>;
+    /// Fetch alert
+    ///
+    /// Sends a `GET` request to `/v1/alerts/{alert_id}`
+    ///
+    /// Arguments:
+    /// - `alert_id`: UUID of the alert
+    /// ```ignore
+    /// let response = client.alert_view()
+    ///    .alert_id(alert_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_view(&self) -> builder::AlertView<'_>;
     /// Request re-delivery of alert
     ///
     /// Sends a `POST` request to `/v1/alerts/{alert_id}/resend`
@@ -70284,6 +70670,14 @@ impl ClientSystemAlertsExt for Client {
 
     fn alert_receiver_subscription_remove(&self) -> builder::AlertReceiverSubscriptionRemove<'_> {
         builder::AlertReceiverSubscriptionRemove::new(self)
+    }
+
+    fn alert_list(&self) -> builder::AlertList<'_> {
+        builder::AlertList::new(self)
+    }
+
+    fn alert_view(&self) -> builder::AlertView<'_> {
+        builder::AlertView::new(self)
     }
 
     fn alert_delivery_resend(&self) -> builder::AlertDeliveryResend<'_> {
@@ -77561,6 +77955,288 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_list`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_list`]: super::ClientSystemAlertsExt::alert_list
+    #[derive(Debug, Clone)]
+    pub struct AlertList<'a> {
+        client: &'a super::Client,
+        alert_class: Result<Option<types::AlertSubscription>, String>,
+        end_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+        start_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+    }
+
+    impl<'a> AlertList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                alert_class: Ok(None),
+                end_time: Ok(None),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                start_time: Ok(None),
+            }
+        }
+
+        pub fn alert_class<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AlertSubscription>,
+        {
+            self.alert_class = value.try_into().map(Some).map_err(|_| {
+                "conversion to `AlertSubscription` for alert_class failed".to_string()
+            });
+            self
+        }
+
+        pub fn end_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        {
+            self.end_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for end_time \
+                 failed"
+                    .to_string()
+            });
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeAndIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn start_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        {
+            self.start_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for \
+                 start_time failed"
+                    .to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/alerts`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                alert_class,
+                end_time,
+                limit,
+                page_token,
+                sort_by,
+                start_time,
+            } = self;
+            let alert_class = alert_class.map_err(Error::InvalidRequest)?;
+            let end_time = end_time.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let start_time = start_time.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/alerts", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "alert_class",
+                    &alert_class,
+                ))
+                .query(&progenitor_client::QueryParam::new("end_time", &end_time))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new(
+                    "start_time",
+                    &start_time,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/alerts`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Alert, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                alert_class: Ok(None),
+                end_time: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_view`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_view`]: super::ClientSystemAlertsExt::alert_view
+    #[derive(Debug, Clone)]
+    pub struct AlertView<'a> {
+        client: &'a super::Client,
+        alert_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> AlertView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                alert_id: Err("alert_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn alert_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.alert_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for alert_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/alerts/{alert_id}`
+        pub async fn send(self) -> Result<ResponseValue<types::Alert>, Error<types::Error>> {
+            let Self { client, alert_id } = self;
+            let alert_id = alert_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alerts/{}",
+                client.baseurl,
+                encode_path(&alert_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
