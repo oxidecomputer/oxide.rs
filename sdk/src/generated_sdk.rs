@@ -27495,6 +27495,17 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
+    ///    "slot": {
+    ///      "description": "The physical slot in the rack where this sled was
+    /// last observed to be located, or null if its location is not known at
+    /// this time.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
     ///    "state": {
     ///      "description": "The current state of the sled.",
     ///      "allOf": [
@@ -27543,6 +27554,10 @@ pub mod types {
         pub policy: SledPolicy,
         /// The rack to which this Sled is currently attached
         pub rack_id: ::uuid::Uuid,
+        /// The physical slot in the rack where this sled was last observed to
+        /// be located, or null if its location is not known at this time.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub slot: ::std::option::Option<u16>,
         /// The current state of the sled.
         pub state: SledState,
         /// Timestamp when this resource was created
@@ -58169,6 +58184,7 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             policy: ::std::result::Result<super::SledPolicy, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            slot: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
             state: ::std::result::Result<super::SledState, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
@@ -58189,6 +58205,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     policy: Err("no value supplied for policy".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
+                    slot: Ok(Default::default()),
                     state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -58241,6 +58258,16 @@ pub mod types {
                 self.rack_id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+                self
+            }
+            pub fn slot<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u16>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for slot: {e}"));
                 self
             }
             pub fn state<T>(mut self, value: T) -> Self
@@ -58303,6 +58330,7 @@ pub mod types {
                     id: value.id?,
                     policy: value.policy?,
                     rack_id: value.rack_id?,
+                    slot: value.slot?,
                     state: value.state?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -58319,6 +58347,7 @@ pub mod types {
                     id: Ok(value.id),
                     policy: Ok(value.policy),
                     rack_id: Ok(value.rack_id),
+                    slot: Ok(value.slot),
                     state: Ok(value.state),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -66783,7 +66812,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026073100.0.0
+/// Version: 2026081200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -66824,7 +66853,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026073100.0.0"
+        "2026081200.0.0"
     }
 
     fn baseurl(&self) -> &str {
