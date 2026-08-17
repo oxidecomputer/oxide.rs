@@ -67144,7 +67144,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026081400.0.0
+/// Version: 2026081700.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -67185,7 +67185,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026081400.0.0"
+        "2026081700.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -67867,181 +67867,6 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn probe_delete(&self) -> builder::ProbeDelete<'_>;
-    /// List all support bundles
-    ///
-    /// Sends a `GET` request to `/experimental/v1/system/support-bundles`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.support_bundle_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_list(&self) -> builder::SupportBundleList<'_>;
-    /// Create support bundle
-    ///
-    /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
-    ///
-    /// ```ignore
-    /// let response = client.support_bundle_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_create(&self) -> builder::SupportBundleCreate<'_>;
-    /// View support bundle
-    ///
-    /// Sends a `GET` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// ```ignore
-    /// let response = client.support_bundle_view()
-    ///    .bundle_id(bundle_id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_view(&self) -> builder::SupportBundleView<'_>;
-    /// Update support bundle
-    ///
-    /// Sends a `PUT` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// - `body`
-    /// ```ignore
-    /// let response = client.support_bundle_update()
-    ///    .bundle_id(bundle_id)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_update(&self) -> builder::SupportBundleUpdate<'_>;
-    /// Delete support bundle
-    ///
-    /// May also be used to cancel a support bundle which is currently being
-    /// collected, or to remove metadata for a support bundle that has failed.
-    ///
-    /// Sends a `DELETE` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// ```ignore
-    /// let response = client.support_bundle_delete()
-    ///    .bundle_id(bundle_id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_delete(&self) -> builder::SupportBundleDelete<'_>;
-    /// Download support bundle contents
-    ///
-    /// Sends a `GET` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as
-    ///   `bytes=0-499`
-    ///
-    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
-    /// ```ignore
-    /// let response = client.support_bundle_download()
-    ///    .bundle_id(bundle_id)
-    ///    .range(range)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_download(&self) -> builder::SupportBundleDownload<'_>;
-    /// Download support bundle metadata
-    ///
-    /// Sends a `HEAD` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as
-    ///   `bytes=0-499`
-    ///
-    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
-    /// ```ignore
-    /// let response = client.support_bundle_head()
-    ///    .bundle_id(bundle_id)
-    ///    .range(range)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_head(&self) -> builder::SupportBundleHead<'_>;
-    /// Download file from support bundle
-    ///
-    /// Sends a `GET` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}/download/{file}`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// - `file`: The file within the bundle to download
-    /// - `range`: A request to access a portion of the resource, such as
-    ///   `bytes=0-499`
-    ///
-    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
-    /// ```ignore
-    /// let response = client.support_bundle_download_file()
-    ///    .bundle_id(bundle_id)
-    ///    .file(file)
-    ///    .range(range)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile<'_>;
-    /// Download metadata of file in support bundle
-    ///
-    /// Sends a `HEAD` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}/download/{file}`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// - `file`: The file within the bundle to download
-    /// - `range`: A request to access a portion of the resource, such as
-    ///   `bytes=0-499`
-    ///
-    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
-    /// ```ignore
-    /// let response = client.support_bundle_head_file()
-    ///    .bundle_id(bundle_id)
-    ///    .file(file)
-    ///    .range(range)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile<'_>;
-    /// Download support bundle index
-    ///
-    /// Sends a `GET` request to
-    /// `/experimental/v1/system/support-bundles/{bundle_id}/index`
-    ///
-    /// Arguments:
-    /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as
-    ///   `bytes=0-499`
-    ///
-    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
-    /// ```ignore
-    /// let response = client.support_bundle_index()
-    ///    .bundle_id(bundle_id)
-    ///    .range(range)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn support_bundle_index(&self) -> builder::SupportBundleIndex<'_>;
     /// List affinity groups
     ///
     /// Sends a `GET` request to `/v1/affinity-groups`
@@ -68438,46 +68263,6 @@ impl ClientExperimentalExt for Client {
 
     fn probe_delete(&self) -> builder::ProbeDelete<'_> {
         builder::ProbeDelete::new(self)
-    }
-
-    fn support_bundle_list(&self) -> builder::SupportBundleList<'_> {
-        builder::SupportBundleList::new(self)
-    }
-
-    fn support_bundle_create(&self) -> builder::SupportBundleCreate<'_> {
-        builder::SupportBundleCreate::new(self)
-    }
-
-    fn support_bundle_view(&self) -> builder::SupportBundleView<'_> {
-        builder::SupportBundleView::new(self)
-    }
-
-    fn support_bundle_update(&self) -> builder::SupportBundleUpdate<'_> {
-        builder::SupportBundleUpdate::new(self)
-    }
-
-    fn support_bundle_delete(&self) -> builder::SupportBundleDelete<'_> {
-        builder::SupportBundleDelete::new(self)
-    }
-
-    fn support_bundle_download(&self) -> builder::SupportBundleDownload<'_> {
-        builder::SupportBundleDownload::new(self)
-    }
-
-    fn support_bundle_head(&self) -> builder::SupportBundleHead<'_> {
-        builder::SupportBundleHead::new(self)
-    }
-
-    fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile<'_> {
-        builder::SupportBundleDownloadFile::new(self)
-    }
-
-    fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile<'_> {
-        builder::SupportBundleHeadFile::new(self)
-    }
-
-    fn support_bundle_index(&self) -> builder::SupportBundleIndex<'_> {
-        builder::SupportBundleIndex::new(self)
     }
 
     fn affinity_group_list(&self) -> builder::AffinityGroupList<'_> {
@@ -73103,6 +72888,224 @@ impl ClientSystemSubnetPoolsExt for Client {
     }
 }
 
+/// Support bundles collect debugging information from the rack for use by Oxide
+/// support.
+pub trait ClientSystemSupportBundlesExt {
+    /// List all support bundles
+    ///
+    /// Sends a `GET` request to `/v1/system/support-bundles`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.support_bundle_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_list(&self) -> builder::SupportBundleList<'_>;
+    /// Create support bundle
+    ///
+    /// Sends a `POST` request to `/v1/system/support-bundles`
+    ///
+    /// ```ignore
+    /// let response = client.support_bundle_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_create(&self) -> builder::SupportBundleCreate<'_>;
+    /// View support bundle
+    ///
+    /// Sends a `GET` request to `/v1/system/support-bundles/{bundle_id}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_view()
+    ///    .bundle_id(bundle_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_view(&self) -> builder::SupportBundleView<'_>;
+    /// Update support bundle
+    ///
+    /// Sends a `PUT` request to `/v1/system/support-bundles/{bundle_id}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `body`
+    /// ```ignore
+    /// let response = client.support_bundle_update()
+    ///    .bundle_id(bundle_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_update(&self) -> builder::SupportBundleUpdate<'_>;
+    /// Delete support bundle
+    ///
+    /// May also be used to cancel a support bundle which is currently being
+    /// collected, or to remove metadata for a support bundle that has failed.
+    ///
+    /// Sends a `DELETE` request to `/v1/system/support-bundles/{bundle_id}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_delete()
+    ///    .bundle_id(bundle_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_delete(&self) -> builder::SupportBundleDelete<'_>;
+    /// Download support bundle contents
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/support-bundles/{bundle_id}/download`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// ```ignore
+    /// let response = client.support_bundle_download()
+    ///    .bundle_id(bundle_id)
+    ///    .range(range)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_download(&self) -> builder::SupportBundleDownload<'_>;
+    /// Download support bundle metadata
+    ///
+    /// Sends a `HEAD` request to
+    /// `/v1/system/support-bundles/{bundle_id}/download`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// ```ignore
+    /// let response = client.support_bundle_head()
+    ///    .bundle_id(bundle_id)
+    ///    .range(range)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_head(&self) -> builder::SupportBundleHead<'_>;
+    /// Download file from support bundle
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/support-bundles/{bundle_id}/download/{file}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `file`: The file within the bundle to download
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// ```ignore
+    /// let response = client.support_bundle_download_file()
+    ///    .bundle_id(bundle_id)
+    ///    .file(file)
+    ///    .range(range)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile<'_>;
+    /// Download metadata of file in support bundle
+    ///
+    /// Sends a `HEAD` request to
+    /// `/v1/system/support-bundles/{bundle_id}/download/{file}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `file`: The file within the bundle to download
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// ```ignore
+    /// let response = client.support_bundle_head_file()
+    ///    .bundle_id(bundle_id)
+    ///    .file(file)
+    ///    .range(range)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile<'_>;
+    /// Download support bundle index
+    ///
+    /// Sends a `GET` request to `/v1/system/support-bundles/{bundle_id}/index`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// ```ignore
+    /// let response = client.support_bundle_index()
+    ///    .bundle_id(bundle_id)
+    ///    .range(range)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_index(&self) -> builder::SupportBundleIndex<'_>;
+}
+
+impl ClientSystemSupportBundlesExt for Client {
+    fn support_bundle_list(&self) -> builder::SupportBundleList<'_> {
+        builder::SupportBundleList::new(self)
+    }
+
+    fn support_bundle_create(&self) -> builder::SupportBundleCreate<'_> {
+        builder::SupportBundleCreate::new(self)
+    }
+
+    fn support_bundle_view(&self) -> builder::SupportBundleView<'_> {
+        builder::SupportBundleView::new(self)
+    }
+
+    fn support_bundle_update(&self) -> builder::SupportBundleUpdate<'_> {
+        builder::SupportBundleUpdate::new(self)
+    }
+
+    fn support_bundle_delete(&self) -> builder::SupportBundleDelete<'_> {
+        builder::SupportBundleDelete::new(self)
+    }
+
+    fn support_bundle_download(&self) -> builder::SupportBundleDownload<'_> {
+        builder::SupportBundleDownload::new(self)
+    }
+
+    fn support_bundle_head(&self) -> builder::SupportBundleHead<'_> {
+        builder::SupportBundleHead::new(self)
+    }
+
+    fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile<'_> {
+        builder::SupportBundleDownloadFile::new(self)
+    }
+
+    fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile<'_> {
+        builder::SupportBundleHeadFile::new(self)
+    }
+
+    fn support_bundle_index(&self) -> builder::SupportBundleIndex<'_> {
+        builder::SupportBundleIndex::new(self)
+    }
+}
+
 /// Upload and manage system updates
 pub trait ClientSystemUpdateExt {
     /// Clear system recovery status
@@ -74887,919 +74890,6 @@ pub mod builder {
                     ResponseValue::from_response(response).await?,
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_list`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_list`]: super::ClientExperimentalExt::support_bundle_list
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<::std::num::NonZeroU32>, String>,
-        page_token: Result<Option<::std::string::String>, String>,
-        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
-    }
-
-    impl<'a> SupportBundleList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.page_token = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for page_token failed".to_string()
-            });
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::TimeAndIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/experimental/v1/system/support-bundles`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SupportBundleInfoResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/experimental/v1/system/support-bundles", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("limit", &limit))
-                .query(&progenitor_client::QueryParam::new(
-                    "page_token",
-                    &page_token,
-                ))
-                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_list",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/experimental/v1/system/support-bundles`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::SupportBundleInfo, Error<types::Error>>>
-               + Unpin
-               + 'a {
-            use ::futures::StreamExt;
-            use ::futures::TryFutureExt;
-            use ::futures::TryStreamExt;
-            let next = Self {
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_create`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_create`]: super::ClientExperimentalExt::support_bundle_create
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::SupportBundleCreate, String>,
-    }
-
-    impl<'a> SupportBundleCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SupportBundleCreate>,
-            <V as std::convert::TryInto<types::SupportBundleCreate>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `SupportBundleCreate` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::SupportBundleCreate,
-            ) -> types::builder::SupportBundleCreate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(|v| types::SupportBundleCreate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/experimental/v1/system/support-bundles", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_create",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_view`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_view`]: super::ClientExperimentalExt::support_bundle_view
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleView<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-    }
-
-    impl<'a> SupportBundleView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
-            let Self { client, bundle_id } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_view",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_update`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_update`]: super::ClientExperimentalExt::support_bundle_update
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleUpdate<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-        body: Result<types::builder::SupportBundleUpdate, String>,
-    }
-
-    impl<'a> SupportBundleUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SupportBundleUpdate>,
-            <V as std::convert::TryInto<types::SupportBundleUpdate>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `SupportBundleUpdate` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::SupportBundleUpdate,
-            ) -> types::builder::SupportBundleUpdate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `PUT` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
-            let Self {
-                client,
-                bundle_id,
-                body,
-            } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::SupportBundleUpdate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .put(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_update",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_delete`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_delete`]: super::ClientExperimentalExt::support_bundle_delete
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleDelete<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-    }
-
-    impl<'a> SupportBundleDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        /// Sends a `DELETE` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, bundle_id } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .delete(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_delete",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_download`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_download`]: super::ClientExperimentalExt::support_bundle_download
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleDownload<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-        range: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> SupportBundleDownload<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-                range: Ok(None),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        pub fn range<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.range = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for range failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self {
-                client,
-                bundle_id,
-                range,
-            } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let range = range.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}/download",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            if let Some(value) = range {
-                header_map.append("range", value.to_string().try_into()?);
-            }
-            #[allow(unused_mut)]
-            let mut request = client.client.get(url).headers(header_map).build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_download",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_head`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_head`]: super::ClientExperimentalExt::support_bundle_head
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleHead<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-        range: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> SupportBundleHead<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-                range: Ok(None),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        pub fn range<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.range = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for range failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `HEAD` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self {
-                client,
-                bundle_id,
-                range,
-            } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let range = range.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}/download",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            if let Some(value) = range {
-                header_map.append("range", value.to_string().try_into()?);
-            }
-            #[allow(unused_mut)]
-            let mut request = client.client.head(url).headers(header_map).build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_head",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_download_file`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_download_file`]: super::ClientExperimentalExt::support_bundle_download_file
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleDownloadFile<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-        file: Result<::std::string::String, String>,
-        range: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> SupportBundleDownloadFile<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-                file: Err("file was not initialized".to_string()),
-                range: Ok(None),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        pub fn file<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.file = value.try_into().map_err(|_| {
-                "conversion to `:: std :: string :: String` for file failed".to_string()
-            });
-            self
-        }
-
-        pub fn range<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.range = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for range failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}/download/
-        /// {file}`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self {
-                client,
-                bundle_id,
-                file,
-                range,
-            } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let file = file.map_err(Error::InvalidRequest)?;
-            let range = range.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}/download/{}",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-                encode_path(&file.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            if let Some(value) = range {
-                header_map.append("range", value.to_string().try_into()?);
-            }
-            #[allow(unused_mut)]
-            let mut request = client.client.get(url).headers(header_map).build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_download_file",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_head_file`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_head_file`]: super::ClientExperimentalExt::support_bundle_head_file
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleHeadFile<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-        file: Result<::std::string::String, String>,
-        range: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> SupportBundleHeadFile<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-                file: Err("file was not initialized".to_string()),
-                range: Ok(None),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        pub fn file<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.file = value.try_into().map_err(|_| {
-                "conversion to `:: std :: string :: String` for file failed".to_string()
-            });
-            self
-        }
-
-        pub fn range<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.range = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for range failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `HEAD` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}/download/
-        /// {file}`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self {
-                client,
-                bundle_id,
-                file,
-                range,
-            } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let file = file.map_err(Error::InvalidRequest)?;
-            let range = range.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}/download/{}",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-                encode_path(&file.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            if let Some(value) = range {
-                header_map.append("range", value.to_string().try_into()?);
-            }
-            #[allow(unused_mut)]
-            let mut request = client.client.head(url).headers(header_map).build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_head_file",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
-            }
-        }
-    }
-
-    /// Builder for [`ClientExperimentalExt::support_bundle_index`]
-    ///
-    /// [`ClientExperimentalExt::support_bundle_index`]: super::ClientExperimentalExt::support_bundle_index
-    #[derive(Debug, Clone)]
-    pub struct SupportBundleIndex<'a> {
-        client: &'a super::Client,
-        bundle_id: Result<::uuid::Uuid, String>,
-        range: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> SupportBundleIndex<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                bundle_id: Err("bundle_id was not initialized".to_string()),
-                range: Ok(None),
-            }
-        }
-
-        pub fn bundle_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.bundle_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
-            self
-        }
-
-        pub fn range<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.range = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for range failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/experimental/v1/system/support-bundles/{bundle_id}/index`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self {
-                client,
-                bundle_id,
-                range,
-            } = self;
-            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
-            let range = range.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/experimental/v1/system/support-bundles/{}/index",
-                client.baseurl,
-                encode_path(&bundle_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            if let Some(value) = range {
-                header_map.append("range", value.to_string().try_into()?);
-            }
-            #[allow(unused_mut)]
-            let mut request = client.client.get(url).headers(header_map).build()?;
-            let info = OperationInfo {
-                operation_id: "support_bundle_index",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
             }
         }
     }
@@ -103621,6 +102711,915 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_list`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_list`]: super::ClientSystemSupportBundlesExt::support_bundle_list
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+    }
+
+    impl<'a> SupportBundleList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeAndIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/support-bundles`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfoResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/support-bundles", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/support-bundles`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SupportBundleInfo, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_create`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_create`]: super::ClientSystemSupportBundlesExt::support_bundle_create
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SupportBundleCreate, String>,
+    }
+
+    impl<'a> SupportBundleCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SupportBundleCreate>,
+            <V as std::convert::TryInto<types::SupportBundleCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SupportBundleCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SupportBundleCreate,
+            ) -> types::builder::SupportBundleCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/support-bundles`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SupportBundleCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/support-bundles", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_view`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_view`]: super::ClientSystemSupportBundlesExt::support_bundle_view
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleView<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/support-bundles/{bundle_id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self { client, bundle_id } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_update`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_update`]: super::ClientSystemSupportBundlesExt::support_bundle_update
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleUpdate<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        body: Result<types::builder::SupportBundleUpdate, String>,
+    }
+
+    impl<'a> SupportBundleUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SupportBundleUpdate>,
+            <V as std::convert::TryInto<types::SupportBundleUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SupportBundleUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SupportBundleUpdate,
+            ) -> types::builder::SupportBundleUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/support-bundles/{bundle_id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self {
+                client,
+                bundle_id,
+                body,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SupportBundleUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_delete`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_delete`]: super::ClientSystemSupportBundlesExt::support_bundle_delete
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleDelete<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/support-bundles/{bundle_id}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, bundle_id } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_download`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_download`]: super::ClientSystemSupportBundlesExt::support_bundle_download
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleDownload<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        range: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> SupportBundleDownload<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                range: Ok(None),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/support-bundles/{bundle_id}/download`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                bundle_id,
+                range,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}/download",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
+            #[allow(unused_mut)]
+            let mut request = client.client.get(url).headers(header_map).build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_download",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_head`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_head`]: super::ClientSystemSupportBundlesExt::support_bundle_head
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleHead<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        range: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> SupportBundleHead<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                range: Ok(None),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `HEAD` request to
+        /// `/v1/system/support-bundles/{bundle_id}/download`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                bundle_id,
+                range,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}/download",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
+            #[allow(unused_mut)]
+            let mut request = client.client.head(url).headers(header_map).build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_head",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemSupportBundlesExt::support_bundle_download_file`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_download_file`]: super::ClientSystemSupportBundlesExt::support_bundle_download_file
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleDownloadFile<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        file: Result<::std::string::String, String>,
+        range: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> SupportBundleDownloadFile<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                file: Err("file was not initialized".to_string()),
+                range: Ok(None),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn file<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.file = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for file failed".to_string()
+            });
+            self
+        }
+
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/support-bundles/{bundle_id}/download/{file}`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                bundle_id,
+                file,
+                range,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let file = file.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}/download/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+                encode_path(&file.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
+            #[allow(unused_mut)]
+            let mut request = client.client.get(url).headers(header_map).build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_download_file",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_head_file`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_head_file`]: super::ClientSystemSupportBundlesExt::support_bundle_head_file
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleHeadFile<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        file: Result<::std::string::String, String>,
+        range: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> SupportBundleHeadFile<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                file: Err("file was not initialized".to_string()),
+                range: Ok(None),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn file<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.file = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for file failed".to_string()
+            });
+            self
+        }
+
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `HEAD` request to
+        /// `/v1/system/support-bundles/{bundle_id}/download/{file}`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                bundle_id,
+                file,
+                range,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let file = file.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}/download/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+                encode_path(&file.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
+            #[allow(unused_mut)]
+            let mut request = client.client.head(url).headers(header_map).build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_head_file",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSupportBundlesExt::support_bundle_index`]
+    ///
+    /// [`ClientSystemSupportBundlesExt::support_bundle_index`]: super::ClientSystemSupportBundlesExt::support_bundle_index
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleIndex<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        range: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> SupportBundleIndex<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                range: Ok(None),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/support-bundles/{bundle_id}/index`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                bundle_id,
+                range,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/support-bundles/{}/index",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
+            #[allow(unused_mut)]
+            let mut request = client.client.get(url).headers(header_map).build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_index",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemMetricsExt::system_timeseries_query`]
     ///
     /// [`ClientSystemMetricsExt::system_timeseries_query`]: super::ClientSystemMetricsExt::system_timeseries_query
@@ -109745,6 +109744,7 @@ pub mod prelude {
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
     pub use super::ClientSystemSubnetPoolsExt;
+    pub use super::ClientSystemSupportBundlesExt;
     pub use super::ClientSystemUpdateExt;
     pub use super::ClientTokensExt;
     pub use super::ClientVpcsExt;
