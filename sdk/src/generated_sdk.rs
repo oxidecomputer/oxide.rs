@@ -25131,12 +25131,22 @@ pub mod types {
     ///    {
     ///      "type": "object",
     ///      "required": [
-    ///        "ip",
+    ///        "target_addr",
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "ip": {
-    ///          "description": "IP address for numbered BGP peers.",
+    ///        "src_addr": {
+    ///          "description": "Optional local IP address to bind when
+    /// establishing outbound TCP connections to this peer. If `None`, the OS
+    /// selects the source address.",
+    ///          "type": [
+    ///            "string",
+    ///            "null"
+    ///          ],
+    ///          "format": "ip"
+    ///        },
+    ///        "target_addr": {
+    ///          "description": "Target IP address for numbered BGP peers.",
     ///          "type": "string",
     ///          "format": "ip"
     ///        },
@@ -25164,8 +25174,13 @@ pub mod types {
         },
         #[serde(rename = "numbered")]
         Numbered {
-            /// IP address for numbered BGP peers.
-            ip: ::std::net::IpAddr,
+            /// Optional local IP address to bind when establishing outbound TCP
+            /// connections to this peer. If `None`, the OS selects the source
+            /// address.
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            src_addr: ::std::option::Option<::std::net::IpAddr>,
+            /// Target IP address for numbered BGP peers.
+            target_addr: ::std::net::IpAddr,
         },
     }
 
@@ -67144,7 +67159,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026081700.0.0
+/// Version: 2026081901.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -67185,7 +67200,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026081700.0.0"
+        "2026081901.0.0"
     }
 
     fn baseurl(&self) -> &str {
