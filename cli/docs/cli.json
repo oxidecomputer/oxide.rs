@@ -77,6 +77,41 @@
           ]
         },
         {
+          "name": "list",
+          "about": "List alerts\n\nAlerts may be filtered by alert class or alert class glob and by an inclusive creation time range.",
+          "operation_id": "alert_list",
+          "args": [
+            {
+              "long": "alert-class",
+              "help": "Optional alert class or glob pattern used to filter alerts.\n\nIf this is included, only alerts with the specified class or matching the glob pattern (as appropriate) will be returned. Otherwise, alerts of all classes will be returned.\n\nSee the guide-level documentation on alerts for details on alert classes and alert class glob patterns."
+            },
+            {
+              "long": "end-time",
+              "help": "Inclusive upper bound on the alert creation time\n\nIf this is included, only alerts created at or before this time will be returned."
+            },
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "time_and_id_ascending",
+                "time_and_id_descending"
+              ]
+            },
+            {
+              "long": "start-time",
+              "help": "Inclusive lower bound on the alert creation time.\n\nIf this is included, only alerts created at or after this time will be returned."
+            }
+          ]
+        },
+        {
           "name": "receiver",
           "args": [
             {
@@ -432,6 +467,22 @@
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch alert",
+          "operation_id": "alert_view",
+          "args": [
+            {
+              "long": "alert-id",
+              "help": "UUID of the alert"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }
@@ -7363,6 +7414,10 @@
                         },
                         {
                           "long": "router-lifetime"
+                        },
+                        {
+                          "long": "src-addr",
+                          "help": "Source IP address to use when initiating the BGP session with the peer. If not provided, an address is selected automatically"
                         },
                         {
                           "long": "switch",

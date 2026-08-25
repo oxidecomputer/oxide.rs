@@ -1,4 +1,7 @@
 oxide alert class list — List alert classes
+oxide alert list — List alerts
+
+Alerts may be filtered by alert class or alert class glob and by an inclusive creation time range.
 oxide alert receiver delete — Delete alert receiver
 oxide alert receiver list — List alert receivers
 oxide alert receiver log — List delivery attempts to alert receiver
@@ -24,6 +27,7 @@ oxide alert receiver webhook secret list — List webhook receiver secret IDs
 oxide alert receiver webhook update — Update webhook receiver
 
 Note that receiver secrets are NOT added or removed using this endpoint. Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.
+oxide alert view — Fetch alert
 oxide api — Makes an authenticated HTTP request to the Oxide API and prints the response.
 oxide audit-log list — View audit log
 

@@ -422,7 +422,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
                     .iter_mut()
                     .find(|x| {
                         matches!( &x.addr,
-                        RouterPeerType::Numbered { ip } if *ip == self.peer)
+                        RouterPeerType::Numbered { target_addr, .. } if *target_addr == self.peer)
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
@@ -506,7 +506,7 @@ impl AuthenticatedCmd for CmdBgpAuth {
                     .iter_mut()
                     .find(|x| {
                         matches!(&x.addr,
-                        RouterPeerType::Numbered { ip } if *ip == self.peer)
+                        RouterPeerType::Numbered { target_addr, .. } if *target_addr == self.peer)
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
@@ -571,7 +571,7 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
                     .iter_mut()
                     .find(|x| {
                         matches!(&x.addr,
-                        RouterPeerType::Numbered { ip } if *ip == self.peer)
+                        RouterPeerType::Numbered { target_addr, .. } if *target_addr == self.peer)
                     })
                     .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
 
@@ -1017,6 +1017,11 @@ pub struct CmdBgpPeerSet {
     #[arg(long)]
     addr: IpAddr,
 
+    /// Source IP address to use when initiating the BGP session with the
+    /// peer. If not provided, an address is selected automatically.
+    #[arg(long)]
+    src_addr: Option<IpAddr>,
+
     /// BGP configuration this peer is associated with.
     #[arg(long)]
     bgp_config: NameOrId,
@@ -1097,7 +1102,10 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
         let mut settings =
             current_port_settings(client, &self.rack, self.switch.into(), &self.port).await?;
         let peer = BgpPeer {
-            addr: RouterPeerType::Numbered { ip: self.addr },
+            addr: RouterPeerType::Numbered {
+                src_addr: self.src_addr,
+                target_addr: self.addr,
+            },
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering
             } else {
@@ -1145,11 +1153,10 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
                     RouterPeerType::Unnumbered { router_lifetime: a },
                     RouterPeerType::Unnumbered { router_lifetime: b },
                 ) if **a == **b => true,
-                (RouterPeerType::Numbered { ip: a }, RouterPeerType::Numbered { ip: b })
-                    if a == b =>
-                {
-                    true
-                }
+                (
+                    RouterPeerType::Numbered { target_addr: a, .. },
+                    RouterPeerType::Numbered { target_addr: b, .. },
+                ) if a == b => true,
                 _ => false,
             }) {
                 Some(p) => *p = peer,
@@ -1209,7 +1216,7 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
             let before = config.peers.len();
             config.peers.retain(|x| {
                 matches!(&x.addr,
-                RouterPeerType::Numbered { ip } if *ip == self.addr)
+                RouterPeerType::Numbered { target_addr, .. } if *target_addr == self.addr)
             });
             let after = config.peers.len();
             if before == after {
@@ -1371,7 +1378,7 @@ impl AuthenticatedCmd for CmdPortConfig {
                         match &p.addr {
                             RouterPeerType::Unnumbered { router_lifetime } =>
                                 format!("({router_lifetime})"),
-                            RouterPeerType::Numbered { ip } => ip.to_string(),
+                            RouterPeerType::Numbered { target_addr, .. } => target_addr.to_string(),
                         },
                         match &p.bgp_config {
                             NameOrId::Id(id) => bgp_configs[id].to_string(),

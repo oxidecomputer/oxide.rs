@@ -774,6 +774,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::AlertReceiverDelete => Some("alert receiver delete"),
         CliCommand::AlertReceiverSubscriptionAdd => Some("alert receiver subscribe"),
         CliCommand::AlertReceiverSubscriptionRemove => Some("alert receiver unsubscribe"),
+        CliCommand::AlertList => Some("alert list"),
+        CliCommand::AlertView => Some("alert view"),
 
         // Webhook specific subcommands (including secret management)
         CliCommand::WebhookReceiverCreate => Some("alert receiver webhook create"),
