@@ -245,7 +245,7 @@ pub struct CmdInstanceFromImage {
     #[clap(long = "anti-affinity-group")]
     anti_affinity_groups: Vec<NameOrId>,
 
-    /// Set network interface MTU to 8500
+    /// Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE
     #[clap(long)]
     enable_jumbo_frames: bool,
 

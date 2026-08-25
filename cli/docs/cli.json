@@ -3451,7 +3451,7 @@
             },
             {
               "long": "enable-jumbo-frames",
-              "help": "Set network interface MTU to 8500 (requires jumbo-frames to be enabled at fleet-level)"
+              "help": "Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE"
             },
             {
               "long": "hostname",
