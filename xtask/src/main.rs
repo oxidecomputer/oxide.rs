@@ -192,6 +192,14 @@ fn format_code(code: String) -> String {
             panic!("unexpected issue formatting generated code: {}", other);
         }
     };
+
+    // rustfmt has a bug where it can sometimes leave trailing whitespace on
+    // wrapped comments. Fix it up. (See rust-lang/rustfmt#7069)
+    let contents = regex::Regex::new(r"(?m) +$")
+        .unwrap()
+        .replace_all(&contents, "")
+        .to_string();
+
     let contents = dos2unix(&contents);
 
     // Add newlines after end-braces at <= two levels of indentation. Rustfmt's

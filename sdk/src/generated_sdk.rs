@@ -70325,7 +70325,7 @@ pub trait ClientSystemAlertsExt {
     /// - `start_time`: Inclusive lower bound on the alert creation time.
     ///
     /// If this is included, only alerts created at or after this time will be
-    /// returned. 
+    /// returned.
     /// ```ignore
     /// let response = client.alert_list()
     ///    .alert_class(alert_class)
