@@ -3450,6 +3450,10 @@
               "help": "Description of the instance"
             },
             {
+              "long": "enable-jumbo-frames",
+              "help": "Set network interface MTU to 8500 (requires jumbo-frames to be enabled at fleet-level)"
+            },
+            {
               "long": "hostname",
               "help": "The hostname to be assigned to the instance"
             },
