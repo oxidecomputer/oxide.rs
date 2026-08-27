@@ -490,8 +490,8 @@
     },
     {
       "name": "api",
-      "about": "Makes an authenticated HTTP request to the Oxide API and prints the response.",
-      "long_about": "Makes an authenticated HTTP request to the Oxide API and prints the response.\n\nThe endpoint argument should be a path of a Oxide API endpoint.\n\nThe default HTTP request method is \"GET\" normally and \"POST\" if any\nparameters were added. Override the method with `--method`.\n\nPass one or more `-f/--raw-field` values in \"key=value\" format to add\nstatic string parameters to the request payload. To add non-string or\notherwise dynamic values, see `--field` below. Note that adding request\nparameters will automatically switch the request method to POST. To send\nthe parameters as a GET query string instead, use `--method GET`.\n\nThe `-F/--field` flag has magic type conversion based on the format of the\nvalue:\n\n- literal values \"true\", \"false\", \"null\", and integer/float numbers get\n  converted to appropriate JSON types;\n- if the value starts with \"@\", the rest of the value is interpreted as a\n  filename to read the value from. Pass \"-\" to read from standard input.\n\nRaw request body may be passed from the outside via a file specified by\n`--input`. Pass \"-\" to read from standard input. In this mode, parameters\nspecified via `--field` flags are serialized into URL query parameters.\n\nIn `--paginate` mode, all pages of results will sequentially be requested\nuntil there are no more pages of results.",
+      "about": "Make an authenticated HTTP request to the Oxide API and print the response",
+      "long_about": "Make an authenticated HTTP request to the Oxide API and print the response\n\nThe endpoint argument should be a path of a Oxide API endpoint.\n\nThe default HTTP request method is \"GET\" normally and \"POST\" if any\nparameters were added. Override the method with `--method`.\n\nPass one or more `-f/--raw-field` values in \"key=value\" format to add\nstatic string parameters to the request payload. To add non-string or\notherwise dynamic values, see `--field` below. Note that adding request\nparameters will automatically switch the request method to POST. To send\nthe parameters as a GET query string instead, use `--method GET`.\n\nThe `-F/--field` flag has magic type conversion based on the format of the\nvalue:\n\n- literal values \"true\", \"false\", \"null\", and integer/float numbers get\n  converted to appropriate JSON types;\n- if the value starts with \"@\", the rest of the value is interpreted as a\n  filename to read the value from. Pass \"-\" to read from standard input.\n\nRaw request body may be passed from the outside via a file specified by\n`--input`. Pass \"-\" to read from standard input. In this mode, parameters\nspecified via `--field` flags are serialized into URL query parameters.\n\nIn `--paginate` mode, all pages of results will sequentially be requested\nuntil there are no more pages of results.",
       "args": [
         {
           "long": "field",
@@ -627,8 +627,8 @@
         },
         {
           "name": "logout",
-          "about": "Removes saved authentication information from profiles.",
-          "long_about": "Removes saved authentication information from profiles.\n\nThis command does not invalidate any tokens.",
+          "about": "Remove saved authentication information from profiles",
+          "long_about": "Remove saved authentication information from profiles\n\nThis command does not invalidate any tokens.",
           "args": [
             {
               "long": "all",
@@ -649,8 +649,8 @@
         },
         {
           "name": "status",
-          "about": "Verifies and displays information about your authentication state.",
-          "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each profile in the\ncurrent configuration.",
+          "about": "Verify and display your authentication state",
+          "long_about": "Verify and display your authentication state\n\nThis command validates the authentication state for each profile in the\ncurrent configuration.",
           "args": [
             {
               "long": "profile",
@@ -761,7 +761,7 @@
         },
         {
           "name": "download",
-          "about": "Downloads a support bundle",
+          "about": "Download a support bundle",
           "args": [
             {
               "long": "chunk-size",
@@ -786,8 +786,8 @@
         },
         {
           "name": "inspect",
-          "about": "Inspects a support bundle",
-          "long_about": "Inspects a support bundle\n\nSupport bundles may be inspected before they are downloaded (via\nsmaller HTTP requests), or after the entire zip file has been\ndownloaded.",
+          "about": "Inspect a support bundle",
+          "long_about": "Inspect a support bundle\n\nSupport bundles may be inspected before they are downloaded (via\nsmaller HTTP requests), or after the entire zip file has been\ndownloaded.",
           "args": [
             {
               "long": "id",
@@ -985,8 +985,8 @@
     },
     {
       "name": "completion",
-      "about": "Generate shell completion scripts for Oxide CLI commands.",
-      "long_about": "Generate shell completion scripts for Oxide CLI commands.\n\nThis command generates scripts for various shells that can be used to\nenable completion.\n\n## Installation\n\n### Bash\n\nAdd this to your `~/.bash_profile`:\n\n```sh\neval \"$(oxide completion -s bash)\"\n```\n\n### Zsh\n\nAdd this to your `~/.zshrc`:\n\n```sh\nautoload -U compinit\ncompinit -i\neval \"$(oxide completion -s zsh)\"\n```\n\n### Fish\n\nAdd the following to the `is-interactive` block in your `~/.config/fish/config.fish`:\n\n```sh\noxide completion -s fish | source\n```\n\n### PowerShell\n\nOpen your profile script with:\n\n```sh\nmkdir -Path (Split-Path -Parent $profile)\nnotepad $profile\n```\n\nAdd the following line and save the file:\n\n```powershell\nInvoke-Expression -Command $(oxide completion -s powershell | Out-String)\n```\n\n### Elvish\n\nAdd this to your `~/.config/elvish/rc.elv`\n\n```sh\neval (oxide completion -s elvish | slurp)\n```",
+      "about": "Generate shell completion scripts for Oxide CLI commands",
+      "long_about": "Generate shell completion scripts for Oxide CLI commands\n\nThis command generates scripts for various shells that can be used to\nenable completion.\n\n## Installation\n\n### Bash\n\nAdd this to your `~/.bash_profile`:\n\n```sh\neval \"$(oxide completion -s bash)\"\n```\n\n### Zsh\n\nAdd this to your `~/.zshrc`:\n\n```sh\nautoload -U compinit\ncompinit -i\neval \"$(oxide completion -s zsh)\"\n```\n\n### Fish\n\nAdd the following to the `is-interactive` block in your `~/.config/fish/config.fish`:\n\n```sh\noxide completion -s fish | source\n```\n\n### PowerShell\n\nOpen your profile script with:\n\n```sh\nmkdir -Path (Split-Path -Parent $profile)\nnotepad $profile\n```\n\nAdd the following line and save the file:\n\n```powershell\nInvoke-Expression -Command $(oxide completion -s powershell | Out-String)\n```\n\n### Elvish\n\nAdd this to your `~/.config/elvish/rc.elv`\n\n```sh\neval (oxide completion -s elvish | slurp)\n```",
       "args": [
         {
           "long": "profile",
@@ -2188,7 +2188,7 @@
           "subcommands": [
             {
               "name": "dashboard",
-              "about": "Graph the results of an OxQL timeseries query.",
+              "about": "Graph the results of an OxQL timeseries query",
               "args": [
                 {
                   "long": "interval",
@@ -3435,7 +3435,7 @@
         },
         {
           "name": "from-image",
-          "about": "Launch an instance from a disk image.",
+          "about": "Launch an instance from a disk image",
           "args": [
             {
               "long": "anti-affinity-group",
@@ -3837,8 +3837,8 @@
           "subcommands": [
             {
               "name": "console",
-              "about": "Connect to an instance's serial console interactively.",
-              "long_about": "Connect to an instance's serial console interactively.\n\n(To pull output non-interactively, try `oxide instance serial history`)",
+              "about": "Connect to an instance's serial console interactively",
+              "long_about": "Connect to an instance's serial console interactively\n\n(To pull output non-interactively, try `oxide instance serial history`)",
               "args": [
                 {
                   "long": "escape-prefix-length",
@@ -3878,8 +3878,8 @@
             },
             {
               "name": "history",
-              "about": "Fetch an instance's serial console output.",
-              "long_about": "Fetch an instance's serial console output.\n\n(To connect interactively and follow live output, try `oxide instance serial console`)",
+              "about": "Fetch an instance's serial console output",
+              "long_about": "Fetch an instance's serial console output\n\n(To connect interactively and follow live output, try `oxide instance serial console`)",
               "args": [
                 {
                   "long": "byte-offset",
@@ -6246,7 +6246,8 @@
                 },
                 {
                   "name": "show-status",
-                  "about": "Get the status of switch ports.",
+                  "about": "Show the link status of every switch port",
+                  "long_about": "Show the link status of every switch port\n\nPrints link state, speed, and MAC address for every port on every switch in\nthe rack. To retrieve the status of a single port as raw API output, use\n`oxide system hardware switch-port status`.",
                   "args": [
                     {
                       "long": "profile",
@@ -6758,8 +6759,8 @@
               "subcommands": [
                 {
                   "name": "announce",
-                  "about": "Announce a prefix over BGP.",
-                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the announce set.",
+                  "about": "Announce a prefix over BGP",
+                  "long_about": "Announce a prefix over BGP\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the announce set.",
                   "args": [
                     {
                       "long": "address-lot",
@@ -6895,8 +6896,8 @@
                 },
                 {
                   "name": "auth",
-                  "about": "Set an authentication string.",
-                  "long_about": "Set an authentication string.\n\nThis command sets the authentication string that the specified BGP session\nwill use for establishing a TCP-MD5 authenticated connection with its peer.\nThis command works by performing a read-modify-write on the switch port\nsettings configuration identified by the specified rack/switch/port.",
+                  "about": "Set the TCP-MD5 authentication string for a BGP peer",
+                  "long_about": "Set the TCP-MD5 authentication string for a BGP peer\n\nThis command sets the authentication string that the specified BGP session\nwill use for establishing a TCP-MD5 authenticated connection with its peer.\nThis command works by performing a read-modify-write on the switch port\nsettings configuration identified by the specified rack/switch/port.",
                   "args": [
                     {
                       "long": "authstring",
@@ -7108,8 +7109,8 @@
                 },
                 {
                   "name": "filter",
-                  "about": "Add a filtering requirement to a BGP session.",
-                  "long_about": "Add a filtering requirement to a BGP session.\n\nThe Oxide BGP implementation can filter prefixes received from peers\non import and filter prefixes sent to peers on export. This command\nprovides a way to specify import/export filtering. Filtering is a\nproperty of the BGP peering settings found in the port settings configuration.\nThis command works by performing a read-modify-write on the port settings\nconfiguration identified by the specified rack/switch/port.",
+                  "about": "Filter the prefixes a BGP peer may import or export",
+                  "long_about": "Filter the prefixes a BGP peer may import or export\n\nThe Oxide BGP implementation can filter prefixes received from peers\non import and filter prefixes sent to peers on export. This command\nprovides a way to specify import/export filtering. Filtering is a\nproperty of the BGP peering settings found in the port settings configuration.\nThis command works by performing a read-modify-write on the port settings\nconfiguration identified by the specified rack/switch/port.",
                   "args": [
                     {
                       "long": "allowed",
@@ -7234,7 +7235,7 @@
                   "subcommands": [
                     {
                       "name": "delete",
-                      "about": "Remove a BGP from a port configuration",
+                      "about": "Remove a BGP peer from a port configuration",
                       "args": [
                         {
                           "long": "addr",
@@ -7437,8 +7438,8 @@
                 },
                 {
                   "name": "pref",
-                  "about": "Set a local preference for a peer.",
-                  "long_about": "Set a local preference for a peer.\n\nThis command associates a local preference for the specified peer. When\nroutes are imported by this peer, they will be installed into the routing\ninformation base (RIB) with the specified preference. This command works\nby performing a read-modify-write on the switch port settings configuration\nidentified by the specified rack/switch/port.",
+                  "about": "Set the local preference applied to routes imported from a BGP peer",
+                  "long_about": "Set the local preference applied to routes imported from a BGP peer\n\nThis command associates a local preference for the specified peer. When\nroutes are imported by this peer, they will be installed into the routing\ninformation base (RIB) with the specified preference. This command works\nby performing a read-modify-write on the switch port settings configuration\nidentified by the specified rack/switch/port.",
                   "args": [
                     {
                       "long": "local-pref",
@@ -7507,8 +7508,8 @@
                 },
                 {
                   "name": "show-status",
-                  "about": "Get the status of BGP on the rack.",
-                  "long_about": "Get the status of BGP on the rack.\n\nThis will show the peering status for all peers on all switches.",
+                  "about": "Show the BGP peering status of every peer as a table",
+                  "long_about": "Show the BGP peering status of every peer as a table\n\nPrints the peer address, session state, and time in state for every peer on\nevery switch in the rack. To retrieve the same information as raw API\noutput, use `oxide system networking bgp status`.",
                   "args": [
                     {
                       "long": "profile",
@@ -7531,8 +7532,8 @@
                 },
                 {
                   "name": "withdraw",
-                  "about": "Withdraw a prefix over BGP.",
-                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix from the specified announce set.\nThe remove is performed as a read-modify-write on the announce set.",
+                  "about": "Withdraw a prefix over BGP",
+                  "long_about": "Withdraw a prefix over BGP\n\nThis command removes the provided prefix from the specified announce set.\nThe remove is performed as a read-modify-write on the announce set.",
                   "args": [
                     {
                       "long": "announce-set",
@@ -9143,7 +9144,8 @@
                 },
                 {
                   "name": "show",
-                  "about": "Get the configuration of switch ports.",
+                  "about": "Show the settings applied to every configured switch port",
+                  "long_about": "Show the settings applied to every configured switch port\n\nPrints addresses, routes, link settings, and BGP peers for every configured\nport on every switch in the rack. To retrieve a single settings group as\nraw API output, use `oxide system networking switch-port-settings view`.",
                   "args": [
                     {
                       "long": "profile",
@@ -9285,6 +9287,8 @@
                 },
                 {
                   "name": "upload",
+                  "about": "Upload a system release repository",
+                  "long_about": "Upload a system release repository\n\nThe repository is a signed archive of the artifacts that make up a system\nrelease. After uploading it, use\n`oxide system update target-release update` to make that release the\nrack's target.",
                   "args": [
                     {
                       "long": "path",
@@ -9589,7 +9593,7 @@
     },
     {
       "name": "version",
-      "about": "Prints version information about the CLI.",
+      "about": "Print version information about the CLI",
       "args": [
         {
           "long": "profile",

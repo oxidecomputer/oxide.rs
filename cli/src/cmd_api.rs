@@ -19,7 +19,7 @@ use serde_json::Value;
 
 use crate::{print_nopipe, println_nopipe};
 
-/// Makes an authenticated HTTP request to the Oxide API and prints the response.
+/// Make an authenticated HTTP request to the Oxide API and print the response
 ///
 /// The endpoint argument should be a path of a Oxide API endpoint.
 ///

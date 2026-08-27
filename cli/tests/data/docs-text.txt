@@ -28,23 +28,23 @@ oxide alert receiver webhook update — Update webhook receiver
 
 Note that receiver secrets are NOT added or removed using this endpoint. Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add and remove secrets.
 oxide alert view — Fetch alert
-oxide api — Makes an authenticated HTTP request to the Oxide API and prints the response.
+oxide api — Make an authenticated HTTP request to the Oxide API and print the response
 oxide audit-log list — View audit log
 
 A single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.
 
 Audit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.
 oxide auth login — Authenticate with an Oxide Silo
-oxide auth logout — Removes saved authentication information from profiles.
-oxide auth status — Verifies and displays information about your authentication state.
+oxide auth logout — Remove saved authentication information from profiles
+oxide auth status — Verify and display your authentication state
 oxide auth-settings update — Update current silo's auth settings
 oxide auth-settings view — Fetch current silo's auth settings
 oxide bundle create — Create support bundle
 oxide bundle delete — Delete support bundle
 
 May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.
-oxide bundle download — Downloads a support bundle
-oxide bundle inspect — Inspects a support bundle
+oxide bundle download — Download a support bundle
+oxide bundle inspect — Inspect a support bundle
 oxide bundle list — List all support bundles
 oxide bundle update — Update support bundle
 oxide bundle view — View support bundle
@@ -60,7 +60,7 @@ Returns a list of TLS certificates used for the external API (for the current Si
 oxide certificate view — Fetch certificate
 
 Returns the details of a specific certificate
-oxide completion — Generate shell completion scripts for Oxide CLI commands.
+oxide completion — Generate shell completion scripts for Oxide CLI commands
 oxide current-user access-token delete — Delete access token
 
 Delete a device access token for the currently authenticated user.
@@ -126,7 +126,7 @@ oxide experimental system timeseries query — Run timeseries query
 
 Queries are written in OxQL.
 oxide experimental system timeseries schema list — List timeseries schemas
-oxide experimental timeseries dashboard — Graph the results of an OxQL timeseries query.
+oxide experimental timeseries dashboard — Graph the results of an OxQL timeseries query
 oxide experimental timeseries query — Run project-scoped timeseries query
 
 Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.
@@ -187,7 +187,7 @@ oxide instance external-ip detach-ephemeral — Detach and deallocate ephemeral 
 When an instance has both IPv4 and IPv6 ephemeral IPs, the `ip_version` query parameter must be specified to identify which IP to detach.
 oxide instance external-ip list — List external IP addresses
 oxide instance external-subnet list — List external subnets attached to instance
-oxide instance from-image — Launch an instance from a disk image.
+oxide instance from-image — Launch an instance from a disk image
 oxide instance list — List instances
 oxide instance nic create — Create network interface
 oxide instance nic delete — Delete network interface
@@ -202,8 +202,8 @@ oxide instance property ssh-key — List SSH public keys for instance
 
 List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.
 oxide instance reboot — Reboot instance
-oxide instance serial console — Connect to an instance's serial console interactively.
-oxide instance serial history — Fetch an instance's serial console output.
+oxide instance serial console — Connect to an instance's serial console interactively
+oxide instance serial history — Fetch an instance's serial console output
 oxide instance start — Boot instance
 oxide instance stop — Stop instance
 oxide instance update — Update instance
@@ -315,7 +315,7 @@ oxide system hardware switch view — Fetch switch
 oxide system hardware switch-port apply-settings — Apply switch port settings
 oxide system hardware switch-port clear-settings — Clear switch port settings
 oxide system hardware switch-port list — List switch ports
-oxide system hardware switch-port show-status — Get the status of switch ports.
+oxide system hardware switch-port show-status — Show the link status of every switch port
 oxide system hardware switch-port status — Get switch port status
 oxide system networking addr add — Add an address to a port configuration
 oxide system networking addr delete — Remove an address from a port configuration
@@ -329,14 +329,14 @@ oxide system networking allow-list view — Get user-facing services IP allowlis
 oxide system networking bfd disable — Disable BFD session
 oxide system networking bfd enable — Enable BFD session
 oxide system networking bfd status — Get BFD status
-oxide system networking bgp announce — Announce a prefix over BGP.
+oxide system networking bgp announce — Announce a prefix over BGP
 oxide system networking bgp announce-set delete — Delete BGP announce set
 oxide system networking bgp announce-set list — List BGP announce sets
 oxide system networking bgp announce-set update — Update BGP announce set
 
 If the announce set exists, this endpoint replaces the existing announce set with the one specified.
 oxide system networking bgp announcement list — Get originated routes for a specified BGP announce set
-oxide system networking bgp auth — Set an authentication string.
+oxide system networking bgp auth — Set the TCP-MD5 authentication string for a BGP peer
 oxide system networking bgp config create — Create BGP configuration
 oxide system networking bgp config delete — Delete BGP configuration
 oxide system networking bgp config list — List BGP configurations
@@ -344,15 +344,15 @@ oxide system networking bgp config update — Update the mutable fields of an ex
 
 The asn field is not updatable; to change the autonomous system number, create a new BGP configuration object.
 oxide system networking bgp exported — List BGP exported routes
-oxide system networking bgp filter — Add a filtering requirement to a BGP session.
+oxide system networking bgp filter — Filter the prefixes a BGP peer may import or export
 oxide system networking bgp history — Get BGP router message history
 oxide system networking bgp imported — Get imported IPv4 BGP routes
-oxide system networking bgp peer delete — Remove a BGP from a port configuration
+oxide system networking bgp peer delete — Remove a BGP peer from a port configuration
 oxide system networking bgp peer set — Set a BGP peer on a port configuration
-oxide system networking bgp pref — Set a local preference for a peer.
-oxide system networking bgp show-status — Get the status of BGP on the rack.
+oxide system networking bgp pref — Set the local preference applied to routes imported from a BGP peer
+oxide system networking bgp show-status — Show the BGP peering status of every peer as a table
 oxide system networking bgp status — Get BGP peer status
-oxide system networking bgp withdraw — Withdraw a prefix over BGP.
+oxide system networking bgp withdraw — Withdraw a prefix over BGP
 oxide system networking inbound-icmp update — Set whether API services can receive limited ICMP traffic
 oxide system networking inbound-icmp view — Return whether API services can receive limited ICMP traffic
 oxide system networking ip-pool assign — Assign IP pool
@@ -409,7 +409,7 @@ oxide system networking subnet-pool view — Fetch subnet pool
 oxide system networking switch-port-settings create — Create switch port settings
 oxide system networking switch-port-settings delete — Delete switch port settings
 oxide system networking switch-port-settings list — List switch port settings
-oxide system networking switch-port-settings show — Get the configuration of switch ports.
+oxide system networking switch-port-settings show — Show the settings applied to every configured switch port
 oxide system networking switch-port-settings view — Get information about switch port
 oxide system policy update — Update top-level IAM policy
 oxide system policy view — Fetch top-level IAM policy
@@ -425,7 +425,7 @@ This endpoint should only be called at the direction of Oxide support.
 oxide system update repo list — List all TUF repositories
 
 Returns a paginated list of all TUF repositories ordered by system version (newest first by default).
-oxide system update repo upload
+oxide system update repo upload — Upload a system release repository
 oxide system update repo view — Fetch system release repository by version
 oxide system update status — Fetch system update status
 
@@ -449,7 +449,7 @@ oxide user logout — Log user out
 Silo admins can use this endpoint to log the specified user out by deleting all of their tokens AND sessions. This cannot be undone.
 oxide user view — Fetch user
 oxide utilization — Fetch resource utilization for user's current silo
-oxide version — Prints version information about the CLI.
+oxide version — Print version information about the CLI
 oxide vpc create — Create VPC
 oxide vpc delete — Delete VPC
 oxide vpc firewall-rules update — Replace firewall rules

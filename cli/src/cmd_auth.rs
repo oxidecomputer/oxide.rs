@@ -405,7 +405,7 @@ impl CmdAuthLogin {
     }
 }
 
-/// Removes saved authentication information from profiles.
+/// Remove saved authentication information from profiles
 ///
 /// This command does not invalidate any tokens.
 #[derive(Parser, Debug, Clone)]
@@ -475,7 +475,7 @@ impl CmdAuthLogout {
     }
 }
 
-/// Verifies and displays information about your authentication state.
+/// Verify and display your authentication state
 ///
 /// This command validates the authentication state for each profile in the
 /// current configuration.

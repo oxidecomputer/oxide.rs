@@ -44,7 +44,7 @@ enum SerialSubCommand {
     History(CmdInstanceSerialHistory),
 }
 
-/// Connect to an instance's serial console interactively.
+/// Connect to an instance's serial console interactively
 ///
 /// (To pull output non-interactively, try `oxide instance serial history`)
 #[derive(Parser, Debug, Clone)]
@@ -140,7 +140,7 @@ impl CmdInstanceSerialConsole {
     }
 }
 
-/// Fetch an instance's serial console output.
+/// Fetch an instance's serial console output
 ///
 /// (To connect interactively and follow live output, try `oxide instance serial console`)
 #[derive(Parser, Debug, Clone)]
@@ -208,7 +208,7 @@ impl CmdInstanceSerialHistory {
     }
 }
 
-/// Launch an instance from a disk image.
+/// Launch an instance from a disk image
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "from-image")]
