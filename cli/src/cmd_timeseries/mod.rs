@@ -23,7 +23,7 @@ use ratatui::{prelude::CrosstermBackend, Terminal};
 
 use self::dashboard::Dashboard;
 
-/// Graph the results of an OxQL timeseries query.
+/// Graph the results of an OxQL timeseries query
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "timeseries dashboard")]

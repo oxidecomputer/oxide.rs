@@ -35,7 +35,7 @@ use tokio::io::ReadBuf;
 use tokio::sync::watch;
 use uuid::Uuid;
 
-/// Downloads a support bundle
+/// Download a support bundle
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 pub struct CmdDownload {
@@ -185,7 +185,7 @@ fn start_progress_bar(
     Ok(pb)
 }
 
-/// Inspects a support bundle
+/// Inspect a support bundle
 ///
 /// Support bundles may be inspected before they are downloaded (via
 /// smaller HTTP requests), or after the entire zip file has been

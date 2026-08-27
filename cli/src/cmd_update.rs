@@ -16,6 +16,12 @@ use tokio_util::io::ReaderStream;
 
 use crate::{generated_cli::CliConfig, util::start_progress_bar, AuthenticatedCmd, OxideOverride};
 
+/// Upload a system release repository
+///
+/// The repository is a signed archive of the artifacts that make up a system
+/// release. After uploading it, use
+/// `oxide system update target-release update` to make that release the
+/// rack's target.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 pub struct CmdUpload {

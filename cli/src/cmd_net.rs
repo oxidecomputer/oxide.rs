@@ -230,20 +230,20 @@ enum BgpSubCommand {
     /// Make a BGP announcement.
     Announce(CmdBgpAnnounce),
 
-    /// Make a BGP announcement.
+    /// Withdraw a prefix over BGP.
     Withdraw(CmdBgpWithdraw),
 
-    /// Set a filtering specification for a peer.
+    /// Filter the prefixes a BGP peer may import or export.
     Filter(CmdBgpFilter),
 
-    /// Set an authentication string.
+    /// Set the TCP-MD5 authentication string for a BGP peer.
     Auth(CmdBgpAuth),
 
-    /// Set a local preference for a peer.
+    /// Set the local preference applied to routes imported from a BGP peer.
     LocalPref(CmdBgpLocalPref),
 }
 
-/// Announce a prefix over BGP.
+/// Announce a prefix over BGP
 ///
 /// This command adds the provided prefix to the specified announce set. It is
 /// required that the prefix be available in the given address lot. The add is
@@ -303,7 +303,7 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
     }
 }
 
-/// Withdraw a prefix over BGP.
+/// Withdraw a prefix over BGP
 ///
 /// This command removes the provided prefix from the specified announce set.
 /// The remove is performed as a read-modify-write on the announce set.
@@ -364,7 +364,7 @@ enum FilterDirection {
     Export,
 }
 
-/// Add a filtering requirement to a BGP session.
+/// Filter the prefixes a BGP peer may import or export
 ///
 /// The Oxide BGP implementation can filter prefixes received from peers
 /// on import and filter prefixes sent to peers on export. This command
@@ -458,7 +458,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
     }
 }
 
-/// Set an authentication string.
+/// Set the TCP-MD5 authentication string for a BGP peer
 ///
 /// This command sets the authentication string that the specified BGP session
 /// will use for establishing a TCP-MD5 authenticated connection with its peer.
@@ -522,7 +522,7 @@ impl AuthenticatedCmd for CmdBgpAuth {
     }
 }
 
-/// Set a local preference for a peer.
+/// Set the local preference applied to routes imported from a BGP peer
 ///
 /// This command associates a local preference for the specified peer. When
 /// routes are imported by this peer, they will be installed into the routing
@@ -989,7 +989,7 @@ enum BgpConfigPeerSubCommand {
     /// Set a BGP peer on a port configuration.
     Set(CmdBgpPeerSet),
 
-    /// Remove a BGP from a port configuration.
+    /// Remove a BGP peer from a port configuration.
     Delete(CmdBgpPeerDel),
 }
 
@@ -1233,7 +1233,11 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
     }
 }
 
-/// Get the configuration of switch ports.
+/// Show the settings applied to every configured switch port
+///
+/// Prints addresses, routes, link settings, and BGP peers for every configured
+/// port on every switch in the rack. To retrieve a single settings group as
+/// raw API output, use `oxide system networking switch-port-settings view`.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "net port config")]
@@ -1454,9 +1458,11 @@ impl AuthenticatedCmd for CmdPortConfig {
     }
 }
 
-/// Get the status of BGP on the rack.
+/// Show the BGP peering status of every peer as a table
 ///
-/// This will show the peering status for all peers on all switches.
+/// Prints the peer address, session state, and time in state for every peer on
+/// every switch in the rack. To retrieve the same information as raw API
+/// output, use `oxide system networking bgp status`.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "net bgp status")]
@@ -1510,7 +1516,11 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
     Ok(())
 }
 
-/// Get the status of switch ports.
+/// Show the link status of every switch port
+///
+/// Prints link state, speed, and MAC address for every port on every switch in
+/// the rack. To retrieve the status of a single port as raw API output, use
+/// `oxide system hardware switch-port status`.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "net port status")]

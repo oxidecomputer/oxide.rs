@@ -10,7 +10,7 @@ use clap::Parser;
 use clap_complete::{generate, Shell};
 use std::io;
 
-/// Generate shell completion scripts for Oxide CLI commands.
+/// Generate shell completion scripts for Oxide CLI commands
 ///
 /// This command generates scripts for various shells that can be used to
 /// enable completion.
