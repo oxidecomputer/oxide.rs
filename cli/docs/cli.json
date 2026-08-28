@@ -3450,6 +3450,10 @@
               "help": "Description of the instance"
             },
             {
+              "long": "enable-jumbo-frames",
+              "help": "Enable jumbo frames (8500 byte MTU) on the instance's primary network interface"
+            },
+            {
               "long": "hostname",
               "help": "The hostname to be assigned to the instance"
             },
