@@ -2708,7 +2708,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(bool))
                     .required(false)
                     .help(
-                        "Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE \
+                        "Enable jumbo frames (8500 byte MTU) on the instance's primary network \
                          interface. Requires the fleet-wide jumbo-frames opt-in to be enabled by \
                          an operator; otherwise this field must be `false`. Changes only take \
                          effect on the next instance restart.",
@@ -5030,7 +5030,10 @@ impl<T: CliConfig> Cli<T> {
                         ::chrono::DateTime<::chrono::offset::Utc>
                     ))
                     .required(false)
-                    .help("Exclusive"),
+                    .help(
+                        "End of time range (exclusive). Filters on `time_completed`. If omitted, \
+                         the range extends to the present.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("limit")
@@ -5058,7 +5061,7 @@ impl<T: CliConfig> Cli<T> {
                         ::chrono::DateTime<::chrono::offset::Utc>
                     ))
                     .required(true)
-                    .help("Required, inclusive"),
+                    .help("Start of time range (inclusive). Filters on `time_completed`."),
             )
             .about(
                 "View audit log\n\nA single item in the audit log represents both the beginning \
@@ -5068,10 +5071,11 @@ impl<T: CliConfig> Cli<T> {
                  timestamps may not be unique, entries have also have a unique `id` that can be \
                  used to deduplicate items fetched from overlapping time intervals.\n\nAudit log \
                  entries are designed to be immutable: once you see an entry, fetching it again \
-                 will never get you a different result. The list is ordered by `time_completed`, \
-                 not `time_started`. If you fetch the audit log for a time range that is fully in \
-                 the past, the resulting list is guaranteed to be complete, i.e., fetching the \
-                 same timespan again later will always produce the same set of entries.",
+                 will never get you a different result. The list is ordered and filtered by \
+                 `time_completed`, not `time_started`. If you fetch the audit log for a time \
+                 range that is fully in the past, the resulting list is guaranteed to be \
+                 complete, i.e., fetching the same timespan again later will always produce the \
+                 same set of entries.",
             )
     }
 
@@ -7613,7 +7617,11 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("discoverable")
                     .long("discoverable")
                     .value_parser(::clap::value_parser!(bool))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help(
+                        "A non-discoverable silo can only be retrieved by ID - it will not be \
+                         part of the \"list all silos\" output.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("identity-mode")
@@ -8649,7 +8657,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List built-in (system) users in silo")
+            .about("List users in silo")
     }
 
     pub fn cli_silo_user_view() -> ::clap::Command {
@@ -8668,7 +8676,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The user's internal ID"),
             )
-            .about("Fetch built-in (system) user")
+            .about("Fetch user in silo")
     }
 
     pub fn cli_user_builtin_list() -> ::clap::Command {
