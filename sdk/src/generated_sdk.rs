@@ -1143,17 +1143,18 @@ pub mod types {
     /// Anti-Affinity Groups",
     ///  "oneOf": [
     ///    {
-    ///      "description": "If the affinity request cannot be satisfied, allow
-    /// it anyway.\n\nThis enables a \"best-effort\" attempt to satisfy the
-    /// affinity policy.",
+    ///      "description": "Best-effort: instances can start even when the
+    /// group's constraints cannot be satisfied.",
     ///      "type": "string",
     ///      "enum": [
     ///        "allow"
     ///      ]
     ///    },
     ///    {
-    ///      "description": "If the affinity request cannot be satisfied, fail
-    /// explicitly.",
+    ///      "description": "When the group's constraints cannot be satisfied,
+    /// an instance start request will fail and the instance will remain
+    /// stopped. Starting the instance may succeed later if conditions change,
+    /// e.g., other instances stop.",
     ///      "type": "string",
     ///      "enum": [
     ///        "fail"
@@ -1177,12 +1178,14 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum AffinityPolicy {
-        /// If the affinity request cannot be satisfied, allow it anyway.
-        ///
-        /// This enables a "best-effort" attempt to satisfy the affinity policy.
+        /// Best-effort: instances can start even when the group's constraints
+        /// cannot be satisfied.
         #[serde(rename = "allow")]
         Allow,
-        /// If the affinity request cannot be satisfied, fail explicitly.
+        /// When the group's constraints cannot be satisfied, an instance start
+        /// request will fail and the instance will remain stopped. Starting the
+        /// instance may succeed later if conditions change, e.g., other
+        /// instances stop.
         #[serde(rename = "fail")]
         Fail,
     }
@@ -15313,9 +15316,10 @@ pub mod types {
     ///    },
     ///    "enable_jumbo_frames": {
     ///      "description": "Enable jumbo frames (8500 byte MTU) on the
-    /// instance's primary OPTE interface. Requires the fleet-wide jumbo-frames
-    /// opt-in to be enabled by an operator; otherwise this field must be
-    /// `false`. Changes only take effect on the next instance restart.",
+    /// instance's primary network interface. Requires the fleet-wide
+    /// jumbo-frames opt-in to be enabled by an operator; otherwise this field
+    /// must be `false`. Changes only take effect on the next instance
+    /// restart.",
     ///      "default": false,
     ///      "type": "boolean"
     ///    },
@@ -15475,10 +15479,10 @@ pub mod types {
         /// limit.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub disks: ::std::vec::Vec<InstanceDiskAttachment>,
-        /// Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE
-        /// interface. Requires the fleet-wide jumbo-frames opt-in to be enabled
-        /// by an operator; otherwise this field must be `false`. Changes only
-        /// take effect on the next instance restart.
+        /// Enable jumbo frames (8500 byte MTU) on the instance's primary
+        /// network interface. Requires the fleet-wide jumbo-frames opt-in to be
+        /// enabled by an operator; otherwise this field must be `false`.
+        /// Changes only take effect on the next instance restart.
         #[serde(default)]
         pub enable_jumbo_frames: bool,
         /// The external IP addresses provided to this instance.
@@ -26282,7 +26286,8 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "discoverable": {
-    ///      "description": "A silo where discoverable is false can be retrieved only by its id - it will not be part of the \"list all silos\" output.",
+    ///      "description": "A non-discoverable silo can only be retrieved by ID
+    /// - it will not be part of the \"list all silos\" output.",
     ///      "type": "boolean"
     ///    },
     ///    "id": {
@@ -26345,8 +26350,8 @@ pub mod types {
         pub admin_group_name: ::std::option::Option<::std::string::String>,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
-        /// A silo where discoverable is false can be retrieved only by its id -
-        /// it will not be part of the "list all silos" output.
+        /// A non-discoverable silo can only be retrieved by ID - it will not be
+        /// part of the "list all silos" output.
         pub discoverable: bool,
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
@@ -26491,6 +26496,8 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "discoverable": {
+    ///      "description": "A non-discoverable silo can only be retrieved by ID
+    /// - it will not be part of the \"list all silos\" output.",
     ///      "type": "boolean"
     ///    },
     ///    "identity_mode": {
@@ -26552,6 +26559,8 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub admin_group_name: ::std::option::Option<::std::string::String>,
         pub description: ::std::string::String,
+        /// A non-discoverable silo can only be retrieved by ID - it will not be
+        /// part of the "list all silos" output.
         pub discoverable: bool,
         pub identity_mode: SiloIdentityMode,
         /// Mapping of which Fleet roles are conferred by each Silo role
@@ -31626,7 +31635,7 @@ pub mod types {
     ///    "external_jumbo_frames_opt_in_enabled": {
     ///      "description": "When true, end users may opt in to jumbo frames
     /// (8500 byte MTU) on the primary interface of an instance. When false,
-    /// instance-level opt-in is ignored and OPTE ports are created with the
+    /// instance-level opt-in is ignored and the primary interface uses the
     /// default MTU.",
     ///      "type": "boolean"
     ///    }
@@ -31640,7 +31649,7 @@ pub mod types {
     pub struct SystemNetworkingSettings {
         /// When true, end users may opt in to jumbo frames (8500 byte MTU) on
         /// the primary interface of an instance. When false, instance-level
-        /// opt-in is ignored and OPTE ports are created with the default MTU.
+        /// opt-in is ignored and the primary interface uses the default MTU.
         pub external_jumbo_frames_opt_in_enabled: bool,
     }
 
@@ -67159,7 +67168,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026081901.0.0
+/// Version: 2026082800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -67200,7 +67209,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026081901.0.0"
+        "2026082800.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -70519,20 +70528,22 @@ pub trait ClientSystemAuditLogExt {
     ///
     /// Audit log entries are designed to be immutable: once you see an entry,
     /// fetching it again will never get you a different result. The list is
-    /// ordered by `time_completed`, not `time_started`. If you fetch the audit
-    /// log for a time range that is fully in the past, the resulting list is
-    /// guaranteed to be complete, i.e., fetching the same timespan again later
-    /// will always produce the same set of entries.
+    /// ordered and filtered by `time_completed`, not `time_started`. If you
+    /// fetch the audit log for a time range that is fully in the past, the
+    /// resulting list is guaranteed to be complete, i.e., fetching the same
+    /// timespan again later will always produce the same set of entries.
     ///
     /// Sends a `GET` request to `/v1/system/audit-log`
     ///
     /// Arguments:
-    /// - `end_time`: Exclusive
+    /// - `end_time`: End of time range (exclusive). Filters on
+    ///   `time_completed`. If omitted, the range extends to the present.
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    /// - `start_time`: Required, inclusive
+    /// - `start_time`: Start of time range (inclusive). Filters on
+    ///   `time_completed`.
     /// ```ignore
     /// let response = client.audit_log_list()
     ///    .end_time(end_time)
@@ -72415,7 +72426,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_subnet_pool_list(&self) -> builder::SiloSubnetPoolList<'_>;
-    /// List built-in (system) users in silo
+    /// List users in silo
     ///
     /// Sends a `GET` request to `/v1/system/users`
     ///
@@ -72435,7 +72446,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_user_list(&self) -> builder::SiloUserList<'_>;
-    /// Fetch built-in (system) user
+    /// Fetch user in silo
     ///
     /// Sends a `GET` request to `/v1/system/users/{user_id}`
     ///

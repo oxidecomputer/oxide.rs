@@ -553,12 +553,12 @@
       "subcommands": [
         {
           "name": "list",
-          "about": "View audit log\n\nA single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.\n\nAudit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.",
+          "about": "View audit log\n\nA single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.\n\nAudit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered and filtered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.",
           "operation_id": "audit_log_list",
           "args": [
             {
               "long": "end-time",
-              "help": "Exclusive"
+              "help": "End of time range (exclusive). Filters on `time_completed`. If omitted, the range extends to the present."
             },
             {
               "long": "limit",
@@ -578,7 +578,7 @@
             },
             {
               "long": "start-time",
-              "help": "Required, inclusive"
+              "help": "Start of time range (inclusive). Filters on `time_completed`."
             }
           ]
         }
@@ -3137,7 +3137,7 @@
                 "true",
                 "false"
               ],
-              "help": "Enable jumbo frames (8500 byte MTU) on the instance's primary OPTE interface. Requires the fleet-wide jumbo-frames opt-in to be enabled by an operator; otherwise this field must be `false`. Changes only take effect on the next instance restart."
+              "help": "Enable jumbo frames (8500 byte MTU) on the instance's primary network interface. Requires the fleet-wide jumbo-frames opt-in to be enabled by an operator; otherwise this field must be `false`. Changes only take effect on the next instance restart."
             },
             {
               "long": "hostname",
@@ -4849,7 +4849,8 @@
               "values": [
                 "true",
                 "false"
-              ]
+              ],
+              "help": "A non-discoverable silo can only be retrieved by ID - it will not be part of the \"list all silos\" output."
             },
             {
               "long": "identity-mode",
@@ -5389,7 +5390,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List built-in (system) users in silo",
+              "about": "List users in silo",
               "operation_id": "silo_user_list",
               "args": [
                 {
@@ -5415,7 +5416,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch built-in (system) user",
+              "about": "Fetch user in silo",
               "operation_id": "silo_user_view",
               "args": [
                 {

@@ -33,7 +33,7 @@ oxide audit-log list — View audit log
 
 A single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.
 
-Audit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.
+Audit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered and filtered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.
 oxide auth login — Authenticate with an Oxide Silo
 oxide auth logout — Remove saved authentication information from profiles
 oxide auth status — Verify and display your authentication state
@@ -274,8 +274,8 @@ oxide silo quotas update — Update resource quotas for silo
 If a quota value is not specified, it will remain unchanged.
 oxide silo quotas view — Fetch resource quotas for silo
 oxide silo subnet-pool list — List subnet pools linked to a silo
-oxide silo user list — List built-in (system) users in silo
-oxide silo user view — Fetch built-in (system) user
+oxide silo user list — List users in silo
+oxide silo user view — Fetch user in silo
 oxide silo utilization list — List current utilization state for all silos
 oxide silo utilization view — Fetch current utilization for given silo
 oxide silo view — Fetch silo
