@@ -7,78 +7,7 @@ pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
-    /// Error types.
-    pub mod error {
-        /// Error from a `TryFrom` or `FromStr` implementation.
-        pub struct ConversionError(::std::borrow::Cow<'static, str>);
-        impl ::std::error::Error for ConversionError {}
-        impl ::std::fmt::Display for ConversionError {
-            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
-                ::std::fmt::Display::fmt(&self.0, f)
-            }
-        }
-
-        impl ::std::fmt::Debug for ConversionError {
-            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
-                ::std::fmt::Debug::fmt(&self.0, f)
-            }
-        }
-
-        impl From<&'static str> for ConversionError {
-            fn from(value: &'static str) -> Self {
-                Self(value.into())
-            }
-        }
-
-        impl From<String> for ConversionError {
-            fn from(value: String) -> Self {
-                Self(value.into())
-            }
-        }
-    }
-
     /// An address tied to an address lot.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An address tied to an address lot.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address",
-    ///    "address_lot"
-    ///  ],
-    ///  "properties": {
-    ///    "address": {
-    ///      "description": "The address and prefix length of this address.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "address_lot": {
-    ///      "description": "The address lot this address is drawn from.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "vlan_id": {
-    ///      "description": "Optional VLAN ID for this address",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -88,7 +17,7 @@ pub mod types {
         /// The address lot this address is drawn from.
         pub address_lot: NameOrId,
         /// Optional VLAN ID for this address
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
     }
 
@@ -99,68 +28,6 @@ pub mod types {
     }
 
     /// Specify how to allocate a floating IP address.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Specify how to allocate a floating IP address.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Reserve a specific IP address. The pool is inferred
-    /// from the address since IP pools cannot have overlapping ranges.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "ip",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "ip": {
-    ///          "description": "The IP address to reserve.",
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Automatically allocate an IP address from a pool.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "pool_selector": {
-    ///          "description": "Pool selection.\n\nIf omitted, the silo's
-    /// default pool is used. If the silo has default pools for both IPv4 and
-    /// IPv6, the request will fail unless `ip_version` is specified.",
-    ///          "default": {
-    ///            "ip_version": null,
-    ///            "type": "auto"
-    ///          },
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/PoolSelector"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "auto"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -187,41 +54,6 @@ pub mod types {
     }
 
     /// A set of addresses associated with a port configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A set of addresses associated with a port
-    /// configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addresses",
-    ///    "link_name"
-    ///  ],
-    ///  "properties": {
-    ///    "addresses": {
-    ///      "description": "The set of addresses assigned to the port
-    /// configuration.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Address"
-    ///      }
-    ///    },
-    ///    "link_name": {
-    ///      "description": "Link to assign the addresses to. On ports that are
-    /// not broken out, this is always phy0. On a 2x breakout the options are
-    /// phy0 and phy1, on 4x phy0-phy3, etc.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -242,64 +74,6 @@ pub mod types {
 
     /// Represents an address lot object, containing the id of the lot that can
     /// be used in other API calls.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Represents an address lot object, containing the id of
-    /// the lot that can be used in other API calls.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "kind",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "kind": {
-    ///      "description": "Desired use of `AddressLot`",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AddressLotKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -326,39 +100,6 @@ pub mod types {
 
     /// An address lot block is a part of an address lot and contains a range of
     /// addresses. The range is inclusive.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An address lot block is a part of an address lot and
-    /// contains a range of addresses. The range is inclusive.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "first_address",
-    ///    "id",
-    ///    "last_address"
-    ///  ],
-    ///  "properties": {
-    ///    "first_address": {
-    ///      "description": "The first address of the block (inclusive).",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "id": {
-    ///      "description": "The id of the address lot block.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "last_address": {
-    ///      "description": "The last address of the block (inclusive).",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -379,33 +120,6 @@ pub mod types {
 
     /// Parameters for creating an address lot block. First and last addresses
     /// are inclusive.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating an address lot block. First and
-    /// last addresses are inclusive.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "first_address",
-    ///    "last_address"
-    ///  ],
-    ///  "properties": {
-    ///    "first_address": {
-    ///      "description": "The first address in the lot (inclusive).",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "last_address": {
-    ///      "description": "The last address in the lot (inclusive).",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -423,36 +137,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressLotBlock"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -460,7 +144,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AddressLotBlock>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -471,45 +155,6 @@ pub mod types {
     }
 
     /// Parameters for creating an address lot.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating an address lot.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "blocks",
-    ///    "description",
-    ///    "kind",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "blocks": {
-    ///      "description": "The blocks to add along with the new address lot.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressLotBlockCreate"
-    ///      }
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "kind": {
-    ///      "description": "The kind of address lot to create.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AddressLotKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -530,38 +175,6 @@ pub mod types {
 
     /// An address lot and associated blocks resulting from creating an address
     /// lot.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An address lot and associated blocks resulting from
-    /// creating an address lot.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "blocks",
-    ///    "lot"
-    ///  ],
-    ///  "properties": {
-    ///    "blocks": {
-    ///      "description": "The address lot blocks that were created.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressLotBlock"
-    ///      }
-    ///    },
-    ///    "lot": {
-    ///      "description": "The address lot that was created.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AddressLot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -579,32 +192,6 @@ pub mod types {
     }
 
     /// The kind associated with an address lot.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The kind associated with an address lot.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Infrastructure address lots are used for network
-    /// infrastructure like addresses assigned to rack switches.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "infra"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Pool address lots are used by IP pools.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "pool"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -655,15 +242,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AddressLotKind {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AddressLotKind {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -674,36 +252,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressLot"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -711,7 +259,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AddressLot>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -723,38 +271,6 @@ pub mod types {
 
     /// An address lot and associated blocks resulting from viewing an address
     /// lot.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An address lot and associated blocks resulting from
-    /// viewing an address lot.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "blocks",
-    ///    "lot"
-    ///  ],
-    ///  "properties": {
-    ///    "blocks": {
-    ///      "description": "The address lot blocks.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressLotBlock"
-    ///      }
-    ///    },
-    ///    "lot": {
-    ///      "description": "The address lot.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AddressLot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -772,67 +288,6 @@ pub mod types {
     }
 
     /// View of an Affinity Group
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of an Affinity Group",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "failure_domain",
-    ///    "id",
-    ///    "name",
-    ///    "policy",
-    ///    "project_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "failure_domain": {
-    ///      "$ref": "#/components/schemas/FailureDomain"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "policy": {
-    ///      "$ref": "#/components/schemas/AffinityPolicy"
-    ///    },
-    ///    "project_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -859,36 +314,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `AffinityGroup`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `AffinityGroup`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "failure_domain",
-    ///    "name",
-    ///    "policy"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "failure_domain": {
-    ///      "$ref": "#/components/schemas/FailureDomain"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "policy": {
-    ///      "$ref": "#/components/schemas/AffinityPolicy"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -911,54 +336,6 @@ pub mod types {
     /// affinity / anti-affinity groups.
     ///
     /// Affinity Groups can contain up to 32 members.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A member of an Affinity Group\n\nMembership in a group is not exclusive - members may belong to multiple affinity / anti-affinity groups.\n\nAffinity Groups can contain up to 32 members.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "An instance belonging to this group\n\nInstances
-    /// can belong to up to 16 affinity groups.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "instance"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "object",
-    ///          "required": [
-    ///            "id",
-    ///            "name",
-    ///            "run_state"
-    ///          ],
-    ///          "properties": {
-    ///            "id": {
-    ///              "type": "string",
-    ///              "format": "uuid"
-    ///            },
-    ///            "name": {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            },
-    ///            "run_state": {
-    ///              "$ref": "#/components/schemas/InstanceState"
-    ///            }
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -976,36 +353,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AffinityGroupMember"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1013,7 +360,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AffinityGroupMember>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -1024,36 +371,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AffinityGroup"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1061,7 +378,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AffinityGroup>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -1072,55 +389,19 @@ pub mod types {
     }
 
     /// Updateable properties of an `AffinityGroup`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of an `AffinityGroup`",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct AffinityGroupUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for AffinityGroupUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl AffinityGroupUpdate {
@@ -1133,37 +414,6 @@ pub mod types {
     /// satisfied"
     ///
     /// Used for both Affinity and Anti-Affinity Groups
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Affinity policy used to describe \"what to do when a
-    /// request cannot be satisfied\"\n\nUsed for both Affinity and
-    /// Anti-Affinity Groups",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Best-effort: instances can start even when the
-    /// group's constraints cannot be satisfied.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "allow"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "When the group's constraints cannot be satisfied,
-    /// an instance start request will fail and the instance will remain
-    /// stopped. Starting the instance may succeed later if conditions change,
-    /// e.g., other instances stop.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "fail"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -1217,15 +467,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AffinityPolicy {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AffinityPolicy {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -1236,28 +477,6 @@ pub mod types {
     }
 
     /// BGP message history for rack switches.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "BGP message history for rack switches.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "switch_histories"
-    ///  ],
-    ///  "properties": {
-    ///    "switch_histories": {
-    ///      "description": "BGP history organized by switch.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchBgpHistory"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1277,65 +496,6 @@ pub mod types {
     /// Alerts provide notifications about events that occurred in the system at
     /// a point in time. See the guide-level documentation on alerts for
     /// details.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An alert.\n\nAlerts provide notifications about events
-    /// that occurred in the system at a point in time. See the guide-level
-    /// documentation on alerts for details.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "alert",
-    ///    "class",
-    ///    "id",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "alert": {
-    ///      "description": "The alert's data payload.\n\nThe schema for this
-    /// object depends on the alert class and version."
-    ///    },
-    ///    "class": {
-    ///      "description": "The alert's class.\n\nSee the guide-level
-    /// documentation on alerts for details on alert classes.",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "version": {
-    ///      "description": "The schema version of this alert's data
-    /// payload.\n\nAlert schemas are versioned on a per-alert-class basis. The
-    /// schema version for a particular alert class does not correspond to an
-    /// Oxide API version. Clients should expect to encounter earlier schema
-    /// versions when retrieving alerts recorded by an earlier version of the
-    /// system software.\n\nSee the guide-level documentation on alerts for
-    /// details.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1374,31 +534,6 @@ pub mod types {
     }
 
     /// An alert class.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An alert class.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "A description of what this alert class
-    /// represents.",
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "description": "The name of the alert class.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1416,36 +551,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AlertClass"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1453,7 +558,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AlertClass>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -1464,79 +569,6 @@ pub mod types {
     }
 
     /// A delivery of a webhook event.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A delivery of a webhook event.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "alert_class",
-    ///    "alert_id",
-    ///    "attempts",
-    ///    "id",
-    ///    "receiver_id",
-    ///    "state",
-    ///    "time_started",
-    ///    "trigger"
-    ///  ],
-    ///  "properties": {
-    ///    "alert_class": {
-    ///      "description": "The event class.",
-    ///      "type": "string"
-    ///    },
-    ///    "alert_id": {
-    ///      "description": "The UUID of the event.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "attempts": {
-    ///      "description": "Individual attempts to deliver this webhook event,
-    /// and their outcomes.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertDeliveryAttempts"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "The UUID of this delivery attempt.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "receiver_id": {
-    ///      "description": "The UUID of the alert receiver that this event was
-    /// delivered to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "state": {
-    ///      "description": "The state of this delivery.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertDeliveryState"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_started": {
-    ///      "description": "The time at which this delivery began (i.e. the
-    /// event was dispatched to the receiver).",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "trigger": {
-    ///      "description": "Why this delivery was performed.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertDeliveryTrigger"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1573,38 +605,6 @@ pub mod types {
     /// it may contain information specific to that delivery mechanism. For
     /// example, webhook delivery attempts contain the HTTP status code of the
     /// webhook request.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A list of attempts to deliver an alert to a
-    /// receiver.\n\nThe type of the delivery attempt model depends on the
-    /// receiver type, as it may contain information specific to that delivery
-    /// mechanism. For example, webhook delivery attempts contain the HTTP
-    /// status code of the webhook request.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A list of attempts to deliver an alert to a webhook
-    /// receiver.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "webhook"
-    ///      ],
-    ///      "properties": {
-    ///        "webhook": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/WebhookDeliveryAttempt"
-    ///          }
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1621,24 +621,6 @@ pub mod types {
     }
 
     /// `AlertDeliveryId`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "delivery_id"
-    ///  ],
-    ///  "properties": {
-    ///    "delivery_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1653,36 +635,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AlertDelivery"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1690,7 +642,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AlertDelivery>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -1701,42 +653,6 @@ pub mod types {
     }
 
     /// The state of a webhook delivery attempt.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The state of a webhook delivery attempt.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The webhook event has not yet been delivered
-    /// successfully.\n\nEither no delivery attempts have yet been performed, or
-    /// the delivery has failed at least once but has retries remaining.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "pending"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The webhook event has been delivered
-    /// successfully.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "delivered"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The webhook delivery attempt has failed permanently
-    /// and will not be retried again.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -1795,15 +711,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AlertDeliveryState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AlertDeliveryState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -1814,39 +721,6 @@ pub mod types {
     }
 
     /// The reason an alert was delivered
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The reason an alert was delivered",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Delivery was triggered by the alert itself.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "alert"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Delivery was triggered by a request to resend the
-    /// alert.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "resend"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "This delivery is a liveness probe.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "probe"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -1901,15 +775,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AlertDeliveryTrigger {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AlertDeliveryTrigger {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -1920,44 +785,6 @@ pub mod types {
     }
 
     /// Data describing the result of an alert receiver liveness probe attempt.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Data describing the result of an alert receiver
-    /// liveness probe attempt.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "probe"
-    ///  ],
-    ///  "properties": {
-    ///    "probe": {
-    ///      "description": "The outcome of the probe delivery.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertDelivery"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "resends_started": {
-    ///      "description": "If the probe request succeeded, and resending
-    /// failed deliveries on success was requested, the number of new delivery
-    /// attempts started. Otherwise, if the probe did not succeed, or resending
-    /// failed deliveries was not requested, this is null.\n\nNote that this may
-    /// be 0, if there were no events found which had not been delivered
-    /// successfully to this receiver.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -1971,7 +798,7 @@ pub mod types {
         ///
         /// Note that this may be 0, if there were no events found which had not
         /// been delivered successfully to this receiver.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub resends_started: ::std::option::Option<u32>,
     }
 
@@ -1982,73 +809,6 @@ pub mod types {
     }
 
     /// The configuration for an alert receiver.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The configuration for an alert receiver.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "kind",
-    ///    "name",
-    ///    "subscriptions",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "kind": {
-    ///      "description": "Configuration specific to the kind of alert
-    /// receiver that this is.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertReceiverKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "subscriptions": {
-    ///      "description": "The list of alert classes to which this receiver is
-    /// subscribed.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AlertSubscription"
-    ///      }
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2076,49 +836,6 @@ pub mod types {
     }
 
     /// The possible alert delivery mechanisms for an alert receiver.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The possible alert delivery mechanisms for an alert
-    /// receiver.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Webhook-specific alert receiver configuration.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "endpoint",
-    ///        "kind",
-    ///        "secrets"
-    ///      ],
-    ///      "properties": {
-    ///        "endpoint": {
-    ///          "description": "The URL that webhook notification requests are
-    /// sent to.",
-    ///          "type": "string",
-    ///          "format": "uri"
-    ///        },
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "webhook"
-    ///          ]
-    ///        },
-    ///        "secrets": {
-    ///          "description": "A list containing the IDs of the secret keys
-    /// used to sign payloads sent to this receiver.",
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/WebhookSecret"
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2136,36 +853,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AlertReceiver"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2173,7 +860,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AlertReceiver>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -2184,36 +871,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Alert"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2221,7 +878,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Alert>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -2234,21 +891,6 @@ pub mod types {
     /// A webhook event class subscription matches either a single event class
     /// exactly, or a glob pattern including wildcards that may match multiple
     /// event classes
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A webhook event class subscription",
-    ///  "description": "A webhook event class subscription matches either a
-    /// single event class exactly, or a glob pattern including wildcards that
-    /// may match multiple event classes",
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -2301,15 +943,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AlertSubscription {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AlertSubscription {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -2333,28 +966,6 @@ pub mod types {
     }
 
     /// `AlertSubscriptionCreate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "subscription"
-    ///  ],
-    ///  "properties": {
-    ///    "subscription": {
-    ///      "description": "The event class pattern to subscribe to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertSubscription"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2370,28 +981,6 @@ pub mod types {
     }
 
     /// `AlertSubscriptionCreated`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "subscription"
-    ///  ],
-    ///  "properties": {
-    ///    "subscription": {
-    ///      "description": "The new subscription added to the receiver.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AlertSubscription"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2408,42 +997,6 @@ pub mod types {
 
     /// Allowlist of IPs or subnets that can make requests to user-facing
     /// services.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Allowlist of IPs or subnets that can make requests to
-    /// user-facing services.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allowed_ips",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "allowed_ips": {
-    ///      "description": "The allowlist of IPs or subnets.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AllowedSourceIps"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Time the list was created.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Time the list was last modified.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2463,29 +1016,6 @@ pub mod types {
     }
 
     /// Parameters for updating allowed source IPs
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating allowed source IPs",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allowed_ips"
-    ///  ],
-    ///  "properties": {
-    ///    "allowed_ips": {
-    ///      "description": "The new list of allowed source IPs.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AllowedSourceIps"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2501,57 +1031,6 @@ pub mod types {
     }
 
     /// Description of source IPs allowed to reach rack services.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Description of source IPs allowed to reach rack
-    /// services.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Allow traffic from any external IP address.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "allow"
-    ///      ],
-    ///      "properties": {
-    ///        "allow": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "any"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Restrict access to a specific set of source IP
-    /// addresses or subnets.\n\nAll others are prevented from reaching rack
-    /// services.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "allow",
-    ///        "ips"
-    ///      ],
-    ///      "properties": {
-    ///        "allow": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "list"
-    ///          ]
-    ///        },
-    ///        "ips": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/IpNet"
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2573,67 +1052,6 @@ pub mod types {
     }
 
     /// View of an Anti-Affinity Group
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of an Anti-Affinity Group",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "failure_domain",
-    ///    "id",
-    ///    "name",
-    ///    "policy",
-    ///    "project_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "failure_domain": {
-    ///      "$ref": "#/components/schemas/FailureDomain"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "policy": {
-    ///      "$ref": "#/components/schemas/AffinityPolicy"
-    ///    },
-    ///    "project_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2660,36 +1078,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `AntiAffinityGroup`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `AntiAffinityGroup`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "failure_domain",
-    ///    "name",
-    ///    "policy"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "failure_domain": {
-    ///      "$ref": "#/components/schemas/FailureDomain"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "policy": {
-    ///      "$ref": "#/components/schemas/AffinityPolicy"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2712,57 +1100,6 @@ pub mod types {
     /// affinity / anti-affinity groups.
     ///
     /// Anti-Affinity Groups can contain up to 32 members.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A member of an Anti-Affinity Group\n\nMembership in a
-    /// group is not exclusive - members may belong to multiple affinity /
-    /// anti-affinity groups.\n\nAnti-Affinity Groups can contain up to 32
-    /// members.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "An instance belonging to this group\n\nInstances
-    /// can belong to up to 16 anti-affinity groups.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "instance"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "object",
-    ///          "required": [
-    ///            "id",
-    ///            "name",
-    ///            "run_state"
-    ///          ],
-    ///          "properties": {
-    ///            "id": {
-    ///              "type": "string",
-    ///              "format": "uuid"
-    ///            },
-    ///            "name": {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            },
-    ///            "run_state": {
-    ///              "$ref": "#/components/schemas/InstanceState"
-    ///            }
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2780,36 +1117,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AntiAffinityGroupMember"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2817,7 +1124,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AntiAffinityGroupMember>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -2828,36 +1135,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AntiAffinityGroup"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -2865,7 +1142,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AntiAffinityGroup>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -2876,55 +1153,19 @@ pub mod types {
     }
 
     /// Updateable properties of an `AntiAffinityGroup`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of an `AntiAffinityGroup`",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct AntiAffinityGroupUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for AntiAffinityGroupUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl AntiAffinityGroupUpdate {
@@ -2934,110 +1175,6 @@ pub mod types {
     }
 
     /// Audit log entry
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Audit log entry",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "actor",
-    ///    "id",
-    ///    "operation_id",
-    ///    "request_id",
-    ///    "request_uri",
-    ///    "result",
-    ///    "source_ip",
-    ///    "time_completed",
-    ///    "time_started"
-    ///  ],
-    ///  "properties": {
-    ///    "actor": {
-    ///      "$ref": "#/components/schemas/AuditLogEntryActor"
-    ///    },
-    ///    "auth_method": {
-    ///      "description": "How the user authenticated the request (access
-    /// token, session, or SCIM token). Null for unauthenticated requests like
-    /// login attempts.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/AuthMethod"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "credential_id": {
-    ///      "description": "ID of the credential used for authentication. Null
-    /// for unauthenticated requests. The value of `auth_method` indicates what
-    /// kind of credential it is (access token, session, or SCIM token).",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique identifier for the audit log entry",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "operation_id": {
-    ///      "description": "API endpoint ID, e.g., `project_create`",
-    ///      "type": "string"
-    ///    },
-    ///    "request_id": {
-    ///      "description": "Request ID for tracing requests through the
-    /// system",
-    ///      "type": "string"
-    ///    },
-    ///    "request_uri": {
-    ///      "description": "URI of the request, truncated to 512 characters.
-    /// Will only include host and scheme for HTTP/2 requests. For HTTP/1.1, the
-    /// URI will consist of only the path and query.",
-    ///      "type": "string"
-    ///    },
-    ///    "result": {
-    ///      "description": "Result of the operation",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AuditLogEntryResult"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "source_ip": {
-    ///      "description": "IP address that made the request",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "time_completed": {
-    ///      "description": "Time operation completed",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_started": {
-    ///      "description": "When the request was received",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "user_agent": {
-    ///      "description": "User agent string from the request, truncated to
-    /// 256 characters.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3045,12 +1182,12 @@ pub mod types {
         pub actor: AuditLogEntryActor,
         /// How the user authenticated the request (access token, session, or
         /// SCIM token). Null for unauthenticated requests like login attempts.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub auth_method: ::std::option::Option<AuthMethod>,
         /// ID of the credential used for authentication. Null for
         /// unauthenticated requests. The value of `auth_method` indicates what
         /// kind of credential it is (access token, session, or SCIM token).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub credential_id: ::std::option::Option<::uuid::Uuid>,
         /// Unique identifier for the audit log entry
         pub id: ::uuid::Uuid,
@@ -3071,7 +1208,7 @@ pub mod types {
         /// When the request was received
         pub time_started: ::chrono::DateTime<::chrono::offset::Utc>,
         /// User agent string from the request, truncated to 256 characters.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub user_agent: ::std::option::Option<::std::string::String>,
     }
 
@@ -3082,92 +1219,6 @@ pub mod types {
     }
 
     /// `AuditLogEntryActor`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind",
-    ///        "user_builtin_id"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "user_builtin"
-    ///          ]
-    ///        },
-    ///        "user_builtin_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind",
-    ///        "silo_id",
-    ///        "silo_user_id"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "silo_user"
-    ///          ]
-    ///        },
-    ///        "silo_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "silo_user_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind",
-    ///        "silo_id"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "scim"
-    ///          ]
-    ///        },
-    ///        "silo_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "unauthenticated"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3187,90 +1238,6 @@ pub mod types {
     }
 
     /// Result of an audit log entry
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Result of an audit log entry",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The operation completed successfully",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "http_status_code",
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "http_status_code": {
-    ///          "description": "HTTP status code",
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "success"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The operation failed",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "error_message",
-    ///        "http_status_code",
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "error_code": {
-    ///          "type": [
-    ///            "string",
-    ///            "null"
-    ///          ]
-    ///        },
-    ///        "error_message": {
-    ///          "type": "string"
-    ///        },
-    ///        "http_status_code": {
-    ///          "description": "HTTP status code",
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "error"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "After the logged operation completed, our attempt
-    /// to write the result to the audit log failed, so it was automatically
-    /// marked completed later by a background job. This does not imply that the
-    /// operation itself timed out or failed, only our attempts to log its
-    /// result.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "unknown"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3285,7 +1252,7 @@ pub mod types {
         /// The operation failed
         #[serde(rename = "error")]
         Error {
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            #[serde(skip_serializing_if = "::std::option::Option::is_none")]
             error_code: ::std::option::Option<::std::string::String>,
             error_message: ::std::string::String,
             /// HTTP status code
@@ -3296,36 +1263,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AuditLogEntry"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3333,7 +1270,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<AuditLogEntry>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -3344,39 +1281,6 @@ pub mod types {
     }
 
     /// Authentication method used for a request
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Authentication method used for a request",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Console session cookie",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "session_cookie"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Device access token (OAuth 2.0 device authorization
-    /// flow)",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "access_token"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "SCIM client bearer token",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "scim_token"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -3431,15 +1335,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AuthMethod {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AuthMethod {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -3456,53 +1351,6 @@ pub mod types {
     /// visible to an operator or fleet reader. Project-scoped, on the other
     /// hand, indicates that a user will see data limited to the projects on
     /// which they have read permissions.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Authorization scope for a timeseries.\n\nThis describes
-    /// the level at which a user must be authorized to read data from a
-    /// timeseries. For example, fleet-scoping means the data is only visible to
-    /// an operator or fleet reader. Project-scoped, on the other hand,
-    /// indicates that a user will see data limited to the projects on which
-    /// they have read permissions.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Timeseries data is limited to fleet readers.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "fleet"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Timeseries data is limited to the authorized silo
-    /// for a user.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "silo"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Timeseries data is limited to the authorized
-    /// projects for a user.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "project"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The timeseries is viewable to all without
-    /// limitation.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "viewable_to_all"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -3562,15 +1410,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for AuthzScope {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AuthzScope {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -3581,35 +1420,6 @@ pub mod types {
     }
 
     /// Properties that uniquely identify an Oxide hardware component
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Properties that uniquely identify an Oxide hardware
-    /// component",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "part",
-    ///    "revision",
-    ///    "serial"
-    ///  ],
-    ///  "properties": {
-    ///    "part": {
-    ///      "type": "string"
-    ///    },
-    ///    "revision": {
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "serial": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3629,33 +1439,6 @@ pub mod types {
     ///
     /// This type is essentially the same as a `Baseboard` except it doesn't
     /// have a revision or HW type (Gimlet, PC, Unknown).
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A representation of a Baseboard ID as used in the
-    /// inventory subsystem.\n\nThis type is essentially the same as a
-    /// `Baseboard` except it doesn't have a revision or HW type (Gimlet, PC,
-    /// Unknown).",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "part_number",
-    ///    "serial_number"
-    ///  ],
-    ///  "properties": {
-    ///    "part_number": {
-    ///      "description": "Oxide Part Number",
-    ///      "type": "string"
-    ///    },
-    ///    "serial_number": {
-    ///      "description": "Serial number (unique for a given part number)",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3673,20 +1456,6 @@ pub mod types {
     }
 
     /// BFD connection mode.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "BFD connection mode.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "single_hop",
-    ///    "multi_hop"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -3734,15 +1503,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for BfdMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for BfdMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -3753,37 +1513,6 @@ pub mod types {
     }
 
     /// Information needed to disable a BFD session
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Information needed to disable a BFD session",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "remote",
-    ///    "switch_slot"
-    ///  ],
-    ///  "properties": {
-    ///    "remote": {
-    ///      "description": "Address of the remote peer to disable a BFD session
-    /// for.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "switch_slot": {
-    ///      "description": "The slot of the switch within the rack to disable
-    /// this session on.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3801,75 +1530,6 @@ pub mod types {
     }
 
     /// Information about a bidirectional forwarding detection (BFD) session.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Information about a bidirectional forwarding detection
-    /// (BFD) session.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "detection_threshold",
-    ///    "mode",
-    ///    "remote",
-    ///    "required_rx",
-    ///    "switch_slot"
-    ///  ],
-    ///  "properties": {
-    ///    "detection_threshold": {
-    ///      "description": "The negotiated Control packet transmission
-    /// interval, multiplied by this variable, will be the Detection Time for
-    /// this session (as seen by the remote system)",
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "local": {
-    ///      "description": "Address the Oxide switch will listen on for BFD
-    /// traffic. If `None` then the unspecified address (0.0.0.0 or ::) is
-    /// used.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
-    ///    },
-    ///    "mode": {
-    ///      "description": "Select either single-hop (RFC 5881) or multi-hop
-    /// (RFC 5883)",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BfdMode"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "remote": {
-    ///      "description": "Address of the remote peer to establish a BFD
-    /// session with.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "required_rx": {
-    ///      "description": "The minimum interval, in microseconds, between
-    /// received BFD Control packets that this system requires",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "switch_slot": {
-    ///      "description": "The slot of the switch within the rack to enable
-    /// this session on.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -3880,7 +1540,7 @@ pub mod types {
         pub detection_threshold: u8,
         /// Address the Oxide switch will listen on for BFD traffic. If `None`
         /// then the unspecified address (0.0.0.0 or ::) is used.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub local: ::std::option::Option<::std::net::IpAddr>,
         /// Select either single-hop (RFC 5881) or multi-hop (RFC 5883)
         pub mode: BfdMode,
@@ -3900,47 +1560,6 @@ pub mod types {
     }
 
     /// `BfdState`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A stable down state. Non-responsive to incoming
-    /// messages.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "admin_down"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The initial state.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "down"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The peer has detected a remote peer in the down
-    /// state.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "init"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The peer has detected a remote peer in the up or
-    /// init state while in the init state.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "up"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -4001,15 +1620,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for BfdState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for BfdState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -4020,61 +1630,12 @@ pub mod types {
     }
 
     /// `BfdStatus`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "detection_threshold",
-    ///    "mode",
-    ///    "peer",
-    ///    "required_rx",
-    ///    "state",
-    ///    "switch_slot"
-    ///  ],
-    ///  "properties": {
-    ///    "detection_threshold": {
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "local": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
-    ///    },
-    ///    "mode": {
-    ///      "$ref": "#/components/schemas/BfdMode"
-    ///    },
-    ///    "peer": {
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "required_rx": {
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "state": {
-    ///      "$ref": "#/components/schemas/BfdState"
-    ///    },
-    ///    "switch_slot": {
-    ///      "$ref": "#/components/schemas/SwitchSlot"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BfdStatus {
         pub detection_threshold: u8,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub local: ::std::option::Option<::std::net::IpAddr>,
         pub mode: BfdMode,
         pub peer: ::std::net::IpAddr,
@@ -4091,55 +1652,6 @@ pub mod types {
 
     /// Represents a BGP announce set by id. The id can be used with other API
     /// calls to view and manage the announce set.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Represents a BGP announce set by id. The id can be used
-    /// with other API calls to view and manage the announce set.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4163,37 +1675,6 @@ pub mod types {
     }
 
     /// Parameters for creating a named set of BGP announcements.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating a named set of BGP
-    /// announcements.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "announcement",
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "announcement": {
-    ///      "description": "The announcements in this set.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BgpAnnouncementCreate"
-    ///      }
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4211,42 +1692,6 @@ pub mod types {
     }
 
     /// A BGP announcement tied to an address lot block.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A BGP announcement tied to an address lot block.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address_lot_block_id",
-    ///    "announce_set_id",
-    ///    "network"
-    ///  ],
-    ///  "properties": {
-    ///    "address_lot_block_id": {
-    ///      "description": "The address block the IP network being announced is
-    /// drawn from.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "announce_set_id": {
-    ///      "description": "The id of the set this announcement is a part of.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "network": {
-    ///      "description": "The IP network being announced.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4266,39 +1711,6 @@ pub mod types {
     }
 
     /// A BGP announcement tied to a particular address lot block.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A BGP announcement tied to a particular address lot
-    /// block.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address_lot_block",
-    ///    "network"
-    ///  ],
-    ///  "properties": {
-    ///    "address_lot_block": {
-    ///      "description": "Address lot this announcement is drawn from.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "network": {
-    ///      "description": "The network being announced.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4316,80 +1728,6 @@ pub mod types {
     }
 
     /// A base BGP configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A base BGP configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "asn",
-    ///    "description",
-    ///    "id",
-    ///    "max_paths",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "asn": {
-    ///      "description": "The autonomous system number of this BGP
-    /// configuration.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "max_paths": {
-    ///      "description": "Maximum number of paths to use when multiple \"best
-    /// paths\" exist",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/MaxPathConfig"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vrf": {
-    ///      "description": "Optional virtual routing and forwarding identifier
-    /// for this BGP configuration.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4410,7 +1748,7 @@ pub mod types {
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vrf: ::std::option::Option<::std::string::String>,
     }
 
@@ -4423,68 +1761,6 @@ pub mod types {
     /// Parameters for creating a BGP configuration. This includes an autonomous
     /// system number (ASN) and a virtual routing and forwarding (VRF)
     /// identifier.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating a BGP configuration. This
-    /// includes an autonomous system number (ASN) and a virtual routing and
-    /// forwarding (VRF) identifier.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "asn",
-    ///    "bgp_announce_set_id",
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "asn": {
-    ///      "description": "The autonomous system number of this BGP
-    /// configuration.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "bgp_announce_set_id": {
-    ///      "$ref": "#/components/schemas/NameOrId"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "max_paths": {
-    ///      "description": "Maximum number of paths to use when multiple \"best
-    /// paths\" exist",
-    ///      "default": 1,
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/MaxPathConfig"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "vrf": {
-    ///      "description": "Optional virtual routing and forwarding identifier
-    /// for this BGP configuration.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4499,7 +1775,7 @@ pub mod types {
         pub name: Name,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vrf: ::std::option::Option<Name>,
     }
 
@@ -4510,36 +1786,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BgpConfig"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4547,7 +1793,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<BgpConfig>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -4560,95 +1806,25 @@ pub mod types {
     /// Parameters for updating a BGP configuration
     ///
     /// If a value is not specified, it will remain unchanged.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating a BGP configuration\n\nIf a
-    /// value is not specified, it will remain unchanged.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "bgp_announce_set_id": {
-    ///      "description": "Update the BGP announce set associated with this
-    /// configuration.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "max_paths": {
-    ///      "description": "Update the maximum number of equal-cost paths.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/MaxPathConfig"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct BgpConfigUpdate {
         /// Update the BGP announce set associated with this configuration.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub bgp_announce_set_id: ::std::option::Option<NameOrId>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
         /// Update the maximum number of equal-cost paths.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub max_paths: ::std::option::Option<MaxPathConfig>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for BgpConfigUpdate {
-        fn default() -> Self {
-            Self {
-                bgp_announce_set_id: Default::default(),
-                description: Default::default(),
-                max_paths: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl BgpConfigUpdate {
@@ -4658,43 +1834,6 @@ pub mod types {
     }
 
     /// Route exported to a peer.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Route exported to a peer.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "peer_id",
-    ///    "prefix",
-    ///    "switch"
-    ///  ],
-    ///  "properties": {
-    ///    "peer_id": {
-    ///      "description": "Identifier for the BGP peer.",
-    ///      "type": "string"
-    ///    },
-    ///    "prefix": {
-    ///      "description": "The destination network prefix.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "switch": {
-    ///      "description": "Switch the route is exported from.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4714,51 +1853,6 @@ pub mod types {
     }
 
     /// A route imported from a BGP peer.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A route imported from a BGP peer.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "nexthop",
-    ///    "prefix",
-    ///    "switch"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "BGP identifier of the originating router.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "nexthop": {
-    ///      "description": "The nexthop the prefix is reachable through.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "prefix": {
-    ///      "description": "The destination network prefix.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "switch": {
-    ///      "description": "Switch the route is imported into.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4780,13 +1874,6 @@ pub mod types {
     }
 
     /// `BgpMessageHistory`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {}
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -4814,172 +1901,6 @@ pub mod types {
     /// A BGP peer configuration for an interface. Includes the set of
     /// announcements that will be advertised to the peer. The `bgp_config`
     /// parameter is a reference to global BGP parameters.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A BGP peer configuration for an interface. Includes the
-    /// set of announcements that will be advertised to the peer. The
-    /// `bgp_config` parameter is a reference to global BGP parameters.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addr",
-    ///    "allowed_export",
-    ///    "allowed_import",
-    ///    "bgp_config",
-    ///    "communities",
-    ///    "connect_retry",
-    ///    "delay_open",
-    ///    "enforce_first_as",
-    ///    "hold_time",
-    ///    "idle_hold_time",
-    ///    "keepalive"
-    ///  ],
-    ///  "properties": {
-    ///    "addr": {
-    ///      "description": "The address of the host to peer with, or specifying
-    /// the configuration of an unnumbered BGP session.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouterPeerType"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "allowed_export": {
-    ///      "description": "Define export policy for a peer.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ImportExportPolicy"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "allowed_import": {
-    ///      "description": "Define import policy for a peer.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ImportExportPolicy"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "bgp_config": {
-    ///      "description": "The global BGP configuration used for establishing
-    /// a session with this peer.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "communities": {
-    ///      "description": "Include the provided communities in updates sent to
-    /// the peer.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint32",
-    ///        "minimum": 0.0
-    ///      }
-    ///    },
-    ///    "connect_retry": {
-    ///      "description": "How long to wait between TCP connection retries
-    /// (seconds).",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "delay_open": {
-    ///      "description": "How long to delay sending an open request after
-    /// establishing a TCP session (seconds).",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "enforce_first_as": {
-    ///      "description": "Enforce that the first AS in paths received from
-    /// this peer is the peer's AS.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "hold_time": {
-    ///      "description": "How long to hold peer connections between
-    /// keepalives (seconds).",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "idle_hold_time": {
-    ///      "description": "How long to hold a peer in idle before attempting a
-    /// new session (seconds).",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "keepalive": {
-    ///      "description": "How often to send keepalive requests (seconds).",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "local_pref": {
-    ///      "description": "Apply a local preference to routes received from
-    /// this peer.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "md5_auth_key": {
-    ///      "description": "Use the given key for TCP-MD5 authentication with
-    /// the peer.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "min_ttl": {
-    ///      "description": "Require messages from a peer have a minimum IP time
-    /// to live field.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "multi_exit_discriminator": {
-    ///      "description": "Apply the provided multi-exit discriminator (MED)
-    /// updates sent to the peer.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "remote_asn": {
-    ///      "description": "Require that a peer has a specified ASN.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "vlan_id": {
-    ///      "description": "Associate a VLAN ID with a peer.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5012,23 +1933,23 @@ pub mod types {
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
         /// Apply a local preference to routes received from this peer.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub local_pref: ::std::option::Option<u32>,
         /// Use the given key for TCP-MD5 authentication with the peer.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub md5_auth_key: ::std::option::Option<::std::string::String>,
         /// Require messages from a peer have a minimum IP time to live field.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub min_ttl: ::std::option::Option<u8>,
         /// Apply the provided multi-exit discriminator (MED) updates sent to
         /// the peer.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub multi_exit_discriminator: ::std::option::Option<u32>,
         /// Require that a peer has a specified ASN.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub remote_asn: ::std::option::Option<u32>,
         /// Associate a VLAN ID with a peer.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
     }
 
@@ -5039,37 +1960,6 @@ pub mod types {
     }
 
     /// `BgpPeerConfig`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "link_name",
-    ///    "peers"
-    ///  ],
-    ///  "properties": {
-    ///    "link_name": {
-    ///      "description": "Link that the peer is reachable on. On ports that
-    /// are not broken out, this is always phy0. On a 2x breakout the options
-    /// are phy0 and phy1, on 4x phy0-phy3, etc.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "peers": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BgpPeer"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5088,76 +1978,6 @@ pub mod types {
     }
 
     /// The current state of a BGP peer.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The current state of a BGP peer.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Initial state. Refuse all incoming BGP connections.
-    /// No resources allocated to peer.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "idle"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Waiting for the TCP connection to be completed.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "connect"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Trying to acquire peer by listening for and
-    /// accepting a TCP connection.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "active"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Waiting for open message from peer.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "open_sent"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Waiting for keepaliave or notification from peer.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "open_confirm"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "There is an ongoing Connection Collision that hasn't yet been resolved. Two connections are maintained until one connection receives an Open or is able to progress into Established.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "connection_collision"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Synchronizing with peer.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "session_setup"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Session established. Able to exchange update,
-    /// notification and keepalive messages with peers.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "established"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -5242,15 +2062,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for BgpPeerState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for BgpPeerState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5261,70 +2072,6 @@ pub mod types {
     }
 
     /// The current status of a BGP peer.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The current status of a BGP peer.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addr",
-    ///    "local_asn",
-    ///    "peer_id",
-    ///    "remote_asn",
-    ///    "state",
-    ///    "state_duration_millis",
-    ///    "switch"
-    ///  ],
-    ///  "properties": {
-    ///    "addr": {
-    ///      "description": "IP address of the peer.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "local_asn": {
-    ///      "description": "Local autonomous system number.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "peer_id": {
-    ///      "description": "Interface name",
-    ///      "type": "string"
-    ///    },
-    ///    "remote_asn": {
-    ///      "description": "Remote autonomous system number.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "state": {
-    ///      "description": "State of the peer.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BgpPeerState"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "state_duration_millis": {
-    ///      "description": "Time of last state change.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "switch": {
-    ///      "description": "Switch with the peer session.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5356,88 +2103,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "number",
-    ///          "format": "double"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "number",
-    ///          "format": "double"
-    ///        },
-    ///        "start": {
-    ///          "type": "number",
-    ///          "format": "double"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "number",
-    ///          "format": "double"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5460,88 +2125,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "number",
-    ///          "format": "float"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "number",
-    ///          "format": "float"
-    ///        },
-    ///        "start": {
-    ///          "type": "number",
-    ///          "format": "float"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "number",
-    ///          "format": "float"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5564,88 +2147,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int16"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int16"
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int16"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int16"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5668,88 +2169,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int32"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int32"
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int32"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int32"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5772,88 +2191,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int64"
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5876,88 +2213,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int8"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "int8"
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int8"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "int8"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -5980,92 +2235,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6088,92 +2257,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6196,92 +2279,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint64",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint64",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint64",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint64",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6304,92 +2301,6 @@ pub mod types {
     /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A type storing a range over `T`.\n\nThis type supports
-    /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
-    /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_to"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "end",
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "end": {
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "start",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "start": {
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "range_from"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6408,37 +2319,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangedouble"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6456,37 +2336,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangefloat"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6504,37 +2353,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeint16"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6552,37 +2370,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeint32"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6600,37 +2387,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeint64"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6648,37 +2404,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeint8"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6696,37 +2421,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeuint16"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6744,37 +2438,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeuint32"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6792,37 +2455,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeuint64"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6840,37 +2472,6 @@ pub mod types {
     }
 
     /// Type storing bin edges and a count of samples within it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "count",
-    ///    "range"
-    ///  ],
-    ///  "properties": {
-    ///    "count": {
-    ///      "description": "The total count of samples in this bin.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "range": {
-    ///      "description": "The range of the support covered by this bin.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BinRangeuint8"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6888,22 +2489,6 @@ pub mod types {
     }
 
     /// Valid values are: 512, 2048, or 4096.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "Block size in bytes",
-    ///  "description": "Valid values are: 512, 2048, or 4096.",
-    ///  "type": "integer",
-    ///  "enum": [
-    ///    512,
-    ///    2048,
-    ///    4096
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(:: serde :: Serialize, Clone, Debug)]
     #[serde(transparent)]
     pub struct BlockSize(i64);
@@ -6962,18 +2547,6 @@ pub mod types {
     }
 
     /// Byte count to express memory or storage capacity.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Byte count to express memory or storage capacity.",
-    ///  "type": "integer",
-    ///  "format": "uint64",
-    ///  "minimum": 0.0
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -6998,6 +2571,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for ByteCount {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for ByteCount {
         type Err = <u64 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -7019,76 +2598,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for ByteCount {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// View of a Certificate
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Certificate",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "cert",
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "service",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "cert": {
-    ///      "description": "PEM-formatted string containing public certificate
-    /// chain",
-    ///      "type": "string"
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "service": {
-    ///      "description": "The service using this certificate",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ServiceUsingCertificate"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7116,48 +2626,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `Certificate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `Certificate`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "cert",
-    ///    "description",
-    ///    "key",
-    ///    "name",
-    ///    "service"
-    ///  ],
-    ///  "properties": {
-    ///    "cert": {
-    ///      "description": "PEM-formatted string containing public certificate
-    /// chain",
-    ///      "type": "string"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "key": {
-    ///      "description": "PEM-formatted string containing private key",
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "service": {
-    ///      "description": "The service using this certificate",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ServiceUsingCertificate"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7179,36 +2647,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Certificate"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7216,7 +2654,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Certificate>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -7227,37 +2665,6 @@ pub mod types {
     }
 
     /// View of a console session
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a console session",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "time_created",
-    ///    "time_last_used"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "A unique, immutable, system-controlled identifier
-    /// for the session",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_last_used": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7275,36 +2682,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ConsoleSession"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7312,7 +2689,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<ConsoleSession>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -7323,30 +2700,6 @@ pub mod types {
     }
 
     /// A cumulative or counter data type.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A cumulative or counter data type.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "start_time",
-    ///    "value"
-    ///  ],
-    ///  "properties": {
-    ///    "start_time": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "value": {
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7362,30 +2715,6 @@ pub mod types {
     }
 
     /// A cumulative or counter data type.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A cumulative or counter data type.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "start_time",
-    ///    "value"
-    ///  ],
-    ///  "properties": {
-    ///    "start_time": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "value": {
-    ///      "type": "number",
-    ///      "format": "float"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7401,30 +2730,6 @@ pub mod types {
     }
 
     /// A cumulative or counter data type.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A cumulative or counter data type.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "start_time",
-    ///    "value"
-    ///  ],
-    ///  "properties": {
-    ///    "start_time": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "value": {
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7440,31 +2745,6 @@ pub mod types {
     }
 
     /// A cumulative or counter data type.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A cumulative or counter data type.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "start_time",
-    ///    "value"
-    ///  ],
-    ///  "properties": {
-    ///    "start_time": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "value": {
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7480,69 +2760,6 @@ pub mod types {
     }
 
     /// Info about the current user
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Info about the current user",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "display_name",
-    ///    "fleet_viewer",
-    ///    "id",
-    ///    "silo_admin",
-    ///    "silo_id",
-    ///    "silo_name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "display_name": {
-    ///      "description": "Human-readable name that can identify the user",
-    ///      "type": "string"
-    ///    },
-    ///    "fleet_viewer": {
-    ///      "description": "Whether this user has the viewer role on the fleet. Used by the web console to determine whether to show system-level UI.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "silo_admin": {
-    ///      "description": "Whether this user has the admin role on their silo.
-    /// Used by the web console to determine whether to show admin-only UI
-    /// elements.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "silo_id": {
-    ///      "description": "Uuid of the silo to which this user belongs",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "silo_name": {
-    ///      "description": "Name of the silo to which this user belongs.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this user was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this user was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -7573,541 +2790,6 @@ pub mod types {
     }
 
     /// A `Datum` is a single sampled data point from a metric.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A `Datum` is a single sampled data point from a
-    /// metric.",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "boolean"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "bool"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "int8"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i8"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u8"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "int16"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i16"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u16"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "int32"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "int64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "integer",
-    ///          "format": "uint64",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "number",
-    ///          "format": "float"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "f32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "number",
-    ///          "format": "double"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "f64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "string"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "string"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "type": "integer",
-    ///            "format": "uint8",
-    ///            "minimum": 0.0
-    ///          }
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "bytes"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Cumulativeint64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "cumulative_i64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Cumulativeuint64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "cumulative_u64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Cumulativefloat"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "cumulative_f32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Cumulativedouble"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "cumulative_f64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramint8"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_i8"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramuint8"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_u8"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramint16"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_i16"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramuint16"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_u16"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramint32"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_i32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramuint32"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_u32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramint64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_i64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramuint64"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_u64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramfloat"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_f32"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/Histogramdouble"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "histogram_f64"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "datum",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "datum": {
-    ///          "$ref": "#/components/schemas/MissingDatum"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "missing"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8334,45 +3016,6 @@ pub mod types {
     }
 
     /// The type of an individual datum of a metric.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The type of an individual datum of a metric.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "bool",
-    ///    "i8",
-    ///    "u8",
-    ///    "i16",
-    ///    "u16",
-    ///    "i32",
-    ///    "u32",
-    ///    "i64",
-    ///    "u64",
-    ///    "f32",
-    ///    "f64",
-    ///    "string",
-    ///    "bytes",
-    ///    "cumulative_i64",
-    ///    "cumulative_u64",
-    ///    "cumulative_f32",
-    ///    "cumulative_f64",
-    ///    "histogram_i8",
-    ///    "histogram_u8",
-    ///    "histogram_i16",
-    ///    "histogram_u16",
-    ///    "histogram_i32",
-    ///    "histogram_u32",
-    ///    "histogram_i64",
-    ///    "histogram_u64",
-    ///    "histogram_f32",
-    ///    "histogram_f64"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -8520,15 +3163,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for DatumType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for DatumType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -8539,31 +3173,6 @@ pub mod types {
     }
 
     /// `DerEncodedKeyPair`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "private_key",
-    ///    "public_cert"
-    ///  ],
-    ///  "properties": {
-    ///    "private_key": {
-    ///      "description": "Request signing RSA private key in PKCS#1 format
-    /// (base64 encoded DER file)",
-    ///      "type": "string"
-    ///    },
-    ///    "public_cert": {
-    ///      "description": "Request signing public certificate (base64 encoded
-    /// DER file)",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8582,42 +3191,6 @@ pub mod types {
     }
 
     /// View of a device access token
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a device access token",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "A unique, immutable, system-controlled identifier
-    /// for the token.\n\nNote that this ID is not the bearer token itself,
-    /// which starts with \"oxide-token-\".",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_expires": {
-    ///      "description": "Expiration timestamp. A null value means the token
-    /// does not automatically expire.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8630,7 +3203,7 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Expiration timestamp. A null value means the token does not
         /// automatically expire.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
@@ -8641,32 +3214,6 @@ pub mod types {
     }
 
     /// `DeviceAccessTokenRequest`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "client_id",
-    ///    "device_code",
-    ///    "grant_type"
-    ///  ],
-    ///  "properties": {
-    ///    "client_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "device_code": {
-    ///      "type": "string"
-    ///    },
-    ///    "grant_type": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8683,36 +3230,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/DeviceAccessToken"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8720,7 +3237,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<DeviceAccessToken>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -8731,43 +3248,6 @@ pub mod types {
     }
 
     /// `DeviceAuthRequest`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "client_id"
-    ///  ],
-    ///  "properties": {
-    ///    "client_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ttl_seconds": {
-    ///      "description": "Optional lifetime for the access token in
-    /// seconds.\n\nThis value will be validated during the confirmation step.
-    /// If not specified, it defaults to the silo's max TTL, which can be seen
-    /// at `/v1/auth-settings`.  If specified, must not exceed the silo's max
-    /// TTL.\n\nSome special logic applies when authenticating the confirmation
-    /// request with an existing device token: the requested TTL must not
-    /// produce an expiration time later than the authenticating token's
-    /// expiration. If no TTL is specified, the expiration will be the lesser of
-    /// the silo max and the authenticating token's expiration time. To get the
-    /// longest allowed lifetime, omit the TTL and authenticate with a web
-    /// console session.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 1.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8787,7 +3267,7 @@ pub mod types {
         /// lesser of the silo max and the authenticating token's expiration
         /// time. To get the longest allowed lifetime, omit the TTL and
         /// authenticate with a web console session.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
     }
 
@@ -8798,23 +3278,6 @@ pub mod types {
     }
 
     /// `DeviceAuthVerify`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "user_code"
-    ///  ],
-    ///  "properties": {
-    ///    "user_code": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8829,34 +3292,6 @@ pub mod types {
     }
 
     /// `Digest`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "sha256"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8867,101 +3302,6 @@ pub mod types {
     }
 
     /// View of a Disk
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Disk",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "block_size",
-    ///    "description",
-    ///    "device_path",
-    ///    "disk_type",
-    ///    "id",
-    ///    "name",
-    ///    "project_id",
-    ///    "read_only",
-    ///    "size",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "block_size": {
-    ///      "$ref": "#/components/schemas/BlockSize"
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "device_path": {
-    ///      "type": "string"
-    ///    },
-    ///    "disk_type": {
-    ///      "$ref": "#/components/schemas/DiskType"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "image_id": {
-    ///      "description": "ID of image from which disk was created, if any",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "project_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "read_only": {
-    ///      "description": "Whether or not this disk is read-only.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "size": {
-    ///      "$ref": "#/components/schemas/ByteCount"
-    ///    },
-    ///    "snapshot_id": {
-    ///      "description": "ID of snapshot from which disk was created, if
-    /// any",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "state": {
-    ///      "$ref": "#/components/schemas/DiskState"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -8974,7 +3314,7 @@ pub mod types {
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// ID of image from which disk was created, if any
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub image_id: ::std::option::Option<::uuid::Uuid>,
         /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
@@ -8983,7 +3323,7 @@ pub mod types {
         pub read_only: bool,
         pub size: ByteCount,
         /// ID of snapshot from which disk was created, if any
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub snapshot_id: ::std::option::Option<::uuid::Uuid>,
         pub state: DiskState,
         /// Timestamp when this resource was created
@@ -8999,54 +3339,6 @@ pub mod types {
     }
 
     /// The source of a `Disk`'s blocks
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The source of a `Disk`'s blocks",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "local"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "disk_source",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "disk_source": {
-    ///          "description": "The initial source for this disk",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/DiskSource"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "distributed"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9065,46 +3357,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `Disk`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `Disk`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "disk_backend",
-    ///    "name",
-    ///    "size"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "disk_backend": {
-    ///      "description": "The source for this `Disk`'s blocks",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/DiskBackend"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "size": {
-    ///      "description": "The total size of the Disk (in bytes)",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9124,28 +3376,6 @@ pub mod types {
     }
 
     /// `DiskPath`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "disk"
-    ///  ],
-    ///  "properties": {
-    ///    "disk": {
-    ///      "description": "Name or ID of the disk",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9161,36 +3391,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Disk"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9198,7 +3398,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Disk>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -9209,114 +3409,6 @@ pub mod types {
     }
 
     /// Different sources for a Distributed Disk
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Different sources for a Distributed Disk",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Create a blank disk",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "block_size",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "block_size": {
-    ///          "description": "Size of blocks for this disk. Valid values are:
-    /// 512, 2048, or 4096.",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/BlockSize"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "blank"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Create a disk from a disk snapshot",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "snapshot_id",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "read_only": {
-    ///          "description": "If `true`, the disk created from this snapshot
-    /// will be read-only.",
-    ///          "default": false,
-    ///          "type": "boolean"
-    ///        },
-    ///        "snapshot_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "snapshot"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Create a disk from an image",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "image_id",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "image_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "read_only": {
-    ///          "description": "If `true`, the disk created from this image
-    /// will be read-only.",
-    ///          "default": false,
-    ///          "type": "boolean"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "image"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Create a blank disk that will accept bulk writes or
-    /// pull blocks from an external source.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "block_size",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "block_size": {
-    ///          "$ref": "#/components/schemas/BlockSize"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "importing_blocks"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9353,213 +3445,6 @@ pub mod types {
     }
 
     /// State of a Disk
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "State of a Disk",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Disk is being initialized",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "creating"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is ready but detached from any Instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "detached"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is ready to receive blocks from an external
-    /// source",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "import_ready"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is importing blocks from a URL",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "importing_from_url"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is importing blocks from bulk writes",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "importing_from_bulk_writes"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is being finalized to state Detached",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "finalizing"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is undergoing maintenance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "maintenance"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is being attached to the given Instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "instance",
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "instance": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "attaching"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is attached to the given Instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "instance",
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "instance": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "attached"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is being detached from the given Instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "instance",
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "instance": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "detaching"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk has been destroyed",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "destroyed"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Disk is unavailable",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "state"
-    ///      ],
-    ///      "properties": {
-    ///        "state": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "faulted"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9595,19 +3480,6 @@ pub mod types {
     }
 
     /// `DiskType`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "distributed",
-    ///    "local"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -9655,15 +3527,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for DiskType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for DiskType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -9679,101 +3542,21 @@ pub mod types {
     ///
     /// Min, max, and the p-* quantiles are treated as optional due to the
     /// possibility of distribution operations, like subtraction.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A distribution is a sequence of bins and counts in
-    /// those bins, and some statistical information tracked to compute the
-    /// mean, standard deviation, and quantile estimates.\n\nMin, max, and the
-    /// p-* quantiles are treated as optional due to the possibility of
-    /// distribution operations, like subtraction.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "counts",
-    ///    "squared_mean",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "number",
-    ///        "format": "double"
-    ///      }
-    ///    },
-    ///    "counts": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint64",
-    ///        "minimum": 0.0
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "min": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "p50": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "p90": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "p99": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "squared_mean": {
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Distributiondouble {
         pub bins: ::std::vec::Vec<f64>,
         pub counts: ::std::vec::Vec<u64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub max: ::std::option::Option<f64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub min: ::std::option::Option<f64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub p50: ::std::option::Option<f64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub p90: ::std::option::Option<f64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub p99: ::std::option::Option<f64>,
         pub squared_mean: f64,
         pub sum_of_samples: f64,
@@ -9791,101 +3574,21 @@ pub mod types {
     ///
     /// Min, max, and the p-* quantiles are treated as optional due to the
     /// possibility of distribution operations, like subtraction.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A distribution is a sequence of bins and counts in
-    /// those bins, and some statistical information tracked to compute the
-    /// mean, standard deviation, and quantile estimates.\n\nMin, max, and the
-    /// p-* quantiles are treated as optional due to the possibility of
-    /// distribution operations, like subtraction.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "counts",
-    ///    "squared_mean",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "int64"
-    ///      }
-    ///    },
-    ///    "counts": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint64",
-    ///        "minimum": 0.0
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int64"
-    ///    },
-    ///    "min": {
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int64"
-    ///    },
-    ///    "p50": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "p90": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "p99": {
-    ///      "type": [
-    ///        "number",
-    ///        "null"
-    ///      ],
-    ///      "format": "double"
-    ///    },
-    ///    "squared_mean": {
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Distributionint64 {
         pub bins: ::std::vec::Vec<i64>,
         pub counts: ::std::vec::Vec<u64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub max: ::std::option::Option<i64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub min: ::std::option::Option<i64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub p50: ::std::option::Option<f64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub p90: ::std::option::Option<f64>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub p99: ::std::option::Option<f64>,
         pub squared_mean: f64,
         pub sum_of_samples: i64,
@@ -9898,31 +3601,6 @@ pub mod types {
     }
 
     /// Parameters for creating an ephemeral IP address for an instance.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating an ephemeral IP address for an
-    /// instance.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "pool_selector": {
-    ///      "description": "Pool to allocate from.",
-    ///      "default": {
-    ///        "ip_version": null,
-    ///        "type": "auto"
-    ///      },
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PoolSelector"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -9947,36 +3625,11 @@ pub mod types {
     }
 
     /// Error information from a response.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Error information from a response.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "message",
-    ///    "request_id"
-    ///  ],
-    ///  "properties": {
-    ///    "error_code": {
-    ///      "type": "string"
-    ///    },
-    ///    "message": {
-    ///      "type": "string"
-    ///    },
-    ///    "request_id": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Error {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub error_code: ::std::option::Option<::std::string::String>,
         pub message: ::std::string::String,
         pub request_id: ::std::string::String,
@@ -9989,163 +3642,6 @@ pub mod types {
     }
 
     /// `ExternalIp`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A source NAT IP address.\n\nSNAT addresses are
-    /// ephemeral addresses used only for outbound connectivity.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "first_port",
-    ///        "ip",
-    ///        "ip_pool_id",
-    ///        "kind",
-    ///        "last_port"
-    ///      ],
-    ///      "properties": {
-    ///        "first_port": {
-    ///          "description": "The first usable port within the IP address.",
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "ip": {
-    ///          "description": "The IP address.",
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        },
-    ///        "ip_pool_id": {
-    ///          "description": "ID of the IP Pool from which the address is
-    /// taken.",
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "snat"
-    ///          ]
-    ///        },
-    ///        "last_port": {
-    ///          "description": "The last usable port within the IP address.",
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "ip",
-    ///        "ip_pool_id",
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "ip": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        },
-    ///        "ip_pool_id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ephemeral"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A Floating IP is a well-known IP address which can
-    /// be attached and detached from instances.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "description",
-    ///        "id",
-    ///        "ip",
-    ///        "ip_pool_id",
-    ///        "kind",
-    ///        "name",
-    ///        "project_id",
-    ///        "time_created",
-    ///        "time_modified"
-    ///      ],
-    ///      "properties": {
-    ///        "description": {
-    ///          "description": "Human-readable free-form text about a
-    /// resource",
-    ///          "type": "string"
-    ///        },
-    ///        "id": {
-    ///          "description": "Unique, immutable, system-controlled identifier
-    /// for each resource",
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "instance_id": {
-    ///          "description": "The ID of the instance that this Floating IP is
-    /// attached to, if it is presently in use.",
-    ///          "type": [
-    ///            "string",
-    ///            "null"
-    ///          ],
-    ///          "format": "uuid"
-    ///        },
-    ///        "ip": {
-    ///          "description": "The IP address held by this resource.",
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        },
-    ///        "ip_pool_id": {
-    ///          "description": "The ID of the IP pool this resource belongs
-    /// to.",
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "floating"
-    ///          ]
-    ///        },
-    ///        "name": {
-    ///          "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "project_id": {
-    ///          "description": "The project this resource exists within.",
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "time_created": {
-    ///          "description": "Timestamp when this resource was created",
-    ///          "type": "string",
-    ///          "format": "date-time"
-    ///        },
-    ///        "time_modified": {
-    ///          "description": "Timestamp when this resource was last
-    /// modified",
-    ///          "type": "string",
-    ///          "format": "date-time"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10182,7 +3678,7 @@ pub mod types {
             id: ::uuid::Uuid,
             /// The ID of the instance that this Floating IP is attached to, if
             /// it is presently in use.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            #[serde(skip_serializing_if = "::std::option::Option::is_none")]
             instance_id: ::std::option::Option<::uuid::Uuid>,
             /// The IP address held by this resource.
             ip: ::std::net::IpAddr,
@@ -10200,68 +3696,6 @@ pub mod types {
     }
 
     /// Parameters for creating an external IP address for instances.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating an external IP address for
-    /// instances.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "An IP address providing both inbound and outbound
-    /// access. The address is automatically assigned from a pool.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "pool_selector": {
-    ///          "description": "Pool to allocate from.",
-    ///          "default": {
-    ///            "ip_version": null,
-    ///            "type": "auto"
-    ///          },
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/PoolSelector"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ephemeral"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "An IP address providing both inbound and outbound
-    /// access. The address is an existing floating IP object assigned to the
-    /// current project.\n\nThe floating IP must not be in use by another
-    /// instance or service.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "floating_ip",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "floating_ip": {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "floating"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10285,36 +3719,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalIp"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10322,7 +3726,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<ExternalIp>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -10333,89 +3737,6 @@ pub mod types {
     }
 
     /// An external subnet allocated from a subnet pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An external subnet allocated from a subnet pool",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "project_id",
-    ///    "subnet",
-    ///    "subnet_pool_id",
-    ///    "subnet_pool_member_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "instance_id": {
-    ///      "description": "The instance this subnet is attached to, if any",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "project_id": {
-    ///      "description": "The project this subnet belongs to",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "subnet": {
-    ///      "description": "The allocated subnet CIDR",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "subnet_pool_id": {
-    ///      "description": "The subnet pool this was allocated from",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "subnet_pool_member_id": {
-    ///      "description": "The subnet pool member this subnet corresponds to",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10425,7 +3746,7 @@ pub mod types {
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// The instance this subnet is attached to, if any
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub instance_id: ::std::option::Option<::uuid::Uuid>,
         /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
@@ -10450,81 +3771,6 @@ pub mod types {
     }
 
     /// Specify how to allocate an external subnet.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Specify how to allocate an external subnet.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Reserve a specific subnet.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "subnet",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "subnet": {
-    ///          "description": "The subnet CIDR to reserve. Must be available
-    /// in the pool.",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IpNet"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Automatically allocate a subnet with the specified
-    /// prefix length.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "prefix_length",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "pool_selector": {
-    ///          "description": "Pool selection.\n\nIf omitted, this field uses
-    /// the silo's default pool. If the silo has default pools for both IPv4 and
-    /// IPv6, the request will fail unless `ip_version` is specified in the pool
-    /// selector.",
-    ///          "default": {
-    ///            "ip_version": null,
-    ///            "type": "auto"
-    ///          },
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/PoolSelector"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "prefix_length": {
-    ///          "description": "The prefix length for the allocated subnet
-    /// (e.g., 24 for a /24).",
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "auto"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10552,29 +3798,6 @@ pub mod types {
     }
 
     /// Attach an external subnet to an instance
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Attach an external subnet to an instance",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "instance"
-    ///  ],
-    ///  "properties": {
-    ///    "instance": {
-    ///      "description": "Name or ID of the instance to attach to",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10590,37 +3813,6 @@ pub mod types {
     }
 
     /// Create an external subnet
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create an external subnet",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allocator",
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "allocator": {
-    ///      "description": "Subnet allocation method.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ExternalSubnetAllocator"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10638,36 +3830,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalSubnet"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10675,7 +3837,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<ExternalSubnet>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -10686,55 +3848,19 @@ pub mod types {
     }
 
     /// Update an external subnet
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Update an external subnet",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct ExternalSubnetUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for ExternalSubnetUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl ExternalSubnetUpdate {
@@ -10744,26 +3870,6 @@ pub mod types {
     }
 
     /// Describes the scope of affinity for the purposes of co-location.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes the scope of affinity for the purposes of
-    /// co-location.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Instances are considered co-located if they are on
-    /// the same sled",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "sled"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -10808,15 +3914,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for FailureDomain {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for FailureDomain {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -10827,37 +3924,6 @@ pub mod types {
     }
 
     /// The name and type information for a field of a timeseries schema.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The name and type information for a field of a
-    /// timeseries schema.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "field_type",
-    ///    "name",
-    ///    "source"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "field_type": {
-    ///      "$ref": "#/components/schemas/FieldType"
-    ///    },
-    ///    "name": {
-    ///      "type": "string"
-    ///    },
-    ///    "source": {
-    ///      "$ref": "#/components/schemas/FieldSource"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -10875,21 +3941,6 @@ pub mod types {
     }
 
     /// The source from which a field is derived, the target or metric.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The source from which a field is derived, the target or
-    /// metric.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "target",
-    ///    "metric"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -10937,15 +3988,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for FieldSource {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for FieldSource {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -10956,31 +3998,6 @@ pub mod types {
     }
 
     /// The `FieldType` identifies the data type of a target or metric field.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The `FieldType` identifies the data type of a target or
-    /// metric field.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "string",
-    ///    "i8",
-    ///    "u8",
-    ///    "i16",
-    ///    "u16",
-    ///    "i32",
-    ///    "u32",
-    ///    "i64",
-    ///    "u64",
-    ///    "ip_addr",
-    ///    "uuid",
-    ///    "bool"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -11068,15 +4085,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for FieldType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for FieldType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -11087,248 +4095,6 @@ pub mod types {
     }
 
     /// The `FieldValue` contains the value of a target or metric field.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The `FieldValue` contains the value of a target or
-    /// metric field.",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "string"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i8"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "int8"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u8"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "uint8",
-    ///          "minimum": 0.0
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i16"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "int16"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u16"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i32"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "int32"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u32"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "i64"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "int64"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "u64"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "integer",
-    ///          "format": "uint64",
-    ///          "minimum": 0.0
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip_addr"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "uuid"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "bool"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "boolean"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11427,54 +4193,21 @@ pub mod types {
     }
 
     /// Parameters for finalizing a disk
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for finalizing a disk",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "snapshot_name": {
-    ///      "description": "If specified a snapshot of the disk will be created
-    /// with the given name during finalization. If not specified, a snapshot
-    /// for the disk will _not_ be created. A snapshot can be manually created
-    /// once the disk transitions into the `Detached` state.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct FinalizeDisk {
         /// If specified a snapshot of the disk will be created with the given
         /// name during finalization. If not specified, a snapshot for the disk
         /// will _not_ be created. A snapshot can be manually created once the
         /// disk transitions into the `Detached` state.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub snapshot_name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for FinalizeDisk {
-        fn default() -> Self {
-            Self {
-                snapshot_name: Default::default(),
-            }
-        }
     }
 
     impl FinalizeDisk {
@@ -11484,20 +4217,6 @@ pub mod types {
     }
 
     /// `FleetRole`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "admin",
-    ///    "collaborator",
-    ///    "viewer"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -11549,15 +4268,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for FleetRole {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for FleetRole {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -11572,31 +4282,6 @@ pub mod types {
     /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
     /// have access to this resource.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Policy for a particular resource\n\nNote that the
-    /// Policy only describes access granted explicitly for this resource.  The
-    /// policies of parent resources can also cause a user to have access to
-    /// this resource.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "role_assignments"
-    ///  ],
-    ///  "properties": {
-    ///    "role_assignments": {
-    ///      "description": "Roles directly assigned on this resource",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/FleetRoleRoleAssignment"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11617,37 +4302,6 @@ pub mod types {
     /// The resource is not part of this structure.  Rather, `RoleAssignment`s
     /// are put into a `Policy` and that Policy is applied to a particular
     /// resource.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes the assignment of a particular role on a
-    /// particular resource to a particular identity (user, group, etc.)\n\nThe
-    /// resource is not part of this structure.  Rather, `RoleAssignment`s are
-    /// put into a `Policy` and that Policy is applied to a particular
-    /// resource.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "identity_id",
-    ///    "identity_type",
-    ///    "role_name"
-    ///  ],
-    ///  "properties": {
-    ///    "identity_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "identity_type": {
-    ///      "$ref": "#/components/schemas/IdentityType"
-    ///    },
-    ///    "role_name": {
-    ///      "$ref": "#/components/schemas/FleetRole"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11665,82 +4319,6 @@ pub mod types {
 
     /// A Floating IP is a well-known IP address which can be attached and
     /// detached from instances.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A Floating IP is a well-known IP address which can be
-    /// attached and detached from instances.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "ip",
-    ///    "ip_pool_id",
-    ///    "name",
-    ///    "project_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "instance_id": {
-    ///      "description": "The ID of the instance that this Floating IP is
-    /// attached to, if it is presently in use.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip": {
-    ///      "description": "The IP address held by this resource.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "ip_pool_id": {
-    ///      "description": "The ID of the IP pool this resource belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "project_id": {
-    ///      "description": "The project this resource exists within.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11751,7 +4329,7 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// The ID of the instance that this Floating IP is attached to, if it
         /// is presently in use.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub instance_id: ::std::option::Option<::uuid::Uuid>,
         /// The IP address held by this resource.
         pub ip: ::std::net::IpAddr,
@@ -11774,40 +4352,6 @@ pub mod types {
     }
 
     /// Parameters for attaching a floating IP address to another resource
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for attaching a floating IP address to
-    /// another resource",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "kind",
-    ///    "parent"
-    ///  ],
-    ///  "properties": {
-    ///    "kind": {
-    ///      "description": "The type of `parent`'s resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/FloatingIpParentKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "parent": {
-    ///      "description": "Name or ID of the resource that this IP address
-    /// should be attached to",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11826,44 +4370,6 @@ pub mod types {
     }
 
     /// Parameters for creating a new floating IP address for instances.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating a new floating IP address for
-    /// instances.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "address_allocator": {
-    ///      "description": "IP address allocation method.",
-    ///      "default": {
-    ///        "pool_selector": {
-    ///          "ip_version": null,
-    ///          "type": "auto"
-    ///        },
-    ///        "type": "auto"
-    ///      },
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AddressAllocator"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11882,20 +4388,6 @@ pub mod types {
     }
 
     /// The type of resource that a floating IP is attached to
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The type of resource that a floating IP is attached
-    /// to",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "instance"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -11939,15 +4431,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for FloatingIpParentKind {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for FloatingIpParentKind {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -11958,36 +4441,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/FloatingIp"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -11995,7 +4448,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<FloatingIp>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -12006,55 +4459,19 @@ pub mod types {
     }
 
     /// Updateable identity-related parameters
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable identity-related parameters",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct FloatingIpUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for FloatingIpUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl FloatingIpUpdate {
@@ -12064,48 +4481,6 @@ pub mod types {
     }
 
     /// View of a Group
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Group",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "display_name",
-    ///    "id",
-    ///    "silo_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "display_name": {
-    ///      "description": "Human-readable name that can identify the group",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "silo_id": {
-    ///      "description": "Uuid of the silo to which this group belongs",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this group was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this group was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12128,36 +4503,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Group"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12165,7 +4510,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Group>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -12185,100 +4530,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Bindouble"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12323,100 +4574,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binfloat"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "number",
-    ///      "format": "float"
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "number",
-    ///      "format": "float"
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12461,100 +4618,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binint16"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int16"
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int16"
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12599,100 +4662,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binint32"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int32"
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int32"
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12737,100 +4706,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binint64"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -12875,100 +4750,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binint8"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int8"
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "int8"
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13013,102 +4794,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binuint16"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13153,102 +4838,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binuint32"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13293,102 +4882,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binuint64"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13433,102 +4926,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Histogram metric\n\nA histogram maintains the count of
-    /// any number of samples, over a set of bins. Bins are specified on
-    /// construction via their _left_ edges, inclusive. There can't be any
-    /// \"gaps\" in the bins, and an additional bin may be added to the left,
-    /// right, or both so that the bins extend to the entire range of the
-    /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bins",
-    ///    "max",
-    ///    "min",
-    ///    "n_samples",
-    ///    "p50",
-    ///    "p90",
-    ///    "p99",
-    ///    "squared_mean",
-    ///    "start_time",
-    ///    "sum_of_samples"
-    ///  ],
-    ///  "properties": {
-    ///    "bins": {
-    ///      "description": "The bins of the histogram.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Binuint8"
-    ///      }
-    ///    },
-    ///    "max": {
-    ///      "description": "The maximum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "min": {
-    ///      "description": "The minimum value of all samples in the
-    /// histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "n_samples": {
-    ///      "description": "The total number of samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "p50": {
-    ///      "description": "p50 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p90": {
-    ///      "description": "p95 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "p99": {
-    ///      "description": "p99 Quantile",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "squared_mean": {
-    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "start_time": {
-    ///      "description": "The start time of the histogram.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "sum_of_samples": {
-    ///      "description": "The sum of all samples in the histogram.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13566,25 +4963,6 @@ pub mod types {
     /// A hostname identifies a host on a network, and is usually a
     /// dot-delimited sequence of labels, where each label contains only
     /// letters, digits, or the hyphen. See RFCs 1035 and 952 for more details.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "An RFC-1035-compliant hostname",
-    ///  "description": "A hostname identifies a host on a network, and is
-    /// usually a dot-delimited sequence of labels, where each label contains
-    /// only letters, digits, or the hyphen. See RFCs 1035 and 952 for more
-    /// details.",
-    ///  "type": "string",
-    ///  "maxLength": 253,
-    ///  "minLength": 1,
-    ///  "pattern":
-    /// "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!
-    /// -))*$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -13645,15 +5023,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for Hostname {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Hostname {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -13678,25 +5047,6 @@ pub mod types {
 
     /// An inclusive-inclusive range of ICMP(v6) types or codes. The second
     /// value may be omitted to represent a single parameter.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A range of ICMP(v6) types or codes",
-    ///  "description": "An inclusive-inclusive range of ICMP(v6) types or
-    /// codes. The second value may be omitted to represent a single
-    /// parameter.",
-    ///  "examples": [
-    ///    "3"
-    ///  ],
-    ///  "type": "string",
-    ///  "maxLength": 7,
-    ///  "minLength": 1,
-    ///  "pattern": "^[0-9]{1,3}(-[0-9]{1,3})?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -13750,15 +5100,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IcmpParamRange {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IcmpParamRange {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -13784,25 +5125,6 @@ pub mod types {
     /// Supported set of sort modes for scanning by id only.
     ///
     /// Currently, we only support scanning in ascending order.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Supported set of sort modes for scanning by id
-    /// only.\n\nCurrently, we only support scanning in ascending order.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Sort in increasing order of \"id\"",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "id_ascending"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -13847,15 +5169,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IdSortMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IdSortMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -13866,63 +5179,6 @@ pub mod types {
     }
 
     /// View of an Identity Provider
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of an Identity Provider",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "provider_type",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "provider_type": {
-    ///      "description": "Identity provider type",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IdentityProviderType"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13948,36 +5204,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IdentityProvider"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -13985,7 +5211,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<IdentityProvider>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -13996,23 +5222,6 @@ pub mod types {
     }
 
     /// `IdentityProviderType`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "SAML identity provider",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "saml"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -14057,15 +5266,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IdentityProviderType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IdentityProviderType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -14076,20 +5276,6 @@ pub mod types {
     }
 
     /// Describes what kind of identity is described by an id
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes what kind of identity is described by an id",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "silo_user",
-    ///    "silo_group"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -14137,15 +5323,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IdentityType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IdentityType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -14156,52 +5333,6 @@ pub mod types {
     }
 
     /// `IdpMetadataSource`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "url"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "url"
-    ///          ]
-    ///        },
-    ///        "url": {
-    ///          "type": "string"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "data",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "data": {
-    ///          "type": "string"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "base64_encoded_xml"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14218,109 +5349,6 @@ pub mod types {
     /// If `project_id` is present then the image is only visible inside that
     /// project. If it's not present then the image is visible to all projects
     /// in the silo.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of an image\n\nIf `project_id` is present then the
-    /// image is only visible inside that project. If it's not present then the
-    /// image is visible to all projects in the silo.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "block_size",
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "os",
-    ///    "size",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "block_size": {
-    ///      "description": "Size of blocks in bytes",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/BlockSize"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "digest": {
-    ///      "description": "Hash of the image contents, if applicable",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Digest"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "os": {
-    ///      "description": "The family of the operating system like Debian,
-    /// Ubuntu, etc.",
-    ///      "type": "string"
-    ///    },
-    ///    "project_id": {
-    ///      "description": "ID of the parent project if the image is a project
-    /// image",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "size": {
-    ///      "description": "Total size in bytes",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "version": {
-    ///      "description": "Version of the operating system",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14330,7 +5358,7 @@ pub mod types {
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// Hash of the image contents, if applicable
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub digest: ::std::option::Option<Digest>,
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
@@ -14339,7 +5367,7 @@ pub mod types {
         /// The family of the operating system like Debian, Ubuntu, etc.
         pub os: ::std::string::String,
         /// ID of the parent project if the image is a project image
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub project_id: ::std::option::Option<::uuid::Uuid>,
         /// Total size in bytes
         pub size: ByteCount,
@@ -14358,49 +5386,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `Image`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `Image`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name",
-    ///    "os",
-    ///    "source",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "os": {
-    ///      "description": "The family of the operating system (e.g. Debian,
-    /// Ubuntu, etc.)",
-    ///      "type": "string"
-    ///    },
-    ///    "source": {
-    ///      "description": "The source of the image's contents.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ImageSource"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "version": {
-    ///      "description": "The version of the operating system (e.g. 18.04,
-    /// 20.04, etc.)",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14422,36 +5407,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Image"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14459,7 +5414,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Image>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -14470,36 +5425,6 @@ pub mod types {
     }
 
     /// The source of the underlying image.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The source of the underlying image.",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "id",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "snapshot"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14516,30 +5441,6 @@ pub mod types {
     }
 
     /// Parameters for importing blocks with a bulk write
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for importing blocks with a bulk write",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "base64_encoded_data",
-    ///    "offset"
-    ///  ],
-    ///  "properties": {
-    ///    "base64_encoded_data": {
-    ///      "type": "string"
-    ///    },
-    ///    "offset": {
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14556,54 +5457,6 @@ pub mod types {
 
     /// Define policy relating to the import and export of prefixes from a BGP
     /// peer.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Define policy relating to the import and export of
-    /// prefixes from a BGP peer.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Do not perform any filtering.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "no_filtering"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "allow"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/IpNet"
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14622,180 +5475,6 @@ pub mod types {
     }
 
     /// View of an Instance
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of an Instance",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "auto_restart_enabled",
-    ///    "description",
-    ///    "enable_jumbo_frames",
-    ///    "hostname",
-    ///    "id",
-    ///    "memory",
-    ///    "name",
-    ///    "ncpus",
-    ///    "project_id",
-    ///    "run_state",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "time_run_state_updated"
-    ///  ],
-    ///  "properties": {
-    ///    "auto_restart_cooldown_expiration": {
-    ///      "description": "The time at which the auto-restart cooldown period
-    /// for this instance completes, permitting it to be automatically restarted
-    /// again. If the instance enters the `Failed` state, it will not be
-    /// restarted until after this time.\n\nIf this is not present, then either
-    /// the instance has never been automatically restarted, or the cooldown
-    /// period has already expired, allowing the instance to be restarted
-    /// immediately if it fails.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    },
-    ///    "auto_restart_enabled": {
-    ///      "description": "`true` if this instance's auto-restart policy will
-    /// permit the control plane to automatically restart it if it enters the
-    /// `Failed` state.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "auto_restart_policy": {
-    ///      "description": "The auto-restart policy configured for this
-    /// instance, or `null` if no explicit policy has been configured.\n\nThis
-    /// policy determines whether the instance should be automatically restarted
-    /// by the control plane on failure. If this is `null`, the control plane
-    /// will use the default policy when determining whether or not to
-    /// automatically restart this instance, which may or may not allow it to be
-    /// restarted. The value of the `auto_restart_enabled` field indicates
-    /// whether the instance will be auto-restarted, based on its current policy
-    /// or the default if it has no configured policy.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "boot_disk_id": {
-    ///      "description": "The ID of the disk used to boot this instance, if a
-    /// specific one is assigned",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "cpu_platform": {
-    ///      "description": "The CPU platform for this instance. If this is
-    /// `null`, the instance requires no particular CPU platform.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceCpuPlatform"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "enable_jumbo_frames": {
-    ///      "description": "When true, this instance has opted in to jumbo
-    /// frames (8500 byte MTU) on its primary network interface. The effective
-    /// MTU also depends on the fleet-wide jumbo-frames opt-in; if that is
-    /// disabled, the primary interface uses the default MTU regardless of this
-    /// value. Changes only take effect on the next instance restart.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "hostname": {
-    ///      "description": "RFC1035-compliant hostname for the instance",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "memory": {
-    ///      "description": "Memory allocated for this instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "ncpus": {
-    ///      "description": "Number of CPUs allocated for this instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/InstanceCpuCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "project_id": {
-    ///      "description": "ID for the project containing this instance",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "run_state": {
-    ///      "$ref": "#/components/schemas/InstanceState"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_last_auto_restarted": {
-    ///      "description": "The timestamp of the most recent time this instance
-    /// was automatically restarted by the control plane.\n\nIf this is not
-    /// present, then this instance has not been automatically restarted.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_run_state_updated": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -14808,7 +5487,7 @@ pub mod types {
         /// If this is not present, then either the instance has never been
         /// automatically restarted, or the cooldown period has already expired,
         /// allowing the instance to be restarted immediately if it fails.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub auto_restart_cooldown_expiration:
             ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
         /// `true` if this instance's auto-restart policy will permit the
@@ -14825,15 +5504,15 @@ pub mod types {
         /// allow it to be restarted. The value of the `auto_restart_enabled`
         /// field indicates whether the instance will be auto-restarted, based
         /// on its current policy or the default if it has no configured policy.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// The ID of the disk used to boot this instance, if a specific one is
         /// assigned
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub boot_disk_id: ::std::option::Option<::uuid::Uuid>,
         /// The CPU platform for this instance. If this is `null`, the instance
         /// requires no particular CPU platform.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
@@ -14863,7 +5542,7 @@ pub mod types {
         ///
         /// If this is not present, then this instance has not been
         /// automatically restarted.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub time_last_auto_restarted:
             ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
         /// Timestamp when this resource was last modified
@@ -14879,37 +5558,6 @@ pub mod types {
 
     /// A policy determining when an instance should be automatically restarted
     /// by the control plane.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A policy determining when an instance should be
-    /// automatically restarted by the control plane.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The instance should not be automatically restarted
-    /// by the control plane if it fails.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "never"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "If this instance is running and unexpectedly fails
-    /// (e.g. due to a host software crash or unexpected host reboot), the
-    /// control plane will make a best-effort attempt to restart it. The control
-    /// plane may choose not to restart the instance to preserve the overall
-    /// availability of the system.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "best_effort"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -14964,15 +5612,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for InstanceAutoRestartPolicy {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for InstanceAutoRestartPolicy {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -14983,18 +5622,6 @@ pub mod types {
     }
 
     /// The number of CPUs in an Instance
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The number of CPUs in an Instance",
-    ///  "type": "integer",
-    ///  "format": "uint16",
-    ///  "minimum": 0.0
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -15019,6 +5646,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for InstanceCpuCount {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for InstanceCpuCount {
         type Err = <u16 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -15037,12 +5670,6 @@ pub mod types {
         type Error = <u16 as ::std::str::FromStr>::Err;
         fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for InstanceCpuCount {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
         }
     }
 
@@ -15072,59 +5699,6 @@ pub mod types {
     /// subset of what the corresponding hardware may actually support; features
     /// which cannot be used from a virtual environment or do not have full
     /// hypervisor support may be masked off.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A required CPU platform for an instance.\n\nWhen an
-    /// instance specifies a required CPU platform:\n\n- The system may expose
-    /// (to the VM) new CPU features that are only present on that platform (or
-    /// on newer platforms of the same lineage that also support those
-    /// features). - The instance must run on hosts that have CPUs that support
-    /// all the features of the supplied platform.\n\nThat is, the instance is
-    /// restricted to hosts that have the CPUs which support all features of the
-    /// required platform, but in exchange the CPU features exposed by the
-    /// platform are available for the guest to use. Note that this may prevent
-    /// an instance from starting (if the hosts that could run it are full but
-    /// there is capacity on other incompatible hosts).\n\nIf an instance does
-    /// not specify a required CPU platform, then when it starts, the control
-    /// plane selects a host for the instance and then supplies the guest with
-    /// the \"minimum\" CPU platform supported by that host. This maximizes the
-    /// number of hosts that can run the VM if it later needs to migrate to
-    /// another host.\n\nIn all cases, the CPU features presented by a given CPU
-    /// platform are a subset of what the corresponding hardware may actually
-    /// support; features which cannot be used from a virtual environment or do
-    /// not have full hypervisor support may be masked off.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "An AMD Milan-like CPU platform.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "amd_milan"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "An AMD Turin-like CPU platform. Prefer `amd_turin_v2` over this; this CPU platform is retained for instances that specifically requested it before `amd_turin_v2` was added.\n\nThis initial version of the Turin CPU platform includes no cache or TLB information in CPUID leaf `8000_0006`. While this was intentional, Oxide later discovered some guest software interprets the zeroed leaves as reporting cache sizes of 0 bytes and behaves incorrectly and unpredictably as a result (see [Propolis#1152](https://github.com/oxidecomputer/propolis/issues/1152)).",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "amd_turin"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "An AMD Turin-like CPU platform.\n\nThis version of
-    /// the Turin CPU platform includes cache and TLB information in CPUID leaf
-    /// `8000_0006`, similar to the cache information included in the initial
-    /// Milan-like CPU platform.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "amd_turin_v2"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -15187,15 +5761,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for InstanceCpuPlatform {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for InstanceCpuPlatform {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -15206,220 +5771,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `Instance`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `Instance`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "hostname",
-    ///    "memory",
-    ///    "name",
-    ///    "ncpus"
-    ///  ],
-    ///  "properties": {
-    ///    "anti_affinity_groups": {
-    ///      "description": "Anti-affinity groups to which this instance should
-    /// be added.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/NameOrId"
-    ///      }
-    ///    },
-    ///    "auto_restart_policy": {
-    ///      "description": "The auto-restart policy for this instance.\n\nThis
-    /// policy determines whether the instance should be automatically restarted
-    /// by the control plane on failure. If this is `null`, no auto-restart
-    /// policy will be explicitly configured for this instance, and the control
-    /// plane will select the default policy when determining whether the
-    /// instance can be automatically restarted.\n\nCurrently, the global
-    /// default auto-restart policy is \"best-effort\", so instances with `null`
-    /// auto-restart policies will be automatically restarted. However, in the
-    /// future, the default policy may be configurable through other mechanisms,
-    /// such as on a per-project basis. In that case, any configured default
-    /// policy will be used if this is `null`.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "boot_disk": {
-    ///      "description": "The disk the instance is configured to boot
-    /// from.\n\nThis disk can either be attached if it already exists or
-    /// created along with the instance.\n\nSpecifying a boot disk is optional
-    /// but recommended to ensure predictable boot behavior. The boot disk can
-    /// be set during instance creation or later if the instance is stopped. The
-    /// boot disk counts against the disk attachment limit.\n\nAn instance that
-    /// does not have a boot disk set will use the boot options specified in its
-    /// UEFI settings, which are controlled by both the instance's UEFI firmware
-    /// and the guest operating system. Boot options can change as disks are
-    /// attached and detached, which may result in an instance that only boots
-    /// to the EFI shell until a boot disk is set.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceDiskAttachment"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "cpu_platform": {
-    ///      "description": "The CPU platform to be used for this instance. If
-    /// this is `null`, the instance requires no particular CPU platform; when
-    /// it is started the instance will have the most general CPU platform
-    /// supported by the sled it is initially placed on.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceCpuPlatform"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "disks": {
-    ///      "description": "A list of disks to be attached to the
-    /// instance.\n\nDisk attachments of type \"create\" will be created, while
-    /// those of type \"attach\" must already exist.\n\nThe order of this list
-    /// does not guarantee a boot order for the instance. Use the boot_disk
-    /// attribute to specify a boot disk. When boot_disk is specified it will
-    /// count against the disk attachment limit.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/InstanceDiskAttachment"
-    ///      }
-    ///    },
-    ///    "enable_jumbo_frames": {
-    ///      "description": "Enable jumbo frames (8500 byte MTU) on the
-    /// instance's primary network interface. Requires the fleet-wide
-    /// jumbo-frames opt-in to be enabled by an operator; otherwise this field
-    /// must be `false`. Changes only take effect on the next instance
-    /// restart.",
-    ///      "default": false,
-    ///      "type": "boolean"
-    ///    },
-    ///    "external_ips": {
-    ///      "description": "The external IP addresses provided to this
-    /// instance.\n\nBy default, all instances have outbound connectivity, but
-    /// no inbound connectivity. These external addresses can be used to provide
-    /// a fixed, known IP address for making inbound connections to the
-    /// instance.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalIpCreate"
-    ///      }
-    ///    },
-    ///    "hostname": {
-    ///      "description": "The hostname to be assigned to the instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Hostname"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "memory": {
-    ///      "description": "The amount of RAM (in bytes) to be allocated to the
-    /// instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "multicast_groups": {
-    ///      "description": "Multicast groups this instance should join at
-    /// creation.\n\nGroups can be specified by name, UUID, or IP address.
-    /// Non-existent groups are created automatically.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/MulticastGroupJoinSpec"
-    ///      }
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "ncpus": {
-    ///      "description": "The number of vCPUs to be allocated to the
-    /// instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/InstanceCpuCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "network_interfaces": {
-    ///      "description": "The network interfaces to be created for this
-    /// instance.",
-    ///      "default": {
-    ///        "type": "default_dual_stack"
-    ///      },
-    ///      "allOf": [
-    ///        {
-    ///          "$ref":
-    /// "#/components/schemas/InstanceNetworkInterfaceAttachment"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "ssh_public_keys": {
-    ///      "description": "An allowlist of SSH public keys to be transferred
-    /// to the instance via cloud-init during instance creation.\n\nIf not
-    /// provided, all SSH public keys from the user's profile will be sent. If
-    /// an empty list is provided, no public keys will be transmitted to the
-    /// instance.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/NameOrId"
-    ///      }
-    ///    },
-    ///    "start": {
-    ///      "description": "Should this instance be started upon creation; true
-    /// by default.",
-    ///      "default": true,
-    ///      "type": "boolean"
-    ///    },
-    ///    "user_data": {
-    ///      "description": "User data for instance initialization systems (such
-    /// as cloud-init). Must be a Base64-encoded string, as specified in RFC
-    /// 4648 § 4 (+ and / characters with padding). Maximum 32 KiB unencoded
-    /// data.",
-    ///      "default": "",
-    ///      "type": "string",
-    ///      "format": "byte"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -15441,7 +5792,7 @@ pub mod types {
         /// configurable through other mechanisms, such as on a per-project
         /// basis. In that case, any configured default policy will be used if
         /// this is `null`.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// The disk the instance is configured to boot from.
         ///
@@ -15459,13 +5810,13 @@ pub mod types {
         /// options can change as disks are attached and detached, which may
         /// result in an instance that only boots to the EFI shell until a boot
         /// disk is set.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub boot_disk: ::std::option::Option<InstanceDiskAttachment>,
         /// The CPU platform to be used for this instance. If this is `null`,
         /// the instance requires no particular CPU platform; when it is started
         /// the instance will have the most general CPU platform supported by
         /// the sled it is initially placed on.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         pub description: ::std::string::String,
         /// A list of disks to be attached to the instance.
@@ -15515,7 +5866,7 @@ pub mod types {
         /// If not provided, all SSH public keys from the user's profile will be
         /// sent. If an empty list is provided, no public keys will be
         /// transmitted to the instance.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ssh_public_keys: ::std::option::Option<::std::vec::Vec<NameOrId>>,
         /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
@@ -15534,82 +5885,6 @@ pub mod types {
     }
 
     /// Describe the instance's disks at creation time
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describe the instance's disks at creation time",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "During instance creation, create and attach disks",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "description",
-    ///        "disk_backend",
-    ///        "name",
-    ///        "size",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "description": {
-    ///          "type": "string"
-    ///        },
-    ///        "disk_backend": {
-    ///          "description": "The source for this `Disk`'s blocks",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/DiskBackend"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "name": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        },
-    ///        "size": {
-    ///          "description": "The total size of the Disk (in bytes)",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/ByteCount"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "create"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "During instance creation, attach this disk",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "name",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "name": {
-    ///          "description": "A disk name to attach",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "attach"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -15637,71 +5912,23 @@ pub mod types {
     ///
     /// When joining by IP address, the pool containing the multicast IP is
     /// auto-discovered from all linked multicast pools.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for joining an instance to a multicast
-    /// group.\n\nWhen joining by IP address, the pool containing the multicast
-    /// IP is auto-discovered from all linked multicast pools.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "ip_version": {
-    ///      "description": "IP version for pool selection when creating a group
-    /// by name. Required if both IPv4 and IPv6 default multicast pools are
-    /// linked.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IpVersion"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "source_ips": {
-    ///      "description": "Source IPs for source-filtered multicast (SSM).
-    /// Optional for ASM groups, required for SSM groups (232.0.0.0/8,
-    /// ff3x::/32).",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "ip"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct InstanceMulticastGroupJoin {
         /// IP version for pool selection when creating a group by name.
         /// Required if both IPv4 and IPv6 default multicast pools are linked.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ip_version: ::std::option::Option<IpVersion>,
         /// Source IPs for source-filtered multicast (SSM). Optional for ASM
         /// groups, required for SSM groups (232.0.0.0/8, ff3x::/32).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
-    }
-
-    impl ::std::default::Default for InstanceMulticastGroupJoin {
-        fn default() -> Self {
-            Self {
-                ip_version: Default::default(),
-                source_ips: Default::default(),
-            }
-        }
     }
 
     impl InstanceMulticastGroupJoin {
@@ -15712,97 +5939,6 @@ pub mod types {
 
     /// An `InstanceNetworkInterface` represents a virtual network interface
     /// device attached to an instance.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An `InstanceNetworkInterface` represents a virtual
-    /// network interface device attached to an instance.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "instance_id",
-    ///    "ip_stack",
-    ///    "mac",
-    ///    "name",
-    ///    "primary",
-    ///    "subnet_id",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vpc_id"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "instance_id": {
-    ///      "description": "The Instance to which the interface belongs.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_stack": {
-    ///      "description": "The VPC-private IP stack for this interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PrivateIpStack"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "mac": {
-    ///      "description": "The MAC address assigned to this interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/MacAddr"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "primary": {
-    ///      "description": "True if this interface is the primary for the
-    /// instance to which it's attached.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "subnet_id": {
-    ///      "description": "The subnet to which the interface belongs.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vpc_id": {
-    ///      "description": "The VPC to which the interface belongs.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -15840,110 +5976,6 @@ pub mod types {
 
     /// Describes an attachment of an `InstanceNetworkInterface` to an
     /// `Instance`, at the time the instance is created.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes an attachment of an
-    /// `InstanceNetworkInterface` to an `Instance`, at the time the instance is
-    /// created.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Create one or more `InstanceNetworkInterface`s for
-    /// the `Instance`.\n\nIf more than one interface is provided, then the
-    /// first will be designated the primary interface for the instance.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "params",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "params": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/InstanceNetworkInterfaceCreate"
-    ///          }
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "create"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Create a single primary interface with an
-    /// automatically-assigned IPv4 address.\n\nThe IP will be pulled from the
-    /// Project's default VPC / VPC Subnet.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "default_ipv4"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Create a single primary interface with an
-    /// automatically-assigned IPv6 address.\n\nThe IP will be pulled from the
-    /// Project's default VPC / VPC Subnet.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "default_ipv6"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Create a single primary interface with
-    /// automatically-assigned IPv4 and IPv6 addresses.\n\nThe IPs will be
-    /// pulled from the Project's default VPC / VPC Subnet.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "default_dual_stack"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "No network interfaces at all will be created for
-    /// the instance.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "none"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -15974,74 +6006,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `InstanceNetworkInterface`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an
-    /// `InstanceNetworkInterface`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name",
-    ///    "subnet_name",
-    ///    "vpc_name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "ip_config": {
-    ///      "description": "The IP stack configuration for this
-    /// interface.\n\nIf not provided, a default configuration will be used,
-    /// which creates a dual-stack IPv4 / IPv6 interface.",
-    ///      "default": {
-    ///        "type": "dual_stack",
-    ///        "value": {
-    ///          "v4": {
-    ///            "ip": {
-    ///              "type": "auto"
-    ///            },
-    ///            "transit_ips": []
-    ///          },
-    ///          "v6": {
-    ///            "ip": {
-    ///              "type": "auto"
-    ///            },
-    ///            "transit_ips": []
-    ///          }
-    ///        }
-    ///      },
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PrivateIpStackCreate"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "subnet_name": {
-    ///      "description": "The VPC Subnet in which to create the interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "vpc_name": {
-    ///      "description": "The VPC in which to create the interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16067,36 +6031,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/InstanceNetworkInterface"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16104,7 +6038,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<InstanceNetworkInterface>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -16118,69 +6052,18 @@ pub mod types {
     ///
     /// Note that modifying IP addresses for an interface is not yet supported,
     /// a new interface must be created instead.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating an
-    /// `InstanceNetworkInterface`\n\nNote that modifying IP addresses for an
-    /// interface is not yet supported, a new interface must be created
-    /// instead.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "primary": {
-    ///      "description": "Make a secondary interface the instance's primary
-    /// interface.\n\nIf applied to a secondary interface, that interface will
-    /// become the primary on the next reboot of the instance. Note that this
-    /// may have implications for routing between instances, as the new primary
-    /// interface will be on a distinct subnet from the previous primary
-    /// interface.\n\nNote that this can only be used to select a new primary
-    /// interface for an instance. Requests to change the primary interface into
-    /// a secondary will return an error.",
-    ///      "default": false,
-    ///      "type": "boolean"
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "A set of additional networks that this interface
-    /// may send and receive traffic on",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpNet"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct InstanceNetworkInterfaceUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
         /// Make a secondary interface the instance's primary interface.
         ///
@@ -16201,17 +6084,6 @@ pub mod types {
         pub transit_ips: ::std::vec::Vec<IpNet>,
     }
 
-    impl ::std::default::Default for InstanceNetworkInterfaceUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-                primary: Default::default(),
-                transit_ips: Default::default(),
-            }
-        }
-    }
-
     impl InstanceNetworkInterfaceUpdate {
         pub fn builder() -> builder::InstanceNetworkInterfaceUpdate {
             Default::default()
@@ -16219,36 +6091,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Instance"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16256,7 +6098,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Instance>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -16267,41 +6109,6 @@ pub mod types {
     }
 
     /// Contents of an Instance's serial console buffer.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Contents of an Instance's serial console buffer.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "data",
-    ///    "last_byte_offset"
-    ///  ],
-    ///  "properties": {
-    ///    "data": {
-    ///      "description": "The bytes starting from the requested offset up to
-    /// either the end of the buffer or the request's `max_bytes`. Provided as a
-    /// u8 array rather than a string, as it may not be UTF-8.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint8",
-    ///        "minimum": 0.0
-    ///      }
-    ///    },
-    ///    "last_byte_offset": {
-    ///      "description": "The absolute offset since boot (suitable for use as
-    /// `byte_offset` in a subsequent request) of the last byte returned in
-    /// `data`.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16325,94 +6132,6 @@ pub mod types {
     ///
     /// This typically reflects whether it's starting, running, stopping, or
     /// stopped, but also includes states related to the Instance's lifecycle
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Running state of an Instance (primarily: booted or
-    /// stopped)\n\nThis typically reflects whether it's starting, running,
-    /// stopping, or stopped, but also includes states related to the Instance's
-    /// lifecycle",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The instance is being created.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "creating"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance is currently starting up.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "starting"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance is currently running.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "running"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance has been requested to stop and a
-    /// transition to \"Stopped\" is imminent.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "stopping"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance is currently stopped.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "stopped"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance is in the process of rebooting - it
-    /// will remain in the \"rebooting\" state until the VM is starting once
-    /// more.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "rebooting"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance is in the process of migrating - it will remain in the \"migrating\" state until the migration process is complete and the destination propolis is ready to continue execution.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "migrating"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance is attempting to recover from a
-    /// failure.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "repairing"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance has encountered a failure.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The instance has been deleted.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "destroyed"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -16506,15 +6225,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for InstanceState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for InstanceState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -16525,137 +6235,6 @@ pub mod types {
     }
 
     /// Parameters of an `Instance` that can be reconfigured after creation.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters of an `Instance` that can be reconfigured
-    /// after creation.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "auto_restart_policy",
-    ///    "boot_disk",
-    ///    "cpu_platform",
-    ///    "enable_jumbo_frames",
-    ///    "memory",
-    ///    "ncpus"
-    ///  ],
-    ///  "properties": {
-    ///    "auto_restart_policy": {
-    ///      "description": "The auto-restart policy for this instance.\n\nThis
-    /// policy determines whether the instance should be automatically restarted
-    /// by the control plane on failure. If this is `null`, any explicitly
-    /// configured auto-restart policy will be unset, and the control plane will
-    /// select the default policy when determining whether the instance can be
-    /// automatically restarted.\n\nCurrently, the global default auto-restart
-    /// policy is \"best-effort\", so instances with `null` auto-restart
-    /// policies will be automatically restarted. However, in the future, the
-    /// default policy may be configurable through other mechanisms, such as on
-    /// a per-project basis. In that case, any configured default policy will be
-    /// used if this is `null`.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "boot_disk": {
-    ///      "description": "The disk the instance is configured to boot
-    /// from.\n\nSetting a boot disk is optional but recommended to ensure
-    /// predictable boot behavior. The boot disk can be set during instance
-    /// creation or later if the instance is stopped. The boot disk counts
-    /// against the disk attachment limit.\n\nAn instance that does not have a
-    /// boot disk set will use the boot options specified in its UEFI settings,
-    /// which are controlled by both the instance's UEFI firmware and the guest
-    /// operating system. Boot options can change as disks are attached and
-    /// detached, which may result in an instance that only boots to the EFI
-    /// shell until a boot disk is set.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "cpu_platform": {
-    ///      "description": "The CPU platform to be used for this instance. If
-    /// this is `null`, the instance requires no particular CPU platform; when
-    /// it is started the instance will have the most general CPU platform
-    /// supported by the sled it is initially placed on.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/InstanceCpuPlatform"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "enable_jumbo_frames": {
-    ///      "description": "Update the per-instance jumbo-frames opt-in.
-    /// Setting this to `true` requires the fleet-wide jumbo-frames opt-in to be
-    /// enabled. Changes only take effect on the next instance restart.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "memory": {
-    ///      "description": "The amount of RAM (in bytes) to be allocated to the
-    /// instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "multicast_groups": {
-    ///      "description": "Multicast groups this instance should join.\n\nWhen
-    /// specified, this replaces the instance's current multicast group
-    /// membership with the new set of groups. The instance will leave any
-    /// groups not listed here and join any new groups that are
-    /// specified.\n\nEach entry can specify the group by name, UUID, or IP
-    /// address, along with optional source IP filtering for SSM
-    /// (Source-Specific Multicast). When a group doesn't exist, it will be
-    /// implicitly created using the default multicast pool (or you can specify
-    /// `ip_version` to disambiguate if needed).\n\nIf not provided, the
-    /// instance's multicast group membership will not be changed.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/MulticastGroupJoinSpec"
-    ///      }
-    ///    },
-    ///    "ncpus": {
-    ///      "description": "The number of vCPUs to be allocated to the
-    /// instance",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/InstanceCpuCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16674,6 +6253,7 @@ pub mod types {
         /// configurable through other mechanisms, such as on a per-project
         /// basis. In that case, any configured default policy will be used if
         /// this is `null`.
+        #[serde(deserialize_with = "::std::option::Option::deserialize")]
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// The disk the instance is configured to boot from.
         ///
@@ -16688,11 +6268,13 @@ pub mod types {
         /// options can change as disks are attached and detached, which may
         /// result in an instance that only boots to the EFI shell until a boot
         /// disk is set.
+        #[serde(deserialize_with = "::std::option::Option::deserialize")]
         pub boot_disk: ::std::option::Option<NameOrId>,
         /// The CPU platform to be used for this instance. If this is `null`,
         /// the instance requires no particular CPU platform; when it is started
         /// the instance will have the most general CPU platform supported by
         /// the sled it is initially placed on.
+        #[serde(deserialize_with = "::std::option::Option::deserialize")]
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         /// Update the per-instance jumbo-frames opt-in. Setting this to `true`
         /// requires the fleet-wide jumbo-frames opt-in to be enabled. Changes
@@ -16714,7 +6296,7 @@ pub mod types {
         ///
         /// If not provided, the instance's multicast group membership will not
         /// be changed.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub multicast_groups: ::std::option::Option<::std::vec::Vec<MulticastGroupJoinSpec>>,
         /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
@@ -16727,58 +6309,6 @@ pub mod types {
     }
 
     /// `InterfaceNum`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "unknown"
-    ///      ],
-    ///      "properties": {
-    ///        "unknown": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "if_index"
-    ///      ],
-    ///      "properties": {
-    ///        "if_index": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "port_number"
-    ///      ],
-    ///      "properties": {
-    ///        "port_number": {
-    ///          "type": "integer",
-    ///          "format": "uint32",
-    ///          "minimum": 0.0
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16793,61 +6323,6 @@ pub mod types {
 
     /// An internet gateway provides a path between VPC networks and external
     /// networks.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An internet gateway provides a path between VPC
-    /// networks and external networks.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vpc_id"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vpc_id": {
-    ///      "description": "The VPC to which the gateway belongs.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16873,28 +6348,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `InternetGateway`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `InternetGateway`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16910,66 +6363,6 @@ pub mod types {
     }
 
     /// An IP address that is attached to an internet gateway
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An IP address that is attached to an internet gateway",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address",
-    ///    "description",
-    ///    "id",
-    ///    "internet_gateway_id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "address": {
-    ///      "description": "The associated IP address",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "internet_gateway_id": {
-    ///      "description": "The associated internet gateway",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -16997,33 +6390,6 @@ pub mod types {
     }
 
     /// Create-time identity-related parameters
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time identity-related parameters",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address",
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "address": {
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17040,36 +6406,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/InternetGatewayIpAddress"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17077,7 +6413,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<InternetGatewayIpAddress>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -17088,66 +6424,6 @@ pub mod types {
     }
 
     /// An IP pool that is attached to an internet gateway
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An IP pool that is attached to an internet gateway",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "internet_gateway_id",
-    ///    "ip_pool_id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "internet_gateway_id": {
-    ///      "description": "The associated internet gateway.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_pool_id": {
-    ///      "description": "The associated IP pool.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17175,32 +6451,6 @@ pub mod types {
     }
 
     /// Create-time identity-related parameters
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time identity-related parameters",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "ip_pool",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "ip_pool": {
-    ///      "$ref": "#/components/schemas/NameOrId"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17217,36 +6467,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/InternetGatewayIpPool"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17254,7 +6474,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<InternetGatewayIpPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -17265,36 +6485,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/InternetGateway"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17302,7 +6492,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<InternetGateway>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -17313,37 +6503,6 @@ pub mod types {
     }
 
     /// `IpNet`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "title": "v4",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    {
-    ///      "title": "v6",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Net"
-    ///        }
-    ///      ]
-    ///    }
-    ///  ],
-    ///  "x-rust-type": {
-    ///    "crate": "oxnet",
-    ///    "path": "oxnet::IpNet",
-    ///    "version": "0.1.0"
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17351,6 +6510,15 @@ pub mod types {
     pub enum IpNet {
         V4(Ipv4Net),
         V6(Ipv6Net),
+    }
+
+    impl ::std::fmt::Display for IpNet {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match self {
+                Self::V4(x) => x.fmt(f),
+                Self::V6(x) => x.fmt(f),
+            }
+        }
     }
 
     impl ::std::str::FromStr for IpNet {
@@ -17373,30 +6541,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IpNet {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IpNet {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for IpNet {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match self {
-                Self::V4(x) => x.fmt(f),
-                Self::V6(x) => x.fmt(f),
-            }
         }
     }
 
@@ -17413,81 +6563,6 @@ pub mod types {
     }
 
     /// A collection of IP ranges.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A collection of IP ranges.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "assignment",
-    ///    "description",
-    ///    "id",
-    ///    "ip_version",
-    ///    "name",
-    ///    "pool_type",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "assignment": {
-    ///      "description": "What this pool is currently assigned to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolAssignment"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "The IP version for the pool.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpVersion"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "pool_type": {
-    ///      "description": "Type of IP pool (unicast or multicast).",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolType"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17517,24 +6592,6 @@ pub mod types {
     }
 
     /// Body parameters for reassigning an IP pool.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Body parameters for reassigning an IP pool.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "assignment"
-    ///  ],
-    ///  "properties": {
-    ///    "assignment": {
-    ///      "$ref": "#/components/schemas/IpPoolAssignment"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17549,32 +6606,6 @@ pub mod types {
     }
 
     /// Assignment of an IP pool to resources and services.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Assignment of an IP pool to resources and services.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Pool is available to be linked to customer silos.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "silos"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Pool is reserved for Oxide-operated rack services
-    /// (NTP, DNS, etc.).",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "system_services"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -17624,15 +6655,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IpPoolAssignment {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IpPoolAssignment {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -17651,62 +6673,6 @@ pub mod types {
     /// ASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field
     /// != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field
     /// = 3
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `IpPool`.\n\nFor
-    /// multicast pools, all ranges must be either Any-Source Multicast (ASM) or
-    /// Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges
-    /// in the same pool is not allowed.\n\nASM: IPv4 addresses outside
-    /// 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in
-    /// 232.0.0.0/8, IPv6 addresses with flag field = 3",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "assignment": {
-    ///      "description": "What this pool is assigned to (defaults to
-    /// Silos).",
-    ///      "default": "silos",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolAssignment"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "The IP version of the pool.\n\nThe default is
-    /// IPv4.",
-    ///      "default": "v4",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpVersion"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "pool_type": {
-    ///      "description": "Type of IP pool (defaults to Unicast)",
-    ///      "default": "unicast",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolType"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17733,32 +6699,6 @@ pub mod types {
     }
 
     /// `IpPoolLinkSilo`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "is_default",
-    ///    "silo"
-    ///  ],
-    ///  "properties": {
-    ///    "is_default": {
-    ///      "description": "When a pool is the default for a silo, floating IPs
-    /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified.\n\nA silo can have at most one default pool per
-    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
-    /// IPv6), allowing up to 4 default pools total.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "silo": {
-    ///      "$ref": "#/components/schemas/NameOrId"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17781,38 +6721,6 @@ pub mod types {
     }
 
     /// `IpPoolRange`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "ip_pool_id",
-    ///    "range",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_pool_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "range": {
-    ///      "$ref": "#/components/schemas/IpRange"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17830,36 +6738,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpPoolRange"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17867,7 +6745,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<IpPoolRange>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -17878,36 +6756,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpPool"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17915,7 +6763,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<IpPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -17927,40 +6775,6 @@ pub mod types {
 
     /// A link between an IP pool and a silo that allows one to allocate IPs
     /// from the pool within the silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A link between an IP pool and a silo that allows one to
-    /// allocate IPs from the pool within the silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip_pool_id",
-    ///    "is_default",
-    ///    "silo_id"
-    ///  ],
-    ///  "properties": {
-    ///    "ip_pool_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "is_default": {
-    ///      "description": "When a pool is the default for a silo, floating IPs
-    /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified.\n\nA silo can have at most one default pool per
-    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
-    /// IPv6), allowing up to 4 default pools total.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "silo_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -17984,36 +6798,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpPoolSiloLink"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18021,7 +6805,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<IpPoolSiloLink>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -18032,30 +6816,6 @@ pub mod types {
     }
 
     /// `IpPoolSiloUpdate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "is_default"
-    ///  ],
-    ///  "properties": {
-    ///    "is_default": {
-    ///      "description": "When a pool is the default for a silo, floating IPs
-    /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified.\n\nA silo can have at most one default pool per
-    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
-    /// IPv6), allowing up to 4 default pools total. When a pool is made
-    /// default, an existing default of the same type and version will remain
-    /// linked but will no longer be the default.",
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18079,33 +6839,6 @@ pub mod types {
     }
 
     /// Type of IP pool.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Type of IP pool.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Unicast IP pool for standard IP allocations.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "unicast"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Multicast IP pool for multicast group
-    /// allocations.\n\nAll ranges in a multicast pool must be either ASM or SSM
-    /// (not mixed).",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "multicast"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -18158,15 +6891,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IpPoolType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IpPoolType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -18177,55 +6901,19 @@ pub mod types {
     }
 
     /// Parameters for updating an IP Pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating an IP Pool",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct IpPoolUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for IpPoolUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl IpPoolUpdate {
@@ -18242,38 +6930,6 @@ pub mod types {
     /// address spaces. With very large IP Pools (> 2**53 addresses), integer
     /// precision will be lost, in exchange for representing the entire range.
     /// In such a case the pool still has many available addresses.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The utilization of IP addresses in a pool.\n\nNote that
-    /// both the count of remaining addresses and the total capacity are
-    /// integers, reported as floating point numbers. This accommodates
-    /// allocations larger than a 64-bit integer, which is common with IPv6
-    /// address spaces. With very large IP Pools (> 2**53 addresses), integer
-    /// precision will be lost, in exchange for representing the entire range.
-    /// In such a case the pool still has many available addresses.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "capacity",
-    ///    "remaining"
-    ///  ],
-    ///  "properties": {
-    ///    "capacity": {
-    ///      "description": "The total number of addresses in the pool.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "remaining": {
-    ///      "description": "The number of remaining addresses in the pool.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18291,32 +6947,6 @@ pub mod types {
     }
 
     /// `IpRange`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "title": "v4",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Range"
-    ///        }
-    ///      ]
-    ///    },
-    ///    {
-    ///      "title": "v6",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Range"
-    ///        }
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18339,20 +6969,6 @@ pub mod types {
     }
 
     /// The IP address version.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The IP address version.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "v4",
-    ///    "v6"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -18400,15 +7016,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for IpVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IpVersion {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -18419,55 +7026,6 @@ pub mod types {
     }
 
     /// How a VPC-private IP address is assigned to a network interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "How a VPC-private IP address is assigned to a network
-    /// interface.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Automatically assign an IP address from the VPC
-    /// Subnet.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "auto"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Explicitly assign a specific address, if
-    /// available.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ipv4"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18487,29 +7045,6 @@ pub mod types {
     }
 
     /// An IPv4 subnet, including prefix and prefix length
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "An IPv4 subnet",
-    ///  "description": "An IPv4 subnet, including prefix and prefix length",
-    ///  "examples": [
-    ///    "192.168.1.0/24"
-    ///  ],
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.
-    /// ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/
-    /// ([0-9]|1[0-9]|2[0-9]|3[0-2])$",
-    ///  "x-rust-type": {
-    ///    "crate": "oxnet",
-    ///    "path": "oxnet::Ipv4Net",
-    ///    "version": "0.1.0"
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -18566,15 +7101,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for Ipv4Net {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Ipv4Net {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -18600,32 +7126,6 @@ pub mod types {
     /// A non-decreasing IPv4 address range, inclusive of both ends.
     ///
     /// The first address must be less than or equal to the last address.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A non-decreasing IPv4 address range, inclusive of both
-    /// ends.\n\nThe first address must be less than or equal to the last
-    /// address.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "first",
-    ///    "last"
-    ///  ],
-    ///  "properties": {
-    ///    "first": {
-    ///      "type": "string",
-    ///      "format": "ipv4"
-    ///    },
-    ///    "last": {
-    ///      "type": "string",
-    ///      "format": "ipv4"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18641,55 +7141,6 @@ pub mod types {
     }
 
     /// How a VPC-private IP address is assigned to a network interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "How a VPC-private IP address is assigned to a network
-    /// interface.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Automatically assign an IP address from the VPC
-    /// Subnet.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "auto"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Explicitly assign a specific address, if
-    /// available.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ipv6"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18709,37 +7160,6 @@ pub mod types {
     }
 
     /// An IPv6 subnet, including prefix and subnet mask
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "An IPv6 subnet",
-    ///  "description": "An IPv6 subnet, including prefix and subnet mask",
-    ///  "examples": [
-    ///    "fd12:3456::/64"
-    ///  ],
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
-    /// |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:
-    /// [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,
-    /// 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:
-    /// ){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,
-    /// 6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%
-    /// [0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,
-    /// 1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
-    /// 1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
-    /// 1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/
-    /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
-    ///  "x-rust-type": {
-    ///    "crate": "oxnet",
-    ///    "path": "oxnet::Ipv6Net",
-    ///    "version": "0.1.0"
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -18813,15 +7233,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for Ipv6Net {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Ipv6Net {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -18847,32 +7258,6 @@ pub mod types {
     /// A non-decreasing IPv6 address range, inclusive of both ends.
     ///
     /// The first address must be less than or equal to the last address.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A non-decreasing IPv6 address range, inclusive of both
-    /// ends.\n\nThe first address must be less than or equal to the last
-    /// address.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "first",
-    ///    "last"
-    ///  ],
-    ///  "properties": {
-    ///    "first": {
-    ///      "type": "string",
-    ///      "format": "ipv6"
-    ///    },
-    ///    "last": {
-    ///      "type": "string",
-    ///      "format": "ipv6"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -18889,24 +7274,6 @@ pub mod types {
 
     /// An inclusive-inclusive range of IP ports. The second port may be omitted
     /// to represent a single port.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A range of IP ports",
-    ///  "description": "An inclusive-inclusive range of IP ports. The second
-    /// port may be omitted to represent a single port.",
-    ///  "examples": [
-    ///    "22"
-    ///  ],
-    ///  "type": "string",
-    ///  "maxLength": 11,
-    ///  "minLength": 1,
-    ///  "pattern": "^[0-9]{1,5}(-[0-9]{1,5})?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -18960,15 +7327,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for L4PortRange {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for L4PortRange {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -18992,94 +7350,6 @@ pub mod types {
     }
 
     /// Switch link configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Switch link configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "autoneg",
-    ///    "link_name",
-    ///    "lldp",
-    ///    "mtu",
-    ///    "speed"
-    ///  ],
-    ///  "properties": {
-    ///    "autoneg": {
-    ///      "description": "Whether or not to set autonegotiation.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "fec": {
-    ///      "description": "The requested forward-error correction method.  If
-    /// this is not specified, the standard FEC for the underlying media will be
-    /// applied if it can be determined.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/LinkFec"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "link_name": {
-    ///      "description": "Link name. On ports that are not broken out, this
-    /// is always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
-    /// phy0-phy3, etc.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "lldp": {
-    ///      "description": "The link-layer discovery protocol (LLDP)
-    /// configuration for the link.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/LldpLinkConfigCreate"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "mtu": {
-    ///      "description": "Maximum transmission unit for the link.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "speed": {
-    ///      "description": "The speed of the link.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/LinkSpeed"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "tx_eq": {
-    ///      "description": "Optional tx_eq settings.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/TxEqConfig"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -19089,7 +7359,7 @@ pub mod types {
         /// The requested forward-error correction method.  If this is not
         /// specified, the standard FEC for the underlying media will be applied
         /// if it can be determined.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub fec: ::std::option::Option<LinkFec>,
         /// Link name. On ports that are not broken out, this is always phy0. On
         /// a 2x breakout the options are phy0 and phy1, on 4x phy0-phy3, etc.
@@ -19101,7 +7371,7 @@ pub mod types {
         /// The speed of the link.
         pub speed: LinkSpeed,
         /// Optional tx_eq settings.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub tx_eq: ::std::option::Option<TxEqConfig>,
     }
 
@@ -19112,38 +7382,6 @@ pub mod types {
     }
 
     /// The forward error correction mode of a link.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The forward error correction mode of a link.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Firecode forward error correction.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "firecode"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "No forward error correction.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "none"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Reed-Solomon forward error correction.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "rs"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -19198,15 +7436,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for LinkFec {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for LinkFec {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -19217,80 +7446,6 @@ pub mod types {
     }
 
     /// The speed of a link.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The speed of a link.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Zero gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed0_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "1 gigabit per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed1_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "10 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed10_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "25 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed25_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "40 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed40_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "50 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed50_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "100 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed100_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "200 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed200_g"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "400 gigabits per second.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "speed400_g"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -19375,15 +7530,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for LinkSpeed {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for LinkSpeed {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -19394,100 +7540,31 @@ pub mod types {
     }
 
     /// A link layer discovery protocol (LLDP) service configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A link layer discovery protocol (LLDP) service
-    /// configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "enabled",
-    ///    "id"
-    ///  ],
-    ///  "properties": {
-    ///    "chassis_id": {
-    ///      "description": "The LLDP chassis identifier TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "enabled": {
-    ///      "description": "Whether or not the LLDP service is enabled.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "id": {
-    ///      "description": "The id of this LLDP service instance.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "link_description": {
-    ///      "description": "The LLDP link description TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "link_name": {
-    ///      "description": "The LLDP link name TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "management_ip": {
-    ///      "description": "The LLDP management IP TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
-    ///    },
-    ///    "system_description": {
-    ///      "description": "The LLDP system description TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "system_name": {
-    ///      "description": "The LLDP system name TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct LldpLinkConfig {
         /// The LLDP chassis identifier TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub chassis_id: ::std::option::Option<::std::string::String>,
         /// Whether or not the LLDP service is enabled.
         pub enabled: bool,
         /// The id of this LLDP service instance.
         pub id: ::uuid::Uuid,
         /// The LLDP link description TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub link_description: ::std::option::Option<::std::string::String>,
         /// The LLDP link name TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub link_name: ::std::option::Option<::std::string::String>,
         /// The LLDP management IP TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub management_ip: ::std::option::Option<::std::net::IpAddr>,
         /// The LLDP system description TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub system_description: ::std::option::Option<::std::string::String>,
         /// The LLDP system name TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub system_name: ::std::option::Option<::std::string::String>,
     }
 
@@ -19498,91 +7575,29 @@ pub mod types {
     }
 
     /// The LLDP configuration associated with a port.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The LLDP configuration associated with a port.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "enabled"
-    ///  ],
-    ///  "properties": {
-    ///    "chassis_id": {
-    ///      "description": "The LLDP chassis identifier TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "enabled": {
-    ///      "description": "Whether or not LLDP is enabled.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "link_description": {
-    ///      "description": "The LLDP link description TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "link_name": {
-    ///      "description": "The LLDP link name TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "management_ip": {
-    ///      "description": "The LLDP management IP TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
-    ///    },
-    ///    "system_description": {
-    ///      "description": "The LLDP system description TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "system_name": {
-    ///      "description": "The LLDP system name TLV.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct LldpLinkConfigCreate {
         /// The LLDP chassis identifier TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub chassis_id: ::std::option::Option<::std::string::String>,
         /// Whether or not LLDP is enabled.
         pub enabled: bool,
         /// The LLDP link description TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub link_description: ::std::option::Option<::std::string::String>,
         /// The LLDP link name TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub link_name: ::std::option::Option<::std::string::String>,
         /// The LLDP management IP TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub management_ip: ::std::option::Option<::std::net::IpAddr>,
         /// The LLDP system description TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub system_description: ::std::option::Option<::std::string::String>,
         /// The LLDP system name TLV.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub system_name: ::std::option::Option<::std::string::String>,
     }
 
@@ -19596,83 +7611,6 @@ pub mod types {
     /// directly connected to a switch port.  This structure contains both
     /// metadata about when and where the neighbor was seen, as well as the
     /// specific information the neighbor was advertising.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Information about LLDP advertisements from other
-    /// network entities directly connected to a switch port.  This structure
-    /// contains both metadata about when and where the neighbor was seen, as
-    /// well as the specific information the neighbor was advertising.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "chassis_id",
-    ///    "first_seen",
-    ///    "last_seen",
-    ///    "link_name",
-    ///    "local_port",
-    ///    "management_ip"
-    ///  ],
-    ///  "properties": {
-    ///    "chassis_id": {
-    ///      "description": "The LLDP chassis identifier advertised by the
-    /// neighbor",
-    ///      "type": "string"
-    ///    },
-    ///    "first_seen": {
-    ///      "description": "Initial sighting of this LldpNeighbor",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "last_seen": {
-    ///      "description": "Most recent sighting of this LldpNeighbor",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "link_description": {
-    ///      "description": "The LLDP link description advertised by the
-    /// neighbor",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "link_name": {
-    ///      "description": "The LLDP link name advertised by the neighbor",
-    ///      "type": "string"
-    ///    },
-    ///    "local_port": {
-    ///      "description": "The port on which the neighbor was seen",
-    ///      "type": "string"
-    ///    },
-    ///    "management_ip": {
-    ///      "description": "The LLDP management IP(s) advertised by the
-    /// neighbor",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ManagementAddress"
-    ///      }
-    ///    },
-    ///    "system_description": {
-    ///      "description": "The LLDP system description advertised by the
-    /// neighbor",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "system_name": {
-    ///      "description": "The LLDP system name advertised by the neighbor",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -19684,7 +7622,7 @@ pub mod types {
         /// Most recent sighting of this LldpNeighbor
         pub last_seen: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The LLDP link description advertised by the neighbor
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub link_description: ::std::option::Option<::std::string::String>,
         /// The LLDP link name advertised by the neighbor
         pub link_name: ::std::string::String,
@@ -19693,10 +7631,10 @@ pub mod types {
         /// The LLDP management IP(s) advertised by the neighbor
         pub management_ip: ::std::vec::Vec<ManagementAddress>,
         /// The LLDP system description advertised by the neighbor
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub system_description: ::std::option::Option<::std::string::String>,
         /// The LLDP system name advertised by the neighbor
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub system_name: ::std::option::Option<::std::string::String>,
     }
 
@@ -19707,36 +7645,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/LldpNeighbor"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -19744,7 +7652,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<LldpNeighbor>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -19756,59 +7664,6 @@ pub mod types {
 
     /// A loopback address is an address that is assigned to a rack switch but
     /// is not associated with any particular port.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A loopback address is an address that is assigned to a
-    /// rack switch but is not associated with any particular port.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address",
-    ///    "address_lot_block_id",
-    ///    "id",
-    ///    "rack_id",
-    ///    "switch_slot"
-    ///  ],
-    ///  "properties": {
-    ///    "address": {
-    ///      "description": "The loopback IP address and prefix length.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "address_lot_block_id": {
-    ///      "description": "The address lot block this address came from.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "id": {
-    ///      "description": "The id of the loopback address.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "rack_id": {
-    ///      "description": "The id of the rack where this loopback address is
-    /// assigned.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "switch_slot": {
-    ///      "description": "The slot of the switch within the rack where this
-    /// loopback address is assigned.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -19833,67 +7688,6 @@ pub mod types {
     }
 
     /// Parameters for creating a loopback address on a particular rack switch.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating a loopback address on a
-    /// particular rack switch.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address",
-    ///    "address_lot",
-    ///    "anycast",
-    ///    "mask",
-    ///    "rack_id",
-    ///    "switch_slot"
-    ///  ],
-    ///  "properties": {
-    ///    "address": {
-    ///      "description": "The address to create.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "address_lot": {
-    ///      "description": "The name or id of the address lot this loopback
-    /// address will pull an address from.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "anycast": {
-    ///      "description": "Address is an anycast address.\n\nThis allows the
-    /// address to be assigned to multiple locations simultaneously.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "mask": {
-    ///      "description": "The subnet mask to use for the address.",
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "rack_id": {
-    ///      "description": "The rack containing the switch this loopback
-    /// address will be configured on.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "switch_slot": {
-    ///      "description": "The slot of the switch within the rack this
-    /// loopback address will be configured on.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -19925,36 +7719,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/LoopbackAddress"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -19962,7 +7726,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<LoopbackAddress>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -19973,23 +7737,6 @@ pub mod types {
     }
 
     /// A Media Access Control address, in EUI-48 format
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A MAC address",
-    ///  "description": "A Media Access Control address, in EUI-48 format",
-    ///  "examples": [
-    ///    "ff:ff:ff:ff:ff:ff"
-    ///  ],
-    ///  "type": "string",
-    ///  "maxLength": 17,
-    ///  "minLength": 5,
-    ///  "pattern": "^([0-9a-fA-F]{0,2}:){5}[0-9a-fA-F]{0,2}$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -20045,15 +7792,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for MacAddr {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for MacAddr {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -20077,45 +7815,13 @@ pub mod types {
     }
 
     /// `ManagementAddress`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addr",
-    ///    "interface_num"
-    ///  ],
-    ///  "properties": {
-    ///    "addr": {
-    ///      "$ref": "#/components/schemas/NetworkAddress"
-    ///    },
-    ///    "interface_num": {
-    ///      "$ref": "#/components/schemas/InterfaceNum"
-    ///    },
-    ///    "oid": {
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint8",
-    ///        "minimum": 0.0
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ManagementAddress {
         pub addr: NetworkAddress,
         pub interface_num: InterfaceNum,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub oid: ::std::option::Option<::std::vec::Vec<u8>>,
     }
 
@@ -20126,18 +7832,6 @@ pub mod types {
     }
 
     /// `MaxPathConfig`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "integer",
-    ///  "format": "uint8",
-    ///  "maximum": 32.0,
-    ///  "minimum": 1.0
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20162,6 +7856,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for MaxPathConfig {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for MaxPathConfig {
         type Err = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -20183,37 +7883,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for MaxPathConfig {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// A `Measurement` is a timestamped datum from a single metric
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A `Measurement` is a timestamped datum from a single
-    /// metric",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "datum",
-    ///    "timestamp"
-    ///  ],
-    ///  "properties": {
-    ///    "datum": {
-    ///      "$ref": "#/components/schemas/Datum"
-    ///    },
-    ///    "timestamp": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20229,36 +7899,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Measurement"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20266,7 +7906,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Measurement>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -20277,42 +7917,6 @@ pub mod types {
     }
 
     /// The type of the metric itself, indicating what its values represent.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The type of the metric itself, indicating what its
-    /// values represent.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The value represents an instantaneous measurement
-    /// in time.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "gauge"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The value represents a difference between two
-    /// points in time.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "delta"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The value represents an accumulation between two
-    /// points in time.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "cumulative"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -20367,15 +7971,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for MetricType {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for MetricType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -20386,36 +7981,12 @@ pub mod types {
     }
 
     /// `MissingDatum`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "datum_type"
-    ///  ],
-    ///  "properties": {
-    ///    "datum_type": {
-    ///      "$ref": "#/components/schemas/DatumType"
-    ///    },
-    ///    "start_time": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct MissingDatum {
         pub datum_type: DatumType,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub start_time: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
@@ -20426,92 +7997,6 @@ pub mod types {
     }
 
     /// View of a Multicast Group
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Multicast Group",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "has_any_source_member",
-    ///    "id",
-    ///    "ip_pool_id",
-    ///    "multicast_ip",
-    ///    "name",
-    ///    "source_ips",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "has_any_source_member": {
-    ///      "description": "True if any member joined without specifying source
-    /// IPs (any-source).\n\nWhen true, at least one member receives traffic
-    /// from any source rather than filtering to specific sources.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_pool_id": {
-    ///      "description": "The ID of the IP pool this resource belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "multicast_ip": {
-    ///      "description": "The multicast IP address held by this resource.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "source_ips": {
-    ///      "description": "Deduplicated union of source IPs specified by
-    /// members.\n\nContains only sources from members that joined with explicit
-    /// `source_ips`. Members using any-source multicast (empty `source_ips`) do
-    /// not contribute, so a non-empty value does not imply all members use
-    /// source filtering. For SSM addresses (232/8, ff3x::/32), this is always
-    /// non-empty.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "ip"
-    ///      }
-    ///    },
-    ///    "state": {
-    ///      "description": "Current state of the multicast group.",
-    ///      "type": "string"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20555,17 +8040,6 @@ pub mod types {
     }
 
     /// Can be a UUID, a name, or an IP address
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A multicast group identifier",
-    ///  "description": "Can be a UUID, a name, or an IP address",
-    ///  "type": "string"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -20599,16 +8073,16 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for MulticastGroupIdentifier {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for MulticastGroupIdentifier {
         type Err = ::std::convert::Infallible;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ::std::fmt::Display for MulticastGroupIdentifier {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
         }
     }
 
@@ -20617,63 +8091,6 @@ pub mod types {
     ///
     /// Used in `InstanceCreate` and `InstanceUpdate` to specify multicast group
     /// membership along with per-member source IP configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Specification for joining a multicast group with
-    /// optional source filtering.\n\nUsed in `InstanceCreate` and
-    /// `InstanceUpdate` to specify multicast group membership along with
-    /// per-member source IP configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "group"
-    ///  ],
-    ///  "properties": {
-    ///    "group": {
-    ///      "description": "The multicast group to join, specified by name,
-    /// UUID, or IP address.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/MulticastGroupIdentifier"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "IP version for pool selection when creating a group
-    /// by name. Required if both IPv4 and IPv6 default multicast pools are
-    /// linked.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IpVersion"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "source_ips": {
-    ///      "description": "Source IPs for source-filtered multicast (SSM).
-    /// Optional for ASM groups, required for SSM groups (232.0.0.0/8,
-    /// ff3x::/32).",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "ip"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20682,11 +8099,11 @@ pub mod types {
         pub group: MulticastGroupIdentifier,
         /// IP version for pool selection when creating a group by name.
         /// Required if both IPv4 and IPv6 default multicast pools are linked.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ip_version: ::std::option::Option<IpVersion>,
         /// Source IPs for source-filtered multicast (SSM). Optional for ASM
         /// groups, required for SSM groups (232.0.0.0/8, ff3x::/32).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
     }
 
@@ -20698,94 +8115,6 @@ pub mod types {
 
     /// View of a Multicast Group Member (instance belonging to a multicast
     /// group)
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Multicast Group Member (instance belonging to
-    /// a multicast group)",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "instance_id",
-    ///    "multicast_group_id",
-    ///    "multicast_ip",
-    ///    "name",
-    ///    "source_ips",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "instance_id": {
-    ///      "description": "The ID of the instance that is a member of this
-    /// group.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "multicast_group_id": {
-    ///      "description": "The ID of the multicast group this member belongs
-    /// to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "multicast_ip": {
-    ///      "description": "The multicast IP address of the group this member
-    /// belongs to.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "source_ips": {
-    ///      "description": "Source IP addresses for this member's multicast
-    /// subscription.\n\n- **ASM**: Sources are optional. Empty array means any
-    /// source is allowed. Non-empty array enables source filtering
-    /// (IGMPv3/MLDv2). - **SSM**: Sources are required for SSM addresses
-    /// (232/8, ff3x::/32).",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "ip"
-    ///      }
-    ///    },
-    ///    "state": {
-    ///      "description": "Current state of the multicast group membership.",
-    ///      "type": "string"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20824,36 +8153,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/MulticastGroupMember"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20861,7 +8160,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<MulticastGroupMember>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -20872,36 +8171,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/MulticastGroup"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -20909,7 +8178,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<MulticastGroup>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -20923,25 +8192,6 @@ pub mod types {
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID, but they may contain a UUID. They
     /// can be at most 63 characters long.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A name unique within the parent collection",
-    ///  "description": "Names must begin with a lower case ASCII letter, be
-    /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
-    /// '-', and may not end with a '-'. Names cannot be a UUID, but they may
-    /// contain a UUID. They can be at most 63 characters long.",
-    ///  "type": "string",
-    ///  "maxLength": 63,
-    ///  "minLength": 1,
-    ///  "pattern":
-    /// "^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*
-    /// [a-zA-Z0-9]+)?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -20996,15 +8246,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for Name {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Name {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -21028,33 +8269,6 @@ pub mod types {
     }
 
     /// `NameOrId`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "title": "id",
-    ///      "allOf": [
-    ///        {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        }
-    ///      ]
-    ///    },
-    ///    {
-    ///      "title": "name",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21062,6 +8276,15 @@ pub mod types {
     pub enum NameOrId {
         Id(::uuid::Uuid),
         Name(Name),
+    }
+
+    impl ::std::fmt::Display for NameOrId {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match self {
+                Self::Id(x) => x.fmt(f),
+                Self::Name(x) => x.fmt(f),
+            }
+        }
     }
 
     impl ::std::str::FromStr for NameOrId {
@@ -21084,30 +8307,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for NameOrId {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for NameOrId {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for NameOrId {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match self {
-                Self::Id(x) => x.fmt(f),
-                Self::Name(x) => x.fmt(f),
-            }
         }
     }
 
@@ -21124,39 +8329,6 @@ pub mod types {
     }
 
     /// Supported set of sort modes for scanning by name or id
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Supported set of sort modes for scanning by name or
-    /// id",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Sort in increasing order of \"name\"",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "name_ascending"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Sort in decreasing order of \"name\"",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "name_descending"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Sort in increasing order of \"id\"",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "id_ascending"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -21211,15 +8383,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for NameOrIdSortMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for NameOrIdSortMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -21232,25 +8395,6 @@ pub mod types {
     /// Supported set of sort modes for scanning by name only
     ///
     /// Currently, we only support scanning in ascending order.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Supported set of sort modes for scanning by name
-    /// only\n\nCurrently, we only support scanning in ascending order.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Sort in increasing order of \"name\"",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "name_ascending"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -21295,15 +8439,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for NameSortMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for NameSortMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -21314,46 +8449,6 @@ pub mod types {
     }
 
     /// `NetworkAddress`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "ip_addr"
-    ///      ],
-    ///      "properties": {
-    ///        "ip_addr": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "i_e_e_e802"
-    ///      ],
-    ///      "properties": {
-    ///        "i_e_e_e802": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "type": "integer",
-    ///            "format": "uint8",
-    ///            "minimum": 0.0
-    ///          }
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21377,56 +8472,6 @@ pub mod types {
     }
 
     /// Information required to construct a virtual network interface
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Information required to construct a virtual network
-    /// interface",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "ip_config",
-    ///    "kind",
-    ///    "mac",
-    ///    "name",
-    ///    "primary",
-    ///    "slot",
-    ///    "vni"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_config": {
-    ///      "$ref": "#/components/schemas/PrivateIpConfig"
-    ///    },
-    ///    "kind": {
-    ///      "$ref": "#/components/schemas/NetworkInterfaceKind"
-    ///    },
-    ///    "mac": {
-    ///      "$ref": "#/components/schemas/MacAddr"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "primary": {
-    ///      "type": "boolean"
-    ///    },
-    ///    "slot": {
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "vni": {
-    ///      "$ref": "#/components/schemas/Vni"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21448,77 +8493,6 @@ pub mod types {
     }
 
     /// The type of network interface
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The type of network interface",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "A vNIC attached to a guest instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "id",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "instance"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A vNIC associated with an internal service",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "id",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "service"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "A vNIC associated with a probe",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "id",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "id": {
-    ///          "type": "string",
-    ///          "format": "uuid"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "probe"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21536,29 +8510,6 @@ pub mod types {
     }
 
     /// The result of a successful OxQL query.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The result of a successful OxQL query.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "tables"
-    ///  ],
-    ///  "properties": {
-    ///    "tables": {
-    ///      "description": "Tables resulting from the query, each containing
-    /// timeseries.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/OxqlTable"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21578,34 +8529,6 @@ pub mod types {
     /// A table is the result of an OxQL query. It contains a name, usually the
     /// name of the timeseries schema from which the data is derived, and any
     /// number of timeseries, which contain the actual data.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A table represents one or more timeseries with the same schema.\n\nA table is the result of an OxQL query. It contains a name, usually the name of the timeseries schema from which the data is derived, and any number of timeseries, which contain the actual data.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "name",
-    ///    "timeseries"
-    ///  ],
-    ///  "properties": {
-    ///    "name": {
-    ///      "description": "The name of the table.",
-    ///      "type": "string"
-    ///    },
-    ///    "timeseries": {
-    ///      "description": "The set of timeseries in the table, ordered by
-    /// key.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Timeseries"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21624,21 +8547,6 @@ pub mod types {
 
     /// The order in which the client wants to page through the requested
     /// collection
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The order in which the client wants to page through the
-    /// requested collection",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "ascending",
-    ///    "descending"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -21686,15 +8594,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for PaginationOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for PaginationOrder {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -21705,18 +8604,6 @@ pub mod types {
     }
 
     /// Passwords may be subject to additional constraints.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A password used to authenticate a user",
-    ///  "description": "Passwords may be subject to additional constraints.",
-    ///  "type": "string",
-    ///  "maxLength": 512
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -21760,15 +8647,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for Password {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Password {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -21795,84 +8673,6 @@ pub mod types {
     ///
     /// Physical disks reside in a particular sled and are used to store both
     /// Instance Disk data as well as internal metadata.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Physical Disk\n\nPhysical disks reside in a
-    /// particular sled and are used to store both Instance Disk data as well as
-    /// internal metadata.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "form_factor",
-    ///    "id",
-    ///    "model",
-    ///    "policy",
-    ///    "serial",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vendor"
-    ///  ],
-    ///  "properties": {
-    ///    "form_factor": {
-    ///      "$ref": "#/components/schemas/PhysicalDiskKind"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "model": {
-    ///      "type": "string"
-    ///    },
-    ///    "policy": {
-    ///      "description": "The operator-defined policy for a physical disk.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PhysicalDiskPolicy"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "serial": {
-    ///      "type": "string"
-    ///    },
-    ///    "sled_id": {
-    ///      "description": "The sled to which this disk is attached, if any.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "state": {
-    ///      "description": "The current state Nexus believes the disk to be
-    /// in.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PhysicalDiskState"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vendor": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21885,7 +8685,7 @@ pub mod types {
         pub policy: PhysicalDiskPolicy,
         pub serial: ::std::string::String,
         /// The sled to which this disk is attached, if any.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub sled_id: ::std::option::Option<::uuid::Uuid>,
         /// The current state Nexus believes the disk to be in.
         pub state: PhysicalDiskState,
@@ -21903,34 +8703,6 @@ pub mod types {
     }
 
     /// A request to adopt a physical disk into the control plane
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A request to adopt a physical disk into the control
-    /// plane",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "disk_id",
-    ///    "id",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "disk_id": {
-    ///      "$ref": "#/components/schemas/PhysicalDiskManufacturerIdentity"
-    ///    },
-    ///    "id": {
-    ///      "$ref": "#/components/schemas/PhysicalDiskAdoptionRequestUuid"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21947,36 +8719,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/PhysicalDiskAdoptionRequest"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -21984,7 +8726,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<PhysicalDiskAdoptionRequest>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -21995,21 +8737,6 @@ pub mod types {
     }
 
     /// `PhysicalDiskAdoptionRequestUuid`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid",
-    ///  "x-rust-type": {
-    ///    "crate": "omicron-uuid-kinds",
-    ///    "path": "omicron_uuid_kinds::PhysicalDiskAdoptionRequestUuid",
-    ///    "version": "*"
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22034,6 +8761,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for PhysicalDiskAdoptionRequestUuid {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for PhysicalDiskAdoptionRequestUuid {
         type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -22055,27 +8788,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for PhysicalDiskAdoptionRequestUuid {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// Describes the form factor of physical disks.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes the form factor of physical disks.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "m2",
-    ///    "u2"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -22123,15 +8836,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for PhysicalDiskKind {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for PhysicalDiskKind {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -22142,33 +8846,6 @@ pub mod types {
     }
 
     /// The unique identity of a physical disk provided by the manufacturer
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The unique identity of a physical disk provided by the
-    /// manufacturer",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "model",
-    ///    "serial",
-    ///    "vendor"
-    ///  ],
-    ///  "properties": {
-    ///    "model": {
-    ///      "type": "string"
-    ///    },
-    ///    "serial": {
-    ///      "type": "string"
-    ///    },
-    ///    "vendor": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22185,52 +8862,6 @@ pub mod types {
     }
 
     /// The operator-defined policy of a physical disk.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The operator-defined policy of a physical disk.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The operator has indicated that the disk is
-    /// in-service.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "in_service"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The operator has indicated that the disk has been
-    /// permanently removed from service.\n\nThis is a terminal state: once a
-    /// particular disk ID is expunged, it will never return to service. (The
-    /// actual hardware may be reused, but it will be treated as a brand-new
-    /// disk.)\n\nAn expunged disk is always non-provisionable.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "expunged"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -22279,15 +8910,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for PhysicalDiskPolicy {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for PhysicalDiskPolicy {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -22298,36 +8920,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/PhysicalDisk"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22335,7 +8927,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<PhysicalDisk>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -22346,36 +8938,6 @@ pub mod types {
     }
 
     /// The current state of the disk, as determined by Nexus.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The current state of the disk, as determined by
-    /// Nexus.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The disk is currently active, and has resources
-    /// allocated on it.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "active"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The disk has been permanently removed from
-    /// service.\n\nThis is a terminal state: once a particular disk ID is
-    /// decommissioned, it will never return to service. (The actual hardware
-    /// may be reused, but it will be treated as a brand-new disk.)",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "decommissioned"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -22429,15 +8991,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for PhysicalDiskState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for PhysicalDiskState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -22448,29 +9001,6 @@ pub mod types {
     }
 
     /// `Ping`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "status"
-    ///  ],
-    ///  "properties": {
-    ///    "status": {
-    ///      "description": "Whether the external API is reachable. Will always
-    /// be Ok if the endpoint returns anything at all.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PingStatus"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22487,18 +9017,6 @@ pub mod types {
     }
 
     /// `PingStatus`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "ok"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -22542,15 +9060,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for PingStatus {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for PingStatus {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -22561,50 +9070,11 @@ pub mod types {
     }
 
     /// Timepoints and values for one timeseries.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Timepoints and values for one timeseries.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "timestamps",
-    ///    "values"
-    ///  ],
-    ///  "properties": {
-    ///    "start_times": {
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "date-time"
-    ///      }
-    ///    },
-    ///    "timestamps": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "string",
-    ///        "format": "date-time"
-    ///      }
-    ///    },
-    ///    "values": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Values"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Points {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub start_times:
             ::std::option::Option<::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>>,
         pub timestamps: ::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -22618,72 +9088,6 @@ pub mod types {
     }
 
     /// Specify which IP or external subnet pool to allocate from.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Specify which IP or external subnet pool to allocate
-    /// from.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Use the specified pool by name or ID.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "pool",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "pool": {
-    ///          "description": "The pool to allocate from.",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Use the default pool for the silo.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "ip_version": {
-    ///          "description": "IP version to use when multiple default pools exist. Required if both IPv4 and IPv6 default pools are configured.",
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/IpVersion"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "auto"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22700,103 +9104,12 @@ pub mod types {
         Auto {
             /// IP version to use when multiple default pools exist. Required if
             /// both IPv4 and IPv6 default pools are configured.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            #[serde(skip_serializing_if = "::std::option::Option::is_none")]
             ip_version: ::std::option::Option<IpVersion>,
         },
     }
 
     /// VPC-private IP address configuration for a network interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "VPC-private IP address configuration for a network
-    /// interface.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The interface has only an IPv4 configuration.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "v4"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/PrivateIpv4Config"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The interface has only an IPv6 configuration.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "v6"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/PrivateIpv6Config"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The interface is dual-stack.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "dual_stack"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "object",
-    ///          "required": [
-    ///            "v4",
-    ///            "v6"
-    ///          ],
-    ///          "properties": {
-    ///            "v4": {
-    ///              "description": "The interface's IPv4 configuration.",
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/PrivateIpv4Config"
-    ///                }
-    ///              ]
-    ///            },
-    ///            "v6": {
-    ///              "description": "The interface's IPv6 configuration.",
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/PrivateIpv6Config"
-    ///                }
-    ///              ]
-    ///            }
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22831,86 +9144,6 @@ pub mod types {
     }
 
     /// The VPC-private IP stack for a network interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The VPC-private IP stack for a network interface.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The interface has only an IPv4 stack.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "v4"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/PrivateIpv4Stack"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The interface has only an IPv6 stack.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "v6"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/PrivateIpv6Stack"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The interface is dual-stack IPv4 and IPv6.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "dual_stack"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "object",
-    ///          "required": [
-    ///            "v4",
-    ///            "v6"
-    ///          ],
-    ///          "properties": {
-    ///            "v4": {
-    ///              "$ref": "#/components/schemas/PrivateIpv4Stack"
-    ///            },
-    ///            "v6": {
-    ///              "$ref": "#/components/schemas/PrivateIpv6Stack"
-    ///            }
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -22943,86 +9176,6 @@ pub mod types {
     }
 
     /// Create parameters for a network interface's IP stack.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create parameters for a network interface's IP stack.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The interface has only an IPv4 stack.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "v4"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/PrivateIpv4StackCreate"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The interface has only an IPv6 stack.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "v6"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/PrivateIpv6StackCreate"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The interface has both an IPv4 and IPv6 stack.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "dual_stack"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "object",
-    ///          "required": [
-    ///            "v4",
-    ///            "v6"
-    ///          ],
-    ///          "properties": {
-    ///            "v4": {
-    ///              "$ref": "#/components/schemas/PrivateIpv4StackCreate"
-    ///            },
-    ///            "v6": {
-    ///              "$ref": "#/components/schemas/PrivateIpv6StackCreate"
-    ///            }
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23055,45 +9208,6 @@ pub mod types {
     }
 
     /// VPC-private IPv4 configuration for a network interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "VPC-private IPv4 configuration for a network
-    /// interface.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip",
-    ///    "subnet"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "description": "VPC-private IP address.",
-    ///      "type": "string",
-    ///      "format": "ipv4"
-    ///    },
-    ///    "subnet": {
-    ///      "description": "The IP subnet.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "Additional networks on which the interface can send
-    /// / receive traffic.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Ipv4Net"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23115,35 +9229,6 @@ pub mod types {
     }
 
     /// The VPC-private IPv4 stack for a network interface
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The VPC-private IPv4 stack for a network interface",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip",
-    ///    "transit_ips"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "description": "The VPC-private IPv4 address for the interface.",
-    ///      "type": "string",
-    ///      "format": "ipv4"
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "A set of additional IPv4 networks that this
-    /// interface may send and receive traffic on.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Ipv4Net"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23162,40 +9247,6 @@ pub mod types {
     }
 
     /// Configuration for a network interface's IPv4 addressing.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Configuration for a network interface's IPv4
-    /// addressing.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "description": "The VPC-private address to assign to the
-    /// interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Assignment"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "Additional IP networks the interface can send /
-    /// receive on.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Ipv4Net"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23214,45 +9265,6 @@ pub mod types {
     }
 
     /// VPC-private IPv6 configuration for a network interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "VPC-private IPv6 configuration for a network
-    /// interface.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip",
-    ///    "subnet",
-    ///    "transit_ips"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "description": "VPC-private IP address.",
-    ///      "type": "string",
-    ///      "format": "ipv6"
-    ///    },
-    ///    "subnet": {
-    ///      "description": "The IP subnet.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "Additional networks on which the interface can send
-    /// / receive traffic.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Ipv6Net"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23273,35 +9285,6 @@ pub mod types {
     }
 
     /// The VPC-private IPv6 stack for a network interface
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The VPC-private IPv6 stack for a network interface",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip",
-    ///    "transit_ips"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "description": "The VPC-private IPv6 address for the interface.",
-    ///      "type": "string",
-    ///      "format": "ipv6"
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "A set of additional IPv6 networks that this
-    /// interface may send and receive traffic on.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Ipv6Net"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23320,40 +9303,6 @@ pub mod types {
     }
 
     /// Configuration for a network interface's IPv6 addressing.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Configuration for a network interface's IPv6
-    /// addressing.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "description": "The VPC-private address to assign to the
-    /// interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Assignment"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "Additional IP networks the interface can send /
-    /// receive on.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Ipv6Net"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23372,59 +9321,6 @@ pub mod types {
     }
 
     /// A networking probe
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A networking probe",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "sled",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "sled": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23449,45 +9345,6 @@ pub mod types {
     }
 
     /// Create time parameters for probes.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create time parameters for probes.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name",
-    ///    "sled"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "pool_selector": {
-    ///      "description": "Pool to allocate from.",
-    ///      "default": {
-    ///        "ip_version": null,
-    ///        "type": "auto"
-    ///      },
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/PoolSelector"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "sled": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23507,40 +9364,6 @@ pub mod types {
     }
 
     /// `ProbeExternalIp`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "first_port",
-    ///    "ip",
-    ///    "kind",
-    ///    "last_port"
-    ///  ],
-    ///  "properties": {
-    ///    "first_port": {
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "ip": {
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "kind": {
-    ///      "$ref": "#/components/schemas/ProbeExternalIpKind"
-    ///    },
-    ///    "last_port": {
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23558,20 +9381,6 @@ pub mod types {
     }
 
     /// `ProbeExternalIpKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "snat",
-    ///    "floating",
-    ///    "ephemeral"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -23623,15 +9432,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for ProbeExternalIpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for ProbeExternalIpKind {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -23642,44 +9442,6 @@ pub mod types {
     }
 
     /// `ProbeInfo`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "external_ips",
-    ///    "id",
-    ///    "interface",
-    ///    "name",
-    ///    "sled"
-    ///  ],
-    ///  "properties": {
-    ///    "external_ips": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ProbeExternalIp"
-    ///      }
-    ///    },
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "interface": {
-    ///      "$ref": "#/components/schemas/NetworkInterface"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "sled": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23698,36 +9460,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ProbeInfo"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23735,7 +9467,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<ProbeInfo>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -23746,54 +9478,6 @@ pub mod types {
     }
 
     /// View of a Project
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Project",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23817,48 +9501,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `Project`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `Project`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "defaults": {
-    ///      "description": "Default resources to create in the project\n\nOmit
-    /// this field or pass `null` to create all defaults: currently, a default
-    /// VPC with its own defaults. Pass an object to specify which resources to
-    /// create. `{}` creates none.\n\nFor example, to create the default VPC but
-    /// not its default subnet, pass `{\"vpc\": {\"type\": \"explicit\",
-    /// \"defaults\": {}}}`.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/ProjectCreateDefaults"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23871,7 +9513,7 @@ pub mod types {
         ///
         /// For example, to create the default VPC but not its default subnet,
         /// pass `{"vpc": {"type": "explicit", "defaults": {}}}`.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub defaults: ::std::option::Option<ProjectCreateDefaults>,
         pub description: ::std::string::String,
         pub name: Name,
@@ -23887,42 +9529,13 @@ pub mod types {
     ///
     /// Each field corresponds to one resource. Set a field to an object to
     /// create that resource. Omit it or pass `null` to skip it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Default resources to create in a project\n\nEach field
-    /// corresponds to one resource. Set a field to an object to create that
-    /// resource. Omit it or pass `null` to skip it.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "vpc": {
-    ///      "description": "Create the default VPC. Omit this field or pass
-    /// `null` to skip it.\n\nWhen present, the value also determines which of
-    /// the VPC's own defaults to create: `{\"type\": \"all\"}` creates all of
-    /// them, and `{\"type\": \"explicit\", \"defaults\": {...}}` creates only
-    /// those specified.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/VpcCreateDefaultsSelection"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     #[serde(deny_unknown_fields)]
     pub struct ProjectCreateDefaults {
@@ -23932,16 +9545,8 @@ pub mod types {
         /// defaults to create: `{"type": "all"}` creates all of them, and
         /// `{"type": "explicit", "defaults": {...}}` creates only those
         /// specified.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vpc: ::std::option::Option<VpcCreateDefaultsSelection>,
-    }
-
-    impl ::std::default::Default for ProjectCreateDefaults {
-        fn default() -> Self {
-            Self {
-                vpc: Default::default(),
-            }
-        }
     }
 
     impl ProjectCreateDefaults {
@@ -23951,36 +9556,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Project"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -23988,7 +9563,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Project>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -23999,21 +9574,6 @@ pub mod types {
     }
 
     /// `ProjectRole`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "admin",
-    ///    "collaborator",
-    ///    "limited_collaborator",
-    ///    "viewer"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -24069,15 +9629,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for ProjectRole {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for ProjectRole {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -24092,31 +9643,6 @@ pub mod types {
     /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
     /// have access to this resource.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Policy for a particular resource\n\nNote that the
-    /// Policy only describes access granted explicitly for this resource.  The
-    /// policies of parent resources can also cause a user to have access to
-    /// this resource.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "role_assignments"
-    ///  ],
-    ///  "properties": {
-    ///    "role_assignments": {
-    ///      "description": "Roles directly assigned on this resource",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ProjectRoleRoleAssignment"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24137,37 +9663,6 @@ pub mod types {
     /// The resource is not part of this structure.  Rather, `RoleAssignment`s
     /// are put into a `Policy` and that Policy is applied to a particular
     /// resource.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes the assignment of a particular role on a
-    /// particular resource to a particular identity (user, group, etc.)\n\nThe
-    /// resource is not part of this structure.  Rather, `RoleAssignment`s are
-    /// put into a `Policy` and that Policy is applied to a particular
-    /// resource.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "identity_id",
-    ///    "identity_type",
-    ///    "role_name"
-    ///  ],
-    ///  "properties": {
-    ///    "identity_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "identity_type": {
-    ///      "$ref": "#/components/schemas/IdentityType"
-    ///    },
-    ///    "role_name": {
-    ///      "$ref": "#/components/schemas/ProjectRole"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24184,55 +9679,19 @@ pub mod types {
     }
 
     /// Updateable properties of a `Project`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a `Project`",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct ProjectUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for ProjectUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl ProjectUpdate {
@@ -24248,68 +9707,6 @@ pub mod types {
     ///
     /// The algorithm consists of maintaining five markers: the minimum, the
     /// p/2-, p-, and (1 + p)/2 quantiles, and the maximum.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Structure for estimating the p-quantile of a
-    /// population.\n\nThis is based on the P² algorithm for estimating
-    /// quantiles using constant space.\n\nThe algorithm consists of maintaining
-    /// five markers: the minimum, the p/2-, p-, and (1 + p)/2 quantiles, and
-    /// the maximum.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "desired_marker_positions",
-    ///    "marker_heights",
-    ///    "marker_positions",
-    ///    "p"
-    ///  ],
-    ///  "properties": {
-    ///    "desired_marker_positions": {
-    ///      "description": "The desired marker positions.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "number",
-    ///        "format": "double"
-    ///      },
-    ///      "maxItems": 5,
-    ///      "minItems": 5
-    ///    },
-    ///    "marker_heights": {
-    ///      "description": "The heights of the markers.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "number",
-    ///        "format": "double"
-    ///      },
-    ///      "maxItems": 5,
-    ///      "minItems": 5
-    ///    },
-    ///    "marker_positions": {
-    ///      "description": "The positions of the markers.\n\nWe track sample
-    /// size in the 5th position, as useful observations won't start until we've
-    /// filled the heights at the 6th sample anyway This does deviate from the
-    /// paper, but it's a more useful representation that works according to the
-    /// paper's algorithm.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint64",
-    ///        "minimum": 0.0
-    ///      },
-    ///      "maxItems": 5,
-    ///      "minItems": 5
-    ///    },
-    ///    "p": {
-    ///      "description": "The p value for the quantile.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24336,39 +9733,6 @@ pub mod types {
     }
 
     /// View of a Rack
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Rack",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24388,32 +9752,11 @@ pub mod types {
     }
 
     /// `RackMembershipAddSledsRequest`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "sled_ids"
-    ///  ],
-    ///  "properties": {
-    ///    "sled_ids": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BaseboardId"
-    ///      },
-    ///      "uniqueItems": true
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RackMembershipAddSledsRequest {
-        pub sled_ids: Vec<BaseboardId>,
+        pub sled_ids: ::std::vec::Vec<BaseboardId>,
     }
 
     impl RackMembershipAddSledsRequest {
@@ -24423,20 +9766,6 @@ pub mod types {
     }
 
     /// `RackMembershipChangeState`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "in_progress",
-    ///    "committed",
-    ///    "aborted"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -24488,15 +9817,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for RackMembershipChangeState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for RackMembershipChangeState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -24508,93 +9828,21 @@ pub mod types {
 
     /// Status of the rack membership uniquely identified by the (rack_id,
     /// version) pair
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Status of the rack membership uniquely identified by
-    /// the (rack_id, version) pair",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "members",
-    ///    "rack_id",
-    ///    "state",
-    ///    "time_created",
-    ///    "unacknowledged_members",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "members": {
-    ///      "description": "All members of the rack for this version",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BaseboardId"
-    ///      },
-    ///      "uniqueItems": true
-    ///    },
-    ///    "rack_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "state": {
-    ///      "$ref": "#/components/schemas/RackMembershipChangeState"
-    ///    },
-    ///    "time_aborted": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_committed": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "unacknowledged_members": {
-    ///      "description": "All members that have not yet confirmed this
-    /// membership version",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BaseboardId"
-    ///      },
-    ///      "uniqueItems": true
-    ///    },
-    ///    "version": {
-    ///      "description": "Version that uniquely identifies the rack
-    /// membership at a given point in time",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RackMembershipVersion"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RackMembershipStatus {
         /// All members of the rack for this version
-        pub members: Vec<BaseboardId>,
+        pub members: ::std::vec::Vec<BaseboardId>,
         pub rack_id: ::uuid::Uuid,
         pub state: RackMembershipChangeState,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub time_aborted: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub time_committed: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// All members that have not yet confirmed this membership version
-        pub unacknowledged_members: Vec<BaseboardId>,
+        pub unacknowledged_members: ::std::vec::Vec<BaseboardId>,
         /// Version that uniquely identifies the rack membership at a given
         /// point in time
         pub version: RackMembershipVersion,
@@ -24608,19 +9856,6 @@ pub mod types {
 
     /// A unique, monotonically increasing number representing the set of active
     /// sleds in a rack at a given point in time.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A unique, monotonically increasing number representing
-    /// the set of active sleds in a rack at a given point in time.",
-    ///  "type": "integer",
-    ///  "format": "uint64",
-    ///  "minimum": 0.0
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24645,6 +9880,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for RackMembershipVersion {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for RackMembershipVersion {
         type Err = <u64 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -24666,43 +9907,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for RackMembershipVersion {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Rack"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24710,7 +9915,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Rack>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -24721,55 +9926,6 @@ pub mod types {
     }
 
     /// A route to a destination network through a gateway address.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A route to a destination network through a gateway
-    /// address.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "dst",
-    ///    "gw"
-    ///  ],
-    ///  "properties": {
-    ///    "dst": {
-    ///      "description": "The route destination.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "gw": {
-    ///      "description": "The route gateway.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "rib_priority": {
-    ///      "description": "Route RIB priority. Higher priority indicates
-    /// precedence within and across protocols.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "vid": {
-    ///      "description": "VLAN id the gateway is reachable over.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24780,10 +9936,10 @@ pub mod types {
         pub gw: ::std::net::IpAddr,
         /// Route RIB priority. Higher priority indicates precedence within and
         /// across protocols.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
         /// VLAN id the gateway is reachable over.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vid: ::std::option::Option<u16>,
     }
 
@@ -24794,40 +9950,6 @@ pub mod types {
     }
 
     /// Route configuration data associated with a switch port configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Route configuration data associated with a switch port
-    /// configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "link_name",
-    ///    "routes"
-    ///  ],
-    ///  "properties": {
-    ///    "link_name": {
-    ///      "description": "Link name. On ports that are not broken out, this
-    /// is always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
-    /// phy0-phy3, etc.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "routes": {
-    ///      "description": "The set of routes assigned to a switch port.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Route"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24851,102 +9973,6 @@ pub mod types {
     /// When traffic is to be sent to a destination that is within a given
     /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
     /// will be forward to the `RouteTarget` for that rule.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A `RouteDestination` is used to match traffic with a
-    /// routing rule based on the destination of that traffic.\n\nWhen traffic
-    /// is to be sent to a destination that is within a given
-    /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
-    /// will be forward to the `RouteTarget` for that rule.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Route applies to traffic destined for the specified
-    /// IP address",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Route applies to traffic destined for the specified
-    /// IP subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip_net"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Route applies to traffic destined for the specified
-    /// VPC",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "vpc"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Route applies to traffic destined for the specified
-    /// VPC subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "subnet"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -24980,129 +10006,6 @@ pub mod types {
 
     /// A `RouteTarget` describes the possible locations that traffic matching a
     /// route destination can be sent.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A `RouteTarget` describes the possible locations that
-    /// traffic matching a route destination can be sent.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Forward traffic to a particular IP address.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Forward traffic to a VPC",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "vpc"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Forward traffic to a VPC Subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "subnet"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Forward traffic to a specific instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "instance"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Forward traffic to an internet gateway",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "internet_gateway"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Drop matching traffic",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "drop"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25134,19 +10037,6 @@ pub mod types {
     }
 
     /// Router lifetime in seconds for unnumbered BGP peers
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Router lifetime in seconds for unnumbered BGP peers",
-    ///  "type": "integer",
-    ///  "format": "uint16",
-    ///  "maximum": 9000.0,
-    ///  "minimum": 0.0
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25171,6 +10061,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for RouterLifetimeConfig {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for RouterLifetimeConfig {
         type Err = <u16 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -25192,77 +10088,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for RouterLifetimeConfig {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// `RouterPeerType`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "router_lifetime",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "router_lifetime": {
-    ///          "description": "Router lifetime in seconds for unnumbered BGP
-    /// peers.",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/RouterLifetimeConfig"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "unnumbered"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "target_addr",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "src_addr": {
-    ///          "description": "Optional local IP address to bind when
-    /// establishing outbound TCP connections to this peer. If `None`, the OS
-    /// selects the source address.",
-    ///          "type": [
-    ///            "string",
-    ///            "null"
-    ///          ],
-    ///          "format": "ip"
-    ///        },
-    ///        "target_addr": {
-    ///          "description": "Target IP address for numbered BGP peers.",
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "numbered"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25278,7 +10104,7 @@ pub mod types {
             /// Optional local IP address to bind when establishing outbound TCP
             /// connections to this peer. If `None`, the OS selects the source
             /// address.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            #[serde(skip_serializing_if = "::std::option::Option::is_none")]
             src_addr: ::std::option::Option<::std::net::IpAddr>,
             /// Target IP address for numbered BGP peers.
             target_addr: ::std::net::IpAddr,
@@ -25287,92 +10113,6 @@ pub mod types {
 
     /// A route defines a rule that governs where traffic should be sent based
     /// on its destination.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A route defines a rule that governs where traffic
-    /// should be sent based on its destination.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "destination",
-    ///    "id",
-    ///    "kind",
-    ///    "name",
-    ///    "target",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vpc_router_id"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "destination": {
-    ///      "description": "Selects which traffic this routing rule will apply
-    /// to",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouteDestination"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "kind": {
-    ///      "description": "Describes the kind of router. Set at creation.
-    /// `read-only`",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouterRouteKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "target": {
-    ///      "description": "The location that matched packets should be
-    /// forwarded to",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouteTarget"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vpc_router_id": {
-    ///      "description": "The ID of the VPC Router to which the route
-    /// belongs",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25404,48 +10144,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `RouterRoute`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `RouterRoute`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "destination",
-    ///    "name",
-    ///    "target"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "destination": {
-    ///      "description": "Selects which traffic this routing rule will apply
-    /// to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouteDestination"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "target": {
-    ///      "description": "The location that matched packets should be
-    /// forwarded to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouteTarget"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25468,52 +10166,6 @@ pub mod types {
     ///
     /// The kind determines certain attributes such as if the route is
     /// modifiable and describes how or where the route was created.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The kind of a `RouterRoute`\n\nThe kind determines
-    /// certain attributes such as if the route is modifiable and describes how
-    /// or where the route was created.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Determines the default destination of traffic, such
-    /// as whether it goes to the internet or not.\n\n`Destination: An Internet
-    /// Gateway` `Modifiable: true`",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "default"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Automatically added for each VPC Subnet in the
-    /// VPC\n\n`Destination: A VPC Subnet` `Modifiable: false`",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "vpc_subnet"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Automatically added when VPC peering is
-    /// established\n\n`Destination: A different VPC` `Modifiable: false`",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "vpc_peering"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Created by a user; see
-    /// `RouteTarget`\n\n`Destination: User defined` `Modifiable: true`",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "custom"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -25582,15 +10234,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for RouterRouteKind {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for RouterRouteKind {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -25601,36 +10244,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/RouterRoute"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25638,7 +10251,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<RouterRoute>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -25649,69 +10262,15 @@ pub mod types {
     }
 
     /// Updateable properties of a `RouterRoute`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a `RouterRoute`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "destination",
-    ///    "target"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "destination": {
-    ///      "description": "Selects which traffic this routing rule will apply
-    /// to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouteDestination"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "target": {
-    ///      "description": "The location that matched packets should be
-    /// forwarded to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/RouteTarget"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RouterRouteUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
         /// Selects which traffic this routing rule will apply to.
         pub destination: RouteDestination,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
         /// The location that matched packets should be forwarded to.
         pub target: RouteTarget,
@@ -25724,99 +10283,6 @@ pub mod types {
     }
 
     /// A SAML identity provider
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A SAML identity provider",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "acs_url",
-    ///    "description",
-    ///    "id",
-    ///    "idp_entity_id",
-    ///    "name",
-    ///    "slo_url",
-    ///    "sp_client_id",
-    ///    "technical_contact_email",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "acs_url": {
-    ///      "description": "Service provider endpoint where the response will
-    /// be sent",
-    ///      "type": "string"
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "group_attribute_name": {
-    ///      "description": "If set, attributes with this name will be
-    /// considered to denote a user's group membership, where the values will be
-    /// the group names.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "idp_entity_id": {
-    ///      "description": "IdP's entity id",
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "public_cert": {
-    ///      "description": "Optional request signing public certificate (base64
-    /// encoded der file)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "slo_url": {
-    ///      "description": "Service provider endpoint where the idp should send
-    /// log out requests",
-    ///      "type": "string"
-    ///    },
-    ///    "sp_client_id": {
-    ///      "description": "SP's client id",
-    ///      "type": "string"
-    ///    },
-    ///    "technical_contact_email": {
-    ///      "description": "Customer's technical contact for saml
-    /// configuration",
-    ///      "type": "string"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25827,7 +10293,7 @@ pub mod types {
         pub description: ::std::string::String,
         /// If set, attributes with this name will be considered to denote a
         /// user's group membership, where the values will be the group names.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub group_attribute_name: ::std::option::Option<::std::string::String>,
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
@@ -25837,7 +10303,7 @@ pub mod types {
         pub name: Name,
         /// Optional request signing public certificate (base64 encoded der
         /// file)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub public_cert: ::std::option::Option<::std::string::String>,
         /// Service provider endpoint where the idp should send log out requests
         pub slo_url: ::std::string::String,
@@ -25858,90 +10324,6 @@ pub mod types {
     }
 
     /// Create-time identity-related parameters
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time identity-related parameters",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "acs_url",
-    ///    "description",
-    ///    "idp_entity_id",
-    ///    "idp_metadata_source",
-    ///    "name",
-    ///    "slo_url",
-    ///    "sp_client_id",
-    ///    "technical_contact_email"
-    ///  ],
-    ///  "properties": {
-    ///    "acs_url": {
-    ///      "description": "Service provider endpoint where the response will
-    /// be sent",
-    ///      "type": "string"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "group_attribute_name": {
-    ///      "description": "If set, SAML attributes with this name will be
-    /// considered to denote a user's group membership, where the attribute
-    /// value(s) should be a comma-separated list of group names.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "idp_entity_id": {
-    ///      "description": "IdP's entity ID",
-    ///      "type": "string"
-    ///    },
-    ///    "idp_metadata_source": {
-    ///      "description": "The source of an identity provider metadata
-    /// descriptor",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IdpMetadataSource"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "signing_keypair": {
-    ///      "description": "Request signing key pair",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/DerEncodedKeyPair"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "slo_url": {
-    ///      "description": "Service provider endpoint where the IdP should send
-    /// log out requests",
-    ///      "type": "string"
-    ///    },
-    ///    "sp_client_id": {
-    ///      "description": "SP's client ID",
-    ///      "type": "string"
-    ///    },
-    ///    "technical_contact_email": {
-    ///      "description": "Customer's technical contact for SAML
-    /// configuration",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -25952,7 +10334,7 @@ pub mod types {
         /// If set, SAML attributes with this name will be considered to denote
         /// a user's group membership, where the attribute value(s) should be a
         /// comma-separated list of group names.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub group_attribute_name: ::std::option::Option<::std::string::String>,
         /// IdP's entity ID
         pub idp_entity_id: ::std::string::String,
@@ -25960,7 +10342,7 @@ pub mod types {
         pub idp_metadata_source: IdpMetadataSource,
         pub name: Name,
         /// Request signing key pair
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub signing_keypair: ::std::option::Option<DerEncodedKeyPair>,
         /// Service provider endpoint where the IdP should send log out requests
         pub slo_url: ::std::string::String,
@@ -25977,43 +10359,13 @@ pub mod types {
     }
 
     /// `ScimClientBearerToken`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_expires": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ScimClientBearerToken {
         pub id: ::uuid::Uuid,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
@@ -26025,42 +10377,6 @@ pub mod types {
 
     /// The POST response is the only time the generated bearer token is
     /// returned to the client.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The POST response is the only time the generated bearer
-    /// token is returned to the client.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bearer_token",
-    ///    "id",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "bearer_token": {
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_expires": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -26068,7 +10384,7 @@ pub mod types {
         pub bearer_token: ::std::string::String,
         pub id: ::uuid::Uuid,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
@@ -26079,31 +10395,6 @@ pub mod types {
     }
 
     /// Configuration of inbound ICMP allowed by API services.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Configuration of inbound ICMP allowed by API
-    /// services.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "enabled"
-    ///  ],
-    ///  "properties": {
-    ///    "enabled": {
-    ///      "description": "When enabled, Nexus is able to receive ICMP
-    /// Destination Unreachable type 3 (port unreachable) and type 4
-    /// (fragmentation needed), Redirect, and Time Exceeded messages. These
-    /// enable Nexus to perform Path MTU discovery and better cope with
-    /// fragmentation issues. Otherwise all inbound ICMP traffic will be
-    /// dropped.",
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -26123,25 +10414,6 @@ pub mod types {
     }
 
     /// The service intended to use this certificate.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The service intended to use this certificate.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "This certificate is intended for access to the
-    /// external API.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "external_api"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -26186,15 +10458,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for ServiceUsingCertificate {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for ServiceUsingCertificate {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -26205,31 +10468,6 @@ pub mod types {
     }
 
     /// Parameters for PUT requests to `/v1/system/update/target-release`.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for PUT requests to
-    /// `/v1/system/update/target-release`.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "system_version"
-    ///  ],
-    ///  "properties": {
-    ///    "system_version": {
-    ///      "description": "Version of the system software to make the target
-    /// release.",
-    ///      "type": "string",
-    ///      "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -26245,21 +10483,6 @@ pub mod types {
     }
 
     /// Version of the system software to make the target release.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Version of the system software to make the target
-    /// release.",
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -26317,15 +10540,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SetTargetReleaseParamsSystemVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SetTargetReleaseParamsSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -26351,99 +10565,13 @@ pub mod types {
     /// View of a Silo
     ///
     /// A Silo is the highest level unit of isolation.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Silo\n\nA Silo is the highest level unit of
-    /// isolation.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "discoverable",
-    ///    "id",
-    ///    "identity_mode",
-    ///    "mapped_fleet_roles",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "admin_group_name": {
-    ///      "description": "Optionally, silos can have a group name that is
-    /// automatically granted the silo admin role.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "discoverable": {
-    ///      "description": "A non-discoverable silo can only be retrieved by ID
-    /// - it will not be part of the \"list all silos\" output.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "identity_mode": {
-    ///      "description": "How users and groups are managed in this Silo",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SiloIdentityMode"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "mapped_fleet_roles": {
-    ///      "description": "Mapping of which Fleet roles are conferred by each
-    /// Silo role\n\nThe default is that no Fleet roles are conferred by any
-    /// Silo roles unless there's a corresponding entry in this map.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "type": "array",
-    ///        "items": {
-    ///          "$ref": "#/components/schemas/FleetRole"
-    ///        },
-    ///        "uniqueItems": true
-    ///      }
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Silo {
         /// Optionally, silos can have a group name that is automatically
         /// granted the silo admin role.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub admin_group_name: ::std::option::Option<::std::string::String>,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
@@ -26458,7 +10586,8 @@ pub mod types {
         ///
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
-        pub mapped_fleet_roles: ::std::collections::HashMap<::std::string::String, Vec<FleetRole>>,
+        pub mapped_fleet_roles:
+            ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<FleetRole>>,
         /// Unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Timestamp when this resource was created
@@ -26474,41 +10603,13 @@ pub mod types {
     }
 
     /// View of silo authentication settings
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of silo authentication settings",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "silo_id"
-    ///  ],
-    ///  "properties": {
-    ///    "device_token_max_ttl_seconds": {
-    ///      "description": "Maximum lifetime of a device token in seconds. If set to null, users will be able to create tokens that do not expire.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "silo_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SiloAuthSettings {
         /// Maximum lifetime of a device token in seconds. If set to null, users
         /// will be able to create tokens that do not expire.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub device_token_max_ttl_seconds: ::std::option::Option<u32>,
         pub silo_id: ::uuid::Uuid,
     }
@@ -26520,36 +10621,13 @@ pub mod types {
     }
 
     /// Updateable properties of a silo's settings.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a silo's settings.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "device_token_max_ttl_seconds"
-    ///  ],
-    ///  "properties": {
-    ///    "device_token_max_ttl_seconds": {
-    ///      "description": "Maximum lifetime of a device token in seconds. If set to null, users will be able to create tokens that do not expire.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 1.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SiloAuthSettingsUpdate {
         /// Maximum lifetime of a device token in seconds. If set to null, users
         /// will be able to create tokens that do not expire.
+        #[serde(deserialize_with = "::std::option::Option::deserialize")]
         pub device_token_max_ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
     }
 
@@ -26560,87 +10638,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `Silo`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `Silo`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "discoverable",
-    ///    "identity_mode",
-    ///    "name",
-    ///    "quotas",
-    ///    "tls_certificates"
-    ///  ],
-    ///  "properties": {
-    ///    "admin_group_name": {
-    ///      "description": "If set, this group will be created during Silo
-    /// creation and granted the \"Silo Admin\" role. Identity providers can
-    /// assert that users belong to this group and those users can log in and
-    /// further initialize the Silo.\n\nNote that if configuring a SAML based
-    /// identity provider, group_attribute_name must be set for users to be
-    /// considered part of a group. See `SamlIdentityProviderCreate` for more
-    /// information.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "discoverable": {
-    ///      "description": "A non-discoverable silo can only be retrieved by ID
-    /// - it will not be part of the \"list all silos\" output.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "identity_mode": {
-    ///      "$ref": "#/components/schemas/SiloIdentityMode"
-    ///    },
-    ///    "mapped_fleet_roles": {
-    ///      "description": "Mapping of which Fleet roles are conferred by each
-    /// Silo role\n\nThe default is that no Fleet roles are conferred by any
-    /// Silo roles unless there's a corresponding entry in this map.",
-    ///      "default": {},
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "type": "array",
-    ///        "items": {
-    ///          "$ref": "#/components/schemas/FleetRole"
-    ///        },
-    ///        "uniqueItems": true
-    ///      }
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "quotas": {
-    ///      "description": "Limits the amount of provisionable CPU, memory, and
-    /// storage in the Silo. CPU and memory are only consumed by running
-    /// instances, while storage is consumed by any disk or snapshot. A value of
-    /// 0 means that resource is *not* provisionable.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SiloQuotasCreate"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "tls_certificates": {
-    ///      "description": "Initial TLS certificates to be used for the new
-    /// Silo's console and API endpoints.  These should be valid for the Silo's
-    /// DNS name(s).",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/CertificateCreate"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -26653,7 +10650,7 @@ pub mod types {
         /// Note that if configuring a SAML based identity provider,
         /// group_attribute_name must be set for users to be considered part of
         /// a group. See `SamlIdentityProviderCreate` for more information.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub admin_group_name: ::std::option::Option<::std::string::String>,
         pub description: ::std::string::String,
         /// A non-discoverable silo can only be retrieved by ID - it will not be
@@ -26668,7 +10665,8 @@ pub mod types {
             default,
             skip_serializing_if = ":: std :: collections :: HashMap::is_empty"
         )]
-        pub mapped_fleet_roles: ::std::collections::HashMap<::std::string::String, Vec<FleetRole>>,
+        pub mapped_fleet_roles:
+            ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<FleetRole>>,
         pub name: Name,
         /// Limits the amount of provisionable CPU, memory, and storage in the
         /// Silo. CPU and memory are only consumed by running instances, while
@@ -26688,46 +10686,6 @@ pub mod types {
 
     /// Describes how identities are managed and users are authenticated in this
     /// Silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes how identities are managed and users are
-    /// authenticated in this Silo",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Users are authenticated with SAML using an external
-    /// authentication provider.  The system updates information about users and
-    /// groups only during successful authentication (i.e,. \"JIT provisioning\"
-    /// of users and groups).",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "saml_jit"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The system is the source of truth about users.
-    /// There is no linkage to an external authentication provider or identity
-    /// provider.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "local_only"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Users are authenticated with SAML using an external
-    /// authentication provider. Users and groups are managed with SCIM API
-    /// calls, likely from the same authentication provider.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "saml_scim"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -26788,15 +10746,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SiloIdentityMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SiloIdentityMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -26807,81 +10756,6 @@ pub mod types {
     }
 
     /// An IP pool in the context of a silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An IP pool in the context of a silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "ip_version",
-    ///    "is_default",
-    ///    "name",
-    ///    "pool_type",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "The IP version for the pool.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpVersion"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "is_default": {
-    ///      "description": "When a pool is the default for a silo, floating IPs
-    /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified.\n\nA silo can have at most one default pool per
-    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
-    /// IPv6), allowing up to 4 default pools total.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "pool_type": {
-    ///      "description": "Type of IP pool (unicast or multicast).",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpPoolType"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -26917,36 +10791,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SiloIpPool"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -26954,7 +10798,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SiloIpPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -26966,50 +10810,6 @@ pub mod types {
 
     /// A collection of resource counts used to set the virtual capacity of a
     /// silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A collection of resource counts used to set the virtual
-    /// capacity of a silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "cpus",
-    ///    "memory",
-    ///    "silo_id",
-    ///    "storage"
-    ///  ],
-    ///  "properties": {
-    ///    "cpus": {
-    ///      "description": "Number of virtual CPUs",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "memory": {
-    ///      "description": "Amount of memory in bytes",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "silo_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "storage": {
-    ///      "description": "Amount of disk storage in bytes",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27030,47 +10830,6 @@ pub mod types {
     }
 
     /// The amount of provisionable resources for a Silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The amount of provisionable resources for a Silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "cpus",
-    ///    "memory",
-    ///    "storage"
-    ///  ],
-    ///  "properties": {
-    ///    "cpus": {
-    ///      "description": "The amount of virtual CPUs available for running
-    /// instances in the Silo",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "memory": {
-    ///      "description": "The amount of RAM (in bytes) available for running
-    /// instances in the Silo",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "storage": {
-    ///      "description": "The amount of storage (in bytes) available for
-    /// disks or snapshots",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27092,36 +10851,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SiloQuotas"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27129,7 +10858,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SiloQuotas>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -27141,85 +10870,26 @@ pub mod types {
 
     /// Updateable properties of a Silo's resource limits. If a value is omitted
     /// it will not be updated.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a Silo's resource limits. If a
-    /// value is omitted it will not be updated.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "cpus": {
-    ///      "description": "The amount of virtual CPUs available for running
-    /// instances in the Silo",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int64"
-    ///    },
-    ///    "memory": {
-    ///      "description": "The amount of RAM (in bytes) available for running
-    /// instances in the Silo",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/ByteCount"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "storage": {
-    ///      "description": "The amount of storage (in bytes) available for
-    /// disks or snapshots",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/ByteCount"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct SiloQuotasUpdate {
         /// The amount of virtual CPUs available for running instances in the
         /// Silo
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub cpus: ::std::option::Option<i64>,
         /// The amount of RAM (in bytes) available for running instances in the
         /// Silo
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub memory: ::std::option::Option<ByteCount>,
         /// The amount of storage (in bytes) available for disks or snapshots
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub storage: ::std::option::Option<ByteCount>,
-    }
-
-    impl ::std::default::Default for SiloQuotasUpdate {
-        fn default() -> Self {
-            Self {
-                cpus: Default::default(),
-                memory: Default::default(),
-                storage: Default::default(),
-            }
-        }
     }
 
     impl SiloQuotasUpdate {
@@ -27229,36 +10899,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Silo"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27266,7 +10906,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Silo>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -27277,21 +10917,6 @@ pub mod types {
     }
 
     /// `SiloRole`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "admin",
-    ///    "collaborator",
-    ///    "limited_collaborator",
-    ///    "viewer"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -27347,15 +10972,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SiloRole {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SiloRole {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -27370,31 +10986,6 @@ pub mod types {
     /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
     /// have access to this resource.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Policy for a particular resource\n\nNote that the
-    /// Policy only describes access granted explicitly for this resource.  The
-    /// policies of parent resources can also cause a user to have access to
-    /// this resource.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "role_assignments"
-    ///  ],
-    ///  "properties": {
-    ///    "role_assignments": {
-    ///      "description": "Roles directly assigned on this resource",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SiloRoleRoleAssignment"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27415,37 +11006,6 @@ pub mod types {
     /// The resource is not part of this structure.  Rather, `RoleAssignment`s
     /// are put into a `Policy` and that Policy is applied to a particular
     /// resource.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Describes the assignment of a particular role on a
-    /// particular resource to a particular identity (user, group, etc.)\n\nThe
-    /// resource is not part of this structure.  Rather, `RoleAssignment`s are
-    /// put into a `Policy` and that Policy is applied to a particular
-    /// resource.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "identity_id",
-    ///    "identity_type",
-    ///    "role_name"
-    ///  ],
-    ///  "properties": {
-    ///    "identity_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "identity_type": {
-    ///      "$ref": "#/components/schemas/IdentityType"
-    ///    },
-    ///    "role_name": {
-    ///      "$ref": "#/components/schemas/SiloRole"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27462,71 +11022,6 @@ pub mod types {
     }
 
     /// A subnet pool in the context of a silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A subnet pool in the context of a silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "ip_version",
-    ///    "is_default",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "The IP version for the pool.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpVersion"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "is_default": {
-    ///      "description": "When a pool is the default for a silo, external
-    /// subnet allocations will come from that pool when no other pool is
-    /// specified.\n\nA silo can have at most one default pool per IP version
-    /// (IPv4 or IPv6), allowing up to 2 default pools total.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27558,36 +11053,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SiloSubnetPool"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27595,7 +11060,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SiloSubnetPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -27606,51 +11071,6 @@ pub mod types {
     }
 
     /// View of a silo's resource utilization and capacity
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a silo's resource utilization and capacity",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allocated",
-    ///    "provisioned",
-    ///    "silo_id",
-    ///    "silo_name"
-    ///  ],
-    ///  "properties": {
-    ///    "allocated": {
-    ///      "description": "Accounts for the total amount of resources reserved
-    /// for silos via their quotas.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "provisioned": {
-    ///      "description": "Accounts for the total resources allocated by the
-    /// silo, including CPU and memory for running instances and storage for
-    /// disks and snapshots.\n\nNote that CPU and memory resources associated
-    /// with stopped instances are not counted here.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "silo_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "silo_name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27676,36 +11096,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SiloUtilization"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27713,7 +11103,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SiloUtilization>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -27724,95 +11114,6 @@ pub mod types {
     }
 
     /// An operator's view of a Sled.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An operator's view of a Sled.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "baseboard",
-    ///    "id",
-    ///    "policy",
-    ///    "rack_id",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "usable_hardware_threads",
-    ///    "usable_physical_ram"
-    ///  ],
-    ///  "properties": {
-    ///    "baseboard": {
-    ///      "$ref": "#/components/schemas/Baseboard"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "policy": {
-    ///      "description": "The operator-defined policy of a sled.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SledPolicy"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "rack_id": {
-    ///      "description": "The rack to which this Sled is currently attached",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "slot": {
-    ///      "description": "The physical slot in the rack where this sled was
-    /// last observed to be located, or null if its location is not known at
-    /// this time.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "state": {
-    ///      "description": "The current state of the sled.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SledState"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "usable_hardware_threads": {
-    ///      "description": "The number of hardware threads which can execute on
-    /// this sled",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "usable_physical_ram": {
-    ///      "description": "Amount of RAM which may be used by the Sled's OS",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27826,7 +11127,7 @@ pub mod types {
         pub rack_id: ::uuid::Uuid,
         /// The physical slot in the rack where this sled was last observed to
         /// be located, or null if its location is not known at this time.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub slot: ::std::option::Option<u16>,
         /// The current state of the sled.
         pub state: SledState,
@@ -27847,78 +11148,6 @@ pub mod types {
     }
 
     /// An operator's view of an instance running on a given sled
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An operator's view of an instance running on a given
-    /// sled",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "active_sled_id",
-    ///    "id",
-    ///    "memory",
-    ///    "name",
-    ///    "ncpus",
-    ///    "project_name",
-    ///    "silo_name",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "active_sled_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "memory": {
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "migration_id": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "ncpus": {
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "project_name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "silo_name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "state": {
-    ///      "$ref": "#/components/schemas/InstanceState"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27927,7 +11156,7 @@ pub mod types {
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         pub memory: i64,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub migration_id: ::std::option::Option<::uuid::Uuid>,
         pub name: Name,
         pub ncpus: i64,
@@ -27947,36 +11176,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SledInstance"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -27984,7 +11183,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SledInstance>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -27995,62 +11194,6 @@ pub mod types {
     }
 
     /// The operator-defined policy of a sled.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The operator-defined policy of a sled.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The operator has indicated that the sled is
-    /// in-service.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind",
-    ///        "provision_policy"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "in_service"
-    ///          ]
-    ///        },
-    ///        "provision_policy": {
-    ///          "description": "Determines whether new resources can be
-    /// provisioned onto the sled.",
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/SledProvisionPolicy"
-    ///            }
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The operator has indicated that the sled has been
-    /// permanently removed from service.\n\nThis is a terminal state: once a
-    /// particular sled ID is expunged, it will never return to service. (The
-    /// actual hardware may be reused, but it will be treated as a brand-new
-    /// sled.)\n\nAn expunged sled is always non-provisionable.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "kind"
-    ///      ],
-    ///      "properties": {
-    ///        "kind": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "expunged"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28073,35 +11216,6 @@ pub mod types {
     ///
     /// This controls whether new resources are going to be provisioned on this
     /// sled.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The operator-defined provision policy of a
-    /// sled.\n\nThis controls whether new resources are going to be provisioned
-    /// on this sled.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "New resources will be provisioned on this sled.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "provisionable"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "New resources will not be provisioned on this sled.
-    /// However, if the sled is currently in service, existing resources will
-    /// continue to be on this sled unless manually migrated off.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "non_provisionable"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -28153,15 +11267,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SledProvisionPolicy {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -28172,29 +11277,6 @@ pub mod types {
     }
 
     /// Parameters for `sled_set_provision_policy`.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for `sled_set_provision_policy`.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "state"
-    ///  ],
-    ///  "properties": {
-    ///    "state": {
-    ///      "description": "The provision state.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28210,38 +11292,6 @@ pub mod types {
     }
 
     /// Response to `sled_set_provision_policy`.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Response to `sled_set_provision_policy`.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "new_state",
-    ///    "old_state"
-    ///  ],
-    ///  "properties": {
-    ///    "new_state": {
-    ///      "description": "The new provision state.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "old_state": {
-    ///      "description": "The old provision state.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28259,36 +11309,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Sled"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28296,7 +11316,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Sled>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -28307,35 +11327,6 @@ pub mod types {
     }
 
     /// The current state of the sled.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The current state of the sled.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The sled is currently active, and has resources
-    /// allocated on it.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "active"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The sled has been permanently removed from
-    /// service.\n\nThis is a terminal state: once a particular sled ID is
-    /// decommissioned, it will never return to service. (The actual hardware
-    /// may be reused, but it will be treated as a brand-new sled.)",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "decommissioned"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -28389,15 +11380,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SledState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SledState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -28408,21 +11390,6 @@ pub mod types {
     }
 
     /// `SledUuid`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid",
-    ///  "x-rust-type": {
-    ///    "crate": "omicron-uuid-kinds",
-    ///    "path": "omicron_uuid_kinds::SledUuid",
-    ///    "version": "*"
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28447,6 +11414,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for SledUuid {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for SledUuid {
         type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -28468,79 +11441,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for SledUuid {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// View of a Snapshot
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Snapshot",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "disk_id",
-    ///    "id",
-    ///    "name",
-    ///    "project_id",
-    ///    "size",
-    ///    "state",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "disk_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "project_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "size": {
-    ///      "$ref": "#/components/schemas/ByteCount"
-    ///    },
-    ///    "state": {
-    ///      "$ref": "#/components/schemas/SnapshotState"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28568,37 +11469,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `Snapshot`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `Snapshot`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "disk",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "disk": {
-    ///      "description": "The disk to be snapshotted",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28616,36 +11486,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Snapshot"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28653,7 +11493,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Snapshot>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -28664,21 +11504,6 @@ pub mod types {
     }
 
     /// `SnapshotState`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "creating",
-    ///    "ready",
-    ///    "faulted",
-    ///    "destroyed"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -28734,15 +11559,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SnapshotState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SnapshotState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -28753,66 +11569,6 @@ pub mod types {
     }
 
     /// View of an SSH Key
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of an SSH Key",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "public_key",
-    ///    "silo_user_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "public_key": {
-    ///      "description": "SSH public key, e.g., `\"ssh-ed25519
-    /// AAAAC3NzaC...\"`",
-    ///      "type": "string"
-    ///    },
-    ///    "silo_user_id": {
-    ///      "description": "The user to whom this key belongs",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28840,34 +11596,6 @@ pub mod types {
     }
 
     /// Create-time parameters for an `SshKey`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for an `SshKey`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name",
-    ///    "public_key"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "public_key": {
-    ///      "description": "SSH public key, e.g., `\"ssh-ed25519
-    /// AAAAC3NzaC...\"`",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28885,36 +11613,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SshKey"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -28922,7 +11620,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SshKey>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -28936,31 +11634,16 @@ pub mod types {
     ///
     /// Including this object in the request creates the default subnet. A
     /// subnet has no default resources yet, so the object is always empty.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Default resources to create in the default
-    /// subnet\n\nIncluding this object in the request creates the default
-    /// subnet. A subnet has no default resources yet, so the object is always
-    /// empty.",
-    ///  "type": "object",
-    ///  "additionalProperties": false
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     #[serde(deny_unknown_fields)]
     pub struct SubnetCreateDefaults {}
-    impl ::std::default::Default for SubnetCreateDefaults {
-        fn default() -> Self {
-            Self {}
-        }
-    }
-
     impl SubnetCreateDefaults {
         pub fn builder() -> builder::SubnetCreateDefaults {
             Default::default()
@@ -28968,63 +11651,6 @@ pub mod types {
     }
 
     /// A pool of subnets for external subnet allocation
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A pool of subnets for external subnet allocation",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "ip_version",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "The IP version for this pool",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpVersion"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29050,38 +11676,6 @@ pub mod types {
     }
 
     /// Create a subnet pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create a subnet pool",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "ip_version",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "The IP version for this pool (IPv4 or IPv6). All
-    /// subnets in the pool must match this version.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpVersion"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29100,36 +11694,6 @@ pub mod types {
     }
 
     /// Link a subnet pool to a silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Link a subnet pool to a silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "is_default",
-    ///    "silo"
-    ///  ],
-    ///  "properties": {
-    ///    "is_default": {
-    ///      "description": "Whether this is the default subnet pool for the
-    /// silo. When true, external subnet allocations that don't specify a pool
-    /// use this one.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "silo": {
-    ///      "description": "The silo to link",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29148,65 +11712,6 @@ pub mod types {
     }
 
     /// A member (subnet) within a subnet pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A member (subnet) within a subnet pool",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "max_prefix_length",
-    ///    "min_prefix_length",
-    ///    "subnet",
-    ///    "subnet_pool_id",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "ID of the pool member",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "max_prefix_length": {
-    ///      "description": "Maximum prefix length for allocations from this
-    /// subnet; a larger prefix means smaller allocations are allowed (e.g. a
-    /// /24 prefix yields smaller subnet allocations than a /16 prefix).",
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "min_prefix_length": {
-    ///      "description": "Minimum prefix length for allocations from this
-    /// subnet; a smaller prefix means larger allocations are allowed (e.g. a
-    /// /16 prefix yields larger subnet allocations than a /24 prefix).",
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "subnet": {
-    ///      "description": "The subnet CIDR",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "subnet_pool_id": {
-    ///      "description": "ID of the parent subnet pool",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Time the pool member was created.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29236,55 +11741,6 @@ pub mod types {
     }
 
     /// Add a member (subnet) to a subnet pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Add a member (subnet) to a subnet pool",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "subnet"
-    ///  ],
-    ///  "properties": {
-    ///    "max_prefix_length": {
-    ///      "description": "Maximum prefix length for allocations from this
-    /// subnet; a larger prefix means smaller allocations are allowed (e.g. a
-    /// /24 prefix yields smaller subnet allocations than a /16
-    /// prefix).\n\nValid values: 0-32 for IPv4, 0-128 for IPv6. Default if not
-    /// specified is 32 for IPv4 and 128 for IPv6.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "min_prefix_length": {
-    ///      "description": "Minimum prefix length for allocations from this
-    /// subnet; a smaller prefix means larger allocations are allowed (e.g. a
-    /// /16 prefix yields larger subnet allocations than a /24 prefix).\n\nValid
-    /// values: 0-32 for IPv4, 0-128 for IPv6. Default if not specified is equal
-    /// to the subnet's prefix length.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "subnet": {
-    ///      "description": "The subnet to add to the pool",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29295,7 +11751,7 @@ pub mod types {
         ///
         /// Valid values: 0-32 for IPv4, 0-128 for IPv6. Default if not
         /// specified is 32 for IPv4 and 128 for IPv6.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub max_prefix_length: ::std::option::Option<u8>,
         /// Minimum prefix length for allocations from this subnet; a smaller
         /// prefix means larger allocations are allowed (e.g. a /16 prefix
@@ -29303,7 +11759,7 @@ pub mod types {
         ///
         /// Valid values: 0-32 for IPv4, 0-128 for IPv6. Default if not
         /// specified is equal to the subnet's prefix length.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub min_prefix_length: ::std::option::Option<u8>,
         /// The subnet to add to the pool
         pub subnet: IpNet,
@@ -29316,30 +11772,6 @@ pub mod types {
     }
 
     /// Remove a subnet from a pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Remove a subnet from a pool",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "subnet"
-    ///  ],
-    ///  "properties": {
-    ///    "subnet": {
-    ///      "description": "The subnet to remove from the pool. Must match an
-    /// existing entry exactly.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29356,36 +11788,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SubnetPoolMember"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29393,7 +11795,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SubnetPoolMember>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -29404,36 +11806,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SubnetPool"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29441,7 +11813,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SubnetPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -29452,34 +11824,6 @@ pub mod types {
     }
 
     /// A link between a subnet pool and a silo
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A link between a subnet pool and a silo",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "is_default",
-    ///    "silo_id",
-    ///    "subnet_pool_id"
-    ///  ],
-    ///  "properties": {
-    ///    "is_default": {
-    ///      "type": "boolean"
-    ///    },
-    ///    "silo_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "subnet_pool_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29496,36 +11840,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SubnetPoolSiloLink"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29533,7 +11847,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SubnetPoolSiloLink>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -29544,26 +11858,6 @@ pub mod types {
     }
 
     /// Update a subnet pool's silo link
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Update a subnet pool's silo link",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "is_default"
-    ///  ],
-    ///  "properties": {
-    ///    "is_default": {
-    ///      "description": "Whether this is the default subnet pool for the
-    /// silo",
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29579,55 +11873,19 @@ pub mod types {
     }
 
     /// Update a subnet pool
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Update a subnet pool",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct SubnetPoolUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for SubnetPoolUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl SubnetPoolUpdate {
@@ -29644,38 +11902,6 @@ pub mod types {
     /// address spaces. With very large subnet pools (> 2**53 addresses),
     /// integer precision will be lost, in exchange for representing the entire
     /// range. In such a case the pool still has many available addresses.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Utilization of addresses in a subnet pool.\n\nNote that
-    /// both the count of remaining addresses and the total capacity are
-    /// integers, reported as floating point numbers. This accommodates
-    /// allocations larger than a 64-bit integer, which is common with IPv6
-    /// address spaces. With very large subnet pools (> 2**53 addresses),
-    /// integer precision will be lost, in exchange for representing the entire
-    /// range. In such a case the pool still has many available addresses.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "capacity",
-    ///    "remaining"
-    ///  ],
-    ///  "properties": {
-    ///    "capacity": {
-    ///      "description": "The total number of addresses in the pool.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    },
-    ///    "remaining": {
-    ///      "description": "The number of remaining addresses in the pool.",
-    ///      "type": "number",
-    ///      "format": "double"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29693,39 +11919,18 @@ pub mod types {
     }
 
     /// `SupportBundleCreate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "user_comment": {
-    ///      "description": "User comment for the support bundle",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct SupportBundleCreate {
         /// User comment for the support bundle
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub user_comment: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::default::Default for SupportBundleCreate {
-        fn default() -> Self {
-            Self {
-                user_comment: Default::default(),
-            }
-        }
     }
 
     impl SupportBundleCreate {
@@ -29735,60 +11940,17 @@ pub mod types {
     }
 
     /// `SupportBundleInfo`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "reason_for_creation",
-    ///    "state",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "reason_for_creation": {
-    ///      "type": "string"
-    ///    },
-    ///    "reason_for_failure": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "state": {
-    ///      "$ref": "#/components/schemas/SupportBundleState"
-    ///    },
-    ///    "time_created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "user_comment": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SupportBundleInfo {
         pub id: ::uuid::Uuid,
         pub reason_for_creation: ::std::string::String,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub reason_for_failure: ::std::option::Option<::std::string::String>,
         pub state: SupportBundleState,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub user_comment: ::std::option::Option<::std::string::String>,
     }
 
@@ -29799,36 +11961,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SupportBundleInfo"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -29836,7 +11968,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SupportBundleInfo>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -29847,53 +11979,6 @@ pub mod types {
     }
 
     /// `SupportBundleState`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Support Bundle still actively being
-    /// collected.\n\nThis is the initial state for a Support Bundle, and it
-    /// will automatically transition to either \"Failing\" or \"Active\".\n\nIf
-    /// a user no longer wants to access a Support Bundle, they can request
-    /// cancellation, which will transition to the \"Destroying\" state.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "collecting"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Support Bundle is being destroyed.\n\nOnce backing
-    /// storage has been freed, this bundle is destroyed.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "destroying"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Support Bundle was not created successfully, or was
-    /// created and has lost backing storage.\n\nThe record of the bundle still
-    /// exists for readability, but the only valid operation on these bundles is
-    /// to destroy them.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Support Bundle has been processed, and is ready for
-    /// usage.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "active"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -29966,15 +12051,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SupportBundleState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SupportBundleState {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -29985,39 +12061,18 @@ pub mod types {
     }
 
     /// `SupportBundleUpdate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "user_comment": {
-    ///      "description": "User comment for the support bundle",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct SupportBundleUpdate {
         /// User comment for the support bundle
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub user_comment: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::default::Default for SupportBundleUpdate {
-        fn default() -> Self {
-            Self {
-                user_comment: Default::default(),
-            }
-        }
     }
 
     impl SupportBundleUpdate {
@@ -30027,50 +12082,6 @@ pub mod types {
     }
 
     /// An operator's view of a Switch.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An operator's view of a Switch.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "baseboard",
-    ///    "id",
-    ///    "rack_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "baseboard": {
-    ///      "$ref": "#/components/schemas/Baseboard"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "rack_id": {
-    ///      "description": "The rack to which this Switch is currently
-    /// attached",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30093,37 +12104,6 @@ pub mod types {
     }
 
     /// BGP message history for a particular switch.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "BGP message history for a particular switch.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "history",
-    ///    "switch"
-    ///  ],
-    ///  "properties": {
-    ///    "history": {
-    ///      "description": "Message history indexed by peer address.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "$ref": "#/components/schemas/BgpMessageHistory"
-    ///      }
-    ///    },
-    ///    "switch": {
-    ///      "description": "Switch this message history is associated with.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30141,57 +12121,6 @@ pub mod types {
     }
 
     /// A switch port interface configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A switch port interface configuration for a port
-    /// settings object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "interface_name",
-    ///    "kind",
-    ///    "port_settings_id",
-    ///    "v6_enabled"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "A unique identifier for this switch interface.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "interface_name": {
-    ///      "description": "The name of this switch interface.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "kind": {
-    ///      "description": "The switch interface kind.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchInterfaceKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The port settings object this switch interface
-    /// configuration belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "v6_enabled": {
-    ///      "description": "Whether or not IPv6 is enabled on this interface.",
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30217,47 +12146,6 @@ pub mod types {
 
     /// A layer-3 switch interface configuration. When IPv6 is enabled, a link
     /// local address will be created for the interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A layer-3 switch interface configuration. When IPv6 is
-    /// enabled, a link local address will be created for the interface.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "kind",
-    ///    "link_name",
-    ///    "v6_enabled"
-    ///  ],
-    ///  "properties": {
-    ///    "kind": {
-    ///      "description": "What kind of switch interface this configuration
-    /// represents.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchInterfaceKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "link_name": {
-    ///      "description": "Link name. On ports that are not broken out, this
-    /// is always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
-    /// phy0-phy3, etc.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "v6_enabled": {
-    ///      "description": "Whether or not IPv6 is enabled.",
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30278,76 +12166,6 @@ pub mod types {
     }
 
     /// Indicates the kind for a switch interface.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Indicates the kind for a switch interface.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Primary interfaces are associated with physical
-    /// links. There is exactly one primary interface per physical link.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "primary"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "VLAN interfaces allow physical interfaces to be
-    /// multiplexed onto multiple logical links, each distinguished by a 12-bit
-    /// 802.1Q Ethernet tag.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "vid"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "vlan"
-    ///          ]
-    ///        },
-    ///        "vid": {
-    ///          "description": "The virtual network id (VID) that distinguishes
-    /// this interface and is used for producing and consuming 802.1Q Ethernet
-    /// tags. This field has a maximum value of 4095 as 802.1Q tags are twelve
-    /// bits.",
-    ///          "type": "integer",
-    ///          "format": "uint16",
-    ///          "minimum": 0.0
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Loopback interfaces are anchors for IP addresses
-    /// that are not specific to any particular port.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "loopback"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30371,13 +12189,6 @@ pub mod types {
     }
 
     /// `SwitchLinkState`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {}
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30403,61 +12214,6 @@ pub mod types {
     }
 
     /// A switch port represents a physical external port on a rack switch.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A switch port represents a physical external port on a
-    /// rack switch.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "port_name",
-    ///    "rack_id",
-    ///    "switch_slot"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "The id of the switch port.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "port_name": {
-    ///      "description": "The name of this switch port.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The primary settings group of this switch port.
-    /// Will be `None` until this switch port is configured.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "rack_id": {
-    ///      "description": "The rack this switch port belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "switch_slot": {
-    ///      "description": "The slot of the switch within the rack of this
-    /// switch port.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchSlot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30468,7 +12224,7 @@ pub mod types {
         pub port_name: Name,
         /// The primary settings group of this switch port. Will be `None` until
         /// this switch port is configured.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub port_settings_id: ::std::option::Option<::uuid::Uuid>,
         /// The rack this switch port belongs to.
         pub rack_id: ::uuid::Uuid,
@@ -30483,79 +12239,6 @@ pub mod types {
     }
 
     /// An IP address configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An IP address configuration for a port settings
-    /// object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "address",
-    ///    "address_lot_block_id",
-    ///    "address_lot_id",
-    ///    "address_lot_name",
-    ///    "interface_name",
-    ///    "port_settings_id"
-    ///  ],
-    ///  "properties": {
-    ///    "address": {
-    ///      "description": "The IP address and prefix.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "address_lot_block_id": {
-    ///      "description": "The id of the address lot block this address is
-    /// drawn from.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "address_lot_id": {
-    ///      "description": "The id of the address lot this address is drawn
-    /// from.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "address_lot_name": {
-    ///      "description": "The name of the address lot this address is drawn
-    /// from.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "interface_name": {
-    ///      "description": "The interface name this address belongs to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The port settings object this address configuration
-    /// belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "vlan_id": {
-    ///      "description": "An optional VLAN ID",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30573,7 +12256,7 @@ pub mod types {
         /// The port settings object this address configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
         /// An optional VLAN ID
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
     }
 
@@ -30584,30 +12267,6 @@ pub mod types {
     }
 
     /// Parameters for applying settings to switch ports.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for applying settings to switch ports.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "port_settings"
-    ///  ],
-    ///  "properties": {
-    ///    "port_settings": {
-    ///      "description": "A name or id to use when applying switch port
-    /// settings.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30623,37 +12282,6 @@ pub mod types {
     }
 
     /// A physical port configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A physical port configuration for a port settings
-    /// object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "geometry",
-    ///    "port_settings_id"
-    ///  ],
-    ///  "properties": {
-    ///    "geometry": {
-    ///      "description": "The physical link geometry of the port.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchPortGeometry"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The id of the port settings object this
-    /// configuration belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30671,29 +12299,6 @@ pub mod types {
     }
 
     /// Physical switch port configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Physical switch port configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "geometry"
-    ///  ],
-    ///  "properties": {
-    ///    "geometry": {
-    ///      "description": "Link geometry for the switch port.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchPortGeometry"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30709,41 +12314,6 @@ pub mod types {
     }
 
     /// The link geometry associated with a switch port.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The link geometry associated with a switch port.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The port contains a single QSFP28 link with four
-    /// lanes.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "qsfp28x1"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The port contains two QSFP28 links each with two
-    /// lanes.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "qsfp28x2"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The port contains four SFP28 links each with one
-    /// lane.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "sfp28x4"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -30798,15 +12368,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SwitchPortGeometry {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SwitchPortGeometry {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -30817,106 +12378,6 @@ pub mod types {
     }
 
     /// A link configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A link configuration for a port settings object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "autoneg",
-    ///    "link_name",
-    ///    "mtu",
-    ///    "port_settings_id",
-    ///    "speed"
-    ///  ],
-    ///  "properties": {
-    ///    "autoneg": {
-    ///      "description": "Whether or not the link has autonegotiation
-    /// enabled.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "fec": {
-    ///      "description": "The requested forward-error correction method.  If
-    /// this is not specified, the standard FEC for the underlying media will be
-    /// applied if it can be determined.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/LinkFec"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "link_name": {
-    ///      "description": "The name of this link.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "lldp_link_config": {
-    ///      "description": "The link-layer discovery protocol service
-    /// configuration for this link.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/LldpLinkConfig"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "mtu": {
-    ///      "description": "The maximum transmission unit for this link.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The port settings this link configuration belongs
-    /// to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "speed": {
-    ///      "description": "The configured speed of the link.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/LinkSpeed"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "tx_eq_config": {
-    ///      "description": "The tx_eq configuration for this link.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/TxEqConfig"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30926,13 +12387,13 @@ pub mod types {
         /// The requested forward-error correction method.  If this is not
         /// specified, the standard FEC for the underlying media will be applied
         /// if it can be determined.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub fec: ::std::option::Option<LinkFec>,
         /// The name of this link.
         pub link_name: Name,
         /// The link-layer discovery protocol service configuration for this
         /// link.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub lldp_link_config: ::std::option::Option<LldpLinkConfig>,
         /// The maximum transmission unit for this link.
         pub mtu: u16,
@@ -30941,7 +12402,7 @@ pub mod types {
         /// The configured speed of the link.
         pub speed: LinkSpeed,
         /// The tx_eq configuration for this link.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub tx_eq_config: ::std::option::Option<TxEqConfig>,
     }
 
@@ -30952,36 +12413,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPort"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -30989,7 +12420,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SwitchPort>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -31000,72 +12431,6 @@ pub mod types {
     }
 
     /// A route configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A route configuration for a port settings object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "dst",
-    ///    "gw",
-    ///    "interface_name",
-    ///    "port_settings_id"
-    ///  ],
-    ///  "properties": {
-    ///    "dst": {
-    ///      "description": "The route's destination network.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "gw": {
-    ///      "description": "The route's gateway address.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "interface_name": {
-    ///      "description": "The interface name this route configuration is
-    /// assigned to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The port settings object this route configuration
-    /// belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "rib_priority": {
-    ///      "description": "Route RIB priority. Higher priority indicates
-    /// precedence within and across protocols.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "vlan_id": {
-    ///      "description": "The VLAN identifier for the route. Use this if the
-    /// gateway is reachable over an 802.1Q tagged L2 segment.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31080,11 +12445,11 @@ pub mod types {
         pub port_settings_id: ::uuid::Uuid,
         /// Route RIB priority. Higher priority indicates precedence within and
         /// across protocols.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
         /// The VLAN identifier for the route. Use this if the gateway is
         /// reachable over an 802.1Q tagged L2 segment.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
     }
 
@@ -31097,114 +12462,6 @@ pub mod types {
     /// This structure contains all port settings information in one place. It's
     /// a convenience data structure for getting a complete view of a particular
     /// port's settings.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "This structure contains all port settings information
-    /// in one place. It's a convenience data structure for getting a complete
-    /// view of a particular port's settings.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addresses",
-    ///    "bgp_peers",
-    ///    "description",
-    ///    "groups",
-    ///    "id",
-    ///    "interfaces",
-    ///    "links",
-    ///    "name",
-    ///    "port",
-    ///    "routes",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "addresses": {
-    ///      "description": "Layer 3 IP address settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortAddressView"
-    ///      }
-    ///    },
-    ///    "bgp_peers": {
-    ///      "description": "BGP peer settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BgpPeer"
-    ///      }
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "groups": {
-    ///      "description": "Switch port settings included from other switch
-    /// port settings groups.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortSettingsGroups"
-    ///      }
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "interfaces": {
-    ///      "description": "Layer 3 interface settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchInterfaceConfig"
-    ///      }
-    ///    },
-    ///    "links": {
-    ///      "description": "Layer 2 link settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortLinkConfig"
-    ///      }
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "port": {
-    ///      "description": "Layer 1 physical port settings.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchPortConfig"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "routes": {
-    ///      "description": "IP route settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortRouteConfig"
-    ///      }
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31246,82 +12503,6 @@ pub mod types {
     /// the central data structure for setting up external networking. Switch
     /// port settings include link, interface, route, address and dynamic
     /// network protocol configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for creating switch port settings. Switch
-    /// port settings are the central data structure for setting up external
-    /// networking. Switch port settings include link, interface, route, address
-    /// and dynamic network protocol configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addresses",
-    ///    "description",
-    ///    "links",
-    ///    "name",
-    ///    "port_config"
-    ///  ],
-    ///  "properties": {
-    ///    "addresses": {
-    ///      "description": "Address configurations.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressConfig"
-    ///      }
-    ///    },
-    ///    "bgp_peers": {
-    ///      "description": "BGP peer configurations.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BgpPeerConfig"
-    ///      }
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "groups": {
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/NameOrId"
-    ///      }
-    ///    },
-    ///    "interfaces": {
-    ///      "description": "Interface configurations.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchInterfaceConfigCreate"
-    ///      }
-    ///    },
-    ///    "links": {
-    ///      "description": "Link configurations.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/LinkConfigCreate"
-    ///      }
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "port_config": {
-    ///      "$ref": "#/components/schemas/SwitchPortConfigCreate"
-    ///    },
-    ///    "routes": {
-    ///      "description": "Route configurations.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/RouteConfig"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31356,37 +12537,6 @@ pub mod types {
     /// Port settings objects may inherit settings from groups. This mapping
     /// defines the relationship between settings objects and the groups they
     /// reference.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "This structure maps a port settings object to a port
-    /// settings groups. Port settings objects may inherit settings from groups.
-    /// This mapping defines the relationship between settings objects and the
-    /// groups they reference.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "port_settings_group_id",
-    ///    "port_settings_id"
-    ///  ],
-    ///  "properties": {
-    ///    "port_settings_group_id": {
-    ///      "description": "The id of a port settings group being referenced by
-    /// a port settings object.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The id of a port settings object referencing a port
-    /// settings group.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31406,55 +12556,6 @@ pub mod types {
 
     /// A switch port settings identity whose id may be used to view additional
     /// details.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A switch port settings identity whose id may be used to
-    /// view additional details.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31478,36 +12579,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortSettingsIdentity"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31515,7 +12586,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<SwitchPortSettingsIdentity>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -31526,36 +12597,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Switch"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31563,7 +12604,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Switch>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -31574,31 +12615,6 @@ pub mod types {
     }
 
     /// Identifies switch physical location
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Identifies switch physical location",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Switch in upper slot",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "switch0"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Switch in lower slot",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "switch1"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -31648,15 +12664,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SwitchSlot {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SwitchSlot {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -31667,20 +12674,6 @@ pub mod types {
     }
 
     /// `SystemMetricName`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "virtual_disk_space_provisioned",
-    ///    "cpus_provisioned",
-    ///    "ram_provisioned"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -31732,15 +12725,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SystemMetricName {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SystemMetricName {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -31752,29 +12736,6 @@ pub mod types {
 
     /// Fleet-wide networking settings. Only fleet viewers may view these
     /// settings. Only fleet admins can modify them.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Fleet-wide networking settings. Only fleet viewers may
-    /// view these settings. Only fleet admins can modify them.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "external_jumbo_frames_opt_in_enabled"
-    ///  ],
-    ///  "properties": {
-    ///    "external_jumbo_frames_opt_in_enabled": {
-    ///      "description": "When true, end users may opt in to jumbo frames
-    /// (8500 byte MTU) on the primary interface of an instance. When false,
-    /// instance-level opt-in is ignored and the primary interface uses the
-    /// default MTU.",
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31792,40 +12753,18 @@ pub mod types {
     }
 
     /// Parameters for updating the fleet-wide networking settings.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating the fleet-wide networking
-    /// settings.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "external_jumbo_frames_opt_in_enabled": {
-    ///      "description": "Toggle the fleet-wide external jumbo-frames
-    /// opt-in.",
-    ///      "default": false,
-    ///      "type": "boolean"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct SystemNetworkingSettingsUpdate {
         /// Toggle the fleet-wide external jumbo-frames opt-in.
         #[serde(default)]
         pub external_jumbo_frames_opt_in_enabled: bool,
-    }
-
-    impl ::std::default::Default for SystemNetworkingSettingsUpdate {
-        fn default() -> Self {
-            Self {
-                external_jumbo_frames_opt_in_enabled: Default::default(),
-            }
-        }
     }
 
     impl SystemNetworkingSettingsUpdate {
@@ -31835,19 +12774,6 @@ pub mod types {
     }
 
     /// `SystemUpdateRepositoryViewSystemVersion`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -31905,15 +12831,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SystemUpdateRepositoryViewSystemVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SystemUpdateRepositoryViewSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -31937,36 +12854,6 @@ pub mod types {
     }
 
     /// View of a system software target release
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a system software target release",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "time_requested",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "time_requested": {
-    ///      "description": "Time this was set as the target release",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "version": {
-    ///      "description": "The specified release of the rack's system
-    /// software",
-    ///      "type": "string",
-    ///      "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -31984,20 +12871,6 @@ pub mod types {
     }
 
     /// The specified release of the rack's system software
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The specified release of the rack's system software",
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -32055,15 +12928,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TargetReleaseVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -32087,34 +12951,6 @@ pub mod types {
     }
 
     /// Supported set of sort modes for scanning by timestamp and ID
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Supported set of sort modes for scanning by timestamp
-    /// and ID",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Sort in increasing order of timestamp and ID, i.e.,
-    /// earliest first",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "time_and_id_ascending"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Sort in increasing order of timestamp and ID, i.e.,
-    /// most recent first",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "time_and_id_descending"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -32165,15 +13001,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TimeAndIdSortMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TimeAndIdSortMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -32187,33 +13014,6 @@ pub mod types {
     ///
     /// This includes the typed key-value pairs that uniquely identify it, and
     /// the set of timestamps and data values from it.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A timeseries contains a timestamped set of values from
-    /// one source.\n\nThis includes the typed key-value pairs that uniquely
-    /// identify it, and the set of timestamps and data values from it.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "fields",
-    ///    "points"
-    ///  ],
-    ///  "properties": {
-    ///    "fields": {
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "$ref": "#/components/schemas/FieldValue"
-    ///      }
-    ///    },
-    ///    "points": {
-    ///      "$ref": "#/components/schemas/Points"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32229,29 +13029,6 @@ pub mod types {
     }
 
     /// Text descriptions for the target and metric of a timeseries.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Text descriptions for the target and metric of a
-    /// timeseries.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "metric",
-    ///    "target"
-    ///  ],
-    ///  "properties": {
-    ///    "metric": {
-    ///      "type": "string"
-    ///    },
-    ///    "target": {
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32269,22 +13046,6 @@ pub mod types {
     /// Names are constructed by concatenating the target and metric names with
     /// ':'. Target and metric names must be lowercase alphanumeric characters
     /// with '_' separating words.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "The name of a timeseries",
-    ///  "description": "Names are constructed by concatenating the target and
-    /// metric names with ':'. Target and metric names must be lowercase
-    /// alphanumeric characters with '_' separating words.",
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*
-    /// )$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -32338,15 +13099,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TimeseriesName {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TimeseriesName {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -32370,27 +13122,6 @@ pub mod types {
     }
 
     /// A timeseries query string, written in the Oximeter query language.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A timeseries query string, written in the Oximeter
-    /// query language.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "query"
-    ///  ],
-    ///  "properties": {
-    ///    "query": {
-    ///      "description": "A timeseries query string, written in the Oximeter
-    /// query language.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32409,61 +13140,6 @@ pub mod types {
     ///
     /// This includes the name of the timeseries, as well as the datum type of
     /// its metric and the schema for each field.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The schema for a timeseries.\n\nThis includes the name
-    /// of the timeseries, as well as the datum type of its metric and the
-    /// schema for each field.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "authz_scope",
-    ///    "created",
-    ///    "datum_type",
-    ///    "description",
-    ///    "field_schema",
-    ///    "timeseries_name",
-    ///    "units",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "authz_scope": {
-    ///      "$ref": "#/components/schemas/AuthzScope"
-    ///    },
-    ///    "created": {
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "datum_type": {
-    ///      "$ref": "#/components/schemas/DatumType"
-    ///    },
-    ///    "description": {
-    ///      "$ref": "#/components/schemas/TimeseriesDescription"
-    ///    },
-    ///    "field_schema": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/FieldSchema"
-    ///      },
-    ///      "uniqueItems": true
-    ///    },
-    ///    "timeseries_name": {
-    ///      "$ref": "#/components/schemas/TimeseriesName"
-    ///    },
-    ///    "units": {
-    ///      "$ref": "#/components/schemas/Units"
-    ///    },
-    ///    "version": {
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 1.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32472,7 +13148,7 @@ pub mod types {
         pub created: ::chrono::DateTime<::chrono::offset::Utc>,
         pub datum_type: DatumType,
         pub description: TimeseriesDescription,
-        pub field_schema: Vec<FieldSchema>,
+        pub field_schema: ::std::vec::Vec<FieldSchema>,
         pub timeseries_name: TimeseriesName,
         pub units: Units,
         pub version: ::std::num::NonZeroU8,
@@ -32485,36 +13161,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/TimeseriesSchema"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32522,7 +13168,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<TimeseriesSchema>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -32533,51 +13179,6 @@ pub mod types {
     }
 
     /// Metadata about a TUF repository
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Metadata about a TUF repository",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "file_name",
-    ///    "hash",
-    ///    "system_version",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "file_name": {
-    ///      "description": "The file name of the repository, as reported by the
-    /// client that uploaded it\n\nThis is intended for debugging. The file name
-    /// may not match any particular pattern, and even if it does, it may not be
-    /// accurate since it's just what the client reported.",
-    ///      "type": "string"
-    ///    },
-    ///    "hash": {
-    ///      "description": "The hash of the repository",
-    ///      "type": "string",
-    ///      "format": "hex string (32 bytes)"
-    ///    },
-    ///    "system_version": {
-    ///      "description": "The system version for this repository\n\nThe
-    /// system version is a top-level version number applied to all the software
-    /// in the repository.",
-    ///      "type": "string",
-    ///      "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Time the repository was uploaded",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32607,36 +13208,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/TufRepo"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32644,7 +13215,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<TufRepo>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -32658,22 +13229,6 @@ pub mod types {
     ///
     /// The system version is a top-level version number applied to all the
     /// software in the repository.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The system version for this repository\n\nThe system
-    /// version is a top-level version number applied to all the software in the
-    /// repository.",
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -32731,15 +13286,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoSystemVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TufRepoSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -32763,27 +13309,6 @@ pub mod types {
     }
 
     /// `TufRepoUpload`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "repo",
-    ///    "status"
-    ///  ],
-    ///  "properties": {
-    ///    "repo": {
-    ///      "$ref": "#/components/schemas/TufRepo"
-    ///    },
-    ///    "status": {
-    ///      "$ref": "#/components/schemas/TufRepoUploadStatus"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -32800,33 +13325,6 @@ pub mod types {
 
     /// Whether the uploaded TUF repo already existed or was new and had to be
     /// inserted. Part of `TufRepoUpload`.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Whether the uploaded TUF repo already existed or was
-    /// new and had to be inserted. Part of `TufRepoUpload`.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The repository already existed in the database",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "already_exists"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The repository did not exist, and was inserted into
-    /// the database",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "inserted"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -32876,15 +13374,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoUploadStatus {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TufRepoUploadStatus {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -32896,91 +13385,30 @@ pub mod types {
 
     /// Per-port tx-eq overrides.  This can be used to fine-tune the transceiver
     /// equalization settings to improve signal integrity.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Per-port tx-eq overrides.  This can be used to
-    /// fine-tune the transceiver equalization settings to improve signal
-    /// integrity.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "main": {
-    ///      "description": "Main tap",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "post1": {
-    ///      "description": "Post-cursor tap1",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "post2": {
-    ///      "description": "Post-cursor tap2",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "pre1": {
-    ///      "description": "Pre-cursor tap1",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    },
-    ///    "pre2": {
-    ///      "description": "Pre-cursor tap2",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "int32"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct TxEqConfig {
         /// Main tap
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub main: ::std::option::Option<i32>,
         /// Post-cursor tap1
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub post1: ::std::option::Option<i32>,
         /// Post-cursor tap2
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub post2: ::std::option::Option<i32>,
         /// Pre-cursor tap1
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub pre1: ::std::option::Option<i32>,
         /// Pre-cursor tap2
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub pre2: ::std::option::Option<i32>,
-    }
-
-    impl ::std::default::Default for TxEqConfig {
-        fn default() -> Self {
-            Self {
-                main: Default::default(),
-                post1: Default::default(),
-                post2: Default::default(),
-                pre1: Default::default(),
-                pre2: Default::default(),
-            }
-        }
     }
 
     impl TxEqConfig {
@@ -32990,38 +13418,6 @@ pub mod types {
     }
 
     /// A physical disk that has not yet been adopted by the control plane
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A physical disk that has not yet been adopted by the
-    /// control plane",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "disk_id",
-    ///    "sled_id",
-    ///    "slot",
-    ///    "variant"
-    ///  ],
-    ///  "properties": {
-    ///    "disk_id": {
-    ///      "$ref": "#/components/schemas/PhysicalDiskManufacturerIdentity"
-    ///    },
-    ///    "sled_id": {
-    ///      "$ref": "#/components/schemas/SledUuid"
-    ///    },
-    ///    "slot": {
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "variant": {
-    ///      "$ref": "#/components/schemas/PhysicalDiskKind"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33039,36 +13435,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/UnadoptedPhysicalDisk"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33076,7 +13442,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<UnadoptedPhysicalDisk>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -33087,36 +13453,6 @@ pub mod types {
     }
 
     /// A sled that has not been added to an initialized rack yet
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A sled that has not been added to an initialized rack
-    /// yet",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "baseboard",
-    ///    "cubby",
-    ///    "rack_id"
-    ///  ],
-    ///  "properties": {
-    ///    "baseboard": {
-    ///      "$ref": "#/components/schemas/Baseboard"
-    ///    },
-    ///    "cubby": {
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "rack_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33133,36 +13469,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/UninitializedSled"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33170,7 +13476,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<UninitializedSled>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -33181,46 +13487,6 @@ pub mod types {
     }
 
     /// Measurement units for timeseries samples.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Measurement units for timeseries samples.",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "count",
-    ///        "bytes",
-    ///        "seconds",
-    ///        "nanoseconds",
-    ///        "volts",
-    ///        "amps",
-    ///        "watts",
-    ///        "degrees_celsius",
-    ///        "joules"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "No meaningful units, e.g. a dimensionless
-    /// quanity.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "none"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Rotations per minute.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "rpm"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -33306,15 +13572,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for Units {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Units {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -33325,77 +13582,6 @@ pub mod types {
     }
 
     /// `UpdateStatus`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "components_by_release_version",
-    ///    "contact_support",
-    ///    "suspended",
-    ///    "target_release",
-    ///    "time_last_step_planned"
-    ///  ],
-    ///  "properties": {
-    ///    "components_by_release_version": {
-    ///      "description": "Count of components running each release
-    /// version\n\nKeys will be either:\n\n* Semver-like release version strings
-    /// * \"install dataset\", representing the initial rack software before any
-    /// updates * \"unknown\", which means there is no TUF repo uploaded that
-    /// matches the software running on the component)",
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "type": "integer",
-    ///        "format": "uint",
-    ///        "minimum": 0.0
-    ///      }
-    ///    },
-    ///    "contact_support": {
-    ///      "description": "If true, the system has detected one or more known
-    /// conditions that require Oxide support to resolve\n\nYou should contact
-    /// support to resolve these issues before proceeding with an update, or
-    /// after one has completed. The checks underlying this field are not
-    /// exhaustive, so this being `false` does not mean the entire system is
-    /// completely healthy.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "suspended": {
-    ///      "description": "Whether automatic update is suspended due to manual
-    /// update activity\n\nAfter a manual support procedure that changes the
-    /// system software, automatic update activity is suspended to avoid undoing
-    /// the change. To resume automatic update, first upload the TUF repository
-    /// matching the manually applied update, then set that as the target
-    /// release.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "target_release": {
-    ///      "description": "Current target release of the system software\n\nThis may not correspond to the actual system software running at the time of request; it is instead the release that the system should be moving towards as a goal state. The system asynchronously updates software to match this target release.\n\nWill only be null if a target release has never been set. In that case, the system is not automatically attempting to manage software versions.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/TargetRelease"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_last_step_planned": {
-    ///      "description": "Time of most recent update planning
-    /// activity\n\nThis is intended as a rough indicator of the last time
-    /// something happened in the update planner.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33434,6 +13620,7 @@ pub mod types {
         /// Will only be null if a target release has never been set. In that
         /// case, the system is not automatically attempting to manage software
         /// versions.
+        #[serde(deserialize_with = "::std::option::Option::deserialize")]
         pub target_release: ::std::option::Option<TargetRelease>,
         /// Time of most recent update planning activity
         ///
@@ -33450,38 +13637,6 @@ pub mod types {
 
     /// Trusted root role used by the update system to verify update
     /// repositories.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Trusted root role used by the update system to verify
-    /// update repositories.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "root_role",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "The UUID of this trusted root role.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "root_role": {
-    ///      "description": "The trusted root role itself, a JSON document as
-    /// described by The Update Framework."
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Time the trusted root role was added.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33502,36 +13657,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/UpdatesTrustRoot"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33539,7 +13664,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<UpdatesTrustRoot>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -33550,48 +13675,6 @@ pub mod types {
     }
 
     /// View of a User
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a User",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "display_name",
-    ///    "id",
-    ///    "silo_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "display_name": {
-    ///      "description": "Human-readable name that can identify the user",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "silo_id": {
-    ///      "description": "Uuid of the silo to which this user belongs",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this user was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this user was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33617,56 +13700,6 @@ pub mod types {
     ///
     /// Built-in users are identities internal to the system, used when the
     /// control plane performs actions autonomously
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a Built-in User\n\nBuilt-in users are
-    /// identities internal to the system, used when the control plane performs
-    /// actions autonomously",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33690,36 +13723,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/UserBuiltin"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33727,7 +13730,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<UserBuiltin>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -33738,38 +13741,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `User`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `User`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "external_id",
-    ///    "password"
-    ///  ],
-    ///  "properties": {
-    ///    "external_id": {
-    ///      "description": "Username used to log in",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/UserId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "password": {
-    ///      "description": "How to set the user's login password",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/UserPassword"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33790,25 +13761,6 @@ pub mod types {
     /// exclusively of lowercase ASCII, uppercase ASCII, numbers, and '-', and
     /// may not end with a '-'. Usernames cannot be a UUID, but they may contain
     /// a UUID. They can be at most 63 characters long.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A username for a local-only user",
-    ///  "description": "Usernames must begin with a lower case ASCII letter, be
-    /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
-    /// '-', and may not end with a '-'. Usernames cannot be a UUID, but they
-    /// may contain a UUID. They can be at most 63 characters long.",
-    ///  "type": "string",
-    ///  "maxLength": 63,
-    ///  "minLength": 1,
-    ///  "pattern":
-    /// "^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*
-    /// [a-zA-Z0-9]+)?$"
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Serialize,
         Clone,
@@ -33863,15 +13815,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for UserId {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for UserId {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -33895,52 +13838,6 @@ pub mod types {
     }
 
     /// Parameters for setting a user's password
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for setting a user's password",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Sets the user's password to the provided value",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "mode",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "mode": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "password"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Password"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Invalidates any current password (disabling
-    /// password authentication)",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "mode"
-    ///      ],
-    ///      "properties": {
-    ///        "mode": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "login_disallowed"
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33960,36 +13857,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/User"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -33997,7 +13864,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<User>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -34008,28 +13875,6 @@ pub mod types {
     }
 
     /// Credentials for local user login
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Credentials for local user login",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "password",
-    ///    "username"
-    ///  ],
-    ///  "properties": {
-    ///    "password": {
-    ///      "$ref": "#/components/schemas/Password"
-    ///    },
-    ///    "username": {
-    ///      "$ref": "#/components/schemas/UserId"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34045,44 +13890,6 @@ pub mod types {
     }
 
     /// View of the current silo's resource utilization and capacity
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of the current silo's resource utilization and
-    /// capacity",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "capacity",
-    ///    "provisioned"
-    ///  ],
-    ///  "properties": {
-    ///    "capacity": {
-    ///      "description": "The total amount of resources that can be
-    /// provisioned in this silo. Actions that would exceed this limit will
-    /// fail.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "provisioned": {
-    ///      "description": "Accounts for resources allocated to running
-    /// instances or storage allocated via disks or snapshots.\n\nNote that CPU
-    /// and memory resources associated with stopped instances are not counted
-    /// here, whereas associated disks will still be counted.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34108,180 +13915,6 @@ pub mod types {
     /// List of data values for one timeseries.
     ///
     /// Each element is an option, where `None` represents a missing sample.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "List of data values for one timeseries.\n\nEach element
-    /// is an option, where `None` represents a missing sample.",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "values"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "integer"
-    ///          ]
-    ///        },
-    ///        "values": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "type": [
-    ///              "integer",
-    ///              "null"
-    ///            ],
-    ///            "format": "int64"
-    ///          }
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "values"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "double"
-    ///          ]
-    ///        },
-    ///        "values": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "type": [
-    ///              "number",
-    ///              "null"
-    ///            ],
-    ///            "format": "double"
-    ///          }
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "values"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "boolean"
-    ///          ]
-    ///        },
-    ///        "values": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "type": [
-    ///              "boolean",
-    ///              "null"
-    ///            ]
-    ///          }
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "values"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "string"
-    ///          ]
-    ///        },
-    ///        "values": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "type": [
-    ///              "string",
-    ///              "null"
-    ///            ]
-    ///          }
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "values"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "integer_distribution"
-    ///          ]
-    ///        },
-    ///        "values": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "oneOf": [
-    ///              {
-    ///                "type": "null"
-    ///              },
-    ///              {
-    ///                "allOf": [
-    ///                  {
-    ///                    "$ref": "#/components/schemas/Distributionint64"
-    ///                  }
-    ///                ]
-    ///              }
-    ///            ]
-    ///          }
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "values"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "double_distribution"
-    ///          ]
-    ///        },
-    ///        "values": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "oneOf": [
-    ///              {
-    ///                "type": "null"
-    ///              },
-    ///              {
-    ///                "allOf": [
-    ///                  {
-    ///                    "$ref": "#/components/schemas/Distributiondouble"
-    ///                  }
-    ///                ]
-    ///              }
-    ///            ]
-    ///          }
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34344,39 +13977,6 @@ pub mod types {
     }
 
     /// A single list of values, for one dimension of a timeseries.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single list of values, for one dimension of a
-    /// timeseries.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "metric_type",
-    ///    "values"
-    ///  ],
-    ///  "properties": {
-    ///    "metric_type": {
-    ///      "description": "The type of this metric.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/MetricType"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "values": {
-    ///      "description": "The data values.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ValueArray"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34394,34 +13994,6 @@ pub mod types {
     }
 
     /// Supported sort modes when scanning by semantic version
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Supported sort modes when scanning by semantic
-    /// version",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Sort in increasing semantic version order (oldest
-    /// first)",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "version_ascending"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Sort in decreasing semantic version order (newest
-    /// first)",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "version_descending"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -34471,15 +14043,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for VersionSortMode {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for VersionSortMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -34491,45 +14054,6 @@ pub mod types {
 
     /// A collection of resource counts used to describe capacity and
     /// utilization
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A collection of resource counts used to describe
-    /// capacity and utilization",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "cpus",
-    ///    "memory",
-    ///    "storage"
-    ///  ],
-    ///  "properties": {
-    ///    "cpus": {
-    ///      "description": "Number of virtual CPUs",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "memory": {
-    ///      "description": "Amount of memory in bytes",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "storage": {
-    ///      "description": "Amount of disk storage in bytes",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34549,18 +14073,6 @@ pub mod types {
     }
 
     /// A Geneve Virtual Network Identifier
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A Geneve Virtual Network Identifier",
-    ///  "type": "integer",
-    ///  "format": "uint32",
-    ///  "minimum": 0.0
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34585,6 +14097,12 @@ pub mod types {
         }
     }
 
+    impl ::std::fmt::Display for Vni {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     impl ::std::str::FromStr for Vni {
         type Err = <u32 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
@@ -34606,93 +14124,7 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for Vni {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
     /// View of a VPC
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "View of a VPC",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "dns_name",
-    ///    "id",
-    ///    "ipv6_prefix",
-    ///    "name",
-    ///    "project_id",
-    ///    "system_router_id",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "dns_name": {
-    ///      "description": "The name used for the VPC in DNS.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ipv6_prefix": {
-    ///      "description": "The unique local IPv6 address range for subnets in
-    /// this VPC",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "project_id": {
-    ///      "description": "ID for the project containing this VPC",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "system_router_id": {
-    ///      "description": "ID for the system router where subnet default
-    /// routes are registered",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34724,70 +14156,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `Vpc`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `Vpc`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "dns_name",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "defaults": {
-    ///      "description": "Default resources to create in the VPC\n\nOmit this
-    /// field  or pass `null`  to create all defaults: currently, the default
-    /// subnet. Pass an object to specify which resources to create. `{}`
-    /// creates none.\n\nThis does not affect the system router, default
-    /// firewall rules, or default internet gateway, which are always created
-    /// and do not block deletion of the VPC.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/VpcCreateDefaults"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "dns_name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "ipv6_prefix": {
-    ///      "description": "The IPv6 prefix for this VPC\n\nAll IPv6 subnets
-    /// created from this VPC must be taken from this range, which should be a
-    /// Unique Local Address in the range `fd00::/48`. The default subnet, if
-    /// requested, will take the first `/64` range from this prefix.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Ipv6Net"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34801,7 +14169,7 @@ pub mod types {
         /// This does not affect the system router, default firewall rules, or
         /// default internet gateway, which are always created and do not block
         /// deletion of the VPC.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub defaults: ::std::option::Option<VpcCreateDefaults>,
         pub description: ::std::string::String,
         pub dns_name: Name,
@@ -34811,7 +14179,7 @@ pub mod types {
         /// range, which should be a Unique Local Address in the range
         /// `fd00::/48`. The default subnet, if requested, will take the first
         /// `/64` range from this prefix.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ipv6_prefix: ::std::option::Option<Ipv6Net>,
         pub name: Name,
     }
@@ -34830,56 +14198,20 @@ pub mod types {
     /// This does not affect the system router, default firewall rules, or
     /// default internet gateway, which are always created and do not block
     /// deletion of the VPC.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Default resources to create in a VPC\n\nEach field
-    /// corresponds to one resource. Set a field to an object to create that
-    /// resource. Omit it or pass `null` to skip it.\n\nThis does not affect the
-    /// system router, default firewall rules, or default internet gateway,
-    /// which are always created and do not block deletion of the VPC.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "subnet": {
-    ///      "description": "Create the default subnet. Pass `{}` to create it
-    /// and omit this field (or pass `null`) to skip it.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/SubnetCreateDefaults"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     #[serde(deny_unknown_fields)]
     pub struct VpcCreateDefaults {
         /// Create the default subnet. Pass `{}` to create it and omit this
         /// field (or pass `null`) to skip it.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub subnet: ::std::option::Option<SubnetCreateDefaults>,
-    }
-
-    impl ::std::default::Default for VpcCreateDefaults {
-        fn default() -> Self {
-            Self {
-                subnet: Default::default(),
-            }
-        }
     }
 
     impl VpcCreateDefaults {
@@ -34889,54 +14221,6 @@ pub mod types {
     }
 
     /// Default resources to create in a VPC
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Default resources to create in a VPC",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Create all default resources",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "all"
-    ///          ]
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "description": "Create only the default resources listed in
-    /// `defaults`. Pass `{}` as `defaults` to skip them all.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "defaults",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "defaults": {
-    ///          "$ref": "#/components/schemas/VpcCreateDefaults"
-    ///        },
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "explicit"
-    ///          ]
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -34957,44 +14241,11 @@ pub mod types {
     }
 
     /// `VpcFirewallIcmpFilter`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "icmp_type"
-    ///  ],
-    ///  "properties": {
-    ///    "code": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IcmpParamRange"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "icmp_type": {
-    ///      "type": "integer",
-    ///      "format": "uint8",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcFirewallIcmpFilter {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub code: ::std::option::Option<IcmpParamRange>,
         pub icmp_type: u8,
     }
@@ -35006,114 +14257,6 @@ pub mod types {
     }
 
     /// A single rule in a VPC firewall
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single rule in a VPC firewall",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "action",
-    ///    "description",
-    ///    "direction",
-    ///    "filters",
-    ///    "id",
-    ///    "name",
-    ///    "priority",
-    ///    "status",
-    ///    "targets",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vpc_id"
-    ///  ],
-    ///  "properties": {
-    ///    "action": {
-    ///      "description": "Whether traffic matching the rule should be allowed
-    /// or dropped",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleAction"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "direction": {
-    ///      "description": "Whether this rule is for incoming or outgoing
-    /// traffic",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleDirection"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "filters": {
-    ///      "description": "Reductions on the scope of the rule",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleFilter"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "priority": {
-    ///      "description": "The relative priority of this rule",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "status": {
-    ///      "description": "Whether this rule is in effect",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleStatus"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "targets": {
-    ///      "description": "Determine the set of instances that the rule
-    /// applies to",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
-    ///      }
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vpc_id": {
-    ///      "description": "The VPC to which this rule belongs",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -35151,19 +14294,6 @@ pub mod types {
     }
 
     /// `VpcFirewallRuleAction`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "allow",
-    ///    "deny"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -35211,15 +14341,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleAction {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for VpcFirewallRuleAction {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -35230,19 +14351,6 @@ pub mod types {
     }
 
     /// `VpcFirewallRuleDirection`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "inbound",
-    ///    "outbound"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -35290,15 +14398,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleDirection {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for VpcFirewallRuleDirection {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -35312,86 +14411,27 @@ pub mod types {
     /// applies to all packets to the targets (or from the targets, if it's an
     /// outbound rule). With multiple filters, the rule applies only to packets
     /// matching ALL filters. The maximum number of each type of filter is 256.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Filters reduce the scope of a firewall rule. Without
-    /// filters, the rule applies to all packets to the targets (or from the
-    /// targets, if it's an outbound rule). With multiple filters, the rule
-    /// applies only to packets matching ALL filters. The maximum number of each
-    /// type of filter is 256.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "hosts": {
-    ///      "description": "If present, host filters match the \"other end\" of
-    /// traffic from the target’s perspective: for an inbound rule, they match
-    /// the source of traffic. For an outbound rule, they match the
-    /// destination.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcFirewallRuleHostFilter"
-    ///      },
-    ///      "maxItems": 256
-    ///    },
-    ///    "ports": {
-    ///      "description": "If present, the destination ports or port ranges
-    /// this rule applies to.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/L4PortRange"
-    ///      },
-    ///      "maxItems": 256
-    ///    },
-    ///    "protocols": {
-    ///      "description": "If present, the networking protocols this rule
-    /// applies to.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcFirewallRuleProtocol"
-    ///      },
-    ///      "maxItems": 256
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct VpcFirewallRuleFilter {
         /// If present, host filters match the "other end" of traffic from the
         /// target’s perspective: for an inbound rule, they match the source of
         /// traffic. For an outbound rule, they match the destination.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub hosts: ::std::option::Option<::std::vec::Vec<VpcFirewallRuleHostFilter>>,
         /// If present, the destination ports or port ranges this rule applies
         /// to.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ports: ::std::option::Option<::std::vec::Vec<L4PortRange>>,
         /// If present, the networking protocols this rule applies to.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub protocols: ::std::option::Option<::std::vec::Vec<VpcFirewallRuleProtocol>>,
-    }
-
-    impl ::std::default::Default for VpcFirewallRuleFilter {
-        fn default() -> Self {
-            Self {
-                hosts: Default::default(),
-                ports: Default::default(),
-                protocols: Default::default(),
-            }
-        }
     }
 
     impl VpcFirewallRuleFilter {
@@ -35402,119 +14442,6 @@ pub mod types {
 
     /// The `VpcFirewallRuleHostFilter` is used to filter traffic on the basis
     /// of its source or destination host.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The `VpcFirewallRuleHostFilter` is used to filter
-    /// traffic on the basis of its source or destination host.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The rule applies to traffic from/to all instances
-    /// in the VPC",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "vpc"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to traffic from/to all instances
-    /// in the VPC Subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "subnet"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to traffic from/to this specific
-    /// instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "instance"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to traffic from/to a specific IP
-    /// address",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to traffic from/to a specific IP
-    /// subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip_net"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -35550,104 +14477,6 @@ pub mod types {
     }
 
     /// The protocols that may be specified in a firewall rule's filter
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The protocols that may be specified in a firewall
-    /// rule's filter",
-    ///  "oneOf": [
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "tcp"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "udp"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "icmp"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/VpcFirewallIcmpFilter"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "icmp6"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/VpcFirewallIcmpFilter"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -35664,19 +14493,6 @@ pub mod types {
     }
 
     /// `VpcFirewallRuleStatus`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "disabled",
-    ///    "enabled"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -35724,15 +14540,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleStatus {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for VpcFirewallRuleStatus {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -35747,118 +14554,6 @@ pub mod types {
     /// name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply
     /// the rule to traffic going to all matching instances. Targets are
     /// additive: the rule applies to instances matching ANY target.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A `VpcFirewallRuleTarget` is used to specify the set of
-    /// instances to which a firewall rule applies. You can target instances
-    /// directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which
-    /// will apply the rule to traffic going to all matching instances. Targets
-    /// are additive: the rule applies to instances matching ANY target.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The rule applies to all instances in the VPC",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "vpc"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to all instances in the VPC
-    /// Subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "subnet"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to this specific instance",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "instance"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to a specific IP address",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "type": "string",
-    ///          "format": "ip"
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The rule applies to a specific IP subnet",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "value"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "ip_net"
-    ///          ]
-    ///        },
-    ///        "value": {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -35894,89 +14589,6 @@ pub mod types {
     }
 
     /// A single rule in a VPC firewall
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single rule in a VPC firewall",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "action",
-    ///    "description",
-    ///    "direction",
-    ///    "filters",
-    ///    "name",
-    ///    "priority",
-    ///    "status",
-    ///    "targets"
-    ///  ],
-    ///  "properties": {
-    ///    "action": {
-    ///      "description": "Whether traffic matching the rule should be allowed
-    /// or dropped",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleAction"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "direction": {
-    ///      "description": "Whether this rule is for incoming or outgoing
-    /// traffic",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleDirection"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "filters": {
-    ///      "description": "Reductions on the scope of the rule",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleFilter"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Name of the rule, unique to this VPC",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "priority": {
-    ///      "description": "The relative priority of this rule",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "status": {
-    ///      "description": "Whether this rule is in effect",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/VpcFirewallRuleStatus"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "targets": {
-    ///      "description": "Determine the set of instances that the rule
-    /// applies to",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
-    ///      },
-    ///      "maxItems": 256
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36006,41 +14618,17 @@ pub mod types {
     }
 
     /// Updated list of firewall rules. Will replace all existing rules.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updated list of firewall rules. Will replace all
-    /// existing rules.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "rules": {
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcFirewallRuleUpdate"
-    ///      },
-    ///      "maxItems": 1024
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct VpcFirewallRuleUpdateParams {
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub rules: ::std::vec::Vec<VpcFirewallRuleUpdate>,
-    }
-
-    impl ::std::default::Default for VpcFirewallRuleUpdateParams {
-        fn default() -> Self {
-            Self {
-                rules: Default::default(),
-            }
-        }
     }
 
     impl VpcFirewallRuleUpdateParams {
@@ -36050,27 +14638,6 @@ pub mod types {
     }
 
     /// Collection of a Vpc's firewall rules
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Collection of a Vpc's firewall rules",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "rules"
-    ///  ],
-    ///  "properties": {
-    ///    "rules": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcFirewallRule"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36085,36 +14652,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Vpc"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36122,7 +14659,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<Vpc>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -36134,65 +14671,6 @@ pub mod types {
 
     /// A VPC router defines a series of rules that indicate where traffic
     /// should be sent depending on its destination.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A VPC router defines a series of rules that indicate
-    /// where traffic should be sent depending on its destination.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "kind",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vpc_id"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "kind": {
-    ///      "$ref": "#/components/schemas/VpcRouterKind"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vpc_id": {
-    ///      "description": "The VPC to which the router belongs.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36219,28 +14697,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `VpcRouter`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `VpcRouter`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36256,19 +14712,6 @@ pub mod types {
     }
 
     /// `VpcRouterKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "system",
-    ///    "custom"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -36316,15 +14759,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for VpcRouterKind {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for VpcRouterKind {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -36335,36 +14769,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcRouter"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36372,7 +14776,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<VpcRouter>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -36383,55 +14787,19 @@ pub mod types {
     }
 
     /// Updateable properties of a `VpcRouter`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a `VpcRouter`",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct VpcRouterUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for VpcRouterUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl VpcRouterUpdate {
@@ -36443,94 +14811,12 @@ pub mod types {
     /// A VPC subnet represents a logical grouping for instances that allows
     /// network traffic between them, within an IPv4 subnetwork or optionally an
     /// IPv6 subnetwork.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A VPC subnet represents a logical grouping for
-    /// instances that allows network traffic between them, within an IPv4
-    /// subnetwork or optionally an IPv6 subnetwork.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "id",
-    ///    "ipv4_block",
-    ///    "ipv6_block",
-    ///    "name",
-    ///    "time_created",
-    ///    "time_modified",
-    ///    "vpc_id"
-    ///  ],
-    ///  "properties": {
-    ///    "custom_router_id": {
-    ///      "description": "ID for an attached custom router.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "ipv4_block": {
-    ///      "description": "The IPv4 subnet CIDR block.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "ipv6_block": {
-    ///      "description": "The IPv6 subnet CIDR block.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "vpc_id": {
-    ///      "description": "The VPC to which the subnet belongs.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcSubnet {
         /// ID for an attached custom router.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub custom_router_id: ::std::option::Option<::uuid::Uuid>,
         /// Human-readable free-form text about a resource
         pub description: ::std::string::String,
@@ -36557,77 +14843,6 @@ pub mod types {
     }
 
     /// Create-time parameters for a `VpcSubnet`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time parameters for a `VpcSubnet`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "ipv4_block",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "custom_router": {
-    ///      "description": "An optional router, used to direct packets sent
-    /// from hosts in this subnet to any destination address.\n\nCustom routers
-    /// apply in addition to the VPC-wide *system* router, and have higher
-    /// priority than the system router for an otherwise equal-prefix-length
-    /// match.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "ipv4_block": {
-    ///      "description": "The IPv4 address range for this subnet.\n\nIt must
-    /// be allocated from an RFC 1918 private address range, and must not
-    /// overlap with any other existing subnet in the VPC.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Net"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "ipv6_block": {
-    ///      "description": "The IPv6 address range for this subnet.\n\nIt must
-    /// be allocated from the RFC 4193 Unique Local Address range, with the
-    /// prefix equal to the parent VPC's prefix. A random `/64` block will be
-    /// assigned if one is not provided. It must not overlap with any existing
-    /// subnet in the VPC.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Ipv6Net"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36638,7 +14853,7 @@ pub mod types {
         /// Custom routers apply in addition to the VPC-wide *system* router,
         /// and have higher priority than the system router for an otherwise
         /// equal-prefix-length match.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub custom_router: ::std::option::Option<NameOrId>,
         pub description: ::std::string::String,
         /// The IPv4 address range for this subnet.
@@ -36652,7 +14867,7 @@ pub mod types {
         /// with the prefix equal to the parent VPC's prefix. A random `/64`
         /// block will be assigned if one is not provided. It must not overlap
         /// with any existing subnet in the VPC.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub ipv6_block: ::std::option::Option<Ipv6Net>,
         pub name: Name,
     }
@@ -36664,36 +14879,6 @@ pub mod types {
     }
 
     /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/VpcSubnet"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36701,7 +14886,7 @@ pub mod types {
         /// list of items on this page of results
         pub items: ::std::vec::Vec<VpcSubnet>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
@@ -36712,76 +14897,23 @@ pub mod types {
     }
 
     /// Updateable properties of a `VpcSubnet`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a `VpcSubnet`",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "custom_router": {
-    ///      "description": "An optional router, used to direct packets sent
-    /// from hosts in this subnet to any destination address.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct VpcSubnetUpdate {
         /// An optional router, used to direct packets sent from hosts in this
         /// subnet to any destination address.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub custom_router: ::std::option::Option<NameOrId>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for VpcSubnetUpdate {
-        fn default() -> Self {
-            Self {
-                custom_router: Default::default(),
-                description: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl VpcSubnetUpdate {
@@ -36791,72 +14923,21 @@ pub mod types {
     }
 
     /// Updateable properties of a `Vpc`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Updateable properties of a `Vpc`",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "dns_name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct VpcUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub dns_name: ::std::option::Option<Name>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for VpcUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                dns_name: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl VpcUpdate {
@@ -36866,54 +14947,6 @@ pub mod types {
     }
 
     /// Create-time identity-related parameters
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Create-time identity-related parameters",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "endpoint",
-    ///    "name",
-    ///    "secrets"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": "string"
-    ///    },
-    ///    "endpoint": {
-    ///      "description": "The URL that webhook notification requests should
-    /// be sent to",
-    ///      "type": "string",
-    ///      "format": "uri"
-    ///    },
-    ///    "name": {
-    ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "secrets": {
-    ///      "description": "A non-empty list of secret keys used to sign
-    /// webhook payloads.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "type": "string"
-    ///      }
-    ///    },
-    ///    "subscriptions": {
-    ///      "description": "A list of webhook event class subscriptions.\n\nIf
-    /// this list is empty or is not included in the request body, the webhook
-    /// will not be subscribed to any events.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AlertSubscription"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -36942,68 +14975,13 @@ pub mod types {
     ///
     /// This represents a single HTTP request that was sent to the receiver, and
     /// its outcome.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An individual delivery attempt for a webhook
-    /// event.\n\nThis represents a single HTTP request that was sent to the
-    /// receiver, and its outcome.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "attempt",
-    ///    "result",
-    ///    "time_sent"
-    ///  ],
-    ///  "properties": {
-    ///    "attempt": {
-    ///      "description": "The attempt number.",
-    ///      "type": "integer",
-    ///      "format": "uint",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "response": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/WebhookDeliveryResponse"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "result": {
-    ///      "description": "The outcome of this delivery attempt: either the
-    /// event was delivered successfully, or the request failed for one of
-    /// several reasons.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/WebhookDeliveryAttemptResult"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_sent": {
-    ///      "description": "The time at which the webhook delivery was
-    /// attempted.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct WebhookDeliveryAttempt {
         /// The attempt number.
         pub attempt: u32,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub response: ::std::option::Option<WebhookDeliveryResponse>,
         /// The outcome of this delivery attempt: either the event was delivered
         /// successfully, or the request failed for one of several reasons.
@@ -37019,49 +14997,6 @@ pub mod types {
     }
 
     /// `WebhookDeliveryAttemptResult`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The webhook event has been delivered
-    /// successfully.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "succeeded"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "A webhook request was sent to the endpoint, and it
-    /// returned a HTTP error status code indicating an error.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed_http_error"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The webhook request could not be sent to the
-    /// receiver endpoint.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed_unreachable"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "A connection to the receiver endpoint was
-    /// successfully established, but no response was received within the
-    /// delivery timeout.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed_timeout"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize,
         :: serde :: Serialize,
@@ -37123,15 +15058,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for WebhookDeliveryAttemptResult {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for WebhookDeliveryAttemptResult {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -37142,37 +15068,6 @@ pub mod types {
     }
 
     /// The response received from a webhook receiver endpoint.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The response received from a webhook receiver
-    /// endpoint.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "duration_ms",
-    ///    "status"
-    ///  ],
-    ///  "properties": {
-    ///    "duration_ms": {
-    ///      "description": "The response time of the webhook endpoint, in
-    /// milliseconds.",
-    ///      "type": "integer",
-    ///      "format": "uint",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "status": {
-    ///      "description": "The HTTP status code returned from the webhook
-    /// endpoint.",
-    ///      "type": "integer",
-    ///      "format": "uint16",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -37190,79 +15085,6 @@ pub mod types {
     }
 
     /// The configuration for a webhook alert receiver.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The configuration for a webhook alert receiver.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "endpoint",
-    ///    "id",
-    ///    "name",
-    ///    "secrets",
-    ///    "subscriptions",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "Human-readable free-form text about a resource",
-    ///      "type": "string"
-    ///    },
-    ///    "endpoint": {
-    ///      "description": "The URL that webhook notification requests are sent
-    /// to.",
-    ///      "type": "string",
-    ///      "format": "uri"
-    ///    },
-    ///    "id": {
-    ///      "description": "Unique, immutable, system-controlled identifier for
-    /// each resource",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "Unique, mutable, user-controlled identifier for
-    /// each resource",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Name"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "secrets": {
-    ///      "description": "A list containing the IDs of the secret keys used
-    /// to sign payloads sent to this receiver.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSecret"
-    ///      }
-    ///    },
-    ///    "subscriptions": {
-    ///      "description": "The list of alert classes to which this receiver is
-    /// subscribed.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AlertSubscription"
-    ///      }
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Timestamp when this resource was created",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Timestamp when this resource was last modified",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -37293,68 +15115,22 @@ pub mod types {
     }
 
     /// Parameters to update a webhook configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters to update a webhook configuration.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "description": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "endpoint": {
-    ///      "description": "The URL that webhook notification requests should
-    /// be sent to",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uri"
-    ///    },
-    ///    "name": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Name"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Default,
+        schemars :: JsonSchema,
     )]
     pub struct WebhookReceiverUpdate {
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
         /// The URL that webhook notification requests should be sent to
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub endpoint: ::std::option::Option<::std::string::String>,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<Name>,
-    }
-
-    impl ::std::default::Default for WebhookReceiverUpdate {
-        fn default() -> Self {
-            Self {
-                description: Default::default(),
-                endpoint: Default::default(),
-                name: Default::default(),
-            }
-        }
     }
 
     impl WebhookReceiverUpdate {
@@ -37368,36 +15144,6 @@ pub mod types {
     /// Once a secret is created, the value of the secret is not available in
     /// the API, as it must remain secret. Instead, secrets are referenced by
     /// their unique IDs assigned when they are created.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A view of a shared secret key assigned to a webhook
-    /// receiver.\n\nOnce a secret is created, the value of the secret is not
-    /// available in the API, as it must remain secret. Instead, secrets are
-    /// referenced by their unique IDs assigned when they are created.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id",
-    ///    "time_created"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "description": "The public unique ID of the secret.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "time_created": {
-    ///      "description": "The UTC timestamp at which this secret was
-    /// created.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -37415,24 +15161,6 @@ pub mod types {
     }
 
     /// `WebhookSecretCreate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "secret"
-    ///  ],
-    ///  "properties": {
-    ///    "secret": {
-    ///      "description": "The value of the shared secret key.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -37448,28 +15176,6 @@ pub mod types {
     }
 
     /// A list of the IDs of secrets associated with a webhook receiver.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A list of the IDs of secrets associated with a webhook
-    /// receiver.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "secrets"
-    ///  ],
-    ///  "properties": {
-    ///    "secrets": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSecret"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
@@ -55933,7 +33639,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RackMembershipAddSledsRequest {
-            sled_ids: ::std::result::Result<Vec<super::BaseboardId>, ::std::string::String>,
+            sled_ids:
+                ::std::result::Result<::std::vec::Vec<super::BaseboardId>, ::std::string::String>,
         }
 
         impl ::std::default::Default for RackMembershipAddSledsRequest {
@@ -55947,7 +33654,7 @@ pub mod types {
         impl RackMembershipAddSledsRequest {
             pub fn sled_ids<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<Vec<super::BaseboardId>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BaseboardId>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.sled_ids = value
@@ -55980,7 +33687,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RackMembershipStatus {
-            members: ::std::result::Result<Vec<super::BaseboardId>, ::std::string::String>,
+            members:
+                ::std::result::Result<::std::vec::Vec<super::BaseboardId>, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             state: ::std::result::Result<super::RackMembershipChangeState, ::std::string::String>,
             time_aborted: ::std::result::Result<
@@ -55996,7 +33704,7 @@ pub mod types {
                 ::std::string::String,
             >,
             unacknowledged_members:
-                ::std::result::Result<Vec<super::BaseboardId>, ::std::string::String>,
+                ::std::result::Result<::std::vec::Vec<super::BaseboardId>, ::std::string::String>,
             version: ::std::result::Result<super::RackMembershipVersion, ::std::string::String>,
         }
 
@@ -56020,7 +33728,7 @@ pub mod types {
         impl RackMembershipStatus {
             pub fn members<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<Vec<super::BaseboardId>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BaseboardId>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.members = value
@@ -56084,7 +33792,7 @@ pub mod types {
             }
             pub fn unacknowledged_members<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<Vec<super::BaseboardId>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BaseboardId>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.unacknowledged_members = value.try_into().map_err(|e| {
@@ -57425,7 +35133,10 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             identity_mode: ::std::result::Result<super::SiloIdentityMode, ::std::string::String>,
             mapped_fleet_roles: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
+                ::std::collections::HashMap<
+                    ::std::string::String,
+                    ::std::vec::Vec<super::FleetRole>,
+                >,
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
@@ -57509,7 +35220,10 @@ pub mod types {
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
+                    ::std::collections::HashMap<
+                        ::std::string::String,
+                        ::std::vec::Vec<super::FleetRole>,
+                    >,
                 >,
                 T::Error: ::std::fmt::Display,
             {
@@ -57703,7 +35417,10 @@ pub mod types {
             discoverable: ::std::result::Result<bool, ::std::string::String>,
             identity_mode: ::std::result::Result<super::SiloIdentityMode, ::std::string::String>,
             mapped_fleet_roles: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
+                ::std::collections::HashMap<
+                    ::std::string::String,
+                    ::std::vec::Vec<super::FleetRole>,
+                >,
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
@@ -57773,7 +35490,10 @@ pub mod types {
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
+                    ::std::collections::HashMap<
+                        ::std::string::String,
+                        ::std::vec::Vec<super::FleetRole>,
+                    >,
                 >,
                 T::Error: ::std::fmt::Display,
             {
@@ -63388,7 +41108,8 @@ pub mod types {
             >,
             datum_type: ::std::result::Result<super::DatumType, ::std::string::String>,
             description: ::std::result::Result<super::TimeseriesDescription, ::std::string::String>,
-            field_schema: ::std::result::Result<Vec<super::FieldSchema>, ::std::string::String>,
+            field_schema:
+                ::std::result::Result<::std::vec::Vec<super::FieldSchema>, ::std::string::String>,
             timeseries_name: ::std::result::Result<super::TimeseriesName, ::std::string::String>,
             units: ::std::result::Result<super::Units, ::std::string::String>,
             version: ::std::result::Result<::std::num::NonZeroU8, ::std::string::String>,
@@ -63452,7 +41173,7 @@ pub mod types {
             }
             pub fn field_schema<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<Vec<super::FieldSchema>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::FieldSchema>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.field_schema = value
@@ -67607,6 +45328,36 @@ pub mod types {
         pub(super) fn probe_create_pool_selector() -> super::PoolSelector {
             super::PoolSelector::Auto {
                 ip_version: ::std::option::Option::None,
+            }
+        }
+    }
+
+    /// Error types.
+    pub mod error {
+        /// Error from a `TryFrom` or `FromStr` implementation.
+        pub struct ConversionError(::std::borrow::Cow<'static, str>);
+        impl ::std::error::Error for ConversionError {}
+        impl ::std::fmt::Display for ConversionError {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
+                ::std::fmt::Display::fmt(&self.0, f)
+            }
+        }
+
+        impl ::std::fmt::Debug for ConversionError {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
+                ::std::fmt::Debug::fmt(&self.0, f)
+            }
+        }
+
+        impl From<&'static str> for ConversionError {
+            fn from(value: &'static str) -> Self {
+                Self(value.into())
+            }
+        }
+
+        impl From<String> for ConversionError {
+            fn from(value: String) -> Self {
+                Self(value.into())
             }
         }
     }
