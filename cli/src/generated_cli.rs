@@ -9760,8 +9760,8 @@ impl<T: CliConfig> Cli<T> {
                     .help(
                         "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC \
                          must be taken from this range, which should be a Unique Local Address in \
-                         the range `fd00::/48`. The default VPC Subnet will have the first `/64` \
-                         range from this prefix.",
+                         the range `fd00::/48`. The default subnet, if requested, will take the \
+                         first `/64` range from this prefix.",
                     ),
             )
             .arg(

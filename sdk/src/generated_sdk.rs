@@ -23829,6 +23829,26 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
+    ///    "defaults": {
+    ///      "description": "Default resources to create in the project\n\nOmit
+    /// this field or pass `null` to create all defaults: currently, a default
+    /// VPC with its own defaults. Pass an object to specify which resources to
+    /// create. `{}` creates none.\n\nFor example, to create the default VPC but
+    /// not its default subnet, pass `{\"vpc\": {\"type\": \"explicit\",
+    /// \"defaults\": {}}}`.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/ProjectCreateDefaults"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -23843,12 +23863,89 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ProjectCreate {
+        /// Default resources to create in the project
+        ///
+        /// Omit this field or pass `null` to create all defaults: currently, a
+        /// default VPC with its own defaults. Pass an object to specify which
+        /// resources to create. `{}` creates none.
+        ///
+        /// For example, to create the default VPC but not its default subnet,
+        /// pass `{"vpc": {"type": "explicit", "defaults": {}}}`.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub defaults: ::std::option::Option<ProjectCreateDefaults>,
         pub description: ::std::string::String,
         pub name: Name,
     }
 
     impl ProjectCreate {
         pub fn builder() -> builder::ProjectCreate {
+            Default::default()
+        }
+    }
+
+    /// Default resources to create in a project
+    ///
+    /// Each field corresponds to one resource. Set a field to an object to
+    /// create that resource. Omit it or pass `null` to skip it.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Default resources to create in a project\n\nEach field
+    /// corresponds to one resource. Set a field to an object to create that
+    /// resource. Omit it or pass `null` to skip it.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "vpc": {
+    ///      "description": "Create the default VPC. Omit this field or pass
+    /// `null` to skip it.\n\nWhen present, the value also determines which of
+    /// the VPC's own defaults to create: `{\"type\": \"all\"}` creates all of
+    /// them, and `{\"type\": \"explicit\", \"defaults\": {...}}` creates only
+    /// those specified.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/VpcCreateDefaultsSelection"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(deny_unknown_fields)]
+    pub struct ProjectCreateDefaults {
+        /// Create the default VPC. Omit this field or pass `null` to skip it.
+        ///
+        /// When present, the value also determines which of the VPC's own
+        /// defaults to create: `{"type": "all"}` creates all of them, and
+        /// `{"type": "explicit", "defaults": {...}}` creates only those
+        /// specified.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vpc: ::std::option::Option<VpcCreateDefaultsSelection>,
+    }
+
+    impl ::std::default::Default for ProjectCreateDefaults {
+        fn default() -> Self {
+            Self {
+                vpc: Default::default(),
+            }
+        }
+    }
+
+    impl ProjectCreateDefaults {
+        pub fn builder() -> builder::ProjectCreateDefaults {
             Default::default()
         }
     }
@@ -28831,6 +28928,41 @@ pub mod types {
 
     impl SshKeyResultsPage {
         pub fn builder() -> builder::SshKeyResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Default resources to create in the default subnet
+    ///
+    /// Including this object in the request creates the default subnet. A
+    /// subnet has no default resources yet, so the object is always empty.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Default resources to create in the default
+    /// subnet\n\nIncluding this object in the request creates the default
+    /// subnet. A subnet has no default resources yet, so the object is always
+    /// empty.",
+    ///  "type": "object",
+    ///  "additionalProperties": false
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(deny_unknown_fields)]
+    pub struct SubnetCreateDefaults {}
+    impl ::std::default::Default for SubnetCreateDefaults {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
+    impl SubnetCreateDefaults {
+        pub fn builder() -> builder::SubnetCreateDefaults {
             Default::default()
         }
     }
@@ -34605,6 +34737,26 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
+    ///    "defaults": {
+    ///      "description": "Default resources to create in the VPC\n\nOmit this
+    /// field  or pass `null`  to create all defaults: currently, the default
+    /// subnet. Pass an object to specify which resources to create. `{}`
+    /// creates none.\n\nThis does not affect the system router, default
+    /// firewall rules, or default internet gateway, which are always created
+    /// and do not block deletion of the VPC.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/VpcCreateDefaults"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -34614,8 +34766,8 @@ pub mod types {
     ///    "ipv6_prefix": {
     ///      "description": "The IPv6 prefix for this VPC\n\nAll IPv6 subnets
     /// created from this VPC must be taken from this range, which should be a
-    /// Unique Local Address in the range `fd00::/48`. The default VPC Subnet
-    /// will have the first `/64` range from this prefix.",
+    /// Unique Local Address in the range `fd00::/48`. The default subnet, if
+    /// requested, will take the first `/64` range from this prefix.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -34640,14 +34792,25 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcCreate {
+        /// Default resources to create in the VPC
+        ///
+        /// Omit this field  or pass `null`  to create all defaults: currently,
+        /// the default subnet. Pass an object to specify which resources to
+        /// create. `{}` creates none.
+        ///
+        /// This does not affect the system router, default firewall rules, or
+        /// default internet gateway, which are always created and do not block
+        /// deletion of the VPC.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub defaults: ::std::option::Option<VpcCreateDefaults>,
         pub description: ::std::string::String,
         pub dns_name: Name,
         /// The IPv6 prefix for this VPC
         ///
         /// All IPv6 subnets created from this VPC must be taken from this
         /// range, which should be a Unique Local Address in the range
-        /// `fd00::/48`. The default VPC Subnet will have the first `/64` range
-        /// from this prefix.
+        /// `fd00::/48`. The default subnet, if requested, will take the first
+        /// `/64` range from this prefix.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ipv6_prefix: ::std::option::Option<Ipv6Net>,
         pub name: Name,
@@ -34656,6 +34819,140 @@ pub mod types {
     impl VpcCreate {
         pub fn builder() -> builder::VpcCreate {
             Default::default()
+        }
+    }
+
+    /// Default resources to create in a VPC
+    ///
+    /// Each field corresponds to one resource. Set a field to an object to
+    /// create that resource. Omit it or pass `null` to skip it.
+    ///
+    /// This does not affect the system router, default firewall rules, or
+    /// default internet gateway, which are always created and do not block
+    /// deletion of the VPC.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Default resources to create in a VPC\n\nEach field
+    /// corresponds to one resource. Set a field to an object to create that
+    /// resource. Omit it or pass `null` to skip it.\n\nThis does not affect the
+    /// system router, default firewall rules, or default internet gateway,
+    /// which are always created and do not block deletion of the VPC.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "subnet": {
+    ///      "description": "Create the default subnet. Pass `{}` to create it
+    /// and omit this field (or pass `null`) to skip it.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SubnetCreateDefaults"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(deny_unknown_fields)]
+    pub struct VpcCreateDefaults {
+        /// Create the default subnet. Pass `{}` to create it and omit this
+        /// field (or pass `null`) to skip it.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub subnet: ::std::option::Option<SubnetCreateDefaults>,
+    }
+
+    impl ::std::default::Default for VpcCreateDefaults {
+        fn default() -> Self {
+            Self {
+                subnet: Default::default(),
+            }
+        }
+    }
+
+    impl VpcCreateDefaults {
+        pub fn builder() -> builder::VpcCreateDefaults {
+            Default::default()
+        }
+    }
+
+    /// Default resources to create in a VPC
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Default resources to create in a VPC",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Create all default resources",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "all"
+    ///          ]
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    {
+    ///      "description": "Create only the default resources listed in
+    /// `defaults`. Pass `{}` as `defaults` to skip them all.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "defaults",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "defaults": {
+    ///          "$ref": "#/components/schemas/VpcCreateDefaults"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "defaults")]
+    pub enum VpcCreateDefaultsSelection {
+        #[serde(rename = "all")]
+        All,
+        /// Create only the default resources listed in `defaults`. Pass `{}` as
+        /// `defaults` to skip them all.
+        #[serde(rename = "explicit")]
+        Explicit(VpcCreateDefaults),
+    }
+
+    impl ::std::convert::From<VpcCreateDefaults> for VpcCreateDefaultsSelection {
+        fn from(value: VpcCreateDefaults) -> Self {
+            Self::Explicit(value)
         }
     }
 
@@ -55103,6 +55400,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectCreate {
+            defaults: ::std::result::Result<
+                ::std::option::Option<super::ProjectCreateDefaults>,
+                ::std::string::String,
+            >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
         }
@@ -55110,6 +55411,7 @@ pub mod types {
         impl ::std::default::Default for ProjectCreate {
             fn default() -> Self {
                 Self {
+                    defaults: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     name: Err("no value supplied for name".to_string()),
                 }
@@ -55117,6 +55419,16 @@ pub mod types {
         }
 
         impl ProjectCreate {
+            pub fn defaults<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::ProjectCreateDefaults>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.defaults = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for defaults: {e}"));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -55145,6 +55457,7 @@ pub mod types {
                 value: ProjectCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    defaults: value.defaults?,
                     description: value.description?,
                     name: value.name?,
                 })
@@ -55154,9 +55467,56 @@ pub mod types {
         impl ::std::convert::From<super::ProjectCreate> for ProjectCreate {
             fn from(value: super::ProjectCreate) -> Self {
                 Self {
+                    defaults: Ok(value.defaults),
                     description: Ok(value.description),
                     name: Ok(value.name),
                 }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProjectCreateDefaults {
+            vpc: ::std::result::Result<
+                ::std::option::Option<super::VpcCreateDefaultsSelection>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ProjectCreateDefaults {
+            fn default() -> Self {
+                Self {
+                    vpc: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ProjectCreateDefaults {
+            pub fn vpc<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<super::VpcCreateDefaultsSelection>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.vpc = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vpc: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ProjectCreateDefaults> for super::ProjectCreateDefaults {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ProjectCreateDefaults,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self { vpc: value.vpc? })
+            }
+        }
+
+        impl ::std::convert::From<super::ProjectCreateDefaults> for ProjectCreateDefaults {
+            fn from(value: super::ProjectCreateDefaults) -> Self {
+                Self { vpc: Ok(value.vpc) }
             }
         }
 
@@ -59699,6 +60059,30 @@ pub mod types {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
                 }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SubnetCreateDefaults {}
+        impl ::std::default::Default for SubnetCreateDefaults {
+            fn default() -> Self {
+                Self {}
+            }
+        }
+
+        impl SubnetCreateDefaults {}
+        impl ::std::convert::TryFrom<SubnetCreateDefaults> for super::SubnetCreateDefaults {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                _value: SubnetCreateDefaults,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {})
+            }
+        }
+
+        impl ::std::convert::From<super::SubnetCreateDefaults> for SubnetCreateDefaults {
+            fn from(_value: super::SubnetCreateDefaults) -> Self {
+                Self {}
             }
         }
 
@@ -64882,6 +65266,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcCreate {
+            defaults: ::std::result::Result<
+                ::std::option::Option<super::VpcCreateDefaults>,
+                ::std::string::String,
+            >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             dns_name: ::std::result::Result<super::Name, ::std::string::String>,
             ipv6_prefix:
@@ -64892,6 +65280,7 @@ pub mod types {
         impl ::std::default::Default for VpcCreate {
             fn default() -> Self {
                 Self {
+                    defaults: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     dns_name: Err("no value supplied for dns_name".to_string()),
                     ipv6_prefix: Ok(Default::default()),
@@ -64901,6 +65290,16 @@ pub mod types {
         }
 
         impl VpcCreate {
+            pub fn defaults<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::VpcCreateDefaults>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.defaults = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for defaults: {e}"));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -64949,6 +65348,7 @@ pub mod types {
                 value: VpcCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    defaults: value.defaults?,
                     description: value.description?,
                     dns_name: value.dns_name?,
                     ipv6_prefix: value.ipv6_prefix?,
@@ -64960,10 +65360,59 @@ pub mod types {
         impl ::std::convert::From<super::VpcCreate> for VpcCreate {
             fn from(value: super::VpcCreate) -> Self {
                 Self {
+                    defaults: Ok(value.defaults),
                     description: Ok(value.description),
                     dns_name: Ok(value.dns_name),
                     ipv6_prefix: Ok(value.ipv6_prefix),
                     name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct VpcCreateDefaults {
+            subnet: ::std::result::Result<
+                ::std::option::Option<super::SubnetCreateDefaults>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for VpcCreateDefaults {
+            fn default() -> Self {
+                Self {
+                    subnet: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl VpcCreateDefaults {
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SubnetCreateDefaults>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {e}"));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<VpcCreateDefaults> for super::VpcCreateDefaults {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: VpcCreateDefaults,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    subnet: value.subnet?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::VpcCreateDefaults> for VpcCreateDefaults {
+            fn from(value: super::VpcCreateDefaults) -> Self {
+                Self {
+                    subnet: Ok(value.subnet),
                 }
             }
         }
@@ -67168,7 +67617,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026082800.0.0
+/// Version: 2026090800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -67209,7 +67658,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026082800.0.0"
+        "2026090800.0.0"
     }
 
     fn baseurl(&self) -> &str {
