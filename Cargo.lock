@@ -2982,8 +2982,8 @@ dependencies = [
 
 [[package]]
 name = "progenitor"
-version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0b4f61e4e8824fab6753dfd6cc8027699b618fdd"
+version = "0.15.0"
+source = "git+https://github.com/oxidecomputer/progenitor#76a3b70f0eb11e044b52ee15bd07bcc370c8adb5"
 dependencies = [
  "progenitor-impl",
 ]
@@ -3005,8 +3005,8 @@ dependencies = [
 
 [[package]]
 name = "progenitor-impl"
-version = "0.14.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0b4f61e4e8824fab6753dfd6cc8027699b618fdd"
+version = "0.15.0"
+source = "git+https://github.com/oxidecomputer/progenitor#76a3b70f0eb11e044b52ee15bd07bcc370c8adb5"
 dependencies = [
  "heck",
  "http",
