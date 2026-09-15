@@ -500,10 +500,6 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Alert {
-        /// The alert's data payload.
-        ///
-        /// The schema for this object depends on the alert class and version.
-        pub alert: ::serde_json::Value,
         /// The alert's class.
         ///
         /// See the guide-level documentation on alerts for details on alert
@@ -511,6 +507,10 @@ pub mod types {
         pub class: ::std::string::String,
         /// Unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
+        /// The alert's data payload.
+        ///
+        /// The schema for this object depends on the alert class and version.
+        pub payload: ::serde_json::Value,
         /// Timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Timestamp when this resource was last modified
@@ -16398,9 +16398,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Alert {
-            alert: ::std::result::Result<::serde_json::Value, ::std::string::String>,
             class: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            payload: ::std::result::Result<::serde_json::Value, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -16415,9 +16415,9 @@ pub mod types {
         impl ::std::default::Default for Alert {
             fn default() -> Self {
                 Self {
-                    alert: Err("no value supplied for alert".to_string()),
                     class: Err("no value supplied for class".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    payload: Err("no value supplied for payload".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     version: Err("no value supplied for version".to_string()),
@@ -16426,16 +16426,6 @@ pub mod types {
         }
 
         impl Alert {
-            pub fn alert<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::serde_json::Value>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.alert = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for alert: {e}"));
-                self
-            }
             pub fn class<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -16454,6 +16444,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn payload<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::serde_json::Value>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.payload = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for payload: {e}"));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -16494,9 +16494,9 @@ pub mod types {
                 value: Alert,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    alert: value.alert?,
                     class: value.class?,
                     id: value.id?,
+                    payload: value.payload?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                     version: value.version?,
@@ -16507,9 +16507,9 @@ pub mod types {
         impl ::std::convert::From<super::Alert> for Alert {
             fn from(value: super::Alert) -> Self {
                 Self {
-                    alert: Ok(value.alert),
                     class: Ok(value.class),
                     id: Ok(value.id),
+                    payload: Ok(value.payload),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                     version: Ok(value.version),
@@ -45368,7 +45368,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026090800.0.0
+/// Version: 2026091100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -45409,7 +45409,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026090800.0.0"
+        "2026091100.0.0"
     }
 
     fn baseurl(&self) -> &str {
