@@ -4845,14 +4845,6 @@
               "long": "description"
             },
             {
-              "long": "discoverable",
-              "values": [
-                "true",
-                "false"
-              ],
-              "help": "A non-discoverable silo can only be retrieved by ID - it will not be part of the \"list all silos\" output."
-            },
-            {
               "long": "identity-mode",
               "values": [
                 "saml_jit",
