@@ -333,15 +333,40 @@ jobs:
           done
           git push
 
+  publish-winget:
+    needs:
+      - plan
+      - host
+    runs-on: "ubuntu-22.04"
+    if: ${{ !fromJson(needs.plan.outputs.val).announcement_is_prerelease || fromJson(needs.plan.outputs.val).publish_prereleases }}
+    steps:
+      # Our tags carry build metadata (e.g. v0.18.0+2026073100.0.0) but the
+      # winget PackageVersion is the bare semver (0.18.0).
+      - id: version
+        env:
+          TAG: ${{ needs.plan.outputs.tag }}
+        run: |
+          echo "version=$(echo "${TAG#v}" | cut -d+ -f1)" >> "$GITHUB_OUTPUT"
+      # Bases the new manifests on the previous version in winget-pkgs, so the
+      # zip/nested-portable layout and locale metadata carry over untouched.
+      - uses: vedantmgoyal9/winget-releaser@4ffc7888bffd451b357355dc214d43bb9f23917e # v2
+        with:
+          identifier: OxideComputer.OxideCLI
+          version: ${{ steps.version.outputs.version }}
+          installers-regex: 'windows-msvc\.zip$'
+          release-notes-url: "https://github.com/oxidecomputer/oxide.rs/releases/tag/${{ needs.plan.outputs.tag }}"
+          token: ${{ secrets.WINGET_TOKEN }}
+
   announce:
     needs:
       - plan
       - host
       - publish-homebrew-formula
+      - publish-winget
     # use "always() && ..." to allow us to wait for all publish jobs while
     # still allowing individual publish jobs to skip themselves (for prereleases).
     # "host" however must run to completion, no skipping allowed!
-    if: ${{ always() && needs.host.result == 'success' && (needs.publish-homebrew-formula.result == 'skipped' || needs.publish-homebrew-formula.result == 'success') }}
+    if: ${{ always() && needs.host.result == 'success' && (needs.publish-homebrew-formula.result == 'skipped' || needs.publish-homebrew-formula.result == 'success') && (needs.publish-winget.result == 'skipped' || needs.publish-winget.result == 'success') }}
     runs-on: "ubuntu-22.04"
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
