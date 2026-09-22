@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use anyhow::Result;
 use async_trait::async_trait;
@@ -260,6 +260,14 @@ pub struct CmdInstanceFromImage {
     /// Start the instance immediately
     #[clap(long)]
     start: bool,
+
+    /// IP Pool to use for the network interface.
+    #[clap(long, conflicts_with = "ip_version")]
+    ip_pool: Option<NameOrId>,
+
+    /// IP version to use if no IP Pool is specified
+    #[clap(long, default_value_t = IpVersion::V4, conflicts_with = "ip_pool")]
+    ip_version: IpVersion,
 }
 
 #[async_trait]
@@ -272,6 +280,16 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
             image_request = image_request.project(self.project.clone());
         };
         let image_view = image_request.send().await?;
+
+        let pool_selector = if let Some(ip_pool) = &self.ip_pool {
+            PoolSelector::Explicit {
+                pool: ip_pool.clone(),
+            }
+        } else {
+            PoolSelector::Auto {
+                ip_version: Some(self.ip_version.clone()),
+            }
+        };
 
         let instance = client
             .instance_create()
@@ -290,11 +308,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                             .expect("valid disk name"),
                         size: self.size.clone(),
                     })
-                    .external_ips(vec![ExternalIpCreate::Ephemeral {
-                        pool_selector: PoolSelector::Auto {
-                            ip_version: Some(IpVersion::V4),
-                        },
-                    }])
+                    .external_ips(vec![ExternalIpCreate::Ephemeral { pool_selector }])
                     .hostname(self.hostname.clone())
                     .memory(self.memory.clone())
                     .ncpus(self.ncpus.clone())

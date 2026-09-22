@@ -3462,6 +3462,14 @@
               "help": "Source image"
             },
             {
+              "long": "ip-pool",
+              "help": "IP Pool to use for the network interface"
+            },
+            {
+              "long": "ip-version",
+              "help": "IP version to use if no IP Pool is specified"
+            },
+            {
               "long": "memory",
               "help": "Amount of RAM to be allocated to the instance; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
