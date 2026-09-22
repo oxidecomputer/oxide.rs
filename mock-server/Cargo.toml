@@ -3,6 +3,9 @@ name = "mock-server"
 version = "0.0.0"
 edition = "2021"
 
+[package.metadata.dist]
+dist = false
+
 [dependencies]
 chrono = { workspace = true }
 dropshot = { workspace = true }

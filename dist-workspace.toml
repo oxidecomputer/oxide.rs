@@ -12,13 +12,14 @@ installers = []
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = ["aarch64-apple-darwin", "aarch64-pc-windows-msvc", "x86_64-apple-darwin", "x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl"]
 # Which actions to run on pull requests
-pr-run-mode = "plan"
+pr-run-mode = "upload"
+# TODO-RAINCLAUDE: keep caching off so the e2e run matches a tag release
+cache-builds = false
 # Install `perl-IPC-Cmd` on manylinux as required to build OpenSSL
 github-build-setup = "../manylinux.yml"
 # Whether to sign macOS executables
 macos-sign = true
-# Whether to sign Windows executables
-ssldotcom-windows-sign = "prod"
+# TODO-RAINCLAUDE: Windows signing is off for the e2e run; CodeSignTool's bundled JDK 11.0.2 does not trust the chain login.ssl.com has served since 2026-09-30.
 # A GitHub repo to push Homebrew formulas to
 tap = "oxidecomputer/homebrew-tap"
 # Create versioned Homebrew forumlas
