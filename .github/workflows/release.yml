@@ -140,6 +140,12 @@ jobs:
         run: |
           yum install -y perl-IPC-Cmd perl-Time-Piece
           git config --global --add safe.directory /__w/oxide.rs/oxide.rs
+      - name: "Use native aarch64 Rust toolchain on Windows ARM64"
+        if: "runner.os == 'Windows' && runner.arch == 'ARM64'"
+        run: |
+          rustup set default-host aarch64-pc-windows-msvc
+          rustc -vV
+        shell: "bash"
       - name: Install dist
         run: ${{ matrix.install_dist.run }}
       # Get the dist-manifest
