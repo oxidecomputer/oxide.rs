@@ -7614,16 +7614,6 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
-                ::clap::Arg::new("discoverable")
-                    .long("discoverable")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required_unless_present("json-body")
-                    .help(
-                        "A non-discoverable silo can only be retrieved by ID - it will not be \
-                         part of the \"list all silos\" output.",
-                    ),
-            )
-            .arg(
                 ::clap::Arg::new("identity-mode")
                     .long("identity-mode")
                     .value_parser(::clap::builder::TypedValueParser::map(
@@ -18761,10 +18751,6 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<bool>("discoverable") {
-            request = request.body_map(|body| body.discoverable(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity-mode") {

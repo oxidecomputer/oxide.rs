@@ -10653,9 +10653,6 @@ pub mod types {
         #[serde(skip_serializing_if = "::std::option::Option::is_none")]
         pub admin_group_name: ::std::option::Option<::std::string::String>,
         pub description: ::std::string::String,
-        /// A non-discoverable silo can only be retrieved by ID - it will not be
-        /// part of the "list all silos" output.
-        pub discoverable: bool,
         pub identity_mode: SiloIdentityMode,
         /// Mapping of which Fleet roles are conferred by each Silo role
         ///
@@ -35414,7 +35411,6 @@ pub mod types {
                 ::std::string::String,
             >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            discoverable: ::std::result::Result<bool, ::std::string::String>,
             identity_mode: ::std::result::Result<super::SiloIdentityMode, ::std::string::String>,
             mapped_fleet_roles: ::std::result::Result<
                 ::std::collections::HashMap<
@@ -35436,7 +35432,6 @@ pub mod types {
                 Self {
                     admin_group_name: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
-                    discoverable: Err("no value supplied for discoverable".to_string()),
                     identity_mode: Err("no value supplied for identity_mode".to_string()),
                     mapped_fleet_roles: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
@@ -35465,16 +35460,6 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {e}"));
-                self
-            }
-            pub fn discoverable<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<bool>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.discoverable = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for discoverable: {e}"));
                 self
             }
             pub fn identity_mode<T>(mut self, value: T) -> Self
@@ -35542,7 +35527,6 @@ pub mod types {
                 Ok(Self {
                     admin_group_name: value.admin_group_name?,
                     description: value.description?,
-                    discoverable: value.discoverable?,
                     identity_mode: value.identity_mode?,
                     mapped_fleet_roles: value.mapped_fleet_roles?,
                     name: value.name?,
@@ -35557,7 +35541,6 @@ pub mod types {
                 Self {
                     admin_group_name: Ok(value.admin_group_name),
                     description: Ok(value.description),
-                    discoverable: Ok(value.discoverable),
                     identity_mode: Ok(value.identity_mode),
                     mapped_fleet_roles: Ok(value.mapped_fleet_roles),
                     name: Ok(value.name),
@@ -45368,7 +45351,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026091100.0.0
+/// Version: 2026091500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -45409,7 +45392,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026091100.0.0"
+        "2026091500.0.0"
     }
 
     fn baseurl(&self) -> &str {
