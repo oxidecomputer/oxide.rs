@@ -287,7 +287,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
             }
         } else {
             PoolSelector::Auto {
-                ip_version: Some(self.ip_version.clone()),
+                ip_version: Some(self.ip_version),
             }
         };
 
