@@ -1,0 +1,14 @@
+# Install `perl-IPC-Cmd` on manylinux as required to build OpenSSL.
+- name: Install perl-IPC-Cmd on manylinux
+  if: contains(matrix.container.image, 'manylinux')
+  run: |
+    yum install -y perl-IPC-Cmd perl-Time-Piece
+    git config --global --add safe.directory /__w/oxide.rs/oxide.rs
+# The windows-11-arm image's rustup defaults to an x86_64 host -- force it to be
+# aarch64-pc-windows-msvc.
+- name: Use native aarch64 Rust toolchain on Windows ARM64
+  if: runner.os == 'Windows' && runner.arch == 'ARM64'
+  shell: bash
+  run: |
+    rustup set default-host aarch64-pc-windows-msvc
+    rustc -vV

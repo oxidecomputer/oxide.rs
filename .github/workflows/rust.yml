@@ -54,17 +54,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-latest]
+        os: [ubuntu-22.04, windows-2022, windows-11-arm, macos-latest]
         features: [ all, default ]
         include:
           - features: all
             feature_flags: --all-features
     steps:
       - uses: actions/checkout@v4
+      # TODO-RAINCLAUDE: without this, windows-11-arm builds and tests an emulated x64 binary; keep in sync with .github/build-setup.yml
+      - name: Use native aarch64 Rust toolchain on Windows ARM64
+        if: runner.os == 'Windows' && runner.arch == 'ARM64'
+        shell: bash
+        run: rustup set default-host aarch64-pc-windows-msvc
       - name: Report cargo version
         run: cargo --version
       - name: Report rustc version
-        run: rustc --version
+        run: rustc -vV
       - name: Build
         run: cargo build ${{ matrix.feature_flags }} --locked --all-targets --verbose
       - name: Run tests
