@@ -160,12 +160,12 @@ fn test_instance_from_image() {
                     description: "bingo disk".to_string(),
                     disk_backend: oxide::types::DiskBackend::Distributed(
                         oxide::types::DiskSource::Image {
-                            image_id: image_response.id.clone(),
+                            image_id: image_response.id,
                             read_only: false,
                         },
                     ),
                     name: "bingo-disk".parse().unwrap(),
-                    size: (1 * 1024 * 1024 * 1024 * 1024).into(),
+                    size: (1024 * 1024 * 1024 * 1024).into(),
                 }))
                 .external_ips(vec![ExternalIpCreate::Ephemeral {
                     pool_selector: oxide::types::PoolSelector::Auto {
