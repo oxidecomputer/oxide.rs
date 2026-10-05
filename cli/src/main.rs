@@ -44,9 +44,7 @@ mod context;
 mod print;
 mod util;
 
-#[allow(unused_mut)]
-#[allow(unused)] // TODO
-#[allow(unused_must_use)] // TODO
+#[allow(unused)]
 #[allow(clippy::clone_on_copy)]
 mod generated_cli;
 
