@@ -105,7 +105,10 @@ fn generate(
     if httpmock {
         print!("generating httpmock ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.generate_httpmock("oxide").into_stream().to_string();
+        let code = generator
+            .generate_httpmock("oxide")
+            .into_stream()
+            .to_string();
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
