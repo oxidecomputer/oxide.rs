@@ -10,6 +10,7 @@ use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;
 use newline_converter::dos2unix;
+use progenitor::typespace::TypespaceTrait;
 use progenitor::{GenerationSettings, Generator, TagStyle};
 use similar::{Algorithm, ChangeTag, TextDiff};
 
@@ -68,12 +69,14 @@ fn generate(
 
     let file = File::open(spec_path).unwrap();
     let spec = serde_json::from_reader(file).unwrap();
-    let mut generator = Generator::new(
+    let generator = Generator::build(
         GenerationSettings::default()
             .with_interface(progenitor::InterfaceStyle::Builder)
             .with_tag(TagStyle::Separate)
-            .with_derive("schemars::JsonSchema"),
-    );
+            .map_typespace_settings(|s| s.with_required_trait(TypespaceTrait::JsonSchema)),
+        &spec,
+    )
+    .unwrap();
 
     let mut error = false;
     let mut loc = 0;
@@ -86,7 +89,7 @@ fn generate(
         print!("generating sdk ... ");
         std::io::stdout().flush().unwrap();
 
-        let code = generator.generate_tokens(&spec).unwrap();
+        let code = generator.generate_sdk().into_stream();
         let contents = format_code(code.to_string());
         loc += contents.matches('\n').count();
 
@@ -102,7 +105,10 @@ fn generate(
     if httpmock {
         print!("generating httpmock ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.httpmock(&spec, "oxide").unwrap().to_string();
+        let code = generator
+            .generate_httpmock("oxide")
+            .into_stream()
+            .to_string();
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
@@ -118,7 +124,7 @@ fn generate(
     if cli {
         print!("generating cli ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.cli(&spec, "oxide").unwrap().to_string();
+        let code = generator.generate_cli("oxide").into_stream().to_string();
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 

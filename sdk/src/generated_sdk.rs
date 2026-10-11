@@ -920,6 +920,13 @@ pub mod types {
     impl ::std::str::FromStr for AlertSubscription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AlertSubscription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -936,19 +943,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for AlertSubscription {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for AlertSubscription {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -957,8 +957,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -2531,8 +2530,8 @@ pub mod types {
             "BlockSize".to_string()
         }
 
-        fn json_schema(gen: &mut ::schemars::gen::SchemaGenerator) -> ::schemars::schema::Schema {
-            let mut schema = <i64 as ::schemars::JsonSchema>::json_schema(gen).into_object();
+        fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+            let mut schema = <i64 as ::schemars::JsonSchema>::json_schema(g).into_object();
             schema.enum_values = ::std::option::Option::Some(
                 [
                     ::serde_json::from_str("512").unwrap(),
@@ -2581,20 +2580,6 @@ pub mod types {
         type Err = <u64 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for ByteCount {
-        type Error = <u64 as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for ByteCount {
-        type Error = <u64 as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
@@ -4992,6 +4977,13 @@ pub mod types {
     impl ::std::str::FromStr for Hostname {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.chars().count() > 253usize {
                 return Err("longer than 253 characters".into());
             }
@@ -5016,19 +5008,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for Hostname {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Hostname {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -5037,8 +5022,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -5076,6 +5060,13 @@ pub mod types {
     impl ::std::str::FromStr for IcmpParamRange {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for IcmpParamRange {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.chars().count() > 7usize {
                 return Err("longer than 7 characters".into());
             }
@@ -5093,19 +5084,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for IcmpParamRange {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for IcmpParamRange {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -5114,8 +5098,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -5656,20 +5639,6 @@ pub mod types {
         type Err = <u16 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for InstanceCpuCount {
-        type Error = <u16 as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for InstanceCpuCount {
-        type Error = <u16 as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
@@ -7074,6 +7043,13 @@ pub mod types {
     impl ::std::str::FromStr for Ipv4Net {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for Ipv4Net {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -7094,19 +7070,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for Ipv4Net {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Ipv4Net {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -7115,8 +7084,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -7189,6 +7157,13 @@ pub mod types {
     impl ::std::str::FromStr for Ipv6Net {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for Ipv6Net {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -7226,19 +7201,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for Ipv6Net {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Ipv6Net {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -7247,8 +7215,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -7303,6 +7270,13 @@ pub mod types {
     impl ::std::str::FromStr for L4PortRange {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for L4PortRange {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.chars().count() > 11usize {
                 return Err("longer than 11 characters".into());
             }
@@ -7320,19 +7294,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for L4PortRange {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for L4PortRange {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -7341,8 +7308,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -7766,6 +7732,13 @@ pub mod types {
     impl ::std::str::FromStr for MacAddr {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for MacAddr {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.chars().count() > 17usize {
                 return Err("longer than 17 characters".into());
             }
@@ -7785,19 +7758,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for MacAddr {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for MacAddr {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -7806,8 +7772,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -7866,20 +7831,6 @@ pub mod types {
         type Err = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for MaxPathConfig {
-        type Error = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for MaxPathConfig {
-        type Error = <::std::num::NonZeroU8 as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
@@ -8221,6 +8172,13 @@ pub mod types {
     impl ::std::str::FromStr for Name {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for Name {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.chars().count() > 63usize {
                 return Err("longer than 63 characters".into());
             }
@@ -8239,19 +8197,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for Name {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for Name {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -8260,8 +8211,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -8633,17 +8583,17 @@ pub mod types {
     impl ::std::str::FromStr for Password {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.chars().count() > 512usize {
-                return Err("longer than 512 characters".into());
-            }
-            Ok(Self(value.to_string()))
+            ::std::convert::TryFrom::try_from(value)
         }
     }
 
     impl ::std::convert::TryFrom<&str> for Password {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            if value.chars().count() > 512usize {
+                return Err("longer than 512 characters".into());
+            }
+            Ok(Self(value.to_string()))
         }
     }
 
@@ -8652,7 +8602,7 @@ pub mod types {
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -8661,8 +8611,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -8771,20 +8720,6 @@ pub mod types {
         type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PhysicalDiskAdoptionRequestUuid {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for PhysicalDiskAdoptionRequestUuid {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
@@ -9893,20 +9828,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for RackMembershipVersion {
-        type Error = <u64 as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for RackMembershipVersion {
-        type Error = <u64 as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
     /// A single page of results
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
@@ -10071,20 +9992,6 @@ pub mod types {
         type Err = <u16 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for RouterLifetimeConfig {
-        type Error = <u16 as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for RouterLifetimeConfig {
-        type Error = <u16 as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
@@ -10512,6 +10419,13 @@ pub mod types {
     impl ::std::str::FromStr for SetTargetReleaseParamsSystemVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SetTargetReleaseParamsSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -10533,19 +10447,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for SetTargetReleaseParamsSystemVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SetTargetReleaseParamsSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -10554,8 +10461,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -10658,10 +10564,7 @@ pub mod types {
         ///
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
-        #[serde(
-            default,
-            skip_serializing_if = ":: std :: collections :: HashMap::is_empty"
-        )]
+        #[serde(default, skip_serializing_if = "::std::collections::HashMap::is_empty")]
         pub mapped_fleet_roles:
             ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<FleetRole>>,
         pub name: Name,
@@ -11421,20 +11324,6 @@ pub mod types {
         type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for SledUuid {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for SledUuid {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
@@ -12800,6 +12689,13 @@ pub mod types {
     impl ::std::str::FromStr for SystemUpdateRepositoryViewSystemVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SystemUpdateRepositoryViewSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -12821,19 +12717,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for SystemUpdateRepositoryViewSystemVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for SystemUpdateRepositoryViewSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -12842,8 +12731,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -12897,6 +12785,13 @@ pub mod types {
     impl ::std::str::FromStr for TargetReleaseVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TargetReleaseVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -12918,19 +12813,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for TargetReleaseVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -12939,8 +12827,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -13072,6 +12959,13 @@ pub mod types {
     impl ::std::str::FromStr for TimeseriesName {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TimeseriesName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -13089,19 +12983,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for TimeseriesName {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TimeseriesName {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -13110,8 +12997,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -13255,6 +13141,13 @@ pub mod types {
     impl ::std::str::FromStr for TufRepoSystemVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TufRepoSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
                 ::std::sync::LazyLock::new(|| {
                     ::regress::Regex::new(
@@ -13276,19 +13169,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for TufRepoSystemVersion {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for TufRepoSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -13297,8 +13183,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -13787,6 +13672,13 @@ pub mod types {
     impl ::std::str::FromStr for UserId {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for UserId {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.chars().count() > 63usize {
                 return Err("longer than 63 characters".into());
             }
@@ -13805,19 +13697,12 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for UserId {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::convert::TryFrom<::std::string::String> for UserId {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+            ::std::convert::TryFrom::try_from(value.as_str())
         }
     }
 
@@ -13826,8 +13711,7 @@ pub mod types {
         where
             D: ::serde::Deserializer<'de>,
         {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
@@ -14104,20 +13988,6 @@ pub mod types {
         type Err = <u32 as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for Vni {
-        type Error = <u32 as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for Vni {
-        type Error = <u32 as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
         }
     }
 
