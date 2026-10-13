@@ -13074,7 +13074,7 @@ pub mod types {
         /// since it's just what the client reported.
         pub file_name: ::std::string::String,
         /// The hash of the repository
-        pub hash: ::std::string::String,
+        pub hash: TufRepoHash,
         /// The system version for this repository
         ///
         /// The system version is a top-level version number applied to all the
@@ -13087,6 +13087,79 @@ pub mod types {
     impl TufRepo {
         pub fn builder() -> builder::TufRepo {
             Default::default()
+        }
+    }
+
+    /// The hash of the repository
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TufRepoHash(::std::string::String);
+    impl ::std::ops::Deref for TufRepoHash {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TufRepoHash> for ::std::string::String {
+        fn from(value: TufRepoHash) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::str::FromStr for TufRepoHash {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TufRepoHash {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 64usize {
+                return Err("longer than 64 characters".into());
+            }
+            if value.chars().count() < 64usize {
+                return Err("shorter than 64 characters".into());
+            }
+            static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+                ::std::sync::LazyLock::new(|| ::regress::Regex::new("^[0-9a-fA-F]{64}$").unwrap());
+            if PATTERN.find(value).is_none() {
+                return Err("doesn't match pattern \"^[0-9a-fA-F]{64}$\"".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TufRepoHash {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value.as_str())
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for TufRepoHash {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
         }
     }
 
@@ -41167,7 +41240,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct TufRepo {
             file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            hash: ::std::result::Result<::std::string::String, ::std::string::String>,
+            hash: ::std::result::Result<super::TufRepoHash, ::std::string::String>,
             system_version:
                 ::std::result::Result<super::TufRepoSystemVersion, ::std::string::String>,
             time_created: ::std::result::Result<
@@ -41200,7 +41273,7 @@ pub mod types {
             }
             pub fn hash<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::TufRepoHash>,
                 T::Error: ::std::fmt::Display,
             {
                 self.hash = value
@@ -45221,7 +45294,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026091500.0.0
+/// Version: 2026101300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -45262,7 +45335,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026091500.0.0"
+        "2026101300.0.0"
     }
 
     fn baseurl(&self) -> &str {
