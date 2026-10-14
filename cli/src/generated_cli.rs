@@ -443,10 +443,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Start an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to be \
@@ -473,10 +474,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Confirm an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to \
@@ -521,10 +523,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Request a device access token\n\nThis endpoint should be polled by the client \
@@ -600,10 +603,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create instrumentation probe")
     }
@@ -748,10 +752,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create affinity group")
     }
@@ -812,10 +817,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update affinity group")
     }
@@ -1164,10 +1170,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Add alert receiver subscription")
     }
@@ -1371,10 +1378,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create anti-affinity group")
     }
@@ -1435,10 +1443,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update anti-affinity group")
     }
@@ -1598,10 +1607,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update current silo's auth settings")
     }
@@ -1684,10 +1694,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Create system-wide x.509 certificate\n\nThis certificate is automatically used \
@@ -1791,10 +1802,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create disk")
     }
@@ -1874,10 +1886,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Import blocks into disk")
     }
@@ -1963,10 +1976,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Confirm disk block import completion")
     }
@@ -2033,10 +2047,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create external subnet")
     }
@@ -2097,10 +2112,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update external subnet")
     }
@@ -2156,10 +2172,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Attach external subnet to instance")
     }
@@ -2245,10 +2262,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Create floating IP\n\nA specific IP address can be reserved, or an IP can be \
@@ -2312,10 +2330,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update floating IP")
     }
@@ -2383,10 +2402,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Attach floating IP\n\nAttach floating IP to an instance or other resource.")
     }
@@ -2525,10 +2545,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create image\n\nCreate a new image in a project.")
     }
@@ -2775,10 +2796,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create instance")
     }
@@ -2913,10 +2935,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update instance")
     }
@@ -3089,10 +3112,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Attach disk to instance")
     }
@@ -3129,10 +3153,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Detach disk from instance")
     }
@@ -3181,10 +3206,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Allocate and attach ephemeral IP to instance")
     }
@@ -3333,10 +3359,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Join multicast group by name, IP address, or UUID\n\nGroups can be referenced by \
@@ -3668,10 +3695,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Attach IP address to internet gateway")
     }
@@ -3828,10 +3856,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Attach IP pool to internet gateway")
     }
@@ -3964,10 +3993,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create VPC internet gateway")
     }
@@ -4129,10 +4159,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Authenticate user via username and password")
     }
@@ -4268,10 +4299,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Create SSH public key\n\nCreate an SSH public key for the currently \
@@ -4544,10 +4576,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create network interface")
     }
@@ -4644,10 +4677,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update network interface")
     }
@@ -4705,10 +4739,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update current silo's IAM policy")
     }
@@ -4761,10 +4796,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create project")
     }
@@ -4811,10 +4847,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update project")
     }
@@ -4861,10 +4898,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update project's IAM policy")
     }
@@ -4938,10 +4976,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create snapshot\n\nCreates a point-in-time snapshot from a disk.")
     }
@@ -5108,10 +5147,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Enable adoption of a physical disk for general use")
     }
@@ -5342,10 +5382,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Add new sleds to rack membership")
     }
@@ -5476,10 +5517,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Set sled provision policy")
     }
@@ -5658,10 +5700,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update LLDP configuration for switch port")
     }
@@ -5714,10 +5757,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Apply switch port settings")
     }
@@ -5887,10 +5931,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Create user\n\nUsers can only be created in Silos with `provision_type` == \
@@ -5943,10 +5988,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Set or invalidate user's password\n\nPasswords can only be updated for users in \
@@ -6030,10 +6076,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create SAML identity provider")
     }
@@ -6180,10 +6227,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create IP pool")
     }
@@ -6230,10 +6278,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update IP pool")
     }
@@ -6280,10 +6329,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Assign IP pool")
     }
@@ -6325,10 +6375,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Add range to IP pool\n\nFor multicast pools, all ranges must be either \
@@ -6357,10 +6408,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Remove range from IP pool")
     }
@@ -6432,10 +6484,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Link IP pool to silo\n\nUsers in linked silos can allocate external IPs from \
@@ -6482,10 +6535,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Make IP pool default for silo\n\nWhen a user asks for an IP (e.g., at instance \
@@ -6654,10 +6708,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create address lot")
     }
@@ -6731,10 +6786,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update user-facing services IP allowlist")
     }
@@ -6770,10 +6826,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Disable BFD session")
     }
@@ -6853,10 +6910,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Enable BFD session")
     }
@@ -6934,10 +6992,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Update the mutable fields of an existing BGP configuration\n\nThe asn field is \
@@ -6999,10 +7058,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create BGP configuration")
     }
@@ -7074,10 +7134,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Update BGP announce set\n\nIf the announce set exists, this endpoint replaces \
@@ -7170,10 +7231,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Set whether API services can receive limited ICMP traffic")
     }
@@ -7272,10 +7334,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create loopback address")
     }
@@ -7350,10 +7413,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update fleet-wide networking settings")
     }
@@ -7413,10 +7477,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create switch port settings")
     }
@@ -7460,10 +7525,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update top-level IAM policy")
     }
@@ -7641,10 +7707,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create silo")
     }
@@ -7739,10 +7806,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update silo IAM policy")
     }
@@ -7800,10 +7868,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Update resource quotas for silo\n\nIf a quota value is not specified, it will \
@@ -7907,10 +7976,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create subnet pool")
     }
@@ -7957,10 +8027,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update subnet pool")
     }
@@ -8046,10 +8117,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Add member to subnet pool")
     }
@@ -8081,10 +8153,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Remove member from subnet pool")
     }
@@ -8154,10 +8227,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Link subnet pool to silo")
     }
@@ -8194,10 +8268,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update subnet pool's link to silo")
     }
@@ -8275,10 +8350,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create support bundle")
     }
@@ -8320,10 +8396,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update support bundle")
     }
@@ -8382,10 +8459,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Run timeseries query\n\nQueries are written in OxQL.")
     }
@@ -8422,10 +8500,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Clear system recovery status\n\nInstructs the system that a system recovery \
@@ -8532,10 +8611,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Set target release\n\nSet the current target release of the rack's system \
@@ -8584,10 +8664,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Add trusted root role to updates trust store")
     }
@@ -8765,10 +8846,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Run project-scoped timeseries query\n\nQueries are written in OxQL. Project must \
@@ -8945,10 +9027,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Replace firewall rules\n\nThe maximum number of rules per VPC is \
@@ -9062,10 +9145,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create route")
     }
@@ -9162,10 +9246,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update route")
     }
@@ -9287,10 +9372,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create VPC router")
     }
@@ -9369,10 +9455,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update router")
     }
@@ -9520,10 +9607,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create subnet")
     }
@@ -9612,10 +9700,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update subnet")
     }
@@ -9776,10 +9865,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create VPC")
     }
@@ -9846,10 +9936,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Update VPC")
     }
@@ -9903,10 +9994,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Create webhook receiver")
     }
@@ -9948,10 +10040,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about(
                 "Update webhook receiver\n\nNote that receiver secrets are NOT added or removed \
@@ -9997,10 +10090,11 @@ impl<T: CliConfig> Cli<T> {
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
                     .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
+                    .help("Print the schema for the JSON body and exit."),
             )
             .about("Add secret to webhook receiver")
     }
@@ -10651,6 +10745,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.ttl_seconds(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::DeviceAuthRequest>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -10679,6 +10778,11 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.device_auth_confirm();
         if let Some(value) = matches.get_one::<::std::string::String>("user-code") {
             request = request.body_map(|body| body.user_code(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::DeviceAuthVerify>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -10719,6 +10823,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("grant-type") {
             request = request.body_map(|body| body.grant_type(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::DeviceAccessTokenRequest>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -10798,6 +10908,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::uuid::Uuid>("sled") {
             request = request.body_map(|body| body.sled(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::ProbeCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -10962,6 +11077,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::AffinityGroupCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -11032,6 +11152,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::AffinityGroupUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -11455,6 +11580,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.subscription(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::AlertSubscriptionCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -11675,6 +11806,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::AntiAffinityGroupCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -11745,6 +11882,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::AntiAffinityGroupUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -11974,6 +12117,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.device_token_max_ttl_seconds(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SiloAuthSettingsUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12060,6 +12209,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
             request = request.body_map(|body| body.service(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::CertificateCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -12190,6 +12344,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.size(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::DiskCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12279,6 +12438,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::ImportBlocksBulkWrite>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -12377,6 +12542,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.snapshot_name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::FinalizeDisk>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12461,6 +12631,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::ExternalSubnetCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12533,6 +12709,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::ExternalSubnetUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12599,6 +12781,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::ExternalSubnetAttach>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -12713,6 +12901,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::FloatingIpCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12785,6 +12978,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::FloatingIpUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -12855,6 +13053,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::FloatingIpAttach>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -13022,6 +13225,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("version") {
             request = request.body_map(|body| body.version(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::ImageCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -13232,6 +13440,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.user_data(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::InstanceCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -13315,6 +13528,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::InstanceUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -13527,6 +13745,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::DiskPath>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -13565,6 +13788,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::DiskPath>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -13629,6 +13857,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::EphemeralIpCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -13782,6 +14015,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::InstanceMulticastGroupJoin>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -14114,6 +14353,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::InternetGatewayIpAddressCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -14260,6 +14505,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::InternetGatewayIpPoolCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -14391,6 +14642,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::InternetGatewayCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -14560,6 +14817,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::UserId>("username") {
             request = request.body_map(|body| body.username(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::UsernamePasswordCredentials>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -14778,6 +15041,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("public-key") {
             request = request.body_map(|body| body.public_key(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SshKeyCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -15094,6 +15362,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.vpc_name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::InstanceNetworkInterfaceCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -15177,6 +15451,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::InstanceNetworkInterfaceUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -15269,6 +15549,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_policy_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_update();
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SiloRolePolicy>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -15336,6 +15621,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::ProjectCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -15390,6 +15680,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::ProjectUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -15465,6 +15760,11 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.project_policy_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::ProjectRolePolicy>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -15548,6 +15848,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SnapshotCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -15750,6 +16055,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("vendor") {
             request = request.body_map(|body| body.vendor(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::PhysicalDiskManufacturerIdentity>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -16110,6 +16421,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::RackMembershipAddSledsRequest>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -16288,6 +16605,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::SledProvisionPolicy>("state") {
             request = request.body_map(|body| body.state(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SledProvisionPolicyParams>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -16475,6 +16798,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.system_name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::LldpLinkConfig>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -16517,6 +16845,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
             request = request.switch_slot(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SwitchPortApplySettings>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -16719,6 +17053,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::UserCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -16783,6 +17122,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.user_id(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::UserPassword>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -16845,6 +17189,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("technical-contact-email") {
             request = request.body_map(|body| body.technical_contact_email(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SamlIdentityProviderCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -16974,6 +17324,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.pool_type(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpPoolCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17038,6 +17393,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.pool(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpPoolUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17096,6 +17456,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpPoolAssignParam>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17170,6 +17535,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.pool(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpRange>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17200,6 +17570,11 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.system_ip_pool_range_remove();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpRange>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17286,6 +17661,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.silo(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpPoolLinkSilo>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17324,6 +17704,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::IpPoolSiloUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17514,6 +17899,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::AddressLotCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17655,6 +18045,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_allow_list_update();
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::AllowListUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17689,6 +18084,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
             request = request.body_map(|body| body.switch_slot(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::BfdSessionDisable>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17741,6 +18141,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::SwitchSlot>("switch-slot") {
             request = request.body_map(|body| body.switch_slot(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::BfdSessionEnable>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17851,6 +18256,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.name_or_id(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::BgpConfigUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -17901,6 +18311,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::Name>("vrf") {
             request = request.body_map(|body| body.vrf(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::BgpConfigCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -17993,6 +18408,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::BgpAnnounceSetCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -18183,6 +18604,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.enabled(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::ServiceIcmpConfig>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18276,6 +18702,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.switch_slot(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::LoopbackAddressCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18365,6 +18797,12 @@ impl<T: CliConfig> Cli<T> {
                 request.body_map(|body| body.external_jumbo_frames_opt_in_enabled(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SystemNetworkingSettingsUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18445,6 +18883,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SwitchPortSettingsCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -18543,6 +18987,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_update();
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::FleetRolePolicy>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18761,6 +19210,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SiloCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18900,6 +19354,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SiloRolePolicy>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -18966,6 +19425,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::ByteCount>("storage") {
             request = request.body_map(|body| body.storage(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SiloQuotasUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -19092,6 +19556,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SubnetPoolCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -19154,6 +19623,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SubnetPoolUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -19265,6 +19739,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.subnet(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SubnetPoolMemberAdd>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -19299,6 +19778,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::IpNet>("subnet") {
             request = request.body_map(|body| body.subnet(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SubnetPoolMemberRemove>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -19386,6 +19871,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.silo(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SubnetPoolLinkSilo>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -19424,6 +19914,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SubnetPoolSiloUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -19551,6 +20047,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.user_comment(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SupportBundleCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -19609,6 +20110,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("user-comment") {
             request = request.body_map(|body| body.user_comment(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::SupportBundleUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -19805,6 +20311,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.query(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::TimeseriesQuery>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -19874,6 +20385,12 @@ impl<T: CliConfig> Cli<T> {
             matches.get_one::<types::SetTargetReleaseParamsSystemVersion>("system-version")
         {
             request = request.body_map(|body| body.system_version(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SetTargetReleaseParams>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -20019,6 +20536,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.system_version(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::SetTargetReleaseParams>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -20088,6 +20611,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_update_trust_root_create();
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<::serde_json::Value>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -20364,6 +20892,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.query(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::TimeseriesQuery>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -20615,6 +21148,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::VpcFirewallRuleUpdateParams>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -20715,6 +21254,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::RouterRouteCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -20801,6 +21345,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::RouterRouteUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -20930,6 +21479,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::VpcRouterCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -21007,6 +21561,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::VpcRouterUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -21144,6 +21703,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::VpcSubnetCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -21225,6 +21789,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::VpcSubnetUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -21396,6 +21965,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::VpcCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -21464,6 +22038,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::VpcUpdate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -21527,6 +22106,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::WebhookCreate>();
+            return Ok(());
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value)
                 .with_context(|| format!("failed to read {}", value.display()))?;
@@ -21569,6 +22153,12 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
             request = request.receiver(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config
+                .json_body_schema::<types::WebhookReceiverUpdate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -21629,6 +22219,11 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<::std::string::String>("secret") {
             request = request.body_map(|body| body.secret(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::WebhookSecretCreate>();
+            return Ok(());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -21697,6 +22292,9 @@ pub trait CliConfig {
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn list_end_error<T>(&self, value: &Error<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+    fn json_body_schema<T>(&self)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn execute_device_auth_request(

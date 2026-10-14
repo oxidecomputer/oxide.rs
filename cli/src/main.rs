@@ -342,6 +342,15 @@ impl CliConfig for OxideOverride {
 
         Ok(())
     }
+
+    fn json_body_schema<T>(&self)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+        let schema = schemars::schema_for!(T);
+        let s = serde_json::to_string_pretty(&schema).expect("failed to serialize schema to json");
+        println_nopipe!("{}", s);
+    }
 }
 
 #[cfg(test)]
