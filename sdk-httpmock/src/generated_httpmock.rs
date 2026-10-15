@@ -11168,6 +11168,307 @@ pub mod operations {
         }
     }
 
+    pub struct SiloCertificateListWhen(::httpmock::When);
+    impl SiloCertificateListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("silo"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct SiloCertificateListThen(::httpmock::Then);
+    impl SiloCertificateListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloCertificateCreateWhen(::httpmock::When);
+    impl SiloCertificateCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::CertificateCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SiloCertificateCreateThen(::httpmock::Then);
+    impl SiloCertificateCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Certificate) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloCertificateViewWhen(::httpmock::When);
+    impl SiloCertificateViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("silo"))
+            }
+        }
+    }
+
+    pub struct SiloCertificateViewThen(::httpmock::Then);
+    impl SiloCertificateViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Certificate) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloCertificateDeleteWhen(::httpmock::When);
+    impl SiloCertificateDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("silo"))
+            }
+        }
+    }
+
+    pub struct SiloCertificateDeleteThen(::httpmock::Then);
+    impl SiloCertificateDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct PhysicalDiskEnableAdoptionWhen(::httpmock::When);
     impl PhysicalDiskEnableAdoptionWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -24117,6 +24418,18 @@ pub trait MockServerExt {
     fn audit_log_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::AuditLogListWhen, operations::AuditLogListThen);
+    fn silo_certificate_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateListWhen, operations::SiloCertificateListThen);
+    fn silo_certificate_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateCreateWhen, operations::SiloCertificateCreateThen);
+    fn silo_certificate_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateViewWhen, operations::SiloCertificateViewThen);
+    fn silo_certificate_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateDeleteWhen, operations::SiloCertificateDeleteThen);
     fn physical_disk_enable_adoption<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -26642,6 +26955,54 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::AuditLogListWhen::new(when),
                 operations::AuditLogListThen::new(then),
+            )
+        })
+    }
+
+    fn silo_certificate_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateListWhen, operations::SiloCertificateListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloCertificateListWhen::new(when),
+                operations::SiloCertificateListThen::new(then),
+            )
+        })
+    }
+
+    fn silo_certificate_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateCreateWhen, operations::SiloCertificateCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloCertificateCreateWhen::new(when),
+                operations::SiloCertificateCreateThen::new(then),
+            )
+        })
+    }
+
+    fn silo_certificate_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateViewWhen, operations::SiloCertificateViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloCertificateViewWhen::new(when),
+                operations::SiloCertificateViewThen::new(then),
+            )
+        })
+    }
+
+    fn silo_certificate_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SiloCertificateDeleteWhen, operations::SiloCertificateDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloCertificateDeleteWhen::new(when),
+                operations::SiloCertificateDeleteThen::new(then),
             )
         })
     }
