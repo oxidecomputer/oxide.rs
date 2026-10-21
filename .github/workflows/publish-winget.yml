@@ -1,0 +1,51 @@
+# Publishes a new version of the Oxide CLI to the Windows Package Manager
+# Community Repository (microsoft/winget-pkgs).
+#
+# This is a dist "custom publish job": it is invoked from release.yml, which
+# dist generates from the `publish-jobs` list in dist-workspace.toml. Don't
+# wire it up by hand-editing release.yml -- `dist plan` fails CI when that file
+# differs from what dist would generate.
+#
+# Requires a WINGET_TOKEN secret: a classic PAT with the `public_repo` scope
+# (the action does not support fine-grained tokens) on an account with write
+# access to the oxidecomputer/winget-pkgs fork.
+
+name: Publish to WinGet
+
+on:
+  workflow_call:
+    inputs:
+      plan:
+        required: true
+        type: string
+
+jobs:
+  publish-winget:
+    runs-on: "ubuntu-22.04"
+    steps:
+      # Our tags carry build metadata (e.g. v0.18.0+2026073100.0.0) but the
+      # winget PackageVersion is the bare semver (0.18.0).
+      - id: release
+        env:
+          PLAN: ${{ inputs.plan }}
+        run: |
+          tag="$(jq -r .announcement_tag <<< "$PLAN")"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "version=$(echo "${tag#v}" | cut -d+ -f1)" >> "$GITHUB_OUTPUT"
+      # winget-releaser wraps komac, which bases the new manifests on the
+      # previous version already in winget-pkgs. That's why nothing here
+      # restates the zip/nested-portable layout, the oxide.exe command alias or
+      # the locale metadata -- they carry over from the prior version.
+      #
+      # Pinned to a commit SHA rather than the mutable @v2 tag because this job
+      # hands the action a write-scoped PAT.
+      - uses: vedantmgoyal9/winget-releaser@4ffc7888bffd451b357355dc214d43bb9f23917e # v2
+        with:
+          identifier: OxideComputer.OxideCLI
+          version: ${{ steps.release.outputs.version }}
+          release-tag: ${{ steps.release.outputs.tag }}
+          # Selects oxide-cli-x86_64-pc-windows-msvc.zip without also matching
+          # its .sha256 sidecar.
+          installers-regex: 'windows-msvc\.zip$'
+          release-notes-url: "https://github.com/oxidecomputer/oxide.rs/releases/tag/${{ steps.release.outputs.tag }}"
+          token: ${{ secrets.WINGET_TOKEN }}
