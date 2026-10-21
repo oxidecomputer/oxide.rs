@@ -19,7 +19,7 @@ fn test_update_upload() {
         then.ok(&TufRepoUpload {
             repo: TufRepo {
                 file_name: String::from("repo"),
-                hash: String::from("browns"),
+                hash: "a".repeat(64).parse().unwrap(),
                 system_version: "0.0.0".parse().unwrap(),
                 time_created: DateTime::<Utc>::from_timestamp(0x8000_0000, 0).unwrap(),
             },

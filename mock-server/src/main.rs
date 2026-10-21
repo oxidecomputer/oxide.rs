@@ -63,7 +63,7 @@ async fn system_update_put_repository(
     Ok(HttpResponseOk(TufRepoUpload {
         repo: TufRepo {
             file_name: query.into_inner().file_name,
-            hash: String::new(),
+            hash: "0".repeat(64).parse().unwrap(),
             system_version: "1.2.3".parse().unwrap(),
             time_created: DateTime::<Utc>::from_timestamp(0x8000_0000, 0).unwrap(),
         },
