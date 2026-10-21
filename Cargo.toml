@@ -75,6 +75,13 @@ tracing-subscriber = { version = "0.3.23", features = ["env-filter", "json"] }
 url = "2.5.8"
 uuid = { version = "1.23.1", features = ["serde", "v4"] }
 
+# Temporarily adding explicit rustls-webpki and webpki-root-certs versions in
+# case someone gets them exclusively through us and has not bumped those
+# dependencies either. Feel free to remove these at some point "long enough"
+# after the webpki-root-certs release.
+rustls-webpki = "0.103.16"
+webpki-root-certs = "1.0.10"
+
 # The profile that 'cargo dist' will build with
 [profile.dist]
 inherits = "release"
