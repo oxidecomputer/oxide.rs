@@ -48,18 +48,12 @@ oxide bundle inspect — Inspect a support bundle
 oxide bundle list — List all support bundles
 oxide bundle update — Update support bundle
 oxide bundle view — View support bundle
-oxide certificate create — Create system-wide x.509 certificate
+oxide certificate create — Create TLS certificate in current silo
 
-This certificate is automatically used by the Oxide Control plane to serve external connections.
-oxide certificate delete — Delete certificate
-
-Permanently delete a certificate. This operation cannot be undone.
-oxide certificate list — List certificates for external endpoints
-
-Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.
-oxide certificate view — Fetch certificate
-
-Returns the details of a specific certificate
+This certificate is automatically used by the Oxide control plane to serve API requests.
+oxide certificate delete — Delete TLS certificate in current silo
+oxide certificate list — List TLS certificates in current silo
+oxide certificate view — Fetch TLS certificate in current silo
 oxide completion — Generate shell completion scripts for Oxide CLI commands
 oxide current-user access-token delete — Delete access token
 
@@ -244,6 +238,16 @@ Specify the silo by name or ID using the `silo` query parameter.
 oxide scim token view — Fetch SCIM token
 
 Specify the silo by name or ID using the `silo` query parameter.
+oxide silo certificate create — Create TLS certificate in silo
+
+This certificate is automatically used by the Oxide control plane to serve API requests.
+oxide silo certificate delete — Delete TLS certificate in silo
+
+The silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.
+oxide silo certificate list — List TLS certificates in silo
+oxide silo certificate view — Fetch TLS certificate in silo
+
+The silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.
 oxide silo create — Create silo
 oxide silo delete — Delete silo
 

@@ -517,6 +517,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SiloUserList => Some("silo user list"),
         CliCommand::SiloUserView => Some("silo user view"),
 
+        CliCommand::SiloCertificateCreate => Some("silo certificate create"),
+        CliCommand::SiloCertificateView => Some("silo certificate view"),
+        CliCommand::SiloCertificateList => Some("silo certificate list"),
+        CliCommand::SiloCertificateDelete => Some("silo certificate delete"),
+
         CliCommand::SiloIdentityProviderList => Some("silo idp list"),
         CliCommand::LocalIdpUserCreate => Some("silo idp local user create"),
         CliCommand::LocalIdpUserDelete => Some("silo idp local user delete"),
