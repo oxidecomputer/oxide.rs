@@ -886,7 +886,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "about": "Create TLS certificate in current silo\n\nThis certificate is automatically used by the Oxide control plane to serve API requests.",
           "operation_id": "certificate_create",
           "args": [
             {
@@ -927,7 +927,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
+          "about": "Delete TLS certificate in current silo",
           "operation_id": "certificate_delete",
           "args": [
             {
@@ -943,7 +943,7 @@
         },
         {
           "name": "list",
-          "about": "List certificates for external endpoints\n\nReturns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
+          "about": "List TLS certificates in current silo",
           "operation_id": "certificate_list",
           "args": [
             {
@@ -967,7 +967,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch certificate\n\nReturns the details of a specific certificate",
+          "about": "Fetch TLS certificate in current silo",
           "operation_id": "certificate_view",
           "args": [
             {
@@ -4840,6 +4840,131 @@
         }
       ],
       "subcommands": [
+        {
+          "name": "certificate",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Create TLS certificate in silo\n\nThis certificate is automatically used by the Oxide control plane to serve API requests.",
+              "operation_id": "silo_certificate_create",
+              "args": [
+                {
+                  "long": "cert",
+                  "help": "PEM-formatted string containing public certificate chain"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-schema",
+                  "help": "Print the schema for the JSON body and exit."
+                },
+                {
+                  "long": "key",
+                  "help": "PEM-formatted string containing private key"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "service",
+                  "values": [
+                    "external_api"
+                  ],
+                  "help": "The service using this certificate"
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.",
+              "operation_id": "silo_certificate_delete",
+              "args": [
+                {
+                  "long": "certificate",
+                  "help": "Name or ID of the certificate"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List TLS certificates in silo",
+              "operation_id": "silo_certificate_list",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch TLS certificate in silo\n\nThe silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.",
+              "operation_id": "silo_certificate_view",
+              "args": [
+                {
+                  "long": "certificate",
+                  "help": "Name or ID of the certificate"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "create",
           "about": "Create silo",

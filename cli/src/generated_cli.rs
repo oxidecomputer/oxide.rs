@@ -188,6 +188,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SubnetPoolList => Self::cli_subnet_pool_list(),
             CliCommand::SubnetPoolView => Self::cli_subnet_pool_view(),
             CliCommand::AuditLogList => Self::cli_audit_log_list(),
+            CliCommand::SiloCertificateList => Self::cli_silo_certificate_list(),
+            CliCommand::SiloCertificateCreate => Self::cli_silo_certificate_create(),
+            CliCommand::SiloCertificateView => Self::cli_silo_certificate_view(),
+            CliCommand::SiloCertificateDelete => Self::cli_silo_certificate_delete(),
             CliCommand::PhysicalDiskEnableAdoption => Self::cli_physical_disk_enable_adoption(),
             CliCommand::PhysicalDiskDisableAdoption => Self::cli_physical_disk_disable_adoption(),
             CliCommand::PhysicalDiskListAdoptionRequests => {
@@ -1638,11 +1642,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about(
-                "List certificates for external endpoints\n\nReturns a list of TLS certificates \
-                 used for the external API (for the current Silo).  These are sorted by creation \
-                 date, with the most recent certificates appearing first.",
-            )
+            .about("List TLS certificates in current silo")
     }
 
     pub fn cli_certificate_create() -> ::clap::Command {
@@ -1701,8 +1701,8 @@ impl<T: CliConfig> Cli<T> {
                     .help("Print the schema for the JSON body and exit."),
             )
             .about(
-                "Create system-wide x.509 certificate\n\nThis certificate is automatically used \
-                 by the Oxide Control plane to serve external connections.",
+                "Create TLS certificate in current silo\n\nThis certificate is automatically used \
+                 by the Oxide control plane to serve API requests.",
             )
     }
 
@@ -1715,7 +1715,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
-            .about("Fetch certificate\n\nReturns the details of a specific certificate")
+            .about("Fetch TLS certificate in current silo")
     }
 
     pub fn cli_certificate_delete() -> ::clap::Command {
@@ -1727,10 +1727,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
-            .about(
-                "Delete certificate\n\nPermanently delete a certificate. This operation cannot be \
-                 undone.",
-            )
+            .about("Delete TLS certificate in current silo")
     }
 
     pub fn cli_disk_list() -> ::clap::Command {
@@ -5115,6 +5112,152 @@ impl<T: CliConfig> Cli<T> {
                  range that is fully in the past, the resulting list is guaranteed to be \
                  complete, i.e., fetching the same timespan again later will always produce the \
                  same set of entries.",
+            )
+    }
+
+    pub fn cli_silo_certificate_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List TLS certificates in silo")
+    }
+
+    pub fn cli_silo_certificate_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("cert")
+                    .long("cert")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body")
+                    .help("PEM-formatted string containing public certificate chain"),
+            )
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("key")
+                    .long("key")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body")
+                    .help("PEM-formatted string containing private key"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("service")
+                    .long("service")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::ServiceUsingCertificate::ExternalApi.to_string(),
+                        ]),
+                        |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The service using this certificate"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("Print the schema for the JSON body and exit."),
+            )
+            .about(
+                "Create TLS certificate in silo\n\nThis certificate is automatically used by the \
+                 Oxide control plane to serve API requests.",
+            )
+    }
+
+    pub fn cli_silo_certificate_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("certificate")
+                    .long("certificate")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the certificate"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the silo"),
+            )
+            .about(
+                "Fetch TLS certificate in silo\n\nThe silo must be specified if the certificate \
+                 is specified by name, and must not be specified if the certificate is specified \
+                 by ID.",
+            )
+    }
+
+    pub fn cli_silo_certificate_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("certificate")
+                    .long("certificate")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the certificate"),
+            )
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the silo"),
+            )
+            .about(
+                "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate \
+                 is specified by name, and must not be specified if the certificate is specified \
+                 by ID.",
             )
     }
 
@@ -10372,6 +10515,14 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SubnetPoolList => self.execute_subnet_pool_list(matches).await,
             CliCommand::SubnetPoolView => self.execute_subnet_pool_view(matches).await,
             CliCommand::AuditLogList => self.execute_audit_log_list(matches).await,
+            CliCommand::SiloCertificateList => self.execute_silo_certificate_list(matches).await,
+            CliCommand::SiloCertificateCreate => {
+                self.execute_silo_certificate_create(matches).await
+            }
+            CliCommand::SiloCertificateView => self.execute_silo_certificate_view(matches).await,
+            CliCommand::SiloCertificateDelete => {
+                self.execute_silo_certificate_delete(matches).await
+            }
             CliCommand::PhysicalDiskEnableAdoption => {
                 self.execute_physical_disk_enable_adoption(matches).await
             }
@@ -16036,6 +16187,163 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_silo_certificate_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.silo_certificate_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_silo_certificate_list(matches, &mut request)?;
+        self.config.list_start::<types::CertificateResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::CertificateResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_silo_certificate_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.silo_certificate_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("cert") {
+            request = request.body_map(|body| body.cert(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("key") {
+            request = request.body_map(|body| body.key(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
+            request = request.body_map(|body| body.service(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::CertificateCreate>();
+            return Ok(());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_silo_certificate_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_silo_certificate_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.silo_certificate_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
+            request = request.certificate(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.config
+            .execute_silo_certificate_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_silo_certificate_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.silo_certificate_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
+            request = request.certificate(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.config
+            .execute_silo_certificate_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -23449,6 +23757,38 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_silo_certificate_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SiloCertificateList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_silo_certificate_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SiloCertificateCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_silo_certificate_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SiloCertificateView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_silo_certificate_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SiloCertificateDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_physical_disk_enable_adoption(
         &self,
         matches: &::clap::ArgMatches,
@@ -24980,6 +25320,10 @@ pub enum CliCommand {
     SubnetPoolList,
     SubnetPoolView,
     AuditLogList,
+    SiloCertificateList,
+    SiloCertificateCreate,
+    SiloCertificateView,
+    SiloCertificateDelete,
     PhysicalDiskEnableAdoption,
     PhysicalDiskDisableAdoption,
     PhysicalDiskListAdoptionRequests,
@@ -25302,6 +25646,10 @@ impl CliCommand {
             CliCommand::SubnetPoolList,
             CliCommand::SubnetPoolView,
             CliCommand::AuditLogList,
+            CliCommand::SiloCertificateList,
+            CliCommand::SiloCertificateCreate,
+            CliCommand::SiloCertificateView,
+            CliCommand::SiloCertificateDelete,
             CliCommand::PhysicalDiskEnableAdoption,
             CliCommand::PhysicalDiskDisableAdoption,
             CliCommand::PhysicalDiskListAdoptionRequests,
@@ -25633,6 +25981,10 @@ impl CliCommand {
             CliCommand::SubnetPoolList => "subnet_pool_list",
             CliCommand::SubnetPoolView => "subnet_pool_view",
             CliCommand::AuditLogList => "audit_log_list",
+            CliCommand::SiloCertificateList => "silo_certificate_list",
+            CliCommand::SiloCertificateCreate => "silo_certificate_create",
+            CliCommand::SiloCertificateView => "silo_certificate_view",
+            CliCommand::SiloCertificateDelete => "silo_certificate_delete",
             CliCommand::PhysicalDiskEnableAdoption => "physical_disk_enable_adoption",
             CliCommand::PhysicalDiskDisableAdoption => "physical_disk_disable_adoption",
             CliCommand::PhysicalDiskListAdoptionRequests => "physical_disk_list_adoption_requests",

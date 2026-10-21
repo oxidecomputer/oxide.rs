@@ -13074,7 +13074,7 @@ pub mod types {
         /// since it's just what the client reported.
         pub file_name: ::std::string::String,
         /// The hash of the repository
-        pub hash: ::std::string::String,
+        pub hash: TufRepoHash,
         /// The system version for this repository
         ///
         /// The system version is a top-level version number applied to all the
@@ -13087,6 +13087,79 @@ pub mod types {
     impl TufRepo {
         pub fn builder() -> builder::TufRepo {
             Default::default()
+        }
+    }
+
+    /// The hash of the repository
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TufRepoHash(::std::string::String);
+    impl ::std::ops::Deref for TufRepoHash {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TufRepoHash> for ::std::string::String {
+        fn from(value: TufRepoHash) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::str::FromStr for TufRepoHash {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value)
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TufRepoHash {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 64usize {
+                return Err("longer than 64 characters".into());
+            }
+            if value.chars().count() < 64usize {
+                return Err("shorter than 64 characters".into());
+            }
+            static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+                ::std::sync::LazyLock::new(|| ::regress::Regex::new("^[0-9a-fA-F]{64}$").unwrap());
+            if PATTERN.find(value).is_none() {
+                return Err("doesn't match pattern \"^[0-9a-fA-F]{64}$\"".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TufRepoHash {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            ::std::convert::TryFrom::try_from(value.as_str())
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for TufRepoHash {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
         }
     }
 
@@ -41167,7 +41240,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct TufRepo {
             file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            hash: ::std::result::Result<::std::string::String, ::std::string::String>,
+            hash: ::std::result::Result<super::TufRepoHash, ::std::string::String>,
             system_version:
                 ::std::result::Result<super::TufRepoSystemVersion, ::std::string::String>,
             time_created: ::std::result::Result<
@@ -41200,7 +41273,7 @@ pub mod types {
             }
             pub fn hash<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::TufRepoHash>,
                 T::Error: ::std::fmt::Display,
             {
                 self.hash = value
@@ -45221,7 +45294,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026091500.0.0
+/// Version: 2026101500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -45262,7 +45335,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026091500.0.0"
+        "2026101500.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -47748,11 +47821,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn auth_settings_update(&self) -> builder::AuthSettingsUpdate<'_>;
-    /// List certificates for external endpoints
-    ///
-    /// Returns a list of TLS certificates used for the external API (for the
-    /// current Silo).  These are sorted by creation date, with the most recent
-    /// certificates appearing first.
+    /// List TLS certificates in current silo
     ///
     /// Sends a `GET` request to `/v1/certificates`
     ///
@@ -47770,10 +47839,10 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_list(&self) -> builder::CertificateList<'_>;
-    /// Create system-wide x.509 certificate
+    /// Create TLS certificate in current silo
     ///
-    /// This certificate is automatically used by the Oxide Control plane to
-    /// serve external connections.
+    /// This certificate is automatically used by the Oxide control plane to
+    /// serve API requests.
     ///
     /// Sends a `POST` request to `/v1/certificates`
     ///
@@ -47784,9 +47853,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_create(&self) -> builder::CertificateCreate<'_>;
-    /// Fetch certificate
-    ///
-    /// Returns the details of a specific certificate
+    /// Fetch TLS certificate in current silo
     ///
     /// Sends a `GET` request to `/v1/certificates/{certificate}`
     ///
@@ -47799,9 +47866,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_view(&self) -> builder::CertificateView<'_>;
-    /// Delete certificate
-    ///
-    /// Permanently delete a certificate. This operation cannot be undone.
+    /// Delete TLS certificate in current silo
     ///
     /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
     ///
@@ -50124,6 +50189,80 @@ impl ClientSystemNetworkingExt for Client {
 
 /// Silos represent a logical partition of users and resources.
 pub trait ClientSystemSilosExt {
+    /// List TLS certificates in silo
+    ///
+    /// Sends a `GET` request to `/v1/system/certificates`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_certificate_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .silo(silo)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_certificate_list(&self) -> builder::SiloCertificateList<'_>;
+    /// Create TLS certificate in silo
+    ///
+    /// This certificate is automatically used by the Oxide control plane to
+    /// serve API requests.
+    ///
+    /// Sends a `POST` request to `/v1/system/certificates`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
+    /// ```ignore
+    /// let response = client.silo_certificate_create()
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_certificate_create(&self) -> builder::SiloCertificateCreate<'_>;
+    /// Fetch TLS certificate in silo
+    ///
+    /// The silo must be specified if the certificate is specified by name, and
+    /// must not be specified if the certificate is specified by ID.
+    ///
+    /// Sends a `GET` request to `/v1/system/certificates/{certificate}`
+    ///
+    /// Arguments:
+    /// - `certificate`: Name or ID of the certificate
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.silo_certificate_view()
+    ///    .certificate(certificate)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_certificate_view(&self) -> builder::SiloCertificateView<'_>;
+    /// Delete TLS certificate in silo
+    ///
+    /// The silo must be specified if the certificate is specified by name, and
+    /// must not be specified if the certificate is specified by ID.
+    ///
+    /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
+    ///
+    /// Arguments:
+    /// - `certificate`: Name or ID of the certificate
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.silo_certificate_delete()
+    ///    .certificate(certificate)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_certificate_delete(&self) -> builder::SiloCertificateDelete<'_>;
     /// List identity providers for silo
     ///
     /// List identity providers for silo by silo name or ID.
@@ -50577,6 +50716,22 @@ pub trait ClientSystemSilosExt {
 }
 
 impl ClientSystemSilosExt for Client {
+    fn silo_certificate_list(&self) -> builder::SiloCertificateList<'_> {
+        builder::SiloCertificateList::new(self)
+    }
+
+    fn silo_certificate_create(&self) -> builder::SiloCertificateCreate<'_> {
+        builder::SiloCertificateCreate::new(self)
+    }
+
+    fn silo_certificate_view(&self) -> builder::SiloCertificateView<'_> {
+        builder::SiloCertificateView::new(self)
+    }
+
+    fn silo_certificate_delete(&self) -> builder::SiloCertificateDelete<'_> {
+        builder::SiloCertificateDelete::new(self)
+    }
+
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList<'_> {
         builder::SiloIdentityProviderList::new(self)
     }
@@ -69106,6 +69261,452 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_certificate_list`]
+    ///
+    /// [`ClientSystemSilosExt::silo_certificate_list`]: super::ClientSystemSilosExt::silo_certificate_list
+    #[derive(Debug, Clone)]
+    pub struct SiloCertificateList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        silo: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloCertificateList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/certificates`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::CertificateResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                silo,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/certificates", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "silo_certificate_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/certificates`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Certificate, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                silo: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_certificate_create`]
+    ///
+    /// [`ClientSystemSilosExt::silo_certificate_create`]: super::ClientSystemSilosExt::silo_certificate_create
+    #[derive(Debug, Clone)]
+    pub struct SiloCertificateCreate<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::builder::CertificateCreate, String>,
+    }
+
+    impl<'a> SiloCertificateCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::CertificateCreate>,
+            <V as std::convert::TryInto<types::CertificateCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `CertificateCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::CertificateCreate,
+            ) -> types::builder::CertificateCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/certificates`
+        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
+            let Self { client, silo, body } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::CertificateCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/certificates", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "silo_certificate_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_certificate_view`]
+    ///
+    /// [`ClientSystemSilosExt::silo_certificate_view`]: super::ClientSystemSilosExt::silo_certificate_view
+    #[derive(Debug, Clone)]
+    pub struct SiloCertificateView<'a> {
+        client: &'a super::Client,
+        certificate: Result<types::NameOrId, String>,
+        silo: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> SiloCertificateView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                certificate: Err("certificate was not initialized".to_string()),
+                silo: Ok(None),
+            }
+        }
+
+        pub fn certificate<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.certificate = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/certificates/{certificate}`
+        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
+            let Self {
+                client,
+                certificate,
+                silo,
+            } = self;
+            let certificate = certificate.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/certificates/{}",
+                client.baseurl,
+                encode_path(&certificate.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "silo_certificate_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_certificate_delete`]
+    ///
+    /// [`ClientSystemSilosExt::silo_certificate_delete`]: super::ClientSystemSilosExt::silo_certificate_delete
+    #[derive(Debug, Clone)]
+    pub struct SiloCertificateDelete<'a> {
+        client: &'a super::Client,
+        certificate: Result<types::NameOrId, String>,
+        silo: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> SiloCertificateDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                certificate: Err("certificate was not initialized".to_string()),
+                silo: Ok(None),
+            }
+        }
+
+        pub fn certificate<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.certificate = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                certificate,
+                silo,
+            } = self;
+            let certificate = certificate.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/certificates/{}",
+                client.baseurl,
+                encode_path(&certificate.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "silo_certificate_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
