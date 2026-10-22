@@ -60,6 +60,13 @@ tracing-subscriber = { workspace = true }
 url = { workspace = true }
 uuid = { workspace = true }
 
+# Temporarily adding explicit rustls-webpki and webpki-root-certs versions in
+# case someone gets them exclusively through us and has not bumped those
+# dependencies either. Feel free to remove these at some point "long enough"
+# after the webpki-root-certs release.
+rustls-webpki = "0.103.16"
+webpki-root-certs = "1.0.10"
+
 [dev-dependencies]
 assert_cmd = { workspace = true }
 dropshot = { workspace = true }

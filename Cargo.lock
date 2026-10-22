@@ -2651,6 +2651,7 @@ dependencies = [
  "ratatui",
  "rcgen",
  "reqwest",
+ "rustls-webpki",
  "schemars",
  "serde",
  "serde_json",
@@ -2667,6 +2668,7 @@ dependencies = [
  "tracing-subscriber",
  "url",
  "uuid",
+ "webpki-root-certs",
 ]
 
 [[package]]
