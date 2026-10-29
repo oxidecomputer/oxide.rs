@@ -10,6 +10,7 @@ use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;
 use newline_converter::dos2unix;
+use progenitor::codespace::Codespace;
 use progenitor::typespace::TypespaceTrait;
 use progenitor::{GenerationSettings, Generator, TagStyle};
 use similar::{Algorithm, ChangeTag, TextDiff};
@@ -86,19 +87,34 @@ fn generate(
 
     // SDK
     if sdk {
-        print!("generating sdk ... ");
-        std::io::stdout().flush().unwrap();
+        println!("generating sdk:");
 
-        let code = generator.generate_sdk().into_stream();
-        let contents = format_code(code.to_string());
-        loc += contents.matches('\n').count();
+        let mod_space = generator.generate_sdk();
 
-        let mut out_path = root_path.clone();
-        out_path.push("sdk");
-        out_path.push("src");
-        out_path.push("generated_sdk.rs");
+        // We make an outer "lib" wrapper Codespace and insert the generated
+        // SDK as a mod since it drops into an existing hand-written lib.rs.
+        let mut lib_space = Codespace::default();
+        lib_space
+            .add_mod_from_codespace("generated", mod_space)
+            .unwrap();
 
-        error |= output_contents(check, out_path, contents, verbose).is_err();
+        let sdk_src = root_path.join("sdk").join("src");
+
+        for (path, code) in lib_space.into_files() {
+            // Don't overwrite the hand-written lib.rs!
+            if &path == "lib.rs" {
+                continue;
+            }
+
+            print!("  {} ... ", path.display());
+            std::io::stdout().flush().unwrap();
+
+            let out_path = sdk_src.join(path);
+
+            let contents = format_code(code.to_string());
+            loc += contents.matches('\n').count();
+            error |= output_contents(check, out_path, contents, verbose).is_err();
+        }
     }
 
     // SDK httpmock library
@@ -224,7 +240,7 @@ fn output_contents(
     verbose: bool,
 ) -> Result<(), ()> {
     if check {
-        let checked_in = std::fs::read_to_string(out_path).unwrap();
+        let checked_in = std::fs::read_to_string(out_path).unwrap_or_default();
         let checked_in = dos2unix(&checked_in);
         if checked_in != contents {
             println!("❌");
@@ -236,6 +252,7 @@ fn output_contents(
             println!("👍");
         }
     } else {
+        std::fs::create_dir_all(out_path.parent().unwrap()).unwrap();
         std::fs::write(out_path, &contents).unwrap();
         println!("done.");
     }
