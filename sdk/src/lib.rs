@@ -22,10 +22,10 @@ mod auth;
 mod clap_feature;
 #[cfg(feature = "extras")]
 pub mod extras;
-mod generated_sdk;
+mod generated;
 
 pub use auth::*;
-pub use generated_sdk::*;
+pub use generated::*;
 
 /// Errors for interfaces related to authentication
 #[derive(Error, Debug)]
