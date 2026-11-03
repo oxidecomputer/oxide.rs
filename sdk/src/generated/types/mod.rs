@@ -9119,6 +9119,12 @@ impl Rack {
 /// `RackMembershipAddSledsRequest`
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct RackMembershipAddSledsRequest {
+    /// Optional overrides for various safety checks
+    ///
+    /// Overriding checks is dangerous and should only be done at the direction
+    /// of Oxide support.
+    #[serde(default = "defaults::rack_membership_add_sleds_request_override_prechecks")]
+    pub override_prechecks: SledAddPrecheckOverrides,
     pub sled_ids: ::std::vec::Vec<BaseboardId>,
 }
 
@@ -10384,6 +10390,46 @@ pub struct Sled {
 
 impl Sled {
     pub fn builder() -> builder::Sled {
+        Default::default()
+    }
+}
+
+/// Instructs the system to override safety checks when adding a sled
+#[derive(
+    :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, Default, schemars :: JsonSchema,
+)]
+pub struct SledAddPrecheckOverrides {
+    /// Add the requested sleds even if their software does not match the
+    /// current target release
+    ///
+    /// This allows sleds to be added even when their SP, RoT, RoT bootloader,
+    /// or host OS phase 1 images cannot be confirmed to match those expected by
+    /// the control plane. Adding sleds with mismatched software is not
+    /// supported since the control plane needs compatible versions in order to
+    /// communicate with the sled.
+    ///
+    /// This override is provided for working around bugs and only in emergency
+    /// situations. It should not generally be used.
+    #[serde(default)]
+    pub allow_unverified_sled_software: bool,
+    /// Add the requested sleds even if the system has not settled on its
+    /// current target release
+    ///
+    /// This allows sleds to be added when the system is in the middle of a
+    /// software update or if it has recently been MUPdated and that MUPdate
+    /// hasn't been resolved. This is not generally supported because in order
+    /// for adding a sled to work, the versions of software on that sled must
+    /// match the rest of the control plane, but that's not well-defined in
+    /// these two cases.
+    ///
+    /// This override is provided for working around bugs and only in emergency
+    /// situations. It should not generally be used.
+    #[serde(default)]
+    pub allow_without_settled_target_release: bool,
+}
+
+impl SledAddPrecheckOverrides {
+    pub fn builder() -> builder::SledAddPrecheckOverrides {
         Default::default()
     }
 }

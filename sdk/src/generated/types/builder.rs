@@ -18494,18 +18494,34 @@ impl ::std::convert::From<super::Rack> for Rack {
 
 #[derive(Clone, Debug)]
 pub struct RackMembershipAddSledsRequest {
+    override_prechecks:
+        ::std::result::Result<super::SledAddPrecheckOverrides, ::std::string::String>,
     sled_ids: ::std::result::Result<::std::vec::Vec<super::BaseboardId>, ::std::string::String>,
 }
 
 impl ::std::default::Default for RackMembershipAddSledsRequest {
     fn default() -> Self {
         Self {
+            override_prechecks: Ok(
+                super::defaults::rack_membership_add_sleds_request_override_prechecks(),
+            ),
             sled_ids: Err("no value supplied for sled_ids".to_string()),
         }
     }
 }
 
 impl RackMembershipAddSledsRequest {
+    pub fn override_prechecks<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::SledAddPrecheckOverrides>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.override_prechecks = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for override_prechecks: {e}"));
+        self
+    }
+
     pub fn sled_ids<T>(mut self, value: T) -> Self
     where
         T: ::std::convert::TryInto<::std::vec::Vec<super::BaseboardId>>,
@@ -18526,6 +18542,7 @@ impl ::std::convert::TryFrom<RackMembershipAddSledsRequest>
         value: RackMembershipAddSledsRequest,
     ) -> ::std::result::Result<Self, super::error::ConversionError> {
         Ok(Self {
+            override_prechecks: value.override_prechecks?,
             sled_ids: value.sled_ids?,
         })
     }
@@ -18534,6 +18551,7 @@ impl ::std::convert::TryFrom<RackMembershipAddSledsRequest>
 impl ::std::convert::From<super::RackMembershipAddSledsRequest> for RackMembershipAddSledsRequest {
     fn from(value: super::RackMembershipAddSledsRequest) -> Self {
         Self {
+            override_prechecks: Ok(value.override_prechecks),
             sled_ids: Ok(value.sled_ids),
         }
     }
@@ -21626,6 +21644,66 @@ impl ::std::convert::From<super::Sled> for Sled {
             time_modified: Ok(value.time_modified),
             usable_hardware_threads: Ok(value.usable_hardware_threads),
             usable_physical_ram: Ok(value.usable_physical_ram),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct SledAddPrecheckOverrides {
+    allow_unverified_sled_software: ::std::result::Result<bool, ::std::string::String>,
+    allow_without_settled_target_release: ::std::result::Result<bool, ::std::string::String>,
+}
+
+impl ::std::default::Default for SledAddPrecheckOverrides {
+    fn default() -> Self {
+        Self {
+            allow_unverified_sled_software: Ok(Default::default()),
+            allow_without_settled_target_release: Ok(Default::default()),
+        }
+    }
+}
+
+impl SledAddPrecheckOverrides {
+    pub fn allow_unverified_sled_software<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<bool>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.allow_unverified_sled_software = value.try_into().map_err(|e| {
+            format!("error converting supplied value for allow_unverified_sled_software: {e}")
+        });
+        self
+    }
+
+    pub fn allow_without_settled_target_release<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<bool>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.allow_without_settled_target_release = value.try_into().map_err(|e| {
+            format!("error converting supplied value for allow_without_settled_target_release: {e}")
+        });
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<SledAddPrecheckOverrides> for super::SledAddPrecheckOverrides {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: SledAddPrecheckOverrides,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            allow_unverified_sled_software: value.allow_unverified_sled_software?,
+            allow_without_settled_target_release: value.allow_without_settled_target_release?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::SledAddPrecheckOverrides> for SledAddPrecheckOverrides {
+    fn from(value: super::SledAddPrecheckOverrides) -> Self {
+        Self {
+            allow_unverified_sled_software: Ok(value.allow_unverified_sled_software),
+            allow_without_settled_target_release: Ok(value.allow_without_settled_target_release),
         }
     }
 }
