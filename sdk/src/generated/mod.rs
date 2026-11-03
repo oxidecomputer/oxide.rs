@@ -52,7 +52,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026102900.0.0
+/// Version: 2026110200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -93,7 +93,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026102900.0.0"
+        "2026110200.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -2626,6 +2626,9 @@ pub trait ClientSilosExt {
     fn certificate_view(&self) -> builder::CertificateView<'_>;
     /// Delete TLS certificate in current silo
     ///
+    /// The silo's last certificate cannot be deleted. Create another
+    /// certificate first.
+    ///
     /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
     ///
     /// Arguments:
@@ -5007,6 +5010,9 @@ pub trait ClientSystemSilosExt {
     ///
     /// The silo must be specified if the certificate is specified by name, and
     /// must not be specified if the certificate is specified by ID.
+    ///
+    /// The silo's last certificate cannot be deleted. Create another
+    /// certificate first.
     ///
     /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
     ///

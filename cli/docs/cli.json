@@ -927,7 +927,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete TLS certificate in current silo",
+          "about": "Delete TLS certificate in current silo\n\nThe silo's last certificate cannot be deleted. Create another certificate first.",
           "operation_id": "certificate_delete",
           "args": [
             {
@@ -4897,7 +4897,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.",
+              "about": "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.\n\nThe silo's last certificate cannot be deleted. Create another certificate first.",
               "operation_id": "silo_certificate_delete",
               "args": [
                 {

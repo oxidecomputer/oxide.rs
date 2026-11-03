@@ -1727,7 +1727,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
-            .about("Delete TLS certificate in current silo")
+            .about(
+                "Delete TLS certificate in current silo\n\nThe silo's last certificate cannot be \
+                 deleted. Create another certificate first.",
+            )
     }
 
     pub fn cli_disk_list() -> ::clap::Command {
@@ -5257,7 +5260,8 @@ impl<T: CliConfig> Cli<T> {
             .about(
                 "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate \
                  is specified by name, and must not be specified if the certificate is specified \
-                 by ID.",
+                 by ID.\n\nThe silo's last certificate cannot be deleted. Create another \
+                 certificate first.",
             )
     }
 
