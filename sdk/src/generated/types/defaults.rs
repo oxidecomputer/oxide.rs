@@ -74,3 +74,11 @@ pub(super) fn probe_create_pool_selector() -> super::PoolSelector {
         ip_version: ::std::option::Option::None,
     }
 }
+
+pub(super) fn rack_membership_add_sleds_request_override_prechecks(
+) -> super::SledAddPrecheckOverrides {
+    super::SledAddPrecheckOverrides {
+        allow_unverified_sled_software: false,
+        allow_without_settled_target_release: false,
+    }
+}
