@@ -26684,6 +26684,234 @@ impl ::std::convert::From<super::UnadoptedPhysicalDiskResultsPage>
 }
 
 #[derive(Clone, Debug)]
+pub struct UnadoptedRack {
+    rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+    rack_subnet: ::std::result::Result<super::Ipv6Net, ::std::string::String>,
+    unadopted_sleds:
+        ::std::result::Result<::std::vec::Vec<super::UnadoptedSled>, ::std::string::String>,
+}
+
+impl ::std::default::Default for UnadoptedRack {
+    fn default() -> Self {
+        Self {
+            rack_id: Err("no value supplied for rack_id".to_string()),
+            rack_subnet: Err("no value supplied for rack_subnet".to_string()),
+            unadopted_sleds: Err("no value supplied for unadopted_sleds".to_string()),
+        }
+    }
+}
+
+impl UnadoptedRack {
+    pub fn rack_id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::uuid::Uuid>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.rack_id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+        self
+    }
+
+    pub fn rack_subnet<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::Ipv6Net>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.rack_subnet = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for rack_subnet: {e}"));
+        self
+    }
+
+    pub fn unadopted_sleds<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<super::UnadoptedSled>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.unadopted_sleds = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for unadopted_sleds: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<UnadoptedRack> for super::UnadoptedRack {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: UnadoptedRack,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            rack_id: value.rack_id?,
+            rack_subnet: value.rack_subnet?,
+            unadopted_sleds: value.unadopted_sleds?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::UnadoptedRack> for UnadoptedRack {
+    fn from(value: super::UnadoptedRack) -> Self {
+        Self {
+            rack_id: Ok(value.rack_id),
+            rack_subnet: Ok(value.rack_subnet),
+            unadopted_sleds: Ok(value.unadopted_sleds),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct UnadoptedRackResultsPage {
+    items: ::std::result::Result<::std::vec::Vec<super::UnadoptedRack>, ::std::string::String>,
+    next_page:
+        ::std::result::Result<::std::option::Option<::std::string::String>, ::std::string::String>,
+}
+
+impl ::std::default::Default for UnadoptedRackResultsPage {
+    fn default() -> Self {
+        Self {
+            items: Err("no value supplied for items".to_string()),
+            next_page: Ok(Default::default()),
+        }
+    }
+}
+
+impl UnadoptedRackResultsPage {
+    pub fn items<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<super::UnadoptedRack>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.items = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for items: {e}"));
+        self
+    }
+
+    pub fn next_page<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.next_page = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<UnadoptedRackResultsPage> for super::UnadoptedRackResultsPage {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: UnadoptedRackResultsPage,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            items: value.items?,
+            next_page: value.next_page?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::UnadoptedRackResultsPage> for UnadoptedRackResultsPage {
+    fn from(value: super::UnadoptedRackResultsPage) -> Self {
+        Self {
+            items: Ok(value.items),
+            next_page: Ok(value.next_page),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct UnadoptedSled {
+    baseboard_id: ::std::result::Result<super::BaseboardId, ::std::string::String>,
+    last_start_err:
+        ::std::result::Result<::std::option::Option<::std::string::String>, ::std::string::String>,
+    sled_agent_started: ::std::result::Result<bool, ::std::string::String>,
+    sled_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+}
+
+impl ::std::default::Default for UnadoptedSled {
+    fn default() -> Self {
+        Self {
+            baseboard_id: Err("no value supplied for baseboard_id".to_string()),
+            last_start_err: Ok(Default::default()),
+            sled_agent_started: Err("no value supplied for sled_agent_started".to_string()),
+            sled_id: Err("no value supplied for sled_id".to_string()),
+        }
+    }
+}
+
+impl UnadoptedSled {
+    pub fn baseboard_id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::BaseboardId>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.baseboard_id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for baseboard_id: {e}"));
+        self
+    }
+
+    pub fn last_start_err<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.last_start_err = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for last_start_err: {e}"));
+        self
+    }
+
+    pub fn sled_agent_started<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<bool>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.sled_agent_started = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for sled_agent_started: {e}"));
+        self
+    }
+
+    pub fn sled_id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::uuid::Uuid>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.sled_id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for sled_id: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<UnadoptedSled> for super::UnadoptedSled {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: UnadoptedSled,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            baseboard_id: value.baseboard_id?,
+            last_start_err: value.last_start_err?,
+            sled_agent_started: value.sled_agent_started?,
+            sled_id: value.sled_id?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::UnadoptedSled> for UnadoptedSled {
+    fn from(value: super::UnadoptedSled) -> Self {
+        Self {
+            baseboard_id: Ok(value.baseboard_id),
+            last_start_err: Ok(value.last_start_err),
+            sled_agent_started: Ok(value.sled_agent_started),
+            sled_id: Ok(value.sled_id),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct UninitializedSled {
     baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
     cubby: ::std::result::Result<u16, ::std::string::String>,

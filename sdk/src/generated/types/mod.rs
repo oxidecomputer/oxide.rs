@@ -12644,6 +12644,57 @@ impl UnadoptedPhysicalDiskResultsPage {
     }
 }
 
+/// View of a rack that's joined the underlay network but hasn't been adopted
+/// into the regional cluster yet
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct UnadoptedRack {
+    pub rack_id: ::uuid::Uuid,
+    pub rack_subnet: Ipv6Net,
+    pub unadopted_sleds: ::std::vec::Vec<UnadoptedSled>,
+}
+
+impl UnadoptedRack {
+    pub fn builder() -> builder::UnadoptedRack {
+        Default::default()
+    }
+}
+
+/// A single page of results
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct UnadoptedRackResultsPage {
+    /// list of items on this page of results
+    pub items: ::std::vec::Vec<UnadoptedRack>,
+    /// token used to fetch the next page of results (if any)
+    #[serde(skip_serializing_if = "::std::option::Option::is_none")]
+    pub next_page: ::std::option::Option<::std::string::String>,
+}
+
+impl UnadoptedRackResultsPage {
+    pub fn builder() -> builder::UnadoptedRackResultsPage {
+        Default::default()
+    }
+}
+
+/// View of an unadopted sled in an unadopted rack
+///
+/// This is distinct from an `UninitializedSled`, which represents an
+/// uninitialized sled in an *adopted* rack; by contrast, this represents a sled
+/// in a rack that hasn't been adopted yet.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct UnadoptedSled {
+    pub baseboard_id: BaseboardId,
+    #[serde(skip_serializing_if = "::std::option::Option::is_none")]
+    pub last_start_err: ::std::option::Option<::std::string::String>,
+    pub sled_agent_started: bool,
+    pub sled_id: ::uuid::Uuid,
+}
+
+impl UnadoptedSled {
+    pub fn builder() -> builder::UnadoptedSled {
+        Default::default()
+    }
+}
+
 /// A sled that has not been added to an initialized rack yet
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct UninitializedSled {

@@ -208,6 +208,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::RackMembershipStatus => Self::cli_rack_membership_status(),
             CliCommand::RackMembershipAbort => Self::cli_rack_membership_abort(),
             CliCommand::RackMembershipAddSleds => Self::cli_rack_membership_add_sleds(),
+            CliCommand::RackListUnadopted => Self::cli_rack_list_unadopted(),
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
@@ -5538,6 +5539,32 @@ impl<T: CliConfig> Cli<T> {
             .about("Add new sleds to rack membership")
     }
 
+    pub fn cli_rack_list_unadopted() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about(
+                "List unadopted racks\n\nLists racks that have joined the underlay network but \
+                 have not yet been adopted into the regional cluster.",
+            )
+    }
+
     pub fn cli_sled_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -10553,6 +10580,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::RackMembershipAddSleds => {
                 self.execute_rack_membership_add_sleds(matches).await
             }
+            CliCommand::RackListUnadopted => self.execute_rack_list_unadopted(matches).await,
             CliCommand::SledList => self.execute_sled_list(matches).await,
             CliCommand::SledView => self.execute_sled_view(matches).await,
             CliCommand::SledPhysicalDiskList => self.execute_sled_physical_disk_list(matches).await,
@@ -16759,6 +16787,46 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_rack_list_unadopted(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.rack_list_unadopted();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_rack_list_unadopted(matches, &mut request)?;
+        self.config.list_start::<types::UnadoptedRackResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::UnadoptedRackResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -23889,6 +23957,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_rack_list_unadopted(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::RackListUnadopted,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_sled_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -25340,6 +25416,7 @@ pub enum CliCommand {
     RackMembershipStatus,
     RackMembershipAbort,
     RackMembershipAddSleds,
+    RackListUnadopted,
     SledList,
     SledView,
     SledPhysicalDiskList,
@@ -25666,6 +25743,7 @@ impl CliCommand {
             CliCommand::RackMembershipStatus,
             CliCommand::RackMembershipAbort,
             CliCommand::RackMembershipAddSleds,
+            CliCommand::RackListUnadopted,
             CliCommand::SledList,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
@@ -26003,6 +26081,7 @@ impl CliCommand {
             CliCommand::RackMembershipStatus => "rack_membership_status",
             CliCommand::RackMembershipAbort => "rack_membership_abort",
             CliCommand::RackMembershipAddSleds => "rack_membership_add_sleds",
+            CliCommand::RackListUnadopted => "rack_list_unadopted",
             CliCommand::SledList => "sled_list",
             CliCommand::SledView => "sled_view",
             CliCommand::SledPhysicalDiskList => "sled_physical_disk_list",
