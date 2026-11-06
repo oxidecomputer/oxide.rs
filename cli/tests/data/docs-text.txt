@@ -52,6 +52,8 @@ oxide certificate create — Create TLS certificate in current silo
 
 This certificate is automatically used by the Oxide control plane to serve API requests.
 oxide certificate delete — Delete TLS certificate in current silo
+
+The silo's last certificate cannot be deleted. Create another certificate first.
 oxide certificate list — List TLS certificates in current silo
 oxide certificate view — Fetch TLS certificate in current silo
 oxide completion — Generate shell completion scripts for Oxide CLI commands
@@ -244,6 +246,8 @@ This certificate is automatically used by the Oxide control plane to serve API r
 oxide silo certificate delete — Delete TLS certificate in silo
 
 The silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.
+
+The silo's last certificate cannot be deleted. Create another certificate first.
 oxide silo certificate list — List TLS certificates in silo
 oxide silo certificate view — Fetch TLS certificate in silo
 

@@ -12369,6 +12369,94 @@ pub mod operations {
         }
     }
 
+    pub struct RackListUnadoptedWhen(::httpmock::When);
+    impl RackListUnadoptedWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/hardware/racks-unadopted$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct RackListUnadoptedThen(::httpmock::Then);
+    impl RackListUnadoptedThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UnadoptedRackResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SledListWhen(::httpmock::When);
     impl SledListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -24481,6 +24569,9 @@ pub trait MockServerExt {
     fn rack_membership_add_sleds<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::RackMembershipAddSledsWhen, operations::RackMembershipAddSledsThen);
+    fn rack_list_unadopted<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackListUnadoptedWhen, operations::RackListUnadoptedThen);
     fn sled_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SledListWhen, operations::SledListThen);
@@ -27162,6 +27253,18 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::RackMembershipAddSledsWhen::new(when),
                 operations::RackMembershipAddSledsThen::new(then),
+            )
+        })
+    }
+
+    fn rack_list_unadopted<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackListUnadoptedWhen, operations::RackListUnadoptedThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackListUnadoptedWhen::new(when),
+                operations::RackListUnadoptedThen::new(then),
             )
         })
     }
