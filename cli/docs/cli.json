@@ -5983,6 +5983,28 @@
                   ]
                 },
                 {
+                  "name": "list-unadopted",
+                  "about": "List unadopted racks\n\nLists racks that have joined the underlay network but have not yet been adopted into the regional cluster.",
+                  "operation_id": "rack_list_unadopted",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "membership",
                   "args": [
                     {

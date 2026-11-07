@@ -304,6 +304,9 @@ oxide system hardware disk list — List physical disks
 oxide system hardware disk list-unadopted — List physical disks that have not yet been adopted for use
 oxide system hardware disk view — Get physical disk
 oxide system hardware rack list — List racks
+oxide system hardware rack list-unadopted — List unadopted racks
+
+Lists racks that have joined the underlay network but have not yet been adopted into the regional cluster.
 oxide system hardware rack membership abort — Abort the latest rack membership change
 
 This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.
