@@ -927,7 +927,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete TLS certificate in current silo",
+          "about": "Delete TLS certificate in current silo\n\nThe silo's last certificate cannot be deleted. Create another certificate first.",
           "operation_id": "certificate_delete",
           "args": [
             {
@@ -4897,7 +4897,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.",
+              "about": "Delete TLS certificate in silo\n\nThe silo must be specified if the certificate is specified by name, and must not be specified if the certificate is specified by ID.\n\nThe silo's last certificate cannot be deleted. Create another certificate first.",
               "operation_id": "silo_certificate_delete",
               "args": [
                 {
@@ -5964,6 +5964,28 @@
                   "name": "list",
                   "about": "List racks",
                   "operation_id": "rack_list",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "list-unadopted",
+                  "about": "List unadopted racks\n\nLists racks that have joined the underlay network but have not yet been adopted into the regional cluster.",
+                  "operation_id": "rack_list_unadopted",
                   "args": [
                     {
                       "long": "limit",

@@ -52,7 +52,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026102900.0.0
+/// Version: 2026110400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64,7 +64,10 @@ impl Client {
     /// `baseurl` is the base URL provided to the internal
     /// `reqwest::Client`, and should include a scheme and hostname,
     /// as well as port and a path stem if applicable.
-    pub fn new(baseurl: &str) -> Self {
+    ///
+    /// Returns an error if the `reqwest::Client` cannot be built,
+    /// for example when the TLS backend fails to initialize.
+    pub fn new(baseurl: &str) -> Result<Self, reqwest::Error> {
         #[cfg(not(target_arch = "wasm32"))]
         let client = {
             let dur = ::std::time::Duration::from_secs(15u64);
@@ -74,7 +77,7 @@ impl Client {
         };
         #[cfg(target_arch = "wasm32")]
         let client = reqwest::ClientBuilder::new();
-        Self::new_with_client(baseurl, client.build().unwrap())
+        Ok(Self::new_with_client(baseurl, client.build()?))
     }
 
     /// Construct a new client with an existing `reqwest::Client`,
@@ -93,7 +96,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026102900.0.0"
+        "2026110400.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -2626,6 +2629,9 @@ pub trait ClientSilosExt {
     fn certificate_view(&self) -> builder::CertificateView<'_>;
     /// Delete TLS certificate in current silo
     ///
+    /// The silo's last certificate cannot be deleted. Create another
+    /// certificate first.
+    ///
     /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
     ///
     /// Arguments:
@@ -3567,6 +3573,27 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn rack_view(&self) -> builder::RackView<'_>;
+    /// List unadopted racks
+    ///
+    /// Lists racks that have joined the underlay network but have not yet been
+    /// adopted into the regional cluster.
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/racks-unadopted`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.rack_list_unadopted()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn rack_list_unadopted(&self) -> builder::RackListUnadopted<'_>;
     /// List sleds
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds`
@@ -3819,6 +3846,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn rack_view(&self) -> builder::RackView<'_> {
         builder::RackView::new(self)
+    }
+
+    fn rack_list_unadopted(&self) -> builder::RackListUnadopted<'_> {
+        builder::RackListUnadopted::new(self)
     }
 
     fn sled_list(&self) -> builder::SledList<'_> {
@@ -5007,6 +5038,9 @@ pub trait ClientSystemSilosExt {
     ///
     /// The silo must be specified if the certificate is specified by name, and
     /// must not be specified if the certificate is specified by ID.
+    ///
+    /// The silo's last certificate cannot be deleted. Create another
+    /// certificate first.
     ///
     /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
     ///

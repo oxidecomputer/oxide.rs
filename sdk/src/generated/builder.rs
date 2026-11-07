@@ -18545,6 +18545,159 @@ impl<'a> RackMembershipAddSleds<'a> {
     }
 }
 
+/// Builder for [`ClientSystemHardwareExt::rack_list_unadopted`]
+///
+/// [`ClientSystemHardwareExt::rack_list_unadopted`]: super::ClientSystemHardwareExt::rack_list_unadopted
+#[derive(Debug, Clone)]
+pub struct RackListUnadopted<'a> {
+    client: &'a super::Client,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::IdSortMode>, String>,
+}
+
+impl<'a> RackListUnadopted<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+        }
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::IdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/hardware/racks-unadopted`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::UnadoptedRackResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            limit,
+            page_token,
+            sort_by,
+        } = self;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let url = format!("{}/v1/system/hardware/racks-unadopted", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "rack_list_unadopted",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/system/hardware/racks-unadopted`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::UnadoptedRack, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
 /// Builder for [`ClientSystemHardwareExt::sled_list`]
 ///
 /// [`ClientSystemHardwareExt::sled_list`]: super::ClientSystemHardwareExt::sled_list
