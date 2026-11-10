@@ -3419,6 +3419,16 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
+            .arg(
+                ::clap::Arg::new("skip-os-shutdown")
+                    .long("skip-os-shutdown")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether to override the instance's configured Shutdown Policy, if any, \
+                         and hard-cut the power of the VM guest for this stop or reboot request.",
+                    ),
+            )
             .about("Reboot instance")
     }
 
@@ -3588,6 +3598,16 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("skip-os-shutdown")
+                    .long("skip-os-shutdown")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether to override the instance's configured Shutdown Policy, if any, \
+                         and hard-cut the power of the VM guest for this stop or reboot request.",
+                    ),
             )
             .about("Stop instance")
     }
@@ -14274,6 +14294,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<bool>("skip-os-shutdown") {
+            request = request.skip_os_shutdown(value.clone());
+        }
+
         self.config.execute_instance_reboot(matches, &mut request)?;
         let result = request.send().await;
         match result {
@@ -14438,6 +14462,10 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("skip-os-shutdown") {
+            request = request.skip_os_shutdown(value.clone());
         }
 
         self.config.execute_instance_stop(matches, &mut request)?;

@@ -10282,6 +10282,7 @@ pub struct InstanceReboot<'a> {
     client: &'a super::Client,
     instance: Result<types::NameOrId, String>,
     project: Result<Option<types::NameOrId>, String>,
+    skip_os_shutdown: Result<Option<bool>, String>,
 }
 
 impl<'a> InstanceReboot<'a> {
@@ -10290,6 +10291,7 @@ impl<'a> InstanceReboot<'a> {
             client: client,
             instance: Err("instance was not initialized".to_string()),
             project: Ok(None),
+            skip_os_shutdown: Ok(None),
         }
     }
 
@@ -10314,15 +10316,28 @@ impl<'a> InstanceReboot<'a> {
         self
     }
 
+    pub fn skip_os_shutdown<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<bool>,
+    {
+        self.skip_os_shutdown = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `bool` for skip_os_shutdown failed".to_string());
+        self
+    }
+
     /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
     pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
         let Self {
             client,
             instance,
             project,
+            skip_os_shutdown,
         } = self;
         let instance = instance.map_err(Error::InvalidRequest)?;
         let project = project.map_err(Error::InvalidRequest)?;
+        let skip_os_shutdown = skip_os_shutdown.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/instances/{}/reboot",
             client.baseurl,
@@ -10342,6 +10357,10 @@ impl<'a> InstanceReboot<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&progenitor_client::QueryParam::new(
+                "skip_os_shutdown",
+                &skip_os_shutdown,
+            ))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10911,6 +10930,7 @@ pub struct InstanceStop<'a> {
     client: &'a super::Client,
     instance: Result<types::NameOrId, String>,
     project: Result<Option<types::NameOrId>, String>,
+    skip_os_shutdown: Result<Option<bool>, String>,
 }
 
 impl<'a> InstanceStop<'a> {
@@ -10919,6 +10939,7 @@ impl<'a> InstanceStop<'a> {
             client: client,
             instance: Err("instance was not initialized".to_string()),
             project: Ok(None),
+            skip_os_shutdown: Ok(None),
         }
     }
 
@@ -10943,15 +10964,28 @@ impl<'a> InstanceStop<'a> {
         self
     }
 
+    pub fn skip_os_shutdown<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<bool>,
+    {
+        self.skip_os_shutdown = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `bool` for skip_os_shutdown failed".to_string());
+        self
+    }
+
     /// Sends a `POST` request to `/v1/instances/{instance}/stop`
     pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
         let Self {
             client,
             instance,
             project,
+            skip_os_shutdown,
         } = self;
         let instance = instance.map_err(Error::InvalidRequest)?;
         let project = project.map_err(Error::InvalidRequest)?;
+        let skip_os_shutdown = skip_os_shutdown.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/instances/{}/stop",
             client.baseurl,
@@ -10971,6 +11005,10 @@ impl<'a> InstanceStop<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&progenitor_client::QueryParam::new(
+                "skip_os_shutdown",
+                &skip_os_shutdown,
+            ))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {

@@ -6901,6 +6901,17 @@ pub mod operations {
                 Self(self.0.query_param_missing("project"))
             }
         }
+
+        pub fn skip_os_shutdown<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("skip_os_shutdown", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("skip_os_shutdown"))
+            }
+        }
     }
 
     pub struct InstanceRebootThen(::httpmock::Then);
@@ -7338,6 +7349,17 @@ pub mod operations {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
                 Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn skip_os_shutdown<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("skip_os_shutdown", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("skip_os_shutdown"))
             }
         }
     }

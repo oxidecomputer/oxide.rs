@@ -52,7 +52,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026110400.0.0
+/// Version: 2026110500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -96,7 +96,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026110400.0.0"
+        "2026110500.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -1946,10 +1946,14 @@ pub trait ClientInstancesExt {
     /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
+    /// - `skip_os_shutdown`: Whether to override the instance's configured
+    ///   Shutdown Policy, if any, and hard-cut the power of the VM guest for
+    ///   this stop or reboot request.
     /// ```ignore
     /// let response = client.instance_reboot()
     ///    .instance(instance)
     ///    .project(project)
+    ///    .skip_os_shutdown(skip_os_shutdown)
     ///    .send()
     ///    .await;
     /// ```
@@ -2053,10 +2057,14 @@ pub trait ClientInstancesExt {
     /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
+    /// - `skip_os_shutdown`: Whether to override the instance's configured
+    ///   Shutdown Policy, if any, and hard-cut the power of the VM guest for
+    ///   this stop or reboot request.
     /// ```ignore
     /// let response = client.instance_stop()
     ///    .instance(instance)
     ///    .project(project)
+    ///    .skip_os_shutdown(skip_os_shutdown)
     ///    .send()
     ///    .await;
     /// ```
