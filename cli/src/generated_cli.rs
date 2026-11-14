@@ -313,6 +313,13 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemPolicyView => Self::cli_system_policy_view(),
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
+            CliCommand::ProblemList => Self::cli_problem_list(),
+            CliCommand::ProblemView => Self::cli_problem_view(),
+            CliCommand::ProblemAlertList => Self::cli_problem_alert_list(),
+            CliCommand::ProblemCausesList => Self::cli_problem_causes_list(),
+            CliCommand::ProblemConsequencesList => Self::cli_problem_consequences_list(),
+            CliCommand::ProblemImpactList => Self::cli_problem_impact_list(),
+            CliCommand::ProblemSupportBundlesList => Self::cli_problem_support_bundles_list(),
             CliCommand::ScimTokenList => Self::cli_scim_token_list(),
             CliCommand::ScimTokenCreate => Self::cli_scim_token_create(),
             CliCommand::ScimTokenView => Self::cli_scim_token_view(),
@@ -7708,6 +7715,311 @@ impl<T: CliConfig> Cli<T> {
             .about("Update top-level IAM policy")
     }
 
+    pub fn cli_problem_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("state")
+                    .long("state")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::ProblemState::Active.to_string(),
+                            types::ProblemState::Resolved.to_string(),
+                        ]),
+                        |s| types::ProblemState::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "If this is included, only problems in the specified state will be \
+                         returned. Otherwise, problems in all states will be returned.",
+                    ),
+            )
+            .about(
+                "List problems\n\nProblems are sorted by the time at which they were detected, \
+                 and may be filtered by state.",
+            )
+    }
+
+    pub fn cli_problem_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("problem-id")
+                    .long("problem-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the problem"),
+            )
+            .about("Fetch problem")
+    }
+
+    pub fn cli_problem_alert_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("alert-class")
+                    .long("alert-class")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required(false)
+                    .help(
+                        "Optional alert class or glob pattern used to filter alerts.\n\nIf this \
+                         is included, only alerts with the specified class or matching the glob \
+                         pattern (as appropriate) will be returned. Otherwise, alerts of all \
+                         classes will be returned.\n\nSee the guide-level documentation on alerts \
+                         for details on alert classes and alert class glob patterns.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("end-time")
+                    .long("end-time")
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
+                    .required(false)
+                    .help(
+                        "Inclusive upper bound on the alert creation time\n\nIf this is included, \
+                         only alerts created at or before this time will be returned.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("problem-id")
+                    .long("problem-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the problem"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("start-time")
+                    .long("start-time")
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
+                    .required(false)
+                    .help(
+                        "Inclusive lower bound on the alert creation time.\n\nIf this is \
+                         included, only alerts created at or after this time will be returned.",
+                    ),
+            )
+            .about(
+                "List alerts for problem\n\nLists alerts associated with the requested problem. \
+                 Alerts may be filtered by alert class or alert class glob and by an inclusive \
+                 creation time range.",
+            )
+    }
+
+    pub fn cli_problem_causes_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("problem-id")
+                    .long("problem-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the problem"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("state")
+                    .long("state")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::ProblemState::Active.to_string(),
+                            types::ProblemState::Resolved.to_string(),
+                        ]),
+                        |s| types::ProblemState::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "If this is included, only problems in the specified state will be \
+                         returned. Otherwise, problems in all states will be returned.",
+                    ),
+            )
+            .about(
+                "List causes of problem\n\nReturns any other problems which are the causes of the \
+                 specified problem. If the specified problem has no causes, this list may be \
+                 empty.",
+            )
+    }
+
+    pub fn cli_problem_consequences_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("problem-id")
+                    .long("problem-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the problem"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("state")
+                    .long("state")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::ProblemState::Active.to_string(),
+                            types::ProblemState::Resolved.to_string(),
+                        ]),
+                        |s| types::ProblemState::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "If this is included, only problems in the specified state will be \
+                         returned. Otherwise, problems in all states will be returned.",
+                    ),
+            )
+            .about(
+                "List consequences of problem\n\nReturns any other problems which are caused by \
+                 the specified problem. If no other problem is caused by the specified problem, \
+                 then this list may be empty.",
+            )
+    }
+
+    pub fn cli_problem_impact_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("problem-id")
+                    .long("problem-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the problem"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("state")
+                    .long("state")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::ImpactState::Active.to_string(),
+                            types::ImpactState::Recovered.to_string(),
+                            types::ImpactState::OutOfService.to_string(),
+                        ]),
+                        |s| types::ImpactState::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "If this is included, only impacts in the specified state will be \
+                         returned. Otherwise, all impacts will be returned.",
+                    ),
+            )
+            .about("List resources impacted by problem")
+    }
+
+    pub fn cli_problem_support_bundles_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("problem-id")
+                    .long("problem-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the problem"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List support bundles attached to problem")
+    }
+
     pub fn cli_scim_token_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -10763,6 +11075,17 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemPolicyView => self.execute_system_policy_view(matches).await,
             CliCommand::SystemPolicyUpdate => self.execute_system_policy_update(matches).await,
+            CliCommand::ProblemList => self.execute_problem_list(matches).await,
+            CliCommand::ProblemView => self.execute_problem_view(matches).await,
+            CliCommand::ProblemAlertList => self.execute_problem_alert_list(matches).await,
+            CliCommand::ProblemCausesList => self.execute_problem_causes_list(matches).await,
+            CliCommand::ProblemConsequencesList => {
+                self.execute_problem_consequences_list(matches).await
+            }
+            CliCommand::ProblemImpactList => self.execute_problem_impact_list(matches).await,
+            CliCommand::ProblemSupportBundlesList => {
+                self.execute_problem_support_bundles_list(matches).await
+            }
             CliCommand::ScimTokenList => self.execute_scim_token_list(matches).await,
             CliCommand::ScimTokenCreate => self.execute_scim_token_create(matches).await,
             CliCommand::ScimTokenView => self.execute_scim_token_view(matches).await,
@@ -19395,6 +19718,313 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_problem_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.problem_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::ProblemState>("state") {
+            request = request.state(value.clone());
+        }
+
+        self.config.execute_problem_list(matches, &mut request)?;
+        self.config.list_start::<types::ProblemResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config.list_end_success::<types::ProblemResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_problem_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.problem_view();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("problem-id") {
+            request = request.problem_id(value.clone());
+        }
+
+        self.config.execute_problem_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_problem_alert_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.problem_alert_list();
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("alert-class") {
+            request = request.alert_class(value.clone());
+        }
+
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
+        {
+            request = request.end_time(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("problem-id") {
+            request = request.problem_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
+        {
+            request = request.start_time(value.clone());
+        }
+
+        self.config
+            .execute_problem_alert_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config.list_end_success::<types::AlertResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_problem_causes_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.problem_causes_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("problem-id") {
+            request = request.problem_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::ProblemState>("state") {
+            request = request.state(value.clone());
+        }
+
+        self.config
+            .execute_problem_causes_list(matches, &mut request)?;
+        self.config.list_start::<types::RelatedProblemResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::RelatedProblemResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_problem_consequences_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.problem_consequences_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("problem-id") {
+            request = request.problem_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::ProblemState>("state") {
+            request = request.state(value.clone());
+        }
+
+        self.config
+            .execute_problem_consequences_list(matches, &mut request)?;
+        self.config.list_start::<types::RelatedProblemResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::RelatedProblemResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_problem_impact_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.problem_impact_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("problem-id") {
+            request = request.problem_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::ImpactState>("state") {
+            request = request.state(value.clone());
+        }
+
+        self.config
+            .execute_problem_impact_list(matches, &mut request)?;
+        self.config.list_start::<types::ProblemImpactResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::ProblemImpactResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_problem_support_bundles_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.problem_support_bundles_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("problem-id") {
+            request = request.problem_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_problem_support_bundles_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::SupportBundleInfoResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SupportBundleInfoResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_scim_token_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -24525,6 +25155,62 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_problem_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_problem_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_problem_alert_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemAlertList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_problem_causes_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemCausesList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_problem_consequences_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemConsequencesList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_problem_impact_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemImpactList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_problem_support_bundles_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ProblemSupportBundlesList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_scim_token_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -25487,6 +26173,13 @@ pub enum CliCommand {
     NetworkingSwitchPortSettingsView,
     SystemPolicyView,
     SystemPolicyUpdate,
+    ProblemList,
+    ProblemView,
+    ProblemAlertList,
+    ProblemCausesList,
+    ProblemConsequencesList,
+    ProblemImpactList,
+    ProblemSupportBundlesList,
     ScimTokenList,
     ScimTokenCreate,
     ScimTokenView,
@@ -25814,6 +26507,13 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortSettingsView,
             CliCommand::SystemPolicyView,
             CliCommand::SystemPolicyUpdate,
+            CliCommand::ProblemList,
+            CliCommand::ProblemView,
+            CliCommand::ProblemAlertList,
+            CliCommand::ProblemCausesList,
+            CliCommand::ProblemConsequencesList,
+            CliCommand::ProblemImpactList,
+            CliCommand::ProblemSupportBundlesList,
             CliCommand::ScimTokenList,
             CliCommand::ScimTokenCreate,
             CliCommand::ScimTokenView,
@@ -26164,6 +26864,13 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortSettingsView => "networking_switch_port_settings_view",
             CliCommand::SystemPolicyView => "system_policy_view",
             CliCommand::SystemPolicyUpdate => "system_policy_update",
+            CliCommand::ProblemList => "problem_list",
+            CliCommand::ProblemView => "problem_view",
+            CliCommand::ProblemAlertList => "problem_alert_list",
+            CliCommand::ProblemCausesList => "problem_causes_list",
+            CliCommand::ProblemConsequencesList => "problem_consequences_list",
+            CliCommand::ProblemImpactList => "problem_impact_list",
+            CliCommand::ProblemSupportBundlesList => "problem_support_bundles_list",
             CliCommand::ScimTokenList => "scim_token_list",
             CliCommand::ScimTokenCreate => "scim_token_create",
             CliCommand::ScimTokenView => "scim_token_view",
