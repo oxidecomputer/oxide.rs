@@ -5080,6 +5080,111 @@ impl ::std::convert::From<::uuid::Uuid> for ImageSource {
     }
 }
 
+/// Describes whether a resource impacted by an active problem is currently
+/// impacted by that problem, or why it is no longer impacted.
+#[derive(
+    :: serde :: Deserialize,
+    :: serde :: Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    schemars :: JsonSchema,
+)]
+pub enum ImpactState {
+    /// The resource is currently impacted by the active problem.
+    #[serde(rename = "active")]
+    Active,
+    /// The resource has returned to a healthy state due to automated response
+    /// or operator actions. It is no longer impacted by this problem, even if
+    /// the problem remains active.
+    #[serde(rename = "recovered")]
+    Recovered,
+    /// The resource is no longer impacted by the problem because the resource
+    /// has been removed from service by an operator action.
+    ///
+    /// This occurs when an operator (or Oxide support) expunges a hardware
+    /// resource (such as a physical disk or compute sled), or when a virtual
+    /// resource (such as an instance or virtual disk) is deleted.
+    #[serde(rename = "out_of_service")]
+    OutOfService,
+}
+
+impl ::std::fmt::Display for ImpactState {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::Active => f.write_str("active"),
+            Self::Recovered => f.write_str("recovered"),
+            Self::OutOfService => f.write_str("out_of_service"),
+        }
+    }
+}
+
+impl ::std::str::FromStr for ImpactState {
+    type Err = self::error::ConversionError;
+    fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "active" => Ok(Self::Active),
+            "recovered" => Ok(Self::Recovered),
+            "out_of_service" => Ok(Self::OutOfService),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+
+impl ::std::convert::TryFrom<&str> for ImpactState {
+    type Error = self::error::ConversionError;
+    fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+
+impl ::std::convert::TryFrom<::std::string::String> for ImpactState {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+
+/// API resource types which may be impacted by a problem.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+#[serde(tag = "resource_type", content = "id")]
+pub enum ImpactedResource {
+    /// A sled.
+    #[serde(rename = "sled")]
+    Sled(::uuid::Uuid),
+    /// A switch.
+    #[serde(rename = "switch")]
+    Switch(::uuid::Uuid),
+    /// A switch port.
+    #[serde(rename = "switch_port")]
+    SwitchPort(::uuid::Uuid),
+    /// A physical disk.
+    #[serde(rename = "physical_disk")]
+    PhysicalDisk(::uuid::Uuid),
+    /// A virtual machine instance.
+    #[serde(rename = "instance")]
+    Instance(::uuid::Uuid),
+    /// A virtual disk.
+    #[serde(rename = "disk")]
+    Disk(::uuid::Uuid),
+    /// An image.
+    #[serde(rename = "image")]
+    Image(::uuid::Uuid),
+    /// A virtual disk snapshot.
+    #[serde(rename = "snapshot")]
+    Snapshot(::uuid::Uuid),
+    /// A silo.
+    #[serde(rename = "silo")]
+    Silo(::uuid::Uuid),
+}
+
 /// Parameters for importing blocks with a bulk write
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct ImportBlocksBulkWrite {
@@ -8868,6 +8973,240 @@ impl ProbeInfoResultsPage {
     }
 }
 
+/// An active or resolved problem detected by the fault management subsystem.
+///
+/// Problems describe conditions in which some aspect of the system's operation
+/// is degraded. A problem is either *active*, if the condition is still
+/// ongoing, or *resolved*, once the fault management system has determined that
+/// the system is no longer impacted. The `state` field indicates whether a
+/// given problem is active or has been resolved. Resolved problems remain
+/// accessible for historical purposes.
+///
+/// A problem's *impacts* refers to the resources which are affected by an
+/// active problem at a given time. Both hardware resources (e.g. sleds,
+/// physical disks, switches, et cetera) and user-created virtual resources
+/// (e.g. instances, virtual disks, and so on) may be impacted by a problem. The
+/// list of impacted resources may change over time, as the system detects
+/// additional impacted resources, or as resources recover due to automated or
+/// operator response to the problem. To view the list of resources currently
+/// impacted by a problem, use the `problem_impact_list` API endpoint.
+///
+/// Problems may cause, and may be caused by, other problems. A problem may have
+/// multiple causes, and may result in any number of other problems. The
+/// resolution of a problem that causes other problems may, or may not, result
+/// in the resolution of the caused problems, depending on the nature of the
+/// problem. Conversely, problems caused by another problem may be resolved
+/// without resolving the causing problem, again depending on the nature of the
+/// particular issue. Use the `problem_cause_list` and
+/// `problem_consequences_list` API endpoints to list any problems causing or
+/// caused by a given problem, respectively.
+///
+/// Alerts provide notifications regarding events that occurred over the course
+/// of an active problem. To view the list of alerts generated by a problem, use
+/// the `problem_alert_list` API endpoint. This list may be sorted by the
+/// alert's timestamp to provide a chronological view of the problem.
+///
+/// Support bundles may be attached to a problem to provide additional
+/// diagnostic data for operators and Oxide support. Use the
+/// `problem_support_bundle_list` API endpoint to list the support bundles
+/// attached to a problem.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct Problem {
+    /// A description of any actions an operator should take in response to this
+    /// problem.
+    ///
+    /// This may change as the problem progresses.
+    pub action_required: ::std::string::String,
+    /// The problem's class.
+    ///
+    /// Problem classes indicate the broad category of the issue that this
+    /// problem represents, while its problem code represents the specific
+    /// nature of the issue. The class is determined by the problem code: all
+    /// problems with the same problem code will have the same class.
+    ///
+    /// Problem classes are represented by dot-separated strings, in which each
+    /// segment is more specific than the last. For example, a problem related
+    /// to a rack's power shelf will have the problem code
+    /// `hardware.power_shelf`.
+    pub class: ::std::string::String,
+    /// The problem code describing this problem.
+    ///
+    /// Problem codes are opaque numeric identifiers that indicate the nature of
+    /// the issue a problem represents. They may be used to reference
+    /// documentation and service instructions for that particular kind of
+    /// problem, and to communicate with Oxide support. The problem code may
+    /// change if the diagnosis of the problem changes, which creates a new
+    /// revision.
+    pub code: u32,
+    /// A longer human-readable description of the problem.
+    ///
+    /// This may change as the problem progresses.
+    pub description: ::std::string::String,
+    /// Unique, immutable, system-controlled identifier for each resource
+    pub id: ::uuid::Uuid,
+    /// The current revision number of this problem.
+    ///
+    /// The revision number is incremented each time the problem is updated.
+    /// Changes to a problem's impact list, description, and relationships with
+    /// other problems all increment the revision number.
+    pub revision: u64,
+    /// The current state of this problem.
+    pub state: ProblemState,
+    /// A brief, human-readable summary of the problem.
+    ///
+    /// This is short enough to be used as a title. It is intended for display
+    /// to humans, and is not a stable identifier. For a machine-consumable
+    /// identifier, use the problem code field.
+    pub summary: ::std::string::String,
+    /// Timestamp when this resource was created
+    pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+    /// Timestamp when this resource was last modified
+    pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    /// The time at which this problem entered its current `state`.
+    ///
+    /// For an active problem, this is the time at which the problem was first
+    /// detected. For a resolved problem, this is the time at which the problem
+    /// was determined to be resolved.
+    pub time_state_changed: ::chrono::DateTime<::chrono::offset::Utc>,
+}
+
+impl Problem {
+    pub fn builder() -> builder::Problem {
+        Default::default()
+    }
+}
+
+/// A resource impacted by a problem.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct ProblemImpact {
+    /// ID of the problem impacting this resource.
+    pub problem_id: ::uuid::Uuid,
+    /// A human-readable summary of how this resource is impacted by the
+    /// problem.
+    pub reason: ::std::string::String,
+    /// The impacted resource's type and ID.
+    pub resource: ImpactedResource,
+    /// The revision of the problem in which this impact was added.
+    pub revision_added: u64,
+    /// Whether or not the resource remains impacted by the problem.
+    pub state: ImpactState,
+    /// The time at which the system first determined this resource to be
+    /// impacted by the problem.
+    ///
+    /// Note: impact to this resource may predate this timestamp. This
+    /// represents the first time at which the system detected the impact to
+    /// this resource and determine that it was due to this problem.
+    pub time_detected: ::chrono::DateTime<::chrono::offset::Utc>,
+    /// The time at which this impact entered its current `state`.
+    ///
+    /// For an impact that is still active, this is the same as `time_detected`.
+    /// Otherwise, this is the time at which the resource recovered or was
+    /// removed from service.
+    pub time_state_changed: ::chrono::DateTime<::chrono::offset::Utc>,
+}
+
+impl ProblemImpact {
+    pub fn builder() -> builder::ProblemImpact {
+        Default::default()
+    }
+}
+
+/// A single page of results
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct ProblemImpactResultsPage {
+    /// list of items on this page of results
+    pub items: ::std::vec::Vec<ProblemImpact>,
+    /// token used to fetch the next page of results (if any)
+    #[serde(skip_serializing_if = "::std::option::Option::is_none")]
+    pub next_page: ::std::option::Option<::std::string::String>,
+}
+
+impl ProblemImpactResultsPage {
+    pub fn builder() -> builder::ProblemImpactResultsPage {
+        Default::default()
+    }
+}
+
+/// A single page of results
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct ProblemResultsPage {
+    /// list of items on this page of results
+    pub items: ::std::vec::Vec<Problem>,
+    /// token used to fetch the next page of results (if any)
+    #[serde(skip_serializing_if = "::std::option::Option::is_none")]
+    pub next_page: ::std::option::Option<::std::string::String>,
+}
+
+impl ProblemResultsPage {
+    pub fn builder() -> builder::ProblemResultsPage {
+        Default::default()
+    }
+}
+
+/// The state of a problem.
+#[derive(
+    :: serde :: Deserialize,
+    :: serde :: Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    schemars :: JsonSchema,
+)]
+pub enum ProblemState {
+    /// The condition represented by the problem is still ongoing.
+    #[serde(rename = "active")]
+    Active,
+    /// The system has determined that the problem no longer exists.
+    ///
+    /// A resolved problem never becomes active again. If a similar condition is
+    /// detected again, a new problem with a new ID is created.
+    ///
+    /// Resolved problems are retained for historical purposes.
+    #[serde(rename = "resolved")]
+    Resolved,
+}
+
+impl ::std::fmt::Display for ProblemState {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::Active => f.write_str("active"),
+            Self::Resolved => f.write_str("resolved"),
+        }
+    }
+}
+
+impl ::std::str::FromStr for ProblemState {
+    type Err = self::error::ConversionError;
+    fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "active" => Ok(Self::Active),
+            "resolved" => Ok(Self::Resolved),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+
+impl ::std::convert::TryFrom<&str> for ProblemState {
+    type Error = self::error::ConversionError;
+    fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+
+impl ::std::convert::TryFrom<::std::string::String> for ProblemState {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+
 /// View of a Project
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct Project {
@@ -9270,6 +9609,42 @@ pub struct RackResultsPage {
 
 impl RackResultsPage {
     pub fn builder() -> builder::RackResultsPage {
+        Default::default()
+    }
+}
+
+/// A problem that is a cause or consequence of another problem
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct RelatedProblem {
+    /// ID of the related problem
+    pub id: ::uuid::Uuid,
+    /// A human-readable summary of why the problems are related.
+    pub reason: ::std::string::String,
+    /// The revision of the requested problem in which this relationship was
+    /// added.
+    pub revision_added: u64,
+    /// The current state of the related problem.
+    pub state: ProblemState,
+}
+
+impl RelatedProblem {
+    pub fn builder() -> builder::RelatedProblem {
+        Default::default()
+    }
+}
+
+/// A single page of results
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct RelatedProblemResultsPage {
+    /// list of items on this page of results
+    pub items: ::std::vec::Vec<RelatedProblem>,
+    /// token used to fetch the next page of results (if any)
+    #[serde(skip_serializing_if = "::std::option::Option::is_none")]
+    pub next_page: ::std::option::Option<::std::string::String>,
+}
+
+impl RelatedProblemResultsPage {
+    pub fn builder() -> builder::RelatedProblemResultsPage {
         Default::default()
     }
 }
