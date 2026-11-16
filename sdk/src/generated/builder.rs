@@ -18214,6 +18214,7 @@ impl<'a> RackMembershipStatus<'a> {
 pub struct RackMembershipAbort<'a> {
     client: &'a super::Client,
     rack_id: Result<::uuid::Uuid, String>,
+    version: Result<Option<types::RackMembershipVersion>, String>,
 }
 
 impl<'a> RackMembershipAbort<'a> {
@@ -18221,6 +18222,7 @@ impl<'a> RackMembershipAbort<'a> {
         Self {
             client: client,
             rack_id: Err("rack_id was not initialized".to_string()),
+            version: Ok(None),
         }
     }
 
@@ -18234,13 +18236,29 @@ impl<'a> RackMembershipAbort<'a> {
         self
     }
 
+    pub fn version<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::RackMembershipVersion>,
+    {
+        self.version = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `RackMembershipVersion` for version failed".to_string());
+        self
+    }
+
     /// Sends a `POST` request to
     /// `/v1/system/hardware/racks/{rack_id}/membership/abort`
     pub async fn send(
         self,
     ) -> Result<ResponseValue<types::RackMembershipStatus>, Error<types::Error>> {
-        let Self { client, rack_id } = self;
+        let Self {
+            client,
+            rack_id,
+            version,
+        } = self;
         let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+        let version = version.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/system/hardware/racks/{}/membership/abort",
             client.baseurl,
@@ -18259,6 +18277,7 @@ impl<'a> RackMembershipAbort<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
+            .query(&QueryParam::new("version", &version))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {

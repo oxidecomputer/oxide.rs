@@ -5510,12 +5510,19 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the rack"),
             )
+            .arg(
+                ::clap::Arg::new("version")
+                    .long("version")
+                    .value_parser(::clap::value_parser!(types::RackMembershipVersion))
+                    .required(false),
+            )
             .about(
-                "Abort the latest rack membership change\n\nThis operation is synchronous. Upon \
-                 returning from the API call, a success response indicates that the prior \
-                 membership change was aborted. An error response indicates that there is no \
-                 active membership change in progress (previous changes have completed) or that \
-                 the current membership change could not be aborted.",
+                "Abort rack membership change\n\nThis operation is synchronous. Upon returning \
+                 from the API call, a success response indicates that the prior membership change \
+                 was aborted. An error response indicates that there is no active membership \
+                 change in progress (previous changes have completed), that the specified \
+                 membership change could not be aborted, or that (if a version is specified) \
+                 configuration has moved past it.",
             )
     }
 
@@ -17058,6 +17065,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.rack_membership_abort();
         if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::RackMembershipVersion>("version") {
+            request = request.version(value.clone());
         }
 
         self.config

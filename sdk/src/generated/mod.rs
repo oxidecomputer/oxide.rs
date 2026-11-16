@@ -53,7 +53,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026110500.0.0
+/// Version: 2026111000.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -97,7 +97,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026110500.0.0"
+        "2026111000.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -1103,22 +1103,25 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_>;
-    /// Abort the latest rack membership change
+    /// Abort rack membership change
     ///
     /// This operation is synchronous. Upon returning from the API call, a
     /// success response indicates that the prior membership change was aborted.
     /// An error response indicates that there is no active membership change in
-    /// progress (previous changes have completed) or that the current
-    /// membership change could not be aborted.
+    /// progress (previous changes have completed), that the specified
+    /// membership change could not be aborted, or that (if a version is
+    /// specified) configuration has moved past it.
     ///
     /// Sends a `POST` request to
     /// `/v1/system/hardware/racks/{rack_id}/membership/abort`
     ///
     /// Arguments:
     /// - `rack_id`: ID of the rack
+    /// - `version`
     /// ```ignore
     /// let response = client.rack_membership_abort()
     ///    .rack_id(rack_id)
+    ///    .version(version)
     ///    .send()
     ///    .await;
     /// ```

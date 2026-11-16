@@ -12261,6 +12261,17 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn version<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::RackMembershipVersion>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("version", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("version"))
+            }
+        }
     }
 
     pub struct RackMembershipAbortThen(::httpmock::Then);
