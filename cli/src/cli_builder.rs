@@ -808,6 +808,15 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("experimental system timeseries schema list")
         }
 
+        // Problem commands
+        CliCommand::ProblemList => Some("problem list"),
+        CliCommand::ProblemView => Some("problem view"),
+        CliCommand::ProblemAlertList => Some("problem alert list"),
+        CliCommand::ProblemCausesList => Some("problem cause list"),
+        CliCommand::ProblemConsequencesList => Some("problem consequence list"),
+        CliCommand::ProblemImpactList => Some("problem impact list"),
+        CliCommand::ProblemSupportBundlesList => Some("problem bundle list"),
+
         // Support bundle commands
         CliCommand::SupportBundleList => Some("bundle list"),
         CliCommand::SupportBundleCreate => Some("bundle create"),
