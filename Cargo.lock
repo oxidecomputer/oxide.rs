@@ -2648,9 +2648,9 @@ dependencies = [
 
 [[package]]
 name = "oxnet"
-version = "0.1.7"
+version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c18d1166306acc00465fd792bab330933eb7587753ff2f15ca3aa0427163dd4"
+checksum = "ea8d0d4f1ffb3c7c4d907efc5941ece53e3563ee5e42c150c1914ab3ac409099"
 dependencies = [
  "ipnetwork",
  "schemars",
@@ -4089,7 +4089,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.4.3",
+ "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.4",
  "windows-sys 0.61.2",
