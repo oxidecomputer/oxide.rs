@@ -17856,6 +17856,461 @@ impl ::std::convert::From<super::ProbeInfoResultsPage> for ProbeInfoResultsPage 
 }
 
 #[derive(Clone, Debug)]
+pub struct Problem {
+    action_required: ::std::result::Result<::std::string::String, ::std::string::String>,
+    class: ::std::result::Result<::std::string::String, ::std::string::String>,
+    code: ::std::result::Result<u32, ::std::string::String>,
+    description: ::std::result::Result<::std::string::String, ::std::string::String>,
+    id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+    revision: ::std::result::Result<u64, ::std::string::String>,
+    state: ::std::result::Result<super::ProblemState, ::std::string::String>,
+    summary: ::std::result::Result<::std::string::String, ::std::string::String>,
+    time_created:
+        ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
+    time_modified:
+        ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
+    time_state_changed:
+        ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
+}
+
+impl ::std::default::Default for Problem {
+    fn default() -> Self {
+        Self {
+            action_required: Err("no value supplied for action_required".to_string()),
+            class: Err("no value supplied for class".to_string()),
+            code: Err("no value supplied for code".to_string()),
+            description: Err("no value supplied for description".to_string()),
+            id: Err("no value supplied for id".to_string()),
+            revision: Err("no value supplied for revision".to_string()),
+            state: Err("no value supplied for state".to_string()),
+            summary: Err("no value supplied for summary".to_string()),
+            time_created: Err("no value supplied for time_created".to_string()),
+            time_modified: Err("no value supplied for time_modified".to_string()),
+            time_state_changed: Err("no value supplied for time_state_changed".to_string()),
+        }
+    }
+}
+
+impl Problem {
+    pub fn action_required<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.action_required = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for action_required: {e}"));
+        self
+    }
+
+    pub fn class<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.class = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for class: {e}"));
+        self
+    }
+
+    pub fn code<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u32>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.code = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for code: {e}"));
+        self
+    }
+
+    pub fn description<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.description = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for description: {e}"));
+        self
+    }
+
+    pub fn id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::uuid::Uuid>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for id: {e}"));
+        self
+    }
+
+    pub fn revision<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.revision = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for revision: {e}"));
+        self
+    }
+
+    pub fn state<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::ProblemState>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.state = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for state: {e}"));
+        self
+    }
+
+    pub fn summary<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.summary = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for summary: {e}"));
+        self
+    }
+
+    pub fn time_created<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.time_created = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for time_created: {e}"));
+        self
+    }
+
+    pub fn time_modified<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.time_modified = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for time_modified: {e}"));
+        self
+    }
+
+    pub fn time_state_changed<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.time_state_changed = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for time_state_changed: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<Problem> for super::Problem {
+    type Error = super::error::ConversionError;
+    fn try_from(value: Problem) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            action_required: value.action_required?,
+            class: value.class?,
+            code: value.code?,
+            description: value.description?,
+            id: value.id?,
+            revision: value.revision?,
+            state: value.state?,
+            summary: value.summary?,
+            time_created: value.time_created?,
+            time_modified: value.time_modified?,
+            time_state_changed: value.time_state_changed?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::Problem> for Problem {
+    fn from(value: super::Problem) -> Self {
+        Self {
+            action_required: Ok(value.action_required),
+            class: Ok(value.class),
+            code: Ok(value.code),
+            description: Ok(value.description),
+            id: Ok(value.id),
+            revision: Ok(value.revision),
+            state: Ok(value.state),
+            summary: Ok(value.summary),
+            time_created: Ok(value.time_created),
+            time_modified: Ok(value.time_modified),
+            time_state_changed: Ok(value.time_state_changed),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ProblemImpact {
+    problem_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+    reason: ::std::result::Result<::std::string::String, ::std::string::String>,
+    resource: ::std::result::Result<super::ImpactedResource, ::std::string::String>,
+    revision_added: ::std::result::Result<u64, ::std::string::String>,
+    state: ::std::result::Result<super::ImpactState, ::std::string::String>,
+    time_detected:
+        ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
+    time_state_changed:
+        ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
+}
+
+impl ::std::default::Default for ProblemImpact {
+    fn default() -> Self {
+        Self {
+            problem_id: Err("no value supplied for problem_id".to_string()),
+            reason: Err("no value supplied for reason".to_string()),
+            resource: Err("no value supplied for resource".to_string()),
+            revision_added: Err("no value supplied for revision_added".to_string()),
+            state: Err("no value supplied for state".to_string()),
+            time_detected: Err("no value supplied for time_detected".to_string()),
+            time_state_changed: Err("no value supplied for time_state_changed".to_string()),
+        }
+    }
+}
+
+impl ProblemImpact {
+    pub fn problem_id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::uuid::Uuid>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for problem_id: {e}"));
+        self
+    }
+
+    pub fn reason<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.reason = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for reason: {e}"));
+        self
+    }
+
+    pub fn resource<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::ImpactedResource>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.resource = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for resource: {e}"));
+        self
+    }
+
+    pub fn revision_added<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.revision_added = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for revision_added: {e}"));
+        self
+    }
+
+    pub fn state<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::ImpactState>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.state = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for state: {e}"));
+        self
+    }
+
+    pub fn time_detected<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.time_detected = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for time_detected: {e}"));
+        self
+    }
+
+    pub fn time_state_changed<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.time_state_changed = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for time_state_changed: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<ProblemImpact> for super::ProblemImpact {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: ProblemImpact,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            problem_id: value.problem_id?,
+            reason: value.reason?,
+            resource: value.resource?,
+            revision_added: value.revision_added?,
+            state: value.state?,
+            time_detected: value.time_detected?,
+            time_state_changed: value.time_state_changed?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::ProblemImpact> for ProblemImpact {
+    fn from(value: super::ProblemImpact) -> Self {
+        Self {
+            problem_id: Ok(value.problem_id),
+            reason: Ok(value.reason),
+            resource: Ok(value.resource),
+            revision_added: Ok(value.revision_added),
+            state: Ok(value.state),
+            time_detected: Ok(value.time_detected),
+            time_state_changed: Ok(value.time_state_changed),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ProblemImpactResultsPage {
+    items: ::std::result::Result<::std::vec::Vec<super::ProblemImpact>, ::std::string::String>,
+    next_page:
+        ::std::result::Result<::std::option::Option<::std::string::String>, ::std::string::String>,
+}
+
+impl ::std::default::Default for ProblemImpactResultsPage {
+    fn default() -> Self {
+        Self {
+            items: Err("no value supplied for items".to_string()),
+            next_page: Ok(Default::default()),
+        }
+    }
+}
+
+impl ProblemImpactResultsPage {
+    pub fn items<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<super::ProblemImpact>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.items = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for items: {e}"));
+        self
+    }
+
+    pub fn next_page<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.next_page = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<ProblemImpactResultsPage> for super::ProblemImpactResultsPage {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: ProblemImpactResultsPage,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            items: value.items?,
+            next_page: value.next_page?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::ProblemImpactResultsPage> for ProblemImpactResultsPage {
+    fn from(value: super::ProblemImpactResultsPage) -> Self {
+        Self {
+            items: Ok(value.items),
+            next_page: Ok(value.next_page),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ProblemResultsPage {
+    items: ::std::result::Result<::std::vec::Vec<super::Problem>, ::std::string::String>,
+    next_page:
+        ::std::result::Result<::std::option::Option<::std::string::String>, ::std::string::String>,
+}
+
+impl ::std::default::Default for ProblemResultsPage {
+    fn default() -> Self {
+        Self {
+            items: Err("no value supplied for items".to_string()),
+            next_page: Ok(Default::default()),
+        }
+    }
+}
+
+impl ProblemResultsPage {
+    pub fn items<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<super::Problem>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.items = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for items: {e}"));
+        self
+    }
+
+    pub fn next_page<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.next_page = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<ProblemResultsPage> for super::ProblemResultsPage {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: ProblemResultsPage,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            items: value.items?,
+            next_page: value.next_page?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::ProblemResultsPage> for ProblemResultsPage {
+    fn from(value: super::ProblemResultsPage) -> Self {
+        Self {
+            items: Ok(value.items),
+            next_page: Ok(value.next_page),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct Project {
     description: ::std::result::Result<::std::string::String, ::std::string::String>,
     id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -18773,6 +19228,157 @@ impl ::std::convert::TryFrom<RackResultsPage> for super::RackResultsPage {
 
 impl ::std::convert::From<super::RackResultsPage> for RackResultsPage {
     fn from(value: super::RackResultsPage) -> Self {
+        Self {
+            items: Ok(value.items),
+            next_page: Ok(value.next_page),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct RelatedProblem {
+    id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+    reason: ::std::result::Result<::std::string::String, ::std::string::String>,
+    revision_added: ::std::result::Result<u64, ::std::string::String>,
+    state: ::std::result::Result<super::ProblemState, ::std::string::String>,
+}
+
+impl ::std::default::Default for RelatedProblem {
+    fn default() -> Self {
+        Self {
+            id: Err("no value supplied for id".to_string()),
+            reason: Err("no value supplied for reason".to_string()),
+            revision_added: Err("no value supplied for revision_added".to_string()),
+            state: Err("no value supplied for state".to_string()),
+        }
+    }
+}
+
+impl RelatedProblem {
+    pub fn id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::uuid::Uuid>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for id: {e}"));
+        self
+    }
+
+    pub fn reason<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.reason = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for reason: {e}"));
+        self
+    }
+
+    pub fn revision_added<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.revision_added = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for revision_added: {e}"));
+        self
+    }
+
+    pub fn state<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::ProblemState>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.state = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for state: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<RelatedProblem> for super::RelatedProblem {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: RelatedProblem,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            id: value.id?,
+            reason: value.reason?,
+            revision_added: value.revision_added?,
+            state: value.state?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::RelatedProblem> for RelatedProblem {
+    fn from(value: super::RelatedProblem) -> Self {
+        Self {
+            id: Ok(value.id),
+            reason: Ok(value.reason),
+            revision_added: Ok(value.revision_added),
+            state: Ok(value.state),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct RelatedProblemResultsPage {
+    items: ::std::result::Result<::std::vec::Vec<super::RelatedProblem>, ::std::string::String>,
+    next_page:
+        ::std::result::Result<::std::option::Option<::std::string::String>, ::std::string::String>,
+}
+
+impl ::std::default::Default for RelatedProblemResultsPage {
+    fn default() -> Self {
+        Self {
+            items: Err("no value supplied for items".to_string()),
+            next_page: Ok(Default::default()),
+        }
+    }
+}
+
+impl RelatedProblemResultsPage {
+    pub fn items<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<super::RelatedProblem>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.items = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for items: {e}"));
+        self
+    }
+
+    pub fn next_page<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.next_page = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for next_page: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<RelatedProblemResultsPage> for super::RelatedProblemResultsPage {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: RelatedProblemResultsPage,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            items: value.items?,
+            next_page: value.next_page?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::RelatedProblemResultsPage> for RelatedProblemResultsPage {
+    fn from(value: super::RelatedProblemResultsPage) -> Self {
         Self {
             items: Ok(value.items),
             next_page: Ok(value.next_page),
