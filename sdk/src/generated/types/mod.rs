@@ -860,8 +860,9 @@ impl ::std::convert::TryFrom<&str> for AlertSubscription {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -4660,8 +4661,9 @@ impl ::std::convert::TryFrom<&str> for Hostname {
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))*$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -4745,7 +4747,7 @@ impl ::std::convert::TryFrom<&str> for IcmpParamRange {
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new("^[0-9]{1,3}(-[0-9]{1,3})?$").unwrap()
+                ::regress::Regex::with_flags("^[0-9]{1,3}(-[0-9]{1,3})?$", "u").unwrap()
             });
         if PATTERN.find(value).is_none() {
             return Err("doesn't match pattern \"^[0-9]{1,3}(-[0-9]{1,3})?$\"".into());
@@ -6605,10 +6607,11 @@ impl ::std::convert::TryFrom<&str> for Ipv4Net {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.\
                      ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/\
                      ([0-9]|1[0-9]|2[0-9]|3[0-2])$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -6716,7 +6719,7 @@ impl ::std::convert::TryFrom<&str> for Ipv6Net {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:\
                      |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:\
                      [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,\
@@ -6727,6 +6730,7 @@ impl ::std::convert::TryFrom<&str> for Ipv6Net {
                      ){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
                      ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,\
                      1}[0-9]){0,1}[0-9]))\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -6834,7 +6838,7 @@ impl ::std::convert::TryFrom<&str> for L4PortRange {
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new("^[0-9]{1,5}(-[0-9]{1,5})?$").unwrap()
+                ::regress::Regex::with_flags("^[0-9]{1,5}(-[0-9]{1,5})?$", "u").unwrap()
             });
         if PATTERN.find(value).is_none() {
             return Err("doesn't match pattern \"^[0-9]{1,5}(-[0-9]{1,5})?$\"".into());
@@ -7283,7 +7287,8 @@ impl ::std::convert::TryFrom<&str> for MacAddr {
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new("^([0-9a-fA-F]{0,2}:){5}[0-9a-fA-F]{0,2}$").unwrap()
+                ::regress::Regex::with_flags("^([0-9a-fA-F]{0,2}:){5}[0-9a-fA-F]{0,2}$", "u")
+                    .unwrap()
             });
         if PATTERN.find(value).is_none() {
             return Err(
@@ -7702,7 +7707,7 @@ impl ::std::convert::TryFrom<&str> for Name {
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> = ::std::sync::LazyLock::new(
             || {
-                :: regress :: Regex :: new ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$") . unwrap ()
+                :: regress :: Regex :: with_flags ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$" , "u") . unwrap ()
             },
         );
         if PATTERN.find(value).is_none() {
@@ -9823,10 +9828,11 @@ impl ::std::convert::TryFrom<&str> for SetTargetReleaseParamsSystemVersion {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
                      [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?\
                      (?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -11959,10 +11965,11 @@ impl ::std::convert::TryFrom<&str> for SystemUpdateRepositoryViewSystemVersion {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
                      [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?\
                      (?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -12053,10 +12060,11 @@ impl ::std::convert::TryFrom<&str> for TargetReleaseVersion {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
                      [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?\
                      (?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -12222,8 +12230,9 @@ impl ::std::convert::TryFrom<&str> for TimeseriesName {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*)$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -12383,7 +12392,9 @@ impl ::std::convert::TryFrom<&str> for TufRepoHash {
         }
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
-            ::std::sync::LazyLock::new(|| ::regress::Regex::new("^[0-9a-fA-F]{64}$").unwrap());
+            ::std::sync::LazyLock::new(|| {
+                ::regress::Regex::with_flags("^[0-9a-fA-F]{64}$", "u").unwrap()
+            });
         if PATTERN.find(value).is_none() {
             return Err("doesn't match pattern \"^[0-9a-fA-F]{64}$\"".into());
         }
@@ -12471,10 +12482,11 @@ impl ::std::convert::TryFrom<&str> for TufRepoSystemVersion {
     fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
             ::std::sync::LazyLock::new(|| {
-                ::regress::Regex::new(
+                ::regress::Regex::with_flags(
                     "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
                      [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?\
                      (?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "u",
                 )
                 .unwrap()
             });
@@ -13030,7 +13042,7 @@ impl ::std::convert::TryFrom<&str> for UserId {
 
         static PATTERN: ::std::sync::LazyLock<::regress::Regex> = ::std::sync::LazyLock::new(
             || {
-                :: regress :: Regex :: new ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$") . unwrap ()
+                :: regress :: Regex :: with_flags ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$" , "u") . unwrap ()
             },
         );
         if PATTERN.find(value).is_none() {
