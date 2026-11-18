@@ -221,20 +221,20 @@ oxide ping — Ping API
 Always responds with Ok if it responds at all.
 oxide policy update — Update current silo's IAM policy
 oxide policy view — Fetch current silo's IAM policy
-oxide problem alert list — List alerts for problem
-
-Lists alerts associated with the requested problem. Alerts may be filtered by alert class or alert class glob and by an inclusive creation time range.
-oxide problem bundle list — List support bundles attached to problem
-oxide problem cause list — List causes of problem
-
-Returns any other problems which are the causes of the specified problem. If the specified problem has no causes, this list may be empty.
-oxide problem consequence list — List consequences of problem
-
-Returns any other problems which are caused by the specified problem. If no other problem is caused by the specified problem, then this list may be empty.
-oxide problem impact list — List resources impacted by problem
 oxide problem list — List problems
 
 Problems are sorted by the time at which they were detected, and may be filtered by state.
+oxide problem list-alerts — List alerts for problem
+
+Lists alerts associated with the requested problem. Alerts may be filtered by alert class or alert class glob and by an inclusive creation time range.
+oxide problem list-bundles — List support bundles attached to problem
+oxide problem list-causes — List causes of problem
+
+Returns any other problems which are the causes of the specified problem. If the specified problem has no causes, this list may be empty.
+oxide problem list-consequences — List consequences of problem
+
+Returns any other problems which are caused by the specified problem. If no other problem is caused by the specified problem, then this list may be empty.
+oxide problem list-impact — List resources impacted by problem
 oxide problem view — Fetch problem
 oxide project create — Create project
 oxide project delete — Delete project
