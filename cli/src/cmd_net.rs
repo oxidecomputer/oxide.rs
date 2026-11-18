@@ -1215,7 +1215,7 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
         {
             let before = config.peers.len();
             config.peers.retain(|x| {
-                matches!(&x.addr,
+                !matches!(&x.addr,
                 RouterPeerType::Numbered { target_addr, .. } if *target_addr == self.addr)
             });
             let after = config.peers.len();
