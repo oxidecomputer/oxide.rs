@@ -3,8 +3,8 @@
 use super::types;
 #[allow(unused_imports)]
 use super::{
-    encode_path, ByteStream, ClientHooks, ClientInfo, Error, OperationInfo, RequestBuilderExt,
-    ResponseValue,
+    encode_path, ByteStream, ClientHooks, ClientInfo, Error, OperationInfo, QueryParam,
+    RequestBuilderExt, ResponseValue,
 };
 /// Builder for [`ClientConsoleAuthExt::device_auth_request`]
 ///
@@ -324,13 +324,10 @@ impl<'a> ProbeList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -475,7 +472,7 @@ impl<'a> ProbeCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -564,7 +561,7 @@ impl<'a> ProbeView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -653,7 +650,7 @@ impl<'a> ProbeDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -874,13 +871,10 @@ impl<'a> AffinityGroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1027,7 +1021,7 @@ impl<'a> AffinityGroupCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1117,7 +1111,7 @@ impl<'a> AffinityGroupView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1236,7 +1230,7 @@ impl<'a> AffinityGroupUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1326,7 +1320,7 @@ impl<'a> AffinityGroupDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1461,13 +1455,10 @@ impl<'a> AffinityGroupMemberList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1622,7 +1613,7 @@ impl<'a> AffinityGroupMemberInstanceView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1730,7 +1721,7 @@ impl<'a> AffinityGroupMemberInstanceAdd<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1836,7 +1827,7 @@ impl<'a> AffinityGroupMemberInstanceDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -1938,12 +1929,9 @@ impl<'a> AlertClassList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("filter", &filter))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
+            .query(&QueryParam::new("filter", &filter))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -2091,12 +2079,9 @@ impl<'a> AlertReceiverList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -2449,15 +2434,12 @@ impl<'a> AlertDeliveryList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("delivered", &delivered))
-            .query(&progenitor_client::QueryParam::new("failed", &failed))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("pending", &pending))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("delivered", &delivered))
+            .query(&QueryParam::new("failed", &failed))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("pending", &pending))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -2596,7 +2578,7 @@ impl<'a> AlertReceiverProbe<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("resend", &resend))
+            .query(&QueryParam::new("resend", &resend))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -2940,21 +2922,12 @@ impl<'a> AlertList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "alert_class",
-                &alert_class,
-            ))
-            .query(&progenitor_client::QueryParam::new("end_time", &end_time))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new(
-                "start_time",
-                &start_time,
-            ))
+            .query(&QueryParam::new("alert_class", &alert_class))
+            .query(&QueryParam::new("end_time", &end_time))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("start_time", &start_time))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3162,7 +3135,7 @@ impl<'a> AlertDeliveryResend<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("receiver", &receiver))
+            .query(&QueryParam::new("receiver", &receiver))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3279,13 +3252,10 @@ impl<'a> AntiAffinityGroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3436,7 +3406,7 @@ impl<'a> AntiAffinityGroupCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3529,7 +3499,7 @@ impl<'a> AntiAffinityGroupView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3653,7 +3623,7 @@ impl<'a> AntiAffinityGroupUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3744,7 +3714,7 @@ impl<'a> AntiAffinityGroupDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -3880,13 +3850,10 @@ impl<'a> AntiAffinityGroupMemberList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -4044,7 +4011,7 @@ impl<'a> AntiAffinityGroupMemberInstanceView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -4153,7 +4120,7 @@ impl<'a> AntiAffinityGroupMemberInstanceAdd<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -4261,7 +4228,7 @@ impl<'a> AntiAffinityGroupMemberInstanceDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -4499,12 +4466,9 @@ impl<'a> CertificateList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -4893,13 +4857,10 @@ impl<'a> DiskList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5043,7 +5004,7 @@ impl<'a> DiskCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5133,7 +5094,7 @@ impl<'a> DiskView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5223,7 +5184,7 @@ impl<'a> DiskDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5344,7 +5305,7 @@ impl<'a> DiskBulkWriteImport<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5434,7 +5395,7 @@ impl<'a> DiskBulkWriteImportStart<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5524,7 +5485,7 @@ impl<'a> DiskBulkWriteImportStop<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5641,7 +5602,7 @@ impl<'a> DiskFinalizeImport<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5758,13 +5719,10 @@ impl<'a> ExternalSubnetList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -5913,7 +5871,7 @@ impl<'a> ExternalSubnetCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6003,7 +5961,7 @@ impl<'a> ExternalSubnetView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6124,7 +6082,7 @@ impl<'a> ExternalSubnetUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6214,7 +6172,7 @@ impl<'a> ExternalSubnetDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6336,7 +6294,7 @@ impl<'a> ExternalSubnetAttach<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6427,7 +6385,7 @@ impl<'a> ExternalSubnetDetach<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6544,13 +6502,10 @@ impl<'a> FloatingIpList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6695,7 +6650,7 @@ impl<'a> FloatingIpCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6785,7 +6740,7 @@ impl<'a> FloatingIpView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6902,7 +6857,7 @@ impl<'a> FloatingIpUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -6992,7 +6947,7 @@ impl<'a> FloatingIpDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7109,7 +7064,7 @@ impl<'a> FloatingIpAttach<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7199,7 +7154,7 @@ impl<'a> FloatingIpDetach<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7299,12 +7254,9 @@ impl<'a> GroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7535,13 +7487,10 @@ impl<'a> ImageList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7686,7 +7635,7 @@ impl<'a> ImageCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7776,7 +7725,7 @@ impl<'a> ImageView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7866,7 +7815,7 @@ impl<'a> ImageDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -7955,7 +7904,7 @@ impl<'a> ImageDemote<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8045,7 +7994,7 @@ impl<'a> ImagePromote<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8162,13 +8111,10 @@ impl<'a> InstanceList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8313,7 +8259,7 @@ impl<'a> InstanceCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8403,7 +8349,7 @@ impl<'a> InstanceView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8520,7 +8466,7 @@ impl<'a> InstanceUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8610,7 +8556,7 @@ impl<'a> InstanceDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8745,13 +8691,10 @@ impl<'a> InstanceAffinityGroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -8933,13 +8876,10 @@ impl<'a> InstanceAntiAffinityGroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9120,13 +9060,10 @@ impl<'a> InstanceDiskList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9289,7 +9226,7 @@ impl<'a> InstanceDiskAttach<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9406,7 +9343,7 @@ impl<'a> InstanceDiskDetach<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9498,7 +9435,7 @@ impl<'a> InstanceExternalIpList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9616,7 +9553,7 @@ impl<'a> InstanceEphemeralIpAttach<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9722,11 +9659,8 @@ impl<'a> InstanceEphemeralIpDetach<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "ip_version",
-                &ip_version,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("ip_version", &ip_version))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9818,7 +9752,7 @@ impl<'a> InstanceExternalSubnetList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -9953,13 +9887,10 @@ impl<'a> InstanceMulticastGroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10145,7 +10076,7 @@ impl<'a> InstanceMulticastGroupJoin<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10251,7 +10182,7 @@ impl<'a> InstanceMulticastGroupLeave<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10341,7 +10272,7 @@ impl<'a> InstanceReboot<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10478,16 +10409,10 @@ impl<'a> InstanceSerialConsole<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "from_start",
-                &from_start,
-            ))
-            .query(&progenitor_client::QueryParam::new("max_bytes", &max_bytes))
-            .query(&progenitor_client::QueryParam::new(
-                "most_recent",
-                &most_recent,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("from_start", &from_start))
+            .query(&QueryParam::new("max_bytes", &max_bytes))
+            .query(&QueryParam::new("most_recent", &most_recent))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10589,11 +10514,8 @@ impl<'a> InstanceSerialConsoleStream<'a> {
         let mut request = client
             .client
             .get(url)
-            .query(&progenitor_client::QueryParam::new(
-                "most_recent",
-                &most_recent,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("most_recent", &most_recent))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .header(::reqwest::header::CONNECTION, "Upgrade")
             .header(::reqwest::header::UPGRADE, "websocket")
@@ -10738,13 +10660,10 @@ impl<'a> InstanceSshPublicKeyList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10880,7 +10799,7 @@ impl<'a> InstanceStart<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -10970,7 +10889,7 @@ impl<'a> InstanceStop<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -11118,15 +11037,12 @@ impl<'a> InternetGatewayIpAddressList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("gateway", &gateway))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("gateway", &gateway))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -11313,9 +11229,9 @@ impl<'a> InternetGatewayIpAddressCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("gateway", &gateway))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("gateway", &gateway))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -11451,10 +11367,10 @@ impl<'a> InternetGatewayIpAddressDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("cascade", &cascade))
-            .query(&progenitor_client::QueryParam::new("gateway", &gateway))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("cascade", &cascade))
+            .query(&QueryParam::new("gateway", &gateway))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -11601,15 +11517,12 @@ impl<'a> InternetGatewayIpPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("gateway", &gateway))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("gateway", &gateway))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -11795,9 +11708,9 @@ impl<'a> InternetGatewayIpPoolCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("gateway", &gateway))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("gateway", &gateway))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -11932,10 +11845,10 @@ impl<'a> InternetGatewayIpPoolDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("cascade", &cascade))
-            .query(&progenitor_client::QueryParam::new("gateway", &gateway))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("cascade", &cascade))
+            .query(&QueryParam::new("gateway", &gateway))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -12067,14 +11980,11 @@ impl<'a> InternetGatewayList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -12239,8 +12149,8 @@ impl<'a> InternetGatewayCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -12345,8 +12255,8 @@ impl<'a> InternetGatewayView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -12466,9 +12376,9 @@ impl<'a> InternetGatewayDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("cascade", &cascade))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("cascade", &cascade))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -12600,17 +12510,11 @@ impl<'a> IpPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "ip_version",
-                &ip_version,
-            ))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("pool_type", &pool_type))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("ip_version", &ip_version))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("pool_type", &pool_type))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -13042,12 +12946,9 @@ impl<'a> CurrentUserAccessTokenList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -13264,12 +13165,9 @@ impl<'a> CurrentUserGroups<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -13416,12 +13314,9 @@ impl<'a> CurrentUserSshKeyList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -13855,18 +13750,12 @@ impl<'a> SiloMetric<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("end_time", &end_time))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new("order", &order))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new(
-                "start_time",
-                &start_time,
-            ))
+            .query(&QueryParam::new("end_time", &end_time))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("order", &order))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("start_time", &start_time))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14017,12 +13906,9 @@ impl<'a> MulticastGroupList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14263,12 +14149,9 @@ impl<'a> MulticastGroupMemberList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14448,14 +14331,11 @@ impl<'a> InstanceNetworkInterfaceList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("instance", &instance))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("instance", &instance))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14626,8 +14506,8 @@ impl<'a> InstanceNetworkInterfaceCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("instance", &instance))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("instance", &instance))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14734,8 +14614,8 @@ impl<'a> InstanceNetworkInterfaceView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("instance", &instance))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("instance", &instance))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14876,8 +14756,8 @@ impl<'a> InstanceNetworkInterfaceUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("instance", &instance))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("instance", &instance))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -14982,8 +14862,8 @@ impl<'a> InstanceNetworkInterfaceDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("instance", &instance))
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("instance", &instance))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -15269,12 +15149,9 @@ impl<'a> ProjectList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -15935,13 +15812,10 @@ impl<'a> SnapshotList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16086,7 +15960,7 @@ impl<'a> SnapshotCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16176,7 +16050,7 @@ impl<'a> SnapshotView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16266,7 +16140,7 @@ impl<'a> SnapshotDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16368,12 +16242,9 @@ impl<'a> SubnetPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16624,17 +16495,11 @@ impl<'a> AuditLogList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("end_time", &end_time))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new(
-                "start_time",
-                &start_time,
-            ))
+            .query(&QueryParam::new("end_time", &end_time))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("start_time", &start_time))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16799,13 +16664,10 @@ impl<'a> SiloCertificateList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -16946,7 +16808,7 @@ impl<'a> SiloCertificateCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -17036,7 +16898,7 @@ impl<'a> SiloCertificateView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -17126,7 +16988,7 @@ impl<'a> SiloCertificateDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -17404,12 +17266,9 @@ impl<'a> PhysicalDiskListAdoptionRequests<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -17558,12 +17417,9 @@ impl<'a> PhysicalDiskList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -17767,11 +17623,8 @@ impl<'a> PhysicalDiskListUnadopted<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -17970,12 +17823,9 @@ impl<'a> NetworkingSwitchPortLldpNeighbors<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -18123,12 +17973,9 @@ impl<'a> RackList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -18337,7 +18184,7 @@ impl<'a> RackMembershipStatus<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("version", &version))
+            .query(&QueryParam::new("version", &version))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -18624,12 +18471,9 @@ impl<'a> RackListUnadopted<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -18775,12 +18619,9 @@ impl<'a> SledList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -19016,12 +18857,9 @@ impl<'a> SledPhysicalDiskList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -19187,12 +19025,9 @@ impl<'a> SledInstanceList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -19434,11 +19269,8 @@ impl<'a> SledListUninitialized<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -19600,16 +19432,10 @@ impl<'a> NetworkingSwitchPortList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new(
-                "switch_port_id",
-                &switch_port_id,
-            ))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("switch_port_id", &switch_port_id))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -19761,11 +19587,8 @@ impl<'a> NetworkingSwitchPortLldpConfigView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
-            .query(&progenitor_client::QueryParam::new(
-                "switch_slot",
-                &switch_slot,
-            ))
+            .query(&QueryParam::new("rack_id", &rack_id))
+            .query(&QueryParam::new("switch_slot", &switch_slot))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -19897,11 +19720,8 @@ impl<'a> NetworkingSwitchPortLldpConfigUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
-            .query(&progenitor_client::QueryParam::new(
-                "switch_slot",
-                &switch_slot,
-            ))
+            .query(&QueryParam::new("rack_id", &rack_id))
+            .query(&QueryParam::new("switch_slot", &switch_slot))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20037,11 +19857,8 @@ impl<'a> NetworkingSwitchPortApplySettings<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
-            .query(&progenitor_client::QueryParam::new(
-                "switch_slot",
-                &switch_slot,
-            ))
+            .query(&QueryParam::new("rack_id", &rack_id))
+            .query(&QueryParam::new("switch_slot", &switch_slot))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20146,11 +19963,8 @@ impl<'a> NetworkingSwitchPortClearSettings<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
-            .query(&progenitor_client::QueryParam::new(
-                "switch_slot",
-                &switch_slot,
-            ))
+            .query(&QueryParam::new("rack_id", &rack_id))
+            .query(&QueryParam::new("switch_slot", &switch_slot))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20253,11 +20067,8 @@ impl<'a> NetworkingSwitchPortStatus<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
-            .query(&progenitor_client::QueryParam::new(
-                "switch_slot",
-                &switch_slot,
-            ))
+            .query(&QueryParam::new("rack_id", &rack_id))
+            .query(&QueryParam::new("switch_slot", &switch_slot))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20359,12 +20170,9 @@ impl<'a> SwitchList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20597,13 +20405,10 @@ impl<'a> SiloIdentityProviderList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20747,7 +20552,7 @@ impl<'a> LocalIdpUserCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20837,7 +20642,7 @@ impl<'a> LocalIdpUserDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -20942,7 +20747,7 @@ impl<'a> LocalIdpUserSetPassword<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -21042,7 +20847,7 @@ impl<'a> SamlIdentityProviderCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -21134,7 +20939,7 @@ impl<'a> SamlIdentityProviderView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -21281,21 +21086,12 @@ impl<'a> SystemIpPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "assignment",
-                &assignment,
-            ))
-            .query(&progenitor_client::QueryParam::new(
-                "ip_version",
-                &ip_version,
-            ))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("pool_type", &pool_type))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("assignment", &assignment))
+            .query(&QueryParam::new("ip_version", &ip_version))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("pool_type", &pool_type))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -21864,11 +21660,8 @@ impl<'a> SystemIpPoolRangeList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -22203,12 +21996,9 @@ impl<'a> SystemIpPoolSiloList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -22792,18 +22582,12 @@ impl<'a> SystemMetric<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("end_time", &end_time))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new("order", &order))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
-            .query(&progenitor_client::QueryParam::new(
-                "start_time",
-                &start_time,
-            ))
+            .query(&QueryParam::new("end_time", &end_time))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("order", &order))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("start_time", &start_time))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -22954,12 +22738,9 @@ impl<'a> NetworkingAddressLotList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -23360,12 +23141,9 @@ impl<'a> NetworkingAddressLotBlockList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -23860,12 +23638,9 @@ impl<'a> NetworkingBgpConfigList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -24009,10 +23784,7 @@ impl<'a> NetworkingBgpConfigUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new(
-                "name_or_id",
-                &name_or_id,
-            ))
+            .query(&QueryParam::new("name_or_id", &name_or_id))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -24160,10 +23932,7 @@ impl<'a> NetworkingBgpConfigDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "name_or_id",
-                &name_or_id,
-            ))
+            .query(&QueryParam::new("name_or_id", &name_or_id))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -24265,12 +24034,9 @@ impl<'a> NetworkingBgpAnnounceSetList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -24632,7 +24398,7 @@ impl<'a> NetworkingBgpImported<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("asn", &asn))
+            .query(&QueryParam::new("asn", &asn))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -24705,7 +24471,7 @@ impl<'a> NetworkingBgpMessageHistory<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("asn", &asn))
+            .query(&QueryParam::new("asn", &asn))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -24995,12 +24761,9 @@ impl<'a> NetworkingLoopbackAddressList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -25518,16 +25281,10 @@ impl<'a> NetworkingSwitchPortSettingsList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new(
-                "port_settings",
-                &port_settings,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("port_settings", &port_settings))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -25741,10 +25498,7 @@ impl<'a> NetworkingSwitchPortSettingsDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new(
-                "port_settings",
-                &port_settings,
-            ))
+            .query(&QueryParam::new("port_settings", &port_settings))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26022,7 +25776,7 @@ impl<'a> ScimTokenList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26092,7 +25846,7 @@ impl<'a> ScimTokenCreate<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26183,7 +25937,7 @@ impl<'a> ScimTokenView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26272,7 +26026,7 @@ impl<'a> ScimTokenDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26374,12 +26128,9 @@ impl<'a> SystemQuotasList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26525,12 +26276,9 @@ impl<'a> SiloList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -26917,12 +26665,9 @@ impl<'a> SiloIpPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -27424,12 +27169,9 @@ impl<'a> SiloSubnetPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -27577,12 +27319,9 @@ impl<'a> SystemSubnetPoolList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -28052,11 +27791,8 @@ impl<'a> SystemSubnetPoolMemberList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -28422,12 +28158,9 @@ impl<'a> SystemSubnetPoolSiloList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -28958,12 +28691,9 @@ impl<'a> SupportBundleList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -29938,11 +29668,8 @@ impl<'a> SystemTimeseriesSchemaList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -30173,12 +29900,9 @@ impl<'a> SystemUpdateRepositoryList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -30313,7 +30037,7 @@ impl<'a> SystemUpdateRepositoryUpload<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/octet-stream"),
             )
             .body(body)
-            .query(&progenitor_client::QueryParam::new("file_name", &file_name))
+            .query(&QueryParam::new("file_name", &file_name))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -30627,12 +30351,9 @@ impl<'a> SystemUpdateTrustRootList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -31010,13 +30731,10 @@ impl<'a> SiloUserList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -31151,7 +30869,7 @@ impl<'a> SiloUserView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("silo", &silo))
+            .query(&QueryParam::new("silo", &silo))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -31253,12 +30971,9 @@ impl<'a> UserBuiltinList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -31477,12 +31192,9 @@ impl<'a> SiloUtilizationList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -31697,7 +31409,7 @@ impl<'a> TimeseriesQuery<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -31812,13 +31524,10 @@ impl<'a> UserList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("group", &group))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("group", &group))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -32055,12 +31764,9 @@ impl<'a> UserTokenList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -32297,12 +32003,9 @@ impl<'a> UserSessionList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -32486,8 +32189,8 @@ impl<'a> VpcFirewallRulesView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -32606,8 +32309,8 @@ impl<'a> VpcFirewallRulesUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -32754,15 +32457,12 @@ impl<'a> VpcRouterRouteList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("router", &router))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("router", &router))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -32939,9 +32639,9 @@ impl<'a> VpcRouterRouteCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("router", &router))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("router", &router))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33061,9 +32761,9 @@ impl<'a> VpcRouterRouteView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("router", &router))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("router", &router))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33210,9 +32910,9 @@ impl<'a> VpcRouterRouteUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("router", &router))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("router", &router))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33332,9 +33032,9 @@ impl<'a> VpcRouterRouteDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("router", &router))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("router", &router))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33466,14 +33166,11 @@ impl<'a> VpcRouterList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33634,8 +33331,8 @@ impl<'a> VpcRouterCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33740,8 +33437,8 @@ impl<'a> VpcRouterView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33873,8 +33570,8 @@ impl<'a> VpcRouterUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -33979,8 +33676,8 @@ impl<'a> VpcRouterDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34112,14 +33809,11 @@ impl<'a> VpcSubnetList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34280,8 +33974,8 @@ impl<'a> VpcSubnetCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34386,8 +34080,8 @@ impl<'a> VpcSubnetView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34519,8 +34213,8 @@ impl<'a> VpcSubnetUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34625,8 +34319,8 @@ impl<'a> VpcSubnetDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34777,14 +34471,11 @@ impl<'a> VpcSubnetListNetworkInterfaces<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-            .query(&progenitor_client::QueryParam::new("vpc", &vpc))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("vpc", &vpc))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -34948,13 +34639,10 @@ impl<'a> VpcList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new(
-                "page_token",
-                &page_token,
-            ))
-            .query(&progenitor_client::QueryParam::new("project", &project))
-            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&QueryParam::new("limit", &limit))
+            .query(&QueryParam::new("page_token", &page_token))
+            .query(&QueryParam::new("project", &project))
+            .query(&QueryParam::new("sort_by", &sort_by))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -35098,7 +34786,7 @@ impl<'a> VpcCreate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -35188,7 +34876,7 @@ impl<'a> VpcView<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -35305,7 +34993,7 @@ impl<'a> VpcUpdate<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -35395,7 +35083,7 @@ impl<'a> VpcDelete<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -35648,7 +35336,7 @@ impl<'a> WebhookSecretsList<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
-            .query(&progenitor_client::QueryParam::new("receiver", &receiver))
+            .query(&QueryParam::new("receiver", &receiver))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -35748,7 +35436,7 @@ impl<'a> WebhookSecretsAdd<'a> {
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
             .json(&body)
-            .query(&progenitor_client::QueryParam::new("receiver", &receiver))
+            .query(&QueryParam::new("receiver", &receiver))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
