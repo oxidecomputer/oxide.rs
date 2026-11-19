@@ -1,0 +1,11 @@
+switch0
+=======
+Peer Address  Peer Id  Local ASN  Remote ASN  Session State  State Duration
+10.0.0.1      sw0-a    65001      64501       active         1s
+10.0.0.2      sw0-b    65003      64503       open_sent      1day 1h 1m 1s
+
+switch1
+=======
+Peer Address  Peer Id  Local ASN  Remote ASN  Session State  State Duration
+10.1.0.1      sw1-a    65000      64500       established    1h 2m 3s 4ms
+fd00::11      sw1-b    65002      64502       idle           0s

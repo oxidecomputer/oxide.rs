@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProjectCreate",
+  "description": "Create-time parameters for a `Project`",
+  "type": "object",
+  "required": [
+    "description",
+    "name"
+  ],
+  "properties": {
+    "defaults": {
+      "description": "Default resources to create in the project\n\nOmit this field or pass `null` to create all defaults: currently, a default VPC with its own defaults. Pass an object to specify which resources to create. `{}` creates none.\n\nFor example, to create the default VPC but not its default subnet, pass `{\"vpc\": {\"type\": \"explicit\", \"defaults\": {}}}`.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ProjectCreateDefaults"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "ProjectCreateDefaults": {
+      "description": "Default resources to create in a project\n\nEach field corresponds to one resource. Set a field to an object to create that resource. Omit it or pass `null` to skip it.",
+      "type": "object",
+      "properties": {
+        "vpc": {
+          "description": "Create the default VPC. Omit this field or pass `null` to skip it.\n\nWhen present, the value also determines which of the VPC's own defaults to create: `{\"type\": \"all\"}` creates all of them, and `{\"type\": \"explicit\", \"defaults\": {...}}` creates only those specified.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/VpcCreateDefaultsSelection"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "SubnetCreateDefaults": {
+      "description": "Default resources to create in the default subnet\n\nIncluding this object in the request creates the default subnet. A subnet has no default resources yet, so the object is always empty.",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "VpcCreateDefaults": {
+      "description": "Default resources to create in a VPC\n\nEach field corresponds to one resource. Set a field to an object to create that resource. Omit it or pass `null` to skip it.\n\nThis does not affect the system router, default firewall rules, or default internet gateway, which are always created and do not block deletion of the VPC.",
+      "type": "object",
+      "properties": {
+        "subnet": {
+          "description": "Create the default subnet. Pass `{}` to create it and omit this field (or pass `null`) to skip it.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SubnetCreateDefaults"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "VpcCreateDefaultsSelection": {
+      "description": "Default resources to create in a VPC",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Create only the default resources listed in `defaults`. Pass `{}` as `defaults` to skip them all.",
+          "type": "object",
+          "required": [
+            "defaults",
+            "type"
+          ],
+          "properties": {
+            "defaults": {
+              "$ref": "#/definitions/VpcCreateDefaults"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "explicit"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
