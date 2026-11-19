@@ -10,10 +10,10 @@ use oxide::types::{
     AddressLotResultsPage, BgpPeer, BgpPeerConfig, ImportExportPolicy, LinkConfigCreate, LinkFec,
     LinkSpeed, LldpLinkConfig, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
     RouterPeerType, SwitchInterfaceConfig, SwitchInterfaceConfigCreate, SwitchPort,
-    SwitchPortAddressView, SwitchPortConfig, SwitchPortConfigCreate, SwitchPortGeometry,
-    SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings,
-    SwitchPortSettingsCreate, SwitchPortSettingsGroups, SwitchPortSettingsIdentity,
-    SwitchPortSettingsIdentityResultsPage, SwitchSlot, TxEqConfig,
+    SwitchPortAddressView, SwitchPortApplySettings, SwitchPortConfig, SwitchPortConfigCreate,
+    SwitchPortGeometry, SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig,
+    SwitchPortSettings, SwitchPortSettingsCreate, SwitchPortSettingsGroups,
+    SwitchPortSettingsIdentity, SwitchPortSettingsIdentityResultsPage, SwitchSlot, TxEqConfig,
 };
 use oxide_httpmock::MockServerExt;
 use rand::SeedableRng;
@@ -352,6 +352,86 @@ fn test_net_link_add() {
         ],
         &expected,
     );
+}
+
+// `link add` on a port with no settings creates settings that contain the
+// link and applies them to the port.
+#[test]
+fn test_net_link_add_uninitialized() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let server = MockServer::start();
+    let rack_id: Uuid = RACK.parse().unwrap();
+
+    let ports = SwitchPortResultsPage {
+        items: vec![SwitchPort {
+            port_name: PORT.parse().unwrap(),
+            port_settings_id: None,
+            rack_id,
+            switch_slot: SwitchSlot::Switch0,
+            ..SwitchPort::mock_value(&mut src).unwrap()
+        }],
+        next_page: None,
+    };
+    let list = server.networking_switch_port_list(|when, then| {
+        when.into_inner().any_request();
+        then.ok(&ports);
+    });
+
+    let identity = SwitchPortSettingsIdentity::mock_value(&mut src).unwrap();
+    let created = SwitchPortSettings {
+        addresses: Vec::new(),
+        bgp_peers: Vec::new(),
+        description: identity.description,
+        groups: Vec::new(),
+        id: identity.id,
+        interfaces: Vec::new(),
+        links: Vec::new(),
+        name: identity.name,
+        port: SwitchPortConfig {
+            geometry: SwitchPortGeometry::Qsfp28x1,
+            port_settings_id: identity.id,
+        },
+        routes: Vec::new(),
+        time_created: identity.time_created,
+        time_modified: identity.time_modified,
+    };
+    let create = server.networking_switch_port_settings_create(|when, then| {
+        when.into_inner().json_body_includes(
+            serde_json::json!({
+                "links": [{
+                    "autoneg": false,
+                    "link_name": "phy0",
+                    "mtu": 1500,
+                    "speed": "speed25_g",
+                }],
+                "port_config": { "geometry": "qsfp28x1" },
+            })
+            .to_string(),
+        );
+        then.created(&created);
+    });
+    let apply = server.networking_switch_port_apply_settings(|when, then| {
+        when.port(&PORT.parse().unwrap())
+            .rack_id(&rack_id)
+            .switch_slot(SwitchSlot::Switch0)
+            .body(&SwitchPortApplySettings {
+                port_settings: NameOrId::Id(created.id),
+            });
+        then.no_content();
+    });
+
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .args(["system", "networking", "link", "add", "--speed", "25g"])
+        .args(["--rack", RACK, "--switch", "switch0", "--port", PORT])
+        .assert()
+        .success();
+
+    list.assert();
+    create.assert();
+    apply.assert();
 }
 
 // `link delete` removes the link and nothing else.
