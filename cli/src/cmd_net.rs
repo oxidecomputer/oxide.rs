@@ -1846,16 +1846,27 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
             fec: x.fec,
             mtu: x.mtu,
             speed: x.speed,
-            lldp: LldpLinkConfigCreate {
-                enabled: false,
-                link_name: None,
-                link_description: None,
-                chassis_id: None,
-                system_name: None,
-                system_description: None,
-                management_ip: None,
+            lldp: match &x.lldp_link_config {
+                Some(lldp) => LldpLinkConfigCreate {
+                    enabled: lldp.enabled,
+                    link_name: lldp.link_name.clone(),
+                    link_description: lldp.link_description.clone(),
+                    chassis_id: lldp.chassis_id.clone(),
+                    system_name: lldp.system_name.clone(),
+                    system_description: lldp.system_description.clone(),
+                    management_ip: lldp.management_ip,
+                },
+                None => LldpLinkConfigCreate {
+                    enabled: false,
+                    link_name: None,
+                    link_description: None,
+                    chassis_id: None,
+                    system_name: None,
+                    system_description: None,
+                    management_ip: None,
+                },
             },
-            tx_eq: None,
+            tx_eq: x.tx_eq_config.clone(),
         })
         .collect();
 
@@ -1890,7 +1901,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
     let create = SwitchPortSettingsCreate {
         addresses,
         bgp_peers,
-        description: String::from("switch port settings"),
+        description: current.description,
         groups,
         interfaces,
         links,
