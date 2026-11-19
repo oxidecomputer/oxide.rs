@@ -42,6 +42,7 @@ oauth2-reqwest = { workspace = true }
 open = { workspace = true }
 oxide = { workspace = true, features = ["clap", "extras"] }
 oxnet = { workspace = true }
+progenitor-client = { workspace = true }
 predicates = { workspace = true }
 ratatui = { workspace = true }
 reqwest = { workspace = true, features = ["gzip"] }

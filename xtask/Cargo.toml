@@ -8,6 +8,7 @@ publish = false
 clap = { workspace = true }
 newline-converter = { workspace = true }
 progenitor = { workspace = true, default-features = false }
+quote = "1.0"
 regex = { workspace = true }
 rustc_version = { workspace = true }
 rustfmt-wrapper = { workspace = true }

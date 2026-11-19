@@ -73,6 +73,7 @@ fn generate(
     let generator = Generator::build(
         GenerationSettings::default()
             .with_interface(progenitor::InterfaceStyle::Builder)
+            .with_inner_type(quote::quote!(crate::ClientState))
             .with_tag(TagStyle::Separate)
             .map_typespace_settings(|s| s.with_required_trait(TypespaceTrait::JsonSchema)),
         &spec,

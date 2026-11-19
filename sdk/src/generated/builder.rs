@@ -15841,6 +15841,983 @@ impl<'a> ProjectPolicyUpdate<'a> {
     }
 }
 
+/// Builder for [`ClientServiceAccountsExt::service_account_list`]
+///
+/// [`ClientServiceAccountsExt::service_account_list`]: super::ClientServiceAccountsExt::service_account_list
+#[derive(Debug, Clone)]
+pub struct ServiceAccountList<'a> {
+    client: &'a super::Client,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    project: Result<Option<types::NameOrId>, String>,
+    sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+}
+
+impl<'a> ServiceAccountList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            limit: Ok(None),
+            page_token: Ok(None),
+            project: Ok(None),
+            sort_by: Ok(None),
+        }
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrIdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/service-accounts`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::ServiceAccountResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            limit,
+            page_token,
+            project,
+            sort_by,
+        } = self;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let url = format!("{}/v1/service-accounts", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/service-accounts`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::ServiceAccount, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            project: Ok(None),
+            sort_by: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_create`]
+///
+/// [`ClientServiceAccountsExt::service_account_create`]: super::ClientServiceAccountsExt::service_account_create
+#[derive(Debug, Clone)]
+pub struct ServiceAccountCreate<'a> {
+    client: &'a super::Client,
+    project: Result<types::NameOrId, String>,
+    body: Result<types::builder::ServiceAccountCreate, String>,
+}
+
+impl<'a> ServiceAccountCreate<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            project: Err("project was not initialized".to_string()),
+            body: Ok(::std::default::Default::default()),
+        }
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    pub fn body<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::ServiceAccountCreate>,
+        <V as std::convert::TryInto<types::ServiceAccountCreate>>::Error: std::fmt::Display,
+    {
+        self.body = value.try_into().map(From::from).map_err(|s| {
+            format!(
+                "conversion to `ServiceAccountCreate` for body failed: {}",
+                s
+            )
+        });
+        self
+    }
+
+    pub fn body_map<F>(mut self, f: F) -> Self
+    where
+        F: std::ops::FnOnce(
+            types::builder::ServiceAccountCreate,
+        ) -> types::builder::ServiceAccountCreate,
+    {
+        self.body = self.body.map(f);
+        self
+    }
+
+    /// Sends a `POST` request to `/v1/service-accounts`
+    pub async fn send(self) -> Result<ResponseValue<types::ServiceAccount>, Error<types::Error>> {
+        let Self {
+            client,
+            project,
+            body,
+        } = self;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let body = body
+            .and_then(|v| types::ServiceAccountCreate::try_from(v).map_err(|e| e.to_string()))
+            .map_err(Error::InvalidRequest)?;
+        let url = format!("{}/v1/service-accounts", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_create",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            201u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_view`]
+///
+/// [`ClientServiceAccountsExt::service_account_view`]: super::ClientServiceAccountsExt::service_account_view
+#[derive(Debug, Clone)]
+pub struct ServiceAccountView<'a> {
+    client: &'a super::Client,
+    service_account: Result<types::NameOrId, String>,
+    project: Result<Option<types::NameOrId>, String>,
+}
+
+impl<'a> ServiceAccountView<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            service_account: Err("service_account was not initialized".to_string()),
+            project: Ok(None),
+        }
+    }
+
+    pub fn service_account<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.service_account = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for service_account failed".to_string());
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/service-accounts/{service_account}`
+    pub async fn send(self) -> Result<ResponseValue<types::ServiceAccount>, Error<types::Error>> {
+        let Self {
+            client,
+            service_account,
+            project,
+        } = self;
+        let service_account = service_account.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/service-accounts/{}",
+            client.baseurl,
+            encode_path(&service_account.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_view",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_delete`]
+///
+/// [`ClientServiceAccountsExt::service_account_delete`]: super::ClientServiceAccountsExt::service_account_delete
+#[derive(Debug, Clone)]
+pub struct ServiceAccountDelete<'a> {
+    client: &'a super::Client,
+    service_account: Result<types::NameOrId, String>,
+    project: Result<Option<types::NameOrId>, String>,
+}
+
+impl<'a> ServiceAccountDelete<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            service_account: Err("service_account was not initialized".to_string()),
+            project: Ok(None),
+        }
+    }
+
+    pub fn service_account<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.service_account = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for service_account failed".to_string());
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    /// Sends a `DELETE` request to `/v1/service-accounts/{service_account}`
+    pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+        let Self {
+            client,
+            service_account,
+            project,
+        } = self;
+        let service_account = service_account.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/service-accounts/{}",
+            client.baseurl,
+            encode_path(&service_account.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .delete(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_delete",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            204u16 => Ok(ResponseValue::empty(response)),
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_key_list`]
+///
+/// [`ClientServiceAccountsExt::service_account_key_list`]: super::ClientServiceAccountsExt::service_account_key_list
+#[derive(Debug, Clone)]
+pub struct ServiceAccountKeyList<'a> {
+    client: &'a super::Client,
+    service_account: Result<types::NameOrId, String>,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    project: Result<Option<types::NameOrId>, String>,
+    sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+}
+
+impl<'a> ServiceAccountKeyList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            service_account: Err("service_account was not initialized".to_string()),
+            limit: Ok(None),
+            page_token: Ok(None),
+            project: Ok(None),
+            sort_by: Ok(None),
+        }
+    }
+
+    pub fn service_account<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.service_account = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for service_account failed".to_string());
+        self
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrIdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/service-accounts/{service_account}/keys`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::ServiceAccountKeyResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            service_account,
+            limit,
+            page_token,
+            project,
+            sort_by,
+        } = self;
+        let service_account = service_account.map_err(Error::InvalidRequest)?;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/service-accounts/{}/keys",
+            client.baseurl,
+            encode_path(&service_account.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_key_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/service-accounts/{service_account}/keys`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::ServiceAccountKey, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            project: Ok(None),
+            sort_by: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_key_create`]
+///
+/// [`ClientServiceAccountsExt::service_account_key_create`]: super::ClientServiceAccountsExt::service_account_key_create
+#[derive(Debug, Clone)]
+pub struct ServiceAccountKeyCreate<'a> {
+    client: &'a super::Client,
+    service_account: Result<types::NameOrId, String>,
+    project: Result<Option<types::NameOrId>, String>,
+    body: Result<types::builder::ServiceAccountKeyCreate, String>,
+}
+
+impl<'a> ServiceAccountKeyCreate<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            service_account: Err("service_account was not initialized".to_string()),
+            project: Ok(None),
+            body: Ok(::std::default::Default::default()),
+        }
+    }
+
+    pub fn service_account<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.service_account = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for service_account failed".to_string());
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    pub fn body<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::ServiceAccountKeyCreate>,
+        <V as std::convert::TryInto<types::ServiceAccountKeyCreate>>::Error: std::fmt::Display,
+    {
+        self.body = value.try_into().map(From::from).map_err(|s| {
+            format!(
+                "conversion to `ServiceAccountKeyCreate` for body failed: {}",
+                s
+            )
+        });
+        self
+    }
+
+    pub fn body_map<F>(mut self, f: F) -> Self
+    where
+        F: std::ops::FnOnce(
+            types::builder::ServiceAccountKeyCreate,
+        ) -> types::builder::ServiceAccountKeyCreate,
+    {
+        self.body = self.body.map(f);
+        self
+    }
+
+    /// Sends a `POST` request to `/v1/service-accounts/{service_account}/keys`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::ServiceAccountKey>, Error<types::Error>> {
+        let Self {
+            client,
+            service_account,
+            project,
+            body,
+        } = self;
+        let service_account = service_account.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let body = body
+            .and_then(|v| types::ServiceAccountKeyCreate::try_from(v).map_err(|e| e.to_string()))
+            .map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/service-accounts/{}/keys",
+            client.baseurl,
+            encode_path(&service_account.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_key_create",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            201u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_key_view`]
+///
+/// [`ClientServiceAccountsExt::service_account_key_view`]: super::ClientServiceAccountsExt::service_account_key_view
+#[derive(Debug, Clone)]
+pub struct ServiceAccountKeyView<'a> {
+    client: &'a super::Client,
+    service_account: Result<types::NameOrId, String>,
+    key: Result<types::NameOrId, String>,
+    project: Result<Option<types::NameOrId>, String>,
+}
+
+impl<'a> ServiceAccountKeyView<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            service_account: Err("service_account was not initialized".to_string()),
+            key: Err("key was not initialized".to_string()),
+            project: Ok(None),
+        }
+    }
+
+    pub fn service_account<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.service_account = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for service_account failed".to_string());
+        self
+    }
+
+    pub fn key<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.key = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for key failed".to_string());
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to
+    /// `/v1/service-accounts/{service_account}/keys/{key}`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::ServiceAccountKey>, Error<types::Error>> {
+        let Self {
+            client,
+            service_account,
+            key,
+            project,
+        } = self;
+        let service_account = service_account.map_err(Error::InvalidRequest)?;
+        let key = key.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/service-accounts/{}/keys/{}",
+            client.baseurl,
+            encode_path(&service_account.to_string()),
+            encode_path(&key.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_key_view",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientServiceAccountsExt::service_account_key_delete`]
+///
+/// [`ClientServiceAccountsExt::service_account_key_delete`]: super::ClientServiceAccountsExt::service_account_key_delete
+#[derive(Debug, Clone)]
+pub struct ServiceAccountKeyDelete<'a> {
+    client: &'a super::Client,
+    service_account: Result<types::NameOrId, String>,
+    key: Result<types::NameOrId, String>,
+    project: Result<Option<types::NameOrId>, String>,
+}
+
+impl<'a> ServiceAccountKeyDelete<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            service_account: Err("service_account was not initialized".to_string()),
+            key: Err("key was not initialized".to_string()),
+            project: Ok(None),
+        }
+    }
+
+    pub fn service_account<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.service_account = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for service_account failed".to_string());
+        self
+    }
+
+    pub fn key<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.key = value
+            .try_into()
+            .map_err(|_| "conversion to `NameOrId` for key failed".to_string());
+        self
+    }
+
+    pub fn project<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::NameOrId>,
+    {
+        self.project = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+        self
+    }
+
+    /// Sends a `DELETE` request to
+    /// `/v1/service-accounts/{service_account}/keys/{key}`
+    pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+        let Self {
+            client,
+            service_account,
+            key,
+            project,
+        } = self;
+        let service_account = service_account.map_err(Error::InvalidRequest)?;
+        let key = key.map_err(Error::InvalidRequest)?;
+        let project = project.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/service-accounts/{}/keys/{}",
+            client.baseurl,
+            encode_path(&service_account.to_string()),
+            encode_path(&key.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .delete(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("project", &project))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "service_account_key_delete",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            204u16 => Ok(ResponseValue::empty(response)),
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
 /// Builder for [`ClientSnapshotsExt::snapshot_list`]
 ///
 /// [`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list
@@ -18367,6 +19344,7 @@ impl<'a> RackMembershipStatus<'a> {
 pub struct RackMembershipAbort<'a> {
     client: &'a super::Client,
     rack_id: Result<::uuid::Uuid, String>,
+    version: Result<Option<types::RackMembershipVersion>, String>,
 }
 
 impl<'a> RackMembershipAbort<'a> {
@@ -18374,6 +19352,7 @@ impl<'a> RackMembershipAbort<'a> {
         Self {
             client: client,
             rack_id: Err("rack_id was not initialized".to_string()),
+            version: Ok(None),
         }
     }
 
@@ -18387,13 +19366,29 @@ impl<'a> RackMembershipAbort<'a> {
         self
     }
 
+    pub fn version<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::RackMembershipVersion>,
+    {
+        self.version = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `RackMembershipVersion` for version failed".to_string());
+        self
+    }
+
     /// Sends a `POST` request to
     /// `/v1/system/hardware/racks/{rack_id}/membership/abort`
     pub async fn send(
         self,
     ) -> Result<ResponseValue<types::RackMembershipStatus>, Error<types::Error>> {
-        let Self { client, rack_id } = self;
+        let Self {
+            client,
+            rack_id,
+            version,
+        } = self;
         let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+        let version = version.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/system/hardware/racks/{}/membership/abort",
             client.baseurl,
@@ -18412,6 +19407,7 @@ impl<'a> RackMembershipAbort<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
+            .query(&progenitor_client::QueryParam::new("version", &version))
             .headers(header_map)
             .build()?;
         let info = OperationInfo {
@@ -25971,6 +26967,1211 @@ impl<'a> SystemPolicyUpdate<'a> {
             )),
             _ => Err(Error::UnexpectedResponse(response)),
         }
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_list`]
+///
+/// [`ClientSystemProblemsExt::problem_list`]: super::ClientSystemProblemsExt::problem_list
+#[derive(Debug, Clone)]
+pub struct ProblemList<'a> {
+    client: &'a super::Client,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+    state: Result<Option<types::ProblemState>, String>,
+}
+
+impl<'a> ProblemList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+        }
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::TimeAndIdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    pub fn state<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::ProblemState>,
+    {
+        self.state = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `ProblemState` for state failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/problems`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::ProblemResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            limit,
+            page_token,
+            sort_by,
+            state,
+        } = self;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let state = state.map_err(Error::InvalidRequest)?;
+        let url = format!("{}/v1/system/problems", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&progenitor_client::QueryParam::new("state", &state))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/system/problems`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::Problem, Error<types::Error>>> + Unpin + 'a {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_view`]
+///
+/// [`ClientSystemProblemsExt::problem_view`]: super::ClientSystemProblemsExt::problem_view
+#[derive(Debug, Clone)]
+pub struct ProblemView<'a> {
+    client: &'a super::Client,
+    problem_id: Result<::uuid::Uuid, String>,
+}
+
+impl<'a> ProblemView<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            problem_id: Err("problem_id was not initialized".to_string()),
+        }
+    }
+
+    pub fn problem_id<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::uuid::Uuid>,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|_| "conversion to `:: uuid :: Uuid` for problem_id failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}`
+    pub async fn send(self) -> Result<ResponseValue<types::Problem>, Error<types::Error>> {
+        let Self { client, problem_id } = self;
+        let problem_id = problem_id.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/system/problems/{}",
+            client.baseurl,
+            encode_path(&problem_id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_view",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_alert_list`]
+///
+/// [`ClientSystemProblemsExt::problem_alert_list`]: super::ClientSystemProblemsExt::problem_alert_list
+#[derive(Debug, Clone)]
+pub struct ProblemAlertList<'a> {
+    client: &'a super::Client,
+    problem_id: Result<::uuid::Uuid, String>,
+    alert_class: Result<Option<types::AlertSubscription>, String>,
+    end_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+    start_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+}
+
+impl<'a> ProblemAlertList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            problem_id: Err("problem_id was not initialized".to_string()),
+            alert_class: Ok(None),
+            end_time: Ok(None),
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            start_time: Ok(None),
+        }
+    }
+
+    pub fn problem_id<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::uuid::Uuid>,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|_| "conversion to `:: uuid :: Uuid` for problem_id failed".to_string());
+        self
+    }
+
+    pub fn alert_class<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::AlertSubscription>,
+    {
+        self.alert_class = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `AlertSubscription` for alert_class failed".to_string());
+        self
+    }
+
+    pub fn end_time<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+    {
+        self.end_time = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for end_time \
+             failed"
+                .to_string()
+        });
+        self
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::TimeAndIdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    pub fn start_time<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+    {
+        self.start_time = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for start_time \
+             failed"
+                .to_string()
+        });
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/alerts`
+    pub async fn send(self) -> Result<ResponseValue<types::AlertResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            problem_id,
+            alert_class,
+            end_time,
+            limit,
+            page_token,
+            sort_by,
+            start_time,
+        } = self;
+        let problem_id = problem_id.map_err(Error::InvalidRequest)?;
+        let alert_class = alert_class.map_err(Error::InvalidRequest)?;
+        let end_time = end_time.map_err(Error::InvalidRequest)?;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let start_time = start_time.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/system/problems/{}/alerts",
+            client.baseurl,
+            encode_path(&problem_id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new(
+                "alert_class",
+                &alert_class,
+            ))
+            .query(&progenitor_client::QueryParam::new("end_time", &end_time))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&progenitor_client::QueryParam::new(
+                "start_time",
+                &start_time,
+            ))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_alert_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/system/problems/{problem_id}/alerts`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::Alert, Error<types::Error>>> + Unpin + 'a {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            alert_class: Ok(None),
+            end_time: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            start_time: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_causes_list`]
+///
+/// [`ClientSystemProblemsExt::problem_causes_list`]: super::ClientSystemProblemsExt::problem_causes_list
+#[derive(Debug, Clone)]
+pub struct ProblemCausesList<'a> {
+    client: &'a super::Client,
+    problem_id: Result<::uuid::Uuid, String>,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::IdSortMode>, String>,
+    state: Result<Option<types::ProblemState>, String>,
+}
+
+impl<'a> ProblemCausesList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            problem_id: Err("problem_id was not initialized".to_string()),
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+        }
+    }
+
+    pub fn problem_id<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::uuid::Uuid>,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|_| "conversion to `:: uuid :: Uuid` for problem_id failed".to_string());
+        self
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::IdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    pub fn state<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::ProblemState>,
+    {
+        self.state = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `ProblemState` for state failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/causes`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::RelatedProblemResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            problem_id,
+            limit,
+            page_token,
+            sort_by,
+            state,
+        } = self;
+        let problem_id = problem_id.map_err(Error::InvalidRequest)?;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let state = state.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/system/problems/{}/causes",
+            client.baseurl,
+            encode_path(&problem_id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&progenitor_client::QueryParam::new("state", &state))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_causes_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/system/problems/{problem_id}/causes`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::RelatedProblem, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_consequences_list`]
+///
+/// [`ClientSystemProblemsExt::problem_consequences_list`]: super::ClientSystemProblemsExt::problem_consequences_list
+#[derive(Debug, Clone)]
+pub struct ProblemConsequencesList<'a> {
+    client: &'a super::Client,
+    problem_id: Result<::uuid::Uuid, String>,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::IdSortMode>, String>,
+    state: Result<Option<types::ProblemState>, String>,
+}
+
+impl<'a> ProblemConsequencesList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            problem_id: Err("problem_id was not initialized".to_string()),
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+        }
+    }
+
+    pub fn problem_id<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::uuid::Uuid>,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|_| "conversion to `:: uuid :: Uuid` for problem_id failed".to_string());
+        self
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::IdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    pub fn state<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::ProblemState>,
+    {
+        self.state = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `ProblemState` for state failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/consequences`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::RelatedProblemResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            problem_id,
+            limit,
+            page_token,
+            sort_by,
+            state,
+        } = self;
+        let problem_id = problem_id.map_err(Error::InvalidRequest)?;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let state = state.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/system/problems/{}/consequences",
+            client.baseurl,
+            encode_path(&problem_id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&progenitor_client::QueryParam::new("state", &state))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_consequences_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to
+    /// `/v1/system/problems/{problem_id}/consequences`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::RelatedProblem, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_impact_list`]
+///
+/// [`ClientSystemProblemsExt::problem_impact_list`]: super::ClientSystemProblemsExt::problem_impact_list
+#[derive(Debug, Clone)]
+pub struct ProblemImpactList<'a> {
+    client: &'a super::Client,
+    problem_id: Result<::uuid::Uuid, String>,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::IdSortMode>, String>,
+    state: Result<Option<types::ImpactState>, String>,
+}
+
+impl<'a> ProblemImpactList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            problem_id: Err("problem_id was not initialized".to_string()),
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+        }
+    }
+
+    pub fn problem_id<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::uuid::Uuid>,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|_| "conversion to `:: uuid :: Uuid` for problem_id failed".to_string());
+        self
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::IdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    pub fn state<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::ImpactState>,
+    {
+        self.state = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `ImpactState` for state failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/impacts`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::ProblemImpactResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            problem_id,
+            limit,
+            page_token,
+            sort_by,
+            state,
+        } = self;
+        let problem_id = problem_id.map_err(Error::InvalidRequest)?;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let state = state.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/system/problems/{}/impacts",
+            client.baseurl,
+            encode_path(&problem_id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .query(&progenitor_client::QueryParam::new("state", &state))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_impact_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to `/v1/system/problems/{problem_id}/impacts`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::ProblemImpact, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            state: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
+    }
+}
+
+/// Builder for [`ClientSystemProblemsExt::problem_support_bundles_list`]
+///
+/// [`ClientSystemProblemsExt::problem_support_bundles_list`]: super::ClientSystemProblemsExt::problem_support_bundles_list
+#[derive(Debug, Clone)]
+pub struct ProblemSupportBundlesList<'a> {
+    client: &'a super::Client,
+    problem_id: Result<::uuid::Uuid, String>,
+    limit: Result<Option<::std::num::NonZeroU32>, String>,
+    page_token: Result<Option<::std::string::String>, String>,
+    sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+}
+
+impl<'a> ProblemSupportBundlesList<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            problem_id: Err("problem_id was not initialized".to_string()),
+            limit: Ok(None),
+            page_token: Ok(None),
+            sort_by: Ok(None),
+        }
+    }
+
+    pub fn problem_id<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::uuid::Uuid>,
+    {
+        self.problem_id = value
+            .try_into()
+            .map_err(|_| "conversion to `:: uuid :: Uuid` for problem_id failed".to_string());
+        self
+    }
+
+    pub fn limit<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::num::NonZeroU32>,
+    {
+        self.limit = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+        });
+        self
+    }
+
+    pub fn page_token<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<::std::string::String>,
+    {
+        self.page_token = value.try_into().map(Some).map_err(|_| {
+            "conversion to `:: std :: string :: String` for page_token failed".to_string()
+        });
+        self
+    }
+
+    pub fn sort_by<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::TimeAndIdSortMode>,
+    {
+        self.sort_by = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+        self
+    }
+
+    /// Sends a `GET` request to
+    /// `/v1/system/problems/{problem_id}/support-bundles`
+    pub async fn send(
+        self,
+    ) -> Result<ResponseValue<types::SupportBundleInfoResultsPage>, Error<types::Error>> {
+        let Self {
+            client,
+            problem_id,
+            limit,
+            page_token,
+            sort_by,
+        } = self;
+        let problem_id = problem_id.map_err(Error::InvalidRequest)?;
+        let limit = limit.map_err(Error::InvalidRequest)?;
+        let page_token = page_token.map_err(Error::InvalidRequest)?;
+        let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+        let url = format!(
+            "{}/v1/system/problems/{}/support-bundles",
+            client.baseurl,
+            encode_path(&problem_id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new(
+                "page_token",
+                &page_token,
+            ))
+            .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "problem_support_bundles_list",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    /// Streams `GET` requests to
+    /// `/v1/system/problems/{problem_id}/support-bundles`
+    pub fn stream(
+        self,
+    ) -> impl futures::Stream<Item = Result<types::SupportBundleInfo, Error<types::Error>>> + Unpin + 'a
+    {
+        use ::futures::StreamExt;
+        use ::futures::TryFutureExt;
+        use ::futures::TryStreamExt;
+        let next = Self {
+            page_token: Ok(None),
+            sort_by: Ok(None),
+            ..self.clone()
+        };
+        self.send()
+            .map_ok(move |page| {
+                let page = page.into_inner();
+                let first = futures::stream::iter(page.items).map(Ok);
+                let rest = futures::stream::try_unfold(
+                    (page.next_page, next),
+                    |(next_page, next)| async {
+                        if next_page.is_none() {
+                            Ok(None)
+                        } else {
+                            Self {
+                                page_token: Ok(next_page),
+                                ..next.clone()
+                            }
+                            .send()
+                            .map_ok(|page| {
+                                let page = page.into_inner();
+                                Some((
+                                    futures::stream::iter(page.items).map(Ok),
+                                    (page.next_page, next),
+                                ))
+                            })
+                            .await
+                        }
+                    },
+                )
+                .try_flatten();
+                first.chain(rest)
+            })
+            .try_flatten_stream()
+            .boxed()
     }
 }
 

@@ -23,9 +23,12 @@ mod clap_feature;
 #[cfg(feature = "extras")]
 pub mod extras;
 mod generated;
+mod signing;
 
 pub use auth::*;
 pub use generated::*;
+pub use oxide_http_signatures;
+pub use signing::ClientState;
 
 /// Errors for interfaces related to authentication
 #[derive(Error, Debug)]
@@ -49,10 +52,29 @@ pub enum OxideAuthError {
     NoProfile(PathBuf, String),
     #[error("no authenticated hosts; use oxide auth login to authenticate")]
     NoAuthenticatedHosts,
+    #[error("$OXIDE_SERVICE_ACCOUNT_KEY_ID and $OXIDE_SERVICE_ACCOUNT_KEY must be set together")]
+    IncompleteServiceAccount,
+    #[error("$OXIDE_SERVICE_ACCOUNT_KEY_ID is set but $OXIDE_HOST is not")]
+    ServiceAccountMissingHost,
+    #[error("service account credentials cannot be combined with a token")]
+    ServiceAccountTokenConflict,
+    #[error("service account credentials cannot be combined with a profile")]
+    ServiceAccountProfileConflict,
+    #[error("Unable to load service account key {0}: {1}")]
+    ServiceAccountKey(PathBuf, String),
 }
 
 // Hook into the generated API client to capture and log request metadata.
-impl progenitor_client::ClientHooks for Client {
+impl progenitor_client::ClientHooks<ClientState> for Client {
+    async fn pre<E>(
+        &self,
+        request: &mut reqwest::Request,
+        _info: &progenitor_client::OperationInfo,
+    ) -> Result<(), progenitor_client::Error<E>> {
+        signing::sign_request(progenitor_client::ClientInfo::inner(self), request)
+            .map_err(progenitor_client::Error::InvalidRequest)
+    }
+
     async fn exec(
         &self,
         request: reqwest::Request,

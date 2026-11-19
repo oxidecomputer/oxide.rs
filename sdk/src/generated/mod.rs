@@ -29,6 +29,7 @@ pub mod prelude {
     pub use super::ClientMetricsExt;
     pub use super::ClientPolicyExt;
     pub use super::ClientProjectsExt;
+    pub use super::ClientServiceAccountsExt;
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
     pub use super::ClientSubnetPoolsExt;
@@ -38,6 +39,7 @@ pub mod prelude {
     pub use super::ClientSystemIpPoolsExt;
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
+    pub use super::ClientSystemProblemsExt;
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
     pub use super::ClientSystemSubnetPoolsExt;
@@ -52,10 +54,11 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026110400.0.0
+/// Version: 2026111700.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
+    pub(crate) inner: crate::ClientState,
 }
 
 impl Client {
@@ -67,7 +70,7 @@ impl Client {
     ///
     /// Returns an error if the `reqwest::Client` cannot be built,
     /// for example when the TLS backend fails to initialize.
-    pub fn new(baseurl: &str) -> Result<Self, reqwest::Error> {
+    pub fn new(baseurl: &str, inner: crate::ClientState) -> Result<Self, reqwest::Error> {
         #[cfg(not(target_arch = "wasm32"))]
         let client = {
             let dur = ::std::time::Duration::from_secs(15u64);
@@ -77,7 +80,7 @@ impl Client {
         };
         #[cfg(target_arch = "wasm32")]
         let client = reqwest::ClientBuilder::new();
-        Ok(Self::new_with_client(baseurl, client.build()?))
+        Ok(Self::new_with_client(baseurl, client.build()?, inner))
     }
 
     /// Construct a new client with an existing `reqwest::Client`,
@@ -86,17 +89,22 @@ impl Client {
     /// `baseurl` is the base URL provided to the internal
     /// `reqwest::Client`, and should include a scheme and hostname,
     /// as well as port and a path stem if applicable.
-    pub fn new_with_client(baseurl: &str, client: reqwest::Client) -> Self {
+    pub fn new_with_client(
+        baseurl: &str,
+        client: reqwest::Client,
+        inner: crate::ClientState,
+    ) -> Self {
         Self {
             baseurl: baseurl.to_string(),
             client,
+            inner,
         }
     }
 }
 
-impl ClientInfo<()> for Client {
+impl ClientInfo<crate::ClientState> for Client {
     fn api_version() -> &'static str {
-        "2026110400.0.0"
+        "2026111700.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -107,12 +115,12 @@ impl ClientInfo<()> for Client {
         &self.client
     }
 
-    fn inner(&self) -> &() {
-        &()
+    fn inner(&self) -> &crate::ClientState {
+        &self.inner
     }
 }
 
-impl ClientHooks<()> for &Client {}
+impl ClientHooks<crate::ClientState> for &Client {}
 /// Anti-affinity groups give control over instance placement.
 pub trait ClientAffinityExt {
     /// List anti-affinity groups
@@ -1102,22 +1110,25 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_>;
-    /// Abort the latest rack membership change
+    /// Abort rack membership change
     ///
     /// This operation is synchronous. Upon returning from the API call, a
     /// success response indicates that the prior membership change was aborted.
     /// An error response indicates that there is no active membership change in
-    /// progress (previous changes have completed) or that the current
-    /// membership change could not be aborted.
+    /// progress (previous changes have completed), that the specified
+    /// membership change could not be aborted, or that (if a version is
+    /// specified) configuration has moved past it.
     ///
     /// Sends a `POST` request to
     /// `/v1/system/hardware/racks/{rack_id}/membership/abort`
     ///
     /// Arguments:
     /// - `rack_id`: ID of the rack
+    /// - `version`
     /// ```ignore
     /// let response = client.rack_membership_abort()
     ///    .rack_id(rack_id)
+    ///    .version(version)
     ///    .send()
     ///    .await;
     /// ```
@@ -2556,6 +2567,189 @@ impl ClientProjectsExt for Client {
 
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate<'_> {
         builder::ProjectPolicyUpdate::new(self)
+    }
+}
+
+/// Service accounts are non-human principals, scoped to a project, that
+/// authenticate with signed requests.
+pub trait ClientServiceAccountsExt {
+    /// List service accounts
+    ///
+    /// Sends a `GET` request to `/v1/service-accounts`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.service_account_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_list(&self) -> builder::ServiceAccountList<'_>;
+    /// Create service account
+    ///
+    /// Sends a `POST` request to `/v1/service-accounts`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.service_account_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_create(&self) -> builder::ServiceAccountCreate<'_>;
+    /// Fetch service account
+    ///
+    /// Sends a `GET` request to `/v1/service-accounts/{service_account}`
+    ///
+    /// Arguments:
+    /// - `service_account`: Name or ID of the service account
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.service_account_view()
+    ///    .service_account(service_account)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_view(&self) -> builder::ServiceAccountView<'_>;
+    /// Delete service account
+    ///
+    /// Sends a `DELETE` request to `/v1/service-accounts/{service_account}`
+    ///
+    /// Arguments:
+    /// - `service_account`: Name or ID of the service account
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.service_account_delete()
+    ///    .service_account(service_account)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_delete(&self) -> builder::ServiceAccountDelete<'_>;
+    /// List service account keys
+    ///
+    /// Sends a `GET` request to `/v1/service-accounts/{service_account}/keys`
+    ///
+    /// Arguments:
+    /// - `service_account`: Name or ID of the service account
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.service_account_key_list()
+    ///    .service_account(service_account)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_key_list(&self) -> builder::ServiceAccountKeyList<'_>;
+    /// Create service account key
+    ///
+    /// Upload the public half of an Ed25519 key pair. Requests signed with the
+    /// matching private key (RFC 9421 HTTP message signatures, with this key's
+    /// ID as `keyid`) authenticate as the service account.
+    ///
+    /// Sends a `POST` request to `/v1/service-accounts/{service_account}/keys`
+    ///
+    /// Arguments:
+    /// - `service_account`: Name or ID of the service account
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.service_account_key_create()
+    ///    .service_account(service_account)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_key_create(&self) -> builder::ServiceAccountKeyCreate<'_>;
+    /// Fetch service account key
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/service-accounts/{service_account}/keys/{key}`
+    ///
+    /// Arguments:
+    /// - `service_account`: Name or ID of the service account
+    /// - `key`: Name or ID of the service account key
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.service_account_key_view()
+    ///    .service_account(service_account)
+    ///    .key(key)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_key_view(&self) -> builder::ServiceAccountKeyView<'_>;
+    /// Delete service account key
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/service-accounts/{service_account}/keys/{key}`
+    ///
+    /// Arguments:
+    /// - `service_account`: Name or ID of the service account
+    /// - `key`: Name or ID of the service account key
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.service_account_key_delete()
+    ///    .service_account(service_account)
+    ///    .key(key)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn service_account_key_delete(&self) -> builder::ServiceAccountKeyDelete<'_>;
+}
+
+impl ClientServiceAccountsExt for Client {
+    fn service_account_list(&self) -> builder::ServiceAccountList<'_> {
+        builder::ServiceAccountList::new(self)
+    }
+
+    fn service_account_create(&self) -> builder::ServiceAccountCreate<'_> {
+        builder::ServiceAccountCreate::new(self)
+    }
+
+    fn service_account_view(&self) -> builder::ServiceAccountView<'_> {
+        builder::ServiceAccountView::new(self)
+    }
+
+    fn service_account_delete(&self) -> builder::ServiceAccountDelete<'_> {
+        builder::ServiceAccountDelete::new(self)
+    }
+
+    fn service_account_key_list(&self) -> builder::ServiceAccountKeyList<'_> {
+        builder::ServiceAccountKeyList::new(self)
+    }
+
+    fn service_account_key_create(&self) -> builder::ServiceAccountKeyCreate<'_> {
+        builder::ServiceAccountKeyCreate::new(self)
+    }
+
+    fn service_account_key_view(&self) -> builder::ServiceAccountKeyView<'_> {
+        builder::ServiceAccountKeyView::new(self)
+    }
+
+    fn service_account_key_delete(&self) -> builder::ServiceAccountKeyDelete<'_> {
+        builder::ServiceAccountKeyDelete::new(self)
     }
 }
 
@@ -4973,6 +5167,218 @@ impl ClientSystemNetworkingExt for Client {
         &self,
     ) -> builder::NetworkingSwitchPortSettingsView<'_> {
         builder::NetworkingSwitchPortSettingsView::new(self)
+    }
+}
+
+/// Problems detected by the fault management subsystem.
+pub trait ClientSystemProblemsExt {
+    /// List problems
+    ///
+    /// Problems are sorted by the time at which they were detected, and may be
+    /// filtered by state.
+    ///
+    /// Sends a `GET` request to `/v1/system/problems`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `state`: If this is included, only problems in the specified state
+    ///   will be returned. Otherwise, problems in all states will be returned.
+    /// ```ignore
+    /// let response = client.problem_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .state(state)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_list(&self) -> builder::ProblemList<'_>;
+    /// Fetch problem
+    ///
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}`
+    ///
+    /// Arguments:
+    /// - `problem_id`: ID of the problem
+    /// ```ignore
+    /// let response = client.problem_view()
+    ///    .problem_id(problem_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_view(&self) -> builder::ProblemView<'_>;
+    /// List alerts for problem
+    ///
+    /// Lists alerts associated with the requested problem. Alerts may be
+    /// filtered by alert class or alert class glob and by an inclusive creation
+    /// time range.
+    ///
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/alerts`
+    ///
+    /// Arguments:
+    /// - `problem_id`: ID of the problem
+    /// - `alert_class`: Optional alert class or glob pattern used to filter
+    ///   alerts.
+    ///
+    /// If this is included, only alerts with the specified class or matching
+    /// the glob pattern (as appropriate) will be returned. Otherwise, alerts of
+    /// all classes will be returned.
+    ///
+    /// See the guide-level documentation on alerts for details on alert classes
+    /// and alert class glob patterns.
+    /// - `end_time`: Inclusive upper bound on the alert creation time
+    ///
+    /// If this is included, only alerts created at or before this time will be
+    /// returned.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `start_time`: Inclusive lower bound on the alert creation time.
+    ///
+    /// If this is included, only alerts created at or after this time will be
+    /// returned.
+    /// ```ignore
+    /// let response = client.problem_alert_list()
+    ///    .problem_id(problem_id)
+    ///    .alert_class(alert_class)
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_alert_list(&self) -> builder::ProblemAlertList<'_>;
+    /// List causes of problem
+    ///
+    /// Returns any other problems which are the causes of the specified
+    /// problem. If the specified problem has no causes, this list may be empty.
+    ///
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/causes`
+    ///
+    /// Arguments:
+    /// - `problem_id`: ID of the problem
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `state`: If this is included, only problems in the specified state
+    ///   will be returned. Otherwise, problems in all states will be returned.
+    /// ```ignore
+    /// let response = client.problem_causes_list()
+    ///    .problem_id(problem_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .state(state)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_causes_list(&self) -> builder::ProblemCausesList<'_>;
+    /// List consequences of problem
+    ///
+    /// Returns any other problems which are caused by the specified problem. If
+    /// no other problem is caused by the specified problem, then this list may
+    /// be empty.
+    ///
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/consequences`
+    ///
+    /// Arguments:
+    /// - `problem_id`: ID of the problem
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `state`: If this is included, only problems in the specified state
+    ///   will be returned. Otherwise, problems in all states will be returned.
+    /// ```ignore
+    /// let response = client.problem_consequences_list()
+    ///    .problem_id(problem_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .state(state)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_consequences_list(&self) -> builder::ProblemConsequencesList<'_>;
+    /// List resources impacted by problem
+    ///
+    /// Sends a `GET` request to `/v1/system/problems/{problem_id}/impacts`
+    ///
+    /// Arguments:
+    /// - `problem_id`: ID of the problem
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `state`: If this is included, only impacts in the specified state will
+    ///   be returned. Otherwise, all impacts will be returned.
+    /// ```ignore
+    /// let response = client.problem_impact_list()
+    ///    .problem_id(problem_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .state(state)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_impact_list(&self) -> builder::ProblemImpactList<'_>;
+    /// List support bundles attached to problem
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/problems/{problem_id}/support-bundles`
+    ///
+    /// Arguments:
+    /// - `problem_id`: ID of the problem
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.problem_support_bundles_list()
+    ///    .problem_id(problem_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn problem_support_bundles_list(&self) -> builder::ProblemSupportBundlesList<'_>;
+}
+
+impl ClientSystemProblemsExt for Client {
+    fn problem_list(&self) -> builder::ProblemList<'_> {
+        builder::ProblemList::new(self)
+    }
+
+    fn problem_view(&self) -> builder::ProblemView<'_> {
+        builder::ProblemView::new(self)
+    }
+
+    fn problem_alert_list(&self) -> builder::ProblemAlertList<'_> {
+        builder::ProblemAlertList::new(self)
+    }
+
+    fn problem_causes_list(&self) -> builder::ProblemCausesList<'_> {
+        builder::ProblemCausesList::new(self)
+    }
+
+    fn problem_consequences_list(&self) -> builder::ProblemConsequencesList<'_> {
+        builder::ProblemConsequencesList::new(self)
+    }
+
+    fn problem_impact_list(&self) -> builder::ProblemImpactList<'_> {
+        builder::ProblemImpactList::new(self)
+    }
+
+    fn problem_support_bundles_list(&self) -> builder::ProblemSupportBundlesList<'_> {
+        builder::ProblemSupportBundlesList::new(self)
     }
 }
 

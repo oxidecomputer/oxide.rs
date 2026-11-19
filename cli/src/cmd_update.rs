@@ -4,14 +4,18 @@
 
 // Copyright 2025 Oxide Computer Company
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use futures::TryStreamExt;
-use oxide::{Client, ClientSystemUpdateExt};
-use tokio::{fs::File, sync::watch};
+use oxide::{
+    oxide_http_signatures::{DigestHasher, CONTENT_DIGEST_HEADER},
+    types, Client, ClientInfo, ClientSystemUpdateExt, ResponseValue,
+};
+use progenitor_client::{ClientHooks, OperationInfo};
+use tokio::{fs::File, io::AsyncReadExt, sync::watch};
 use tokio_util::io::ReaderStream;
 
 use crate::{generated_cli::CliConfig, util::start_progress_bar, AuthenticatedCmd, OxideOverride};
@@ -35,6 +39,12 @@ impl AuthenticatedCmd for CmdUpload {
     async fn run(&self, client: &Client) -> Result<()> {
         let file_name = self.path.file_name().unwrap().to_str().unwrap();
 
+        let content_digest = if client.signs_requests() {
+            Some(file_content_digest(&self.path).await?)
+        } else {
+            None
+        };
+
         let file = File::open(&self.path).await?;
 
         let len = file.metadata().await?.len();
@@ -56,12 +66,17 @@ impl AuthenticatedCmd for CmdUpload {
 
         let body = reqwest::Body::wrap_stream(file_stream);
 
-        let response = client
-            .system_update_repository_upload()
-            .file_name(file_name)
-            .body(body)
-            .send()
-            .await;
+        let response = match content_digest {
+            Some(digest) => upload_with_content_digest(client, file_name, body, digest).await,
+            None => {
+                client
+                    .system_update_repository_upload()
+                    .file_name(file_name)
+                    .body(body)
+                    .send()
+                    .await
+            }
+        };
 
         // TODO probably we want to figure out the output modality for all
         // commands, but let's figure that out once we have multiple output
@@ -82,5 +97,52 @@ impl AuthenticatedCmd for CmdUpload {
 
     fn maybe_long() -> bool {
         true
+    }
+}
+
+async fn file_content_digest(path: &Path) -> Result<String> {
+    let mut file = File::open(path).await?;
+    let mut hasher = DigestHasher::new();
+    let mut buf = vec![0; 1 << 20];
+    loop {
+        let n = file.read(&mut buf).await?;
+        if n == 0 {
+            break;
+        }
+        hasher.update(&buf[..n]);
+    }
+    Ok(hasher.finish())
+}
+
+async fn upload_with_content_digest(
+    client: &Client,
+    file_name: &str,
+    body: reqwest::Body,
+    content_digest: String,
+) -> Result<ResponseValue<types::TufRepoUpload>, oxide::Error<types::Error>> {
+    let info = OperationInfo {
+        operation_id: "system_update_repository_upload",
+    };
+    let mut request = client
+        .client()
+        .put(format!(
+            "{}/v1/system/update/repositories",
+            client.baseurl()
+        ))
+        .header(reqwest::header::ACCEPT, "application/json")
+        .header(reqwest::header::CONTENT_TYPE, "application/octet-stream")
+        .header("api-version", Client::api_version())
+        .header(CONTENT_DIGEST_HEADER, content_digest)
+        .query(&[("file_name", file_name)])
+        .body(body)
+        .build()?;
+    client.pre::<types::Error>(&mut request, &info).await?;
+    let response = client.exec(request, &info).await?;
+    match response.status().as_u16() {
+        200 => ResponseValue::from_response(response).await,
+        400..=599 => Err(oxide::Error::ErrorResponse(
+            ResponseValue::from_response::<types::Error>(response).await?,
+        )),
+        _ => Err(oxide::Error::UnexpectedResponse(response)),
     }
 }

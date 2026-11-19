@@ -12,6 +12,7 @@ base64 = { workspace = true }
 chrono = { workspace = true }
 dirs = { workspace = true }
 futures = { workspace = true }
+oxide-http-signatures = { path = "../../omicron/http-signatures" }
 progenitor-client = { workspace = true }
 rand = { workspace = true }
 regress = { workspace = true }

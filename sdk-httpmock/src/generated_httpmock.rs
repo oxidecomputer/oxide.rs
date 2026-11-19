@@ -10610,6 +10610,653 @@ pub mod operations {
         }
     }
 
+    pub struct ServiceAccountListWhen(::httpmock::When);
+    impl ServiceAccountListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/service-accounts$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct ServiceAccountListThen(::httpmock::Then);
+    impl ServiceAccountListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ServiceAccountResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountCreateWhen(::httpmock::When);
+    impl ServiceAccountCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/service-accounts$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::ServiceAccountCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ServiceAccountCreateThen(::httpmock::Then);
+    impl ServiceAccountCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::ServiceAccount) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountViewWhen(::httpmock::When);
+    impl ServiceAccountViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/service-accounts/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn service_account(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/service-accounts/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ServiceAccountViewThen(::httpmock::Then);
+    impl ServiceAccountViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ServiceAccount) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountDeleteWhen(::httpmock::When);
+    impl ServiceAccountDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/service-accounts/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn service_account(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/service-accounts/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ServiceAccountDeleteThen(::httpmock::Then);
+    impl ServiceAccountDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountKeyListWhen(::httpmock::When);
+    impl ServiceAccountKeyListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/service-accounts/[^/]*/keys$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn service_account(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/service-accounts/{}/keys$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct ServiceAccountKeyListThen(::httpmock::Then);
+    impl ServiceAccountKeyListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ServiceAccountKeyResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountKeyCreateWhen(::httpmock::When);
+    impl ServiceAccountKeyCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/service-accounts/[^/]*/keys$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn service_account(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/service-accounts/{}/keys$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+
+        pub fn body(self, value: &types::ServiceAccountKeyCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ServiceAccountKeyCreateThen(::httpmock::Then);
+    impl ServiceAccountKeyCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::ServiceAccountKey) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountKeyViewWhen(::httpmock::When);
+    impl ServiceAccountKeyViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/service-accounts/[^/]*/keys/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn service_account(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/service-accounts/{}/keys/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn key(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/service-accounts/.*/keys/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ServiceAccountKeyViewThen(::httpmock::Then);
+    impl ServiceAccountKeyViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ServiceAccountKey) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ServiceAccountKeyDeleteWhen(::httpmock::When);
+    impl ServiceAccountKeyDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/service-accounts/[^/]*/keys/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn service_account(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/service-accounts/{}/keys/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn key(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/service-accounts/.*/keys/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("project"))
+            }
+        }
+    }
+
+    pub struct ServiceAccountKeyDeleteThen(::httpmock::Then);
+    impl ServiceAccountKeyDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SnapshotListWhen(::httpmock::When);
     impl SnapshotListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -12260,6 +12907,17 @@ pub mod operations {
             ))
             .unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn version<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::RackMembershipVersion>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("version", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("version"))
+            }
         }
     }
 
@@ -17311,6 +17969,713 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemListWhen(::httpmock::When);
+    impl ProblemListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/problems$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::TimeAndIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+
+        pub fn state<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::ProblemState>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("state", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("state"))
+            }
+        }
+    }
+
+    pub struct ProblemListThen(::httpmock::Then);
+    impl ProblemListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ProblemResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemViewWhen(::httpmock::When);
+    impl ProblemViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/problems/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn problem_id(self, value: &::uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/problems/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct ProblemViewThen(::httpmock::Then);
+    impl ProblemViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Problem) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemAlertListWhen(::httpmock::When);
+    impl ProblemAlertListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/problems/[^/]*/alerts$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn problem_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/problems/{}/alerts$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn alert_class<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::AlertSubscription>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("alert_class", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("alert_class"))
+            }
+        }
+
+        pub fn end_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("end_time", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("end_time"))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::TimeAndIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+
+        pub fn start_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("start_time", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("start_time"))
+            }
+        }
+    }
+
+    pub struct ProblemAlertListThen(::httpmock::Then);
+    impl ProblemAlertListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemCausesListWhen(::httpmock::When);
+    impl ProblemCausesListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/problems/[^/]*/causes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn problem_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/problems/{}/causes$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+
+        pub fn state<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::ProblemState>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("state", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("state"))
+            }
+        }
+    }
+
+    pub struct ProblemCausesListThen(::httpmock::Then);
+    impl ProblemCausesListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RelatedProblemResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemConsequencesListWhen(::httpmock::When);
+    impl ProblemConsequencesListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/problems/[^/]*/consequences$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn problem_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/problems/{}/consequences$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+
+        pub fn state<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::ProblemState>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("state", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("state"))
+            }
+        }
+    }
+
+    pub struct ProblemConsequencesListThen(::httpmock::Then);
+    impl ProblemConsequencesListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RelatedProblemResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemImpactListWhen(::httpmock::When);
+    impl ProblemImpactListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/problems/[^/]*/impacts$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn problem_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/problems/{}/impacts$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+
+        pub fn state<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::ImpactState>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("state", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("state"))
+            }
+        }
+    }
+
+    pub struct ProblemImpactListThen(::httpmock::Then);
+    impl ProblemImpactListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ProblemImpactResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ProblemSupportBundlesListWhen(::httpmock::When);
+    impl ProblemSupportBundlesListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/problems/[^/]*/support-bundles$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn problem_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/problems/{}/support-bundles$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("limit"))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("page_token"))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::TimeAndIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("sort_by"))
+            }
+        }
+    }
+
+    pub struct ProblemSupportBundlesListThen(::httpmock::Then);
+    impl ProblemSupportBundlesListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SupportBundleInfoResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -24485,6 +25850,30 @@ pub trait MockServerExt {
     fn project_policy_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::ProjectPolicyUpdateWhen, operations::ProjectPolicyUpdateThen);
+    fn service_account_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountListWhen, operations::ServiceAccountListThen);
+    fn service_account_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountCreateWhen, operations::ServiceAccountCreateThen);
+    fn service_account_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountViewWhen, operations::ServiceAccountViewThen);
+    fn service_account_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountDeleteWhen, operations::ServiceAccountDeleteThen);
+    fn service_account_key_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyListWhen, operations::ServiceAccountKeyListThen);
+    fn service_account_key_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyCreateWhen, operations::ServiceAccountKeyCreateThen);
+    fn service_account_key_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyViewWhen, operations::ServiceAccountKeyViewThen);
+    fn service_account_key_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyDeleteWhen, operations::ServiceAccountKeyDeleteThen);
     fn snapshot_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SnapshotListWhen, operations::SnapshotListThen);
@@ -24887,6 +26276,30 @@ pub trait MockServerExt {
     fn system_policy_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen);
+    fn problem_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemListWhen, operations::ProblemListThen);
+    fn problem_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemViewWhen, operations::ProblemViewThen);
+    fn problem_alert_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemAlertListWhen, operations::ProblemAlertListThen);
+    fn problem_causes_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemCausesListWhen, operations::ProblemCausesListThen);
+    fn problem_consequences_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemConsequencesListWhen, operations::ProblemConsequencesListThen);
+    fn problem_impact_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemImpactListWhen, operations::ProblemImpactListThen);
+    fn problem_support_bundles_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::ProblemSupportBundlesListWhen,
+            operations::ProblemSupportBundlesListThen,
+        );
     fn scim_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::ScimTokenListWhen, operations::ScimTokenListThen);
@@ -26966,6 +28379,102 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn service_account_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountListWhen, operations::ServiceAccountListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountListWhen::new(when),
+                operations::ServiceAccountListThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountCreateWhen, operations::ServiceAccountCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountCreateWhen::new(when),
+                operations::ServiceAccountCreateThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountViewWhen, operations::ServiceAccountViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountViewWhen::new(when),
+                operations::ServiceAccountViewThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountDeleteWhen, operations::ServiceAccountDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountDeleteWhen::new(when),
+                operations::ServiceAccountDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_key_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyListWhen, operations::ServiceAccountKeyListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountKeyListWhen::new(when),
+                operations::ServiceAccountKeyListThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_key_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyCreateWhen, operations::ServiceAccountKeyCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountKeyCreateWhen::new(when),
+                operations::ServiceAccountKeyCreateThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_key_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyViewWhen, operations::ServiceAccountKeyViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountKeyViewWhen::new(when),
+                operations::ServiceAccountKeyViewThen::new(then),
+            )
+        })
+    }
+
+    fn service_account_key_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ServiceAccountKeyDeleteWhen, operations::ServiceAccountKeyDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ServiceAccountKeyDeleteWhen::new(when),
+                operations::ServiceAccountKeyDeleteThen::new(then),
+            )
+        })
+    }
+
     fn snapshot_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SnapshotListWhen, operations::SnapshotListThen),
@@ -28210,6 +29719,93 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SystemPolicyUpdateWhen::new(when),
                 operations::SystemPolicyUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn problem_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemListWhen, operations::ProblemListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemListWhen::new(when),
+                operations::ProblemListThen::new(then),
+            )
+        })
+    }
+
+    fn problem_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemViewWhen, operations::ProblemViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemViewWhen::new(when),
+                operations::ProblemViewThen::new(then),
+            )
+        })
+    }
+
+    fn problem_alert_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemAlertListWhen, operations::ProblemAlertListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemAlertListWhen::new(when),
+                operations::ProblemAlertListThen::new(then),
+            )
+        })
+    }
+
+    fn problem_causes_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemCausesListWhen, operations::ProblemCausesListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemCausesListWhen::new(when),
+                operations::ProblemCausesListThen::new(then),
+            )
+        })
+    }
+
+    fn problem_consequences_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemConsequencesListWhen, operations::ProblemConsequencesListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemConsequencesListWhen::new(when),
+                operations::ProblemConsequencesListThen::new(then),
+            )
+        })
+    }
+
+    fn problem_impact_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ProblemImpactListWhen, operations::ProblemImpactListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemImpactListWhen::new(when),
+                operations::ProblemImpactListThen::new(then),
+            )
+        })
+    }
+
+    fn problem_support_bundles_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::ProblemSupportBundlesListWhen,
+            operations::ProblemSupportBundlesListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProblemSupportBundlesListWhen::new(when),
+                operations::ProblemSupportBundlesListThen::new(then),
             )
         })
     }

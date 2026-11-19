@@ -10,7 +10,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{Client, OxideAuthError};
+use crate::{
+    signing::RequestSigner,
+    ClientState,
+    Client, OxideAuthError,
+};
 use reqwest::ClientBuilder;
 use serde::Deserialize;
 
@@ -188,6 +192,12 @@ impl Client {
             ..
         } = config;
 
+        if let Some(service_account) =
+            service_account_from_env(auth_method, |name| std::env::var(name).ok())?
+        {
+            return Self::new_service_account(config, service_account);
+        }
+
         if std::env::var("OXIDE_HOST").is_ok() && std::env::var("OXIDE_PROFILE").is_ok() {
             return Err(OxideAuthError::HostProfileConflict);
         }
@@ -215,7 +225,65 @@ impl Client {
             client_builder
                 .build()
                 .expect("failure to construct underlying client object"),
+            ClientState::default(),
         ))
+    }
+
+    fn new_service_account(
+        config: &ClientConfig,
+        service_account: ServiceAccount,
+    ) -> Result<Self, OxideAuthError> {
+        let ServiceAccount {
+            host,
+            key_id,
+            key_path,
+        } = service_account;
+        let pem = std::fs::read_to_string(&key_path)
+            .map_err(|e| OxideAuthError::ServiceAccountKey(key_path.clone(), e.to_string()))?;
+        let key = oxide_http_signatures::signing_key_from_pem(&pem)
+            .map_err(|e| OxideAuthError::ServiceAccountKey(key_path, e.to_string()))?;
+        Ok(Self::new_with_client(
+            &host,
+            config
+                .make_unauthenticated_client_builder()
+                .build()
+                .expect("failure to construct underlying client object"),
+            ClientState::with_signer(RequestSigner { key_id, key }),
+        ))
+    }
+}
+
+#[derive(Debug, PartialEq)]
+struct ServiceAccount {
+    host: String,
+    key_id: String,
+    key_path: PathBuf,
+}
+
+fn service_account_from_env(
+    auth_method: &AuthMethod,
+    env: impl Fn(&str) -> Option<String>,
+) -> Result<Option<ServiceAccount>, OxideAuthError> {
+    match (
+        env("OXIDE_SERVICE_ACCOUNT_KEY_ID"),
+        env("OXIDE_SERVICE_ACCOUNT_KEY"),
+    ) {
+        (None, None) => Ok(None),
+        (Some(key_id), Some(key_path)) => {
+            if env("OXIDE_TOKEN").is_some() || matches!(auth_method, AuthMethod::HostToken { .. }) {
+                return Err(OxideAuthError::ServiceAccountTokenConflict);
+            }
+            if env("OXIDE_PROFILE").is_some() || matches!(auth_method, AuthMethod::Profile(_)) {
+                return Err(OxideAuthError::ServiceAccountProfileConflict);
+            }
+            let host = env("OXIDE_HOST").ok_or(OxideAuthError::ServiceAccountMissingHost)?;
+            Ok(Some(ServiceAccount {
+                host,
+                key_id,
+                key_path: key_path.into(),
+            }))
+        }
+        _ => Err(OxideAuthError::IncompleteServiceAccount),
     }
 }
 
@@ -328,5 +396,84 @@ fn get_profile_auth(
             .get(&profile_name)
             .ok_or(OxideAuthError::NoProfile(credentials_path, profile_name))?;
         Ok((profile.host.clone(), profile.token.clone()))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn resolve(
+        auth_method: &AuthMethod,
+        vars: &[(&str, &str)],
+    ) -> Result<Option<ServiceAccount>, OxideAuthError> {
+        let vars: BTreeMap<String, String> = vars
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect();
+        service_account_from_env(auth_method, |name| vars.get(name).cloned())
+    }
+
+    #[test]
+    fn service_account_env() {
+        let host = ("OXIDE_HOST", "https://rack.example");
+        let key_id = (
+            "OXIDE_SERVICE_ACCOUNT_KEY_ID",
+            "0b9c1f4e-6a8f-4d55-9a8e-2f7f4c1d6e3a",
+        );
+        let key = ("OXIDE_SERVICE_ACCOUNT_KEY", "/keys/sa.pem");
+
+        assert!(matches!(
+            resolve(&AuthMethod::DefaultProfile, &[host]),
+            Ok(None)
+        ));
+        assert_eq!(
+            resolve(&AuthMethod::DefaultProfile, &[host, key_id, key]).unwrap(),
+            Some(ServiceAccount {
+                host: host.1.to_string(),
+                key_id: key_id.1.to_string(),
+                key_path: key.1.into(),
+            })
+        );
+
+        for (auth_method, vars, expected) in [
+            (
+                AuthMethod::DefaultProfile,
+                vec![host, key_id],
+                OxideAuthError::IncompleteServiceAccount,
+            ),
+            (
+                AuthMethod::DefaultProfile,
+                vec![host, key],
+                OxideAuthError::IncompleteServiceAccount,
+            ),
+            (
+                AuthMethod::DefaultProfile,
+                vec![key_id, key],
+                OxideAuthError::ServiceAccountMissingHost,
+            ),
+            (
+                AuthMethod::DefaultProfile,
+                vec![host, key_id, key, ("OXIDE_TOKEN", "t")],
+                OxideAuthError::ServiceAccountTokenConflict,
+            ),
+            (
+                AuthMethod::DefaultProfile,
+                vec![key_id, key, ("OXIDE_PROFILE", "p")],
+                OxideAuthError::ServiceAccountProfileConflict,
+            ),
+            (
+                AuthMethod::Profile("p".to_string()),
+                vec![host, key_id, key],
+                OxideAuthError::ServiceAccountProfileConflict,
+            ),
+        ] {
+            let err = resolve(&auth_method, &vars).unwrap_err();
+            assert_eq!(
+                std::mem::discriminant(&err),
+                std::mem::discriminant(&expected),
+                "{vars:?}: {err}"
+            );
+        }
     }
 }

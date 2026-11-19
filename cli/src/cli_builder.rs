@@ -400,6 +400,23 @@ impl<C> CustomCmd<C> {
 
 fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
     match command {
+        CliCommand::ServiceAccountList => Some("service-account list"),
+        CliCommand::ServiceAccountCreate => Some("service-account create"),
+        CliCommand::ServiceAccountView => Some("service-account view"),
+        CliCommand::ServiceAccountDelete => Some("service-account delete"),
+        CliCommand::ServiceAccountKeyList => Some("service-account key list"),
+        CliCommand::ServiceAccountKeyCreate => Some("service-account key create"),
+        CliCommand::ServiceAccountKeyView => Some("service-account key view"),
+        CliCommand::ServiceAccountKeyDelete => Some("service-account key delete"),
+
+        CliCommand::ProblemList
+        | CliCommand::ProblemView
+        | CliCommand::ProblemAlertList
+        | CliCommand::ProblemCausesList
+        | CliCommand::ProblemConsequencesList
+        | CliCommand::ProblemImpactList
+        | CliCommand::ProblemSupportBundlesList => None,
+
         CliCommand::InstanceList => Some("instance list"),
         CliCommand::InstanceCreate => Some("instance create"),
         CliCommand::InstanceView => Some("instance view"),

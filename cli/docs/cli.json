@@ -4831,6 +4831,250 @@
       ]
     },
     {
+      "name": "service-account",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "create",
+          "about": "Create service account",
+          "operation_id": "service_account_create",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-schema",
+              "help": "Print the schema for the JSON body and exit."
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete service account",
+          "operation_id": "service_account_delete",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "service-account",
+              "help": "Name or ID of the service account"
+            }
+          ]
+        },
+        {
+          "name": "key",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Create service account key\n\nUpload the public half of an Ed25519 key pair. Requests signed with the matching private key (RFC 9421 HTTP message signatures, with this key's ID as `keyid`) authenticate as the service account.",
+              "operation_id": "service_account_key_create",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-schema",
+                  "help": "Print the schema for the JSON body and exit."
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "public-key",
+                  "help": "Ed25519 public key in PEM (SubjectPublicKeyInfo) format"
+                },
+                {
+                  "long": "service-account",
+                  "help": "Name or ID of the service account"
+                },
+                {
+                  "long": "ttl-seconds",
+                  "help": "Lifetime of the key in seconds. If omitted, the key does not expire."
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Delete service account key",
+              "operation_id": "service_account_key_delete",
+              "args": [
+                {
+                  "long": "key",
+                  "help": "Name or ID of the service account key"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "service-account",
+                  "help": "Name or ID of the service account"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List service account keys",
+              "operation_id": "service_account_key_list",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "service-account",
+                  "help": "Name or ID of the service account"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch service account key",
+              "operation_id": "service_account_key_view",
+              "args": [
+                {
+                  "long": "key",
+                  "help": "Name or ID of the service account key"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "service-account",
+                  "help": "Name or ID of the service account"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List service accounts",
+          "operation_id": "service_account_list",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch service account",
+          "operation_id": "service_account_view",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "service-account",
+              "help": "Name or ID of the service account"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "silo",
       "args": [
         {
@@ -6016,7 +6260,7 @@
                   "subcommands": [
                     {
                       "name": "abort",
-                      "about": "Abort the latest rack membership change\n\nThis operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.",
+                      "about": "Abort rack membership change\n\nThis operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed), that the specified membership change could not be aborted, or that (if a version is specified) configuration has moved past it.",
                       "operation_id": "rack_membership_abort",
                       "args": [
                         {
@@ -6027,6 +6271,9 @@
                         {
                           "long": "rack-id",
                           "help": "ID of the rack"
+                        },
+                        {
+                          "long": "version"
                         }
                       ]
                     },
