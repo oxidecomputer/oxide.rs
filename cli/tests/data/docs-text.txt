@@ -221,6 +221,21 @@ oxide ping — Ping API
 Always responds with Ok if it responds at all.
 oxide policy update — Update current silo's IAM policy
 oxide policy view — Fetch current silo's IAM policy
+oxide problem list — List problems
+
+Problems are sorted by the time at which they were detected, and may be filtered by state.
+oxide problem list-alerts — List alerts for problem
+
+Lists alerts associated with the requested problem. Alerts may be filtered by alert class or alert class glob and by an inclusive creation time range.
+oxide problem list-bundles — List support bundles attached to problem
+oxide problem list-causes — List causes of problem
+
+Returns any other problems which are the causes of the specified problem. If the specified problem has no causes, this list may be empty.
+oxide problem list-consequences — List consequences of problem
+
+Returns any other problems which are caused by the specified problem. If no other problem is caused by the specified problem, then this list may be empty.
+oxide problem list-impact — List resources impacted by problem
+oxide problem view — Fetch problem
 oxide project create — Create project
 oxide project delete — Delete project
 oxide project list — List projects
@@ -307,9 +322,9 @@ oxide system hardware rack list — List racks
 oxide system hardware rack list-unadopted — List unadopted racks
 
 Lists racks that have joined the underlay network but have not yet been adopted into the regional cluster.
-oxide system hardware rack membership abort — Abort the latest rack membership change
+oxide system hardware rack membership abort — Abort rack membership change
 
-This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.
+This operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed), that the specified membership change could not be aborted, or that (if a version is specified) configuration has moved past it.
 oxide system hardware rack membership add — Add new sleds to rack membership
 oxide system hardware rack membership status — Fetch rack cluster membership status
 

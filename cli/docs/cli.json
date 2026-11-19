@@ -4561,6 +4561,234 @@
       ]
     },
     {
+      "name": "problem",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "list",
+          "about": "List problems\n\nProblems are sorted by the time at which they were detected, and may be filtered by state.",
+          "operation_id": "problem_list",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "time_and_id_ascending",
+                "time_and_id_descending"
+              ]
+            },
+            {
+              "long": "state",
+              "values": [
+                "active",
+                "resolved"
+              ],
+              "help": "If this is included, only problems in the specified state will be returned. Otherwise, problems in all states will be returned."
+            }
+          ]
+        },
+        {
+          "name": "list-alerts",
+          "about": "List alerts for problem\n\nLists alerts associated with the requested problem. Alerts may be filtered by alert class or alert class glob and by an inclusive creation time range.",
+          "operation_id": "problem_alert_list",
+          "args": [
+            {
+              "long": "alert-class",
+              "help": "Optional alert class or glob pattern used to filter alerts.\n\nIf this is included, only alerts with the specified class or matching the glob pattern (as appropriate) will be returned. Otherwise, alerts of all classes will be returned.\n\nSee the guide-level documentation on alerts for details on alert classes and alert class glob patterns."
+            },
+            {
+              "long": "end-time",
+              "help": "Inclusive upper bound on the alert creation time\n\nIf this is included, only alerts created at or before this time will be returned."
+            },
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "problem-id",
+              "help": "ID of the problem"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "time_and_id_ascending",
+                "time_and_id_descending"
+              ]
+            },
+            {
+              "long": "start-time",
+              "help": "Inclusive lower bound on the alert creation time.\n\nIf this is included, only alerts created at or after this time will be returned."
+            }
+          ]
+        },
+        {
+          "name": "list-bundles",
+          "about": "List support bundles attached to problem",
+          "operation_id": "problem_support_bundles_list",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "problem-id",
+              "help": "ID of the problem"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "time_and_id_ascending",
+                "time_and_id_descending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "list-causes",
+          "about": "List causes of problem\n\nReturns any other problems which are the causes of the specified problem. If the specified problem has no causes, this list may be empty.",
+          "operation_id": "problem_causes_list",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "problem-id",
+              "help": "ID of the problem"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "state",
+              "values": [
+                "active",
+                "resolved"
+              ],
+              "help": "If this is included, only problems in the specified state will be returned. Otherwise, problems in all states will be returned."
+            }
+          ]
+        },
+        {
+          "name": "list-consequences",
+          "about": "List consequences of problem\n\nReturns any other problems which are caused by the specified problem. If no other problem is caused by the specified problem, then this list may be empty.",
+          "operation_id": "problem_consequences_list",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "problem-id",
+              "help": "ID of the problem"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "state",
+              "values": [
+                "active",
+                "resolved"
+              ],
+              "help": "If this is included, only problems in the specified state will be returned. Otherwise, problems in all states will be returned."
+            }
+          ]
+        },
+        {
+          "name": "list-impact",
+          "about": "List resources impacted by problem",
+          "operation_id": "problem_impact_list",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "problem-id",
+              "help": "ID of the problem"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "state",
+              "values": [
+                "active",
+                "recovered",
+                "out_of_service"
+              ],
+              "help": "If this is included, only impacts in the specified state will be returned. Otherwise, all impacts will be returned."
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch problem",
+          "operation_id": "problem_view",
+          "args": [
+            {
+              "long": "problem-id",
+              "help": "ID of the problem"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "project",
       "args": [
         {
@@ -6016,7 +6244,7 @@
                   "subcommands": [
                     {
                       "name": "abort",
-                      "about": "Abort the latest rack membership change\n\nThis operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed) or that the current membership change could not be aborted.",
+                      "about": "Abort rack membership change\n\nThis operation is synchronous. Upon returning from the API call, a success response indicates that the prior membership change was aborted. An error response indicates that there is no active membership change in progress (previous changes have completed), that the specified membership change could not be aborted, or that (if a version is specified) configuration has moved past it.",
                       "operation_id": "rack_membership_abort",
                       "args": [
                         {
@@ -6027,6 +6255,9 @@
                         {
                           "long": "rack-id",
                           "help": "ID of the rack"
+                        },
+                        {
+                          "long": "version"
                         }
                       ]
                     },
