@@ -53,7 +53,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026111000.0.0
+/// Version: 2026111800.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -97,7 +97,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026111000.0.0"
+        "2026111800.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -3564,6 +3564,17 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn rack_list(&self) -> builder::RackList<'_>;
+    /// Add an unadopted rack to the regional cluster
+    ///
+    /// Sends a `POST` request to `/v1/system/hardware/racks`
+    ///
+    /// ```ignore
+    /// let response = client.rack_adopt()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn rack_adopt(&self) -> builder::RackAdopt<'_>;
     /// Fetch rack
     ///
     /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
@@ -3846,6 +3857,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn rack_list(&self) -> builder::RackList<'_> {
         builder::RackList::new(self)
+    }
+
+    fn rack_adopt(&self) -> builder::RackAdopt<'_> {
+        builder::RackAdopt::new(self)
     }
 
     fn rack_view(&self) -> builder::RackView<'_> {

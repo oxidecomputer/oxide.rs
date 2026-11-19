@@ -9460,6 +9460,19 @@ impl Rack {
     }
 }
 
+/// Request to adopt a rack into the regional cluster
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct RackAdoptRequest {
+    /// ID of the unadopted rack to add
+    pub rack_id: RackUuid,
+}
+
+impl RackAdoptRequest {
+    pub fn builder() -> builder::RackAdoptRequest {
+        Default::default()
+    }
+}
+
 /// `RackMembershipAddSledsRequest`
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct RackMembershipAddSledsRequest {
@@ -9615,6 +9628,42 @@ pub struct RackResultsPage {
 impl RackResultsPage {
     pub fn builder() -> builder::RackResultsPage {
         Default::default()
+    }
+}
+
+/// `RackUuid`
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+#[serde(transparent)]
+pub struct RackUuid(pub ::uuid::Uuid);
+impl ::std::ops::Deref for RackUuid {
+    type Target = ::uuid::Uuid;
+    fn deref(&self) -> &::uuid::Uuid {
+        &self.0
+    }
+}
+
+impl ::std::convert::From<RackUuid> for ::uuid::Uuid {
+    fn from(value: RackUuid) -> Self {
+        value.0
+    }
+}
+
+impl ::std::convert::From<::uuid::Uuid> for RackUuid {
+    fn from(value: ::uuid::Uuid) -> Self {
+        Self(value)
+    }
+}
+
+impl ::std::fmt::Display for RackUuid {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl ::std::str::FromStr for RackUuid {
+    type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
+    fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+        Ok(Self(value.parse()?))
     }
 }
 

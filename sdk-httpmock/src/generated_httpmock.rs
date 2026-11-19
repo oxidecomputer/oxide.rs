@@ -12104,6 +12104,65 @@ pub mod operations {
         }
     }
 
+    pub struct RackAdoptWhen(::httpmock::When);
+    impl RackAdoptWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/racks$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::RackAdoptRequest) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct RackAdoptThen(::httpmock::Then);
+    impl RackAdoptThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Rack) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct RackViewWhen(::httpmock::When);
     impl RackViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -25275,6 +25334,9 @@ pub trait MockServerExt {
     fn rack_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::RackListWhen, operations::RackListThen);
+    fn rack_adopt<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackAdoptWhen, operations::RackAdoptThen);
     fn rack_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::RackViewWhen, operations::RackViewThen);
@@ -27947,6 +28009,18 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::RackListWhen::new(when),
                 operations::RackListThen::new(then),
+            )
+        })
+    }
+
+    fn rack_adopt<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::RackAdoptWhen, operations::RackAdoptThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackAdoptWhen::new(when),
+                operations::RackAdoptThen::new(then),
             )
         })
     }

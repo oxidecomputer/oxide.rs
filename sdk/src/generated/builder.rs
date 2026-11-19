@@ -18043,6 +18043,86 @@ impl<'a> RackList<'a> {
     }
 }
 
+/// Builder for [`ClientSystemHardwareExt::rack_adopt`]
+///
+/// [`ClientSystemHardwareExt::rack_adopt`]: super::ClientSystemHardwareExt::rack_adopt
+#[derive(Debug, Clone)]
+pub struct RackAdopt<'a> {
+    client: &'a super::Client,
+    body: Result<types::builder::RackAdoptRequest, String>,
+}
+
+impl<'a> RackAdopt<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self {
+            client: client,
+            body: Ok(::std::default::Default::default()),
+        }
+    }
+
+    pub fn body<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<types::RackAdoptRequest>,
+        <V as std::convert::TryInto<types::RackAdoptRequest>>::Error: std::fmt::Display,
+    {
+        self.body = value
+            .try_into()
+            .map(From::from)
+            .map_err(|s| format!("conversion to `RackAdoptRequest` for body failed: {}", s));
+        self
+    }
+
+    pub fn body_map<F>(mut self, f: F) -> Self
+    where
+        F: std::ops::FnOnce(types::builder::RackAdoptRequest) -> types::builder::RackAdoptRequest,
+    {
+        self.body = self.body.map(f);
+        self
+    }
+
+    /// Sends a `POST` request to `/v1/system/hardware/racks`
+    pub async fn send(self) -> Result<ResponseValue<types::Rack>, Error<types::Error>> {
+        let Self { client, body } = self;
+        let body = body
+            .and_then(|v| types::RackAdoptRequest::try_from(v).map_err(|e| e.to_string()))
+            .map_err(Error::InvalidRequest)?;
+        let url = format!("{}/v1/system/hardware/racks", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "rack_adopt",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            201u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
 /// Builder for [`ClientSystemHardwareExt::rack_view`]
 ///
 /// [`ClientSystemHardwareExt::rack_view`]: super::ClientSystemHardwareExt::rack_view

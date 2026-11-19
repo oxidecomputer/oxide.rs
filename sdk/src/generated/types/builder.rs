@@ -18948,6 +18948,51 @@ impl ::std::convert::From<super::Rack> for Rack {
 }
 
 #[derive(Clone, Debug)]
+pub struct RackAdoptRequest {
+    rack_id: ::std::result::Result<super::RackUuid, ::std::string::String>,
+}
+
+impl ::std::default::Default for RackAdoptRequest {
+    fn default() -> Self {
+        Self {
+            rack_id: Err("no value supplied for rack_id".to_string()),
+        }
+    }
+}
+
+impl RackAdoptRequest {
+    pub fn rack_id<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::RackUuid>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.rack_id = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for rack_id: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<RackAdoptRequest> for super::RackAdoptRequest {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: RackAdoptRequest,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            rack_id: value.rack_id?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::RackAdoptRequest> for RackAdoptRequest {
+    fn from(value: super::RackAdoptRequest) -> Self {
+        Self {
+            rack_id: Ok(value.rack_id),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct RackMembershipAddSledsRequest {
     override_prechecks:
         ::std::result::Result<super::SledAddPrecheckOverrides, ::std::string::String>,

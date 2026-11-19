@@ -204,6 +204,7 @@ impl<T: CliConfig> Cli<T> {
                 Self::cli_networking_switch_port_lldp_neighbors()
             }
             CliCommand::RackList => Self::cli_rack_list(),
+            CliCommand::RackAdopt => Self::cli_rack_adopt(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::RackMembershipStatus => Self::cli_rack_membership_status(),
             CliCommand::RackMembershipAbort => Self::cli_rack_membership_abort(),
@@ -5467,6 +5468,33 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .about("List racks")
+    }
+
+    pub fn cli_rack_adopt() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(types::RackUuid))
+                    .required_unless_present("json-body")
+                    .help("ID of the unadopted rack to add"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-schema")
+                    .long("json-body-schema")
+                    .exclusive(true)
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("Print the schema for the JSON body and exit."),
+            )
+            .about("Add an unadopted rack to the regional cluster")
     }
 
     pub fn cli_rack_view() -> ::clap::Command {
@@ -10893,6 +10921,7 @@ impl<T: CliConfig> Cli<T> {
                     .await
             }
             CliCommand::RackList => self.execute_rack_list(matches).await,
+            CliCommand::RackAdopt => self.execute_rack_adopt(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
             CliCommand::RackMembershipStatus => self.execute_rack_membership_status(matches).await,
             CliCommand::RackMembershipAbort => self.execute_rack_membership_abort(matches).await,
@@ -17006,6 +17035,39 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_rack_adopt(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.rack_adopt();
+        if let Some(value) = matches.get_one::<types::RackUuid>("rack-id") {
+            request = request.body_map(|body| body.rack_id(value.clone()))
+        }
+
+        if matches.get_flag("json-body-schema") {
+            self.config.json_body_schema::<types::RackAdoptRequest>();
+            return Ok(());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::RackAdoptRequest>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config.execute_rack_adopt(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -24566,6 +24628,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_rack_adopt(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::RackAdopt,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_rack_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -26109,6 +26179,7 @@ pub enum CliCommand {
     PhysicalDiskListUnadopted,
     NetworkingSwitchPortLldpNeighbors,
     RackList,
+    RackAdopt,
     RackView,
     RackMembershipStatus,
     RackMembershipAbort,
@@ -26443,6 +26514,7 @@ impl CliCommand {
             CliCommand::PhysicalDiskListUnadopted,
             CliCommand::NetworkingSwitchPortLldpNeighbors,
             CliCommand::RackList,
+            CliCommand::RackAdopt,
             CliCommand::RackView,
             CliCommand::RackMembershipStatus,
             CliCommand::RackMembershipAbort,
@@ -26788,6 +26860,7 @@ impl CliCommand {
                 "networking_switch_port_lldp_neighbors"
             }
             CliCommand::RackList => "rack_list",
+            CliCommand::RackAdopt => "rack_adopt",
             CliCommand::RackView => "rack_view",
             CliCommand::RackMembershipStatus => "rack_membership_status",
             CliCommand::RackMembershipAbort => "rack_membership_abort",
