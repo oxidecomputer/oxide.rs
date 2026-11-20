@@ -359,12 +359,25 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
             return Ok(());
         }
 
+        // The response carries no page token, so we request the largest page the
+        // server allows.
+        let description = client
+            .networking_bgp_announce_set_list()
+            .limit(u32::MAX)
+            .send()
+            .await?
+            .into_inner()
+            .into_iter()
+            .find(|set| set.name == self.announce_set)
+            .ok_or_else(|| anyhow::anyhow!("announce set {} not found", *self.announce_set))?
+            .description;
+
         client
             .networking_bgp_announce_set_update()
             .body(BgpAnnounceSetCreate {
                 announcement: current,
                 name: self.announce_set.clone(),
-                description: self.announce_set.to_string(), //TODO?
+                description,
             })
             .send()
             .await?;

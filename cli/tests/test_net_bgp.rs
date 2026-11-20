@@ -66,3 +66,60 @@ fn test_net_bgp_announce() {
     list.assert();
     update.assert();
 }
+
+// `bgp withdraw` removes the prefix from the set and keeps the other
+// announcements and the set's description.
+#[test]
+fn test_net_bgp_withdraw() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let server = MockServer::start();
+
+    let set = BgpAnnounceSet {
+        name: "as-set".parse().unwrap(),
+        ..JsonMock::mock_value(&mut src).unwrap()
+    };
+    let keep = BgpAnnouncement {
+        announce_set_id: set.id,
+        network: "198.51.100.0/24".parse().unwrap(),
+        address_lot_block_id: Uuid::mock_value(&mut src).unwrap(),
+    };
+    let withdraw = BgpAnnouncement {
+        announce_set_id: set.id,
+        network: "203.0.113.0/24".parse().unwrap(),
+        address_lot_block_id: Uuid::mock_value(&mut src).unwrap(),
+    };
+
+    let sets = server.networking_bgp_announce_set_list(|when, then| {
+        when.into_inner().any_request();
+        then.ok(&vec![set.clone()]);
+    });
+    let list = server.networking_bgp_announcement_list(|when, then| {
+        when.announce_set(&NameOrId::Name(set.name.clone()));
+        then.ok(&vec![keep.clone(), withdraw.clone()]);
+    });
+    let update = server.networking_bgp_announce_set_update(|when, then| {
+        when.body(&BgpAnnounceSetCreate {
+            announcement: vec![BgpAnnouncementCreate {
+                address_lot_block: NameOrId::Id(keep.address_lot_block_id),
+                network: keep.network.clone(),
+            }],
+            description: set.description.clone(),
+            name: set.name.clone(),
+        });
+        then.ok(&set);
+    });
+
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .args(["system", "networking", "bgp", "withdraw"])
+        .args(["--announce-set", "as-set"])
+        .args(["--prefix", "203.0.113.0/24"])
+        .assert()
+        .success();
+
+    sets.assert();
+    list.assert();
+    update.assert();
+}
