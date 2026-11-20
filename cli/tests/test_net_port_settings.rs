@@ -404,6 +404,17 @@ fn test_net_addr_delete() {
     port.run(&["addr", "delete", "--addr", "198.51.100.2/30"], &expected);
 }
 
+// `addr delete` removes an IPv6 address.
+#[test]
+fn test_net_addr_delete_ipv6() {
+    let port = TestPort::new();
+
+    let mut expected = port.current();
+    expected.addresses[0].addresses.remove(1);
+
+    port.run(&["addr", "delete", "--addr", "2001:db8::2/64"], &expected);
+}
+
 // `route set` appends a route that does not match an existing one.
 #[test]
 fn test_net_route_set_new() {

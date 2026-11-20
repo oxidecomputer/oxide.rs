@@ -901,7 +901,7 @@ pub struct CmdAddrDel {
 
     /// Address to remove.
     #[arg(long)]
-    addr: oxnet::Ipv4Net,
+    addr: oxnet::IpNet,
 }
 
 #[async_trait]
