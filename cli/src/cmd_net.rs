@@ -17,8 +17,8 @@ use oxide::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpConfig, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig, RouterPeerType,
-        SwitchInterfaceConfigCreate, SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry,
-        SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
+        SwitchInterfaceConfigCreate, SwitchPort, SwitchPortApplySettings, SwitchPortConfigCreate,
+        SwitchPortGeometry, SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -106,22 +106,23 @@ pub struct CmdLinkAdd {
 #[async_trait]
 impl AuthenticatedCmd for CmdLinkAdd {
     async fn run(&self, client: &Client) -> Result<()> {
-        let mut settings =
-            current_port_settings(client, &self.rack, self.switch.into(), &self.port)
-                .await
-                .unwrap_or(SwitchPortSettingsCreate {
-                    addresses: Default::default(),
-                    bgp_peers: Default::default(),
-                    description: String::default(),
-                    groups: Vec::default(),
-                    interfaces: Default::default(),
-                    links: Default::default(),
-                    name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
-                    port_config: SwitchPortConfigCreate {
-                        geometry: SwitchPortGeometry::Qsfp28x1,
-                    },
-                    routes: Default::default(),
-                });
+        let port = get_port(client, &self.rack, self.switch.into(), &self.port).await?;
+        let mut settings = match port.port_settings_id {
+            Some(id) => create_current(id, client).await?,
+            None => SwitchPortSettingsCreate {
+                addresses: Default::default(),
+                bgp_peers: Default::default(),
+                description: String::default(),
+                groups: Vec::default(),
+                interfaces: Default::default(),
+                links: Default::default(),
+                name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
+                port_config: SwitchPortConfigCreate {
+                    geometry: SwitchPortGeometry::Qsfp28x1,
+                },
+                routes: Default::default(),
+            },
+        };
         let link = LinkConfigCreate {
             link_name: PHY0.parse().unwrap(),
             autoneg: self.autoneg,
@@ -147,11 +148,25 @@ impl AuthenticatedCmd for CmdLinkAdd {
                 settings.links.push(link);
             }
         }
-        client
+        let created = client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
-            .await?;
+            .await?
+            .into_inner();
+        // New settings take effect only once applied to the port.
+        if port.port_settings_id.is_none() {
+            client
+                .networking_switch_port_apply_settings()
+                .port(port.port_name)
+                .rack_id(self.rack)
+                .switch_slot(port.switch_slot)
+                .body(SwitchPortApplySettings {
+                    port_settings: NameOrId::Id(created.id),
+                })
+                .send()
+                .await?;
+        }
         Ok(())
     }
 }
