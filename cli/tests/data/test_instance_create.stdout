@@ -1,8 +1,6 @@
 {
-  "auto_restart_cooldown_expiration": "2007-01-20T05:48:40Z",
+  "auto_restart_cooldown_expiration": "1964-10-20T17:51:09Z",
   "auto_restart_enabled": false,
-  "auto_restart_policy": "never",
-  "boot_disk_id": "37f41d8a-b55a-5089-0c4c-60a880ac274e",
   "description": "description is required for some reason",
   "enable_jumbo_frames": false,
   "hostname": "hostname",

@@ -1,7 +1,7 @@
 {
   "acs_url": "http://nope.nope",
   "description": "for all the security I guess",
-  "group_attribute_name": "qintars",
+  "group_attribute_name": "tranq",
   "id": "fb603800-ff07-da32-9800-70bbd45865ea",
   "idp_entity_id": "17",
   "name": "samlrific",

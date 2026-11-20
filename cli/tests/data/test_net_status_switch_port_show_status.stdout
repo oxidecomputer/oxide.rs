@@ -1,0 +1,22 @@
+switch0
+=======
+Port    Configured  Enabled  MAC                Autoneg  FEC   Link/FSM State        Media   Speed
+qsfp0   true        true     a8:40:25:00:04:01  false    Fec4  Up/Fsm4               Media4  Speed400G
+qsfp2   true        false    a8:40:25:00:01:01  false    Fec1  Faulted(fault1)/Fsm1  Media1  Speed100G
+qsfp10  false       false    a8:40:25:00:03:01  true     Fec3  Faulted(fault3)/Fsm3  Media3  Speed300G
+
+Port    Receiver Power  Transmitter Bias Current  Transmitter Power
+qsfp0   [Average(4.5)]  [4.25]                    [4.75]
+qsfp2   [Average(1.5)]  [1.25]                    [1.75]
+qsfp10  [Average(3.5)]  [3.25]                    [3.75]
+
+switch1
+=======
+Port    Configured  Enabled  MAC                Autoneg  FEC   Link/FSM State  Media   Speed
+qsfp0   false       true     a8:40:25:00:02:01  false    Fec2  Up/Fsm2         Media2  Speed200G
+qsfp10  true        true     a8:40:25:00:00:01  true     Fec0  Up/Fsm0         Media0  Speed000G
+
+Port    Receiver Power  Transmitter Bias Current  Transmitter Power
+qsfp0   [Average(2.5)]  [2.25]                    [2.75]
+qsfp10  [Average(0.5)]  [0.25]                    [0.75]
+
