@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 //! A Facility to generate valid, random data for types that are
 //! `schemars::JsonSchema + serde::Deserialize`. It generates a JSON value
@@ -153,24 +153,28 @@ fn mock_schema_object(
             InstanceType::Integer => mock_integer(format, number, src),
         },
 
-        // One way to express an option
+        // One way to express an option: a type paired with null. We generate
+        // null a quarter of the time.
         SchemaObject {
-            metadata: _,
             instance_type: Some(SingleOrVec::Vec(vec)),
-            format,
             enum_values: None,
             const_value: None,
             subschemas: None,
-            number: _,
-            string,
-            array: _,
-            object: _,
             reference: None,
-            extensions: _,
-        } if matches!(&vec[..], &[InstanceType::String, InstanceType::Null])
-            | matches!(&vec[..], &[InstanceType::Null, InstanceType::String]) =>
-        {
-            mock_string(format, string, src)
+            ..
+        } if vec.len() == 2 && vec.contains(&InstanceType::Null) => {
+            if src.random_bool(0.25) {
+                return Ok(Value::Null);
+            }
+            let instance_type = vec
+                .iter()
+                .find(|instance_type| **instance_type != InstanceType::Null)
+                .unwrap();
+            let schema = SchemaObject {
+                instance_type: Some(SingleOrVec::Single(Box::new(*instance_type))),
+                ..schema.clone()
+            };
+            mock_schema_object(&schema, definitions, src)
         }
 
         SchemaObject {
@@ -465,6 +469,22 @@ fn mock_string(
 
             return Ok(serde_json::to_value(dt).unwrap());
         }
+        Some("ipv4") => {
+            let addr = std::net::Ipv4Addr::from(src.random::<u32>());
+            return Ok(serde_json::to_value(addr).unwrap());
+        }
+        Some("ipv6") => {
+            let addr = std::net::Ipv6Addr::from(src.random::<u128>());
+            return Ok(serde_json::to_value(addr).unwrap());
+        }
+        Some("ip") => {
+            let addr = if src.random() {
+                std::net::IpAddr::from(src.random::<u32>().to_be_bytes())
+            } else {
+                std::net::IpAddr::from(src.random::<u128>().to_be_bytes())
+            };
+            return Ok(serde_json::to_value(addr).unwrap());
+        }
         _ => (),
     }
 
@@ -655,5 +675,41 @@ mod tests {
         let value = Test::mock_value(&mut src);
 
         assert!(value.is_ok());
+    }
+
+    #[test]
+    fn test_ip() {
+        #[allow(dead_code)]
+        #[derive(Deserialize, JsonSchema, Debug)]
+        struct Test {
+            any: std::net::IpAddr,
+            v4: std::net::Ipv4Addr,
+            v6: std::net::Ipv6Addr,
+        }
+
+        let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+
+        for _ in 0..16 {
+            assert!(Test::mock_value(&mut src).is_ok());
+        }
+    }
+
+    #[test]
+    fn test_option() {
+        #[allow(dead_code)]
+        #[derive(Deserialize, JsonSchema, Debug)]
+        struct Test {
+            a: Option<u32>,
+            b: Option<bool>,
+            c: Option<f64>,
+            d: Option<Vec<u32>>,
+            e: Option<String>,
+        }
+
+        let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+
+        for _ in 0..16 {
+            assert!(Test::mock_value(&mut src).is_ok());
+        }
     }
 }

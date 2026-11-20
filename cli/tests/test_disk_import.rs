@@ -503,8 +503,6 @@ fn test_disk_import_bad_file_size() {
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
-        .arg("--disk-block-size")
-        .arg("123")
         .arg("--project")
         .arg("myproj")
         .arg("--description")
@@ -514,7 +512,10 @@ fn test_disk_import_bad_file_size() {
         .arg("--disk")
         .arg("test-import")
         .assert()
-        .failure();
+        .failure()
+        .stderr(predicate::str::contains(
+            "file size 513 is not divisible by block size 512!",
+        ));
 }
 
 // A disk import where an upload task on write_import fails
