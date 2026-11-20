@@ -113,3 +113,25 @@ fn test_bundle_inspect_id_not_found() {
 
     mock.assert();
 }
+
+// Inspecting a downloaded bundle reads only the local file, so it requires
+// neither a server nor credentials.
+#[test]
+fn test_bundle_inspect_path_unauthenticated() {
+    let config_dir = tempfile::tempdir().unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("missing.zip");
+
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .env("RUST_BACKTRACE", "1")
+        .env_remove("OXIDE_HOST")
+        .env_remove("OXIDE_TOKEN")
+        .arg("--config-dir")
+        .arg(config_dir.path())
+        .args(["bundle", "inspect", "--path"])
+        .arg(&path)
+        .assert()
+        .failure()
+        .stdout("")
+        .stderr(predicate::str::contains("(os error 2)"));
+}

@@ -2,12 +2,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use clap_complete::{generate, Shell};
+use clap_complete::{Generator, Shell};
 use std::io;
 
 /// Generate shell completion scripts for Oxide CLI commands
@@ -80,7 +80,9 @@ impl crate::RunnableCmd for CmdCompletion {
         let cli = crate::make_cli();
         let mut cmd = cli.command_take();
         let name = cmd.get_name().to_string();
-        generate(self.shell, &mut cmd, name, &mut io::stdout());
+        cmd.set_bin_name(name);
+        cmd.build();
+        self.shell.try_generate(&cmd, &mut io::stdout())?;
 
         Ok(())
     }

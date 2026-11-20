@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2025 Oxide Computer Company
+// Copyright 2026 Oxide Computer Company
 
 use anyhow::bail;
 use anyhow::Context as _;
@@ -204,11 +204,16 @@ pub struct CmdInspect {
 }
 
 #[async_trait]
-impl crate::AuthenticatedCmd for CmdInspect {
-    async fn run(&self, client: &Client) -> Result<()> {
+impl crate::RunnableCmd for CmdInspect {
+    async fn run(&self, ctx: &crate::Context) -> Result<()> {
+        // Only inspection via the API requires credentials.
+        let client;
         let accessor: Box<dyn SupportBundleAccessor> = match (self.id, &self.path) {
             (None, Some(path)) => Box::new(LocalFileAccess::new(path)?),
-            (Some(id), None) => Box::new(ApiAccess::new(client, id)),
+            (Some(id), None) => {
+                client = Client::new_authenticated_config(ctx.client_config())?;
+                Box::new(ApiAccess::new(&client, id))
+            }
             (None, None) => {
                 bail!("Must specify at least one of --id or --path");
             }

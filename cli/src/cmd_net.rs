@@ -17,8 +17,8 @@ use oxide::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpConfig, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig, RouterPeerType,
-        SwitchInterfaceConfigCreate, SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry,
-        SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
+        SwitchInterfaceConfigCreate, SwitchPort, SwitchPortApplySettings, SwitchPortConfigCreate,
+        SwitchPortGeometry, SwitchPortRouteConfig, SwitchPortSettingsCreate, SwitchSlot,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -106,22 +106,23 @@ pub struct CmdLinkAdd {
 #[async_trait]
 impl AuthenticatedCmd for CmdLinkAdd {
     async fn run(&self, client: &Client) -> Result<()> {
-        let mut settings =
-            current_port_settings(client, &self.rack, self.switch.into(), &self.port)
-                .await
-                .unwrap_or(SwitchPortSettingsCreate {
-                    addresses: Default::default(),
-                    bgp_peers: Default::default(),
-                    description: String::default(),
-                    groups: Vec::default(),
-                    interfaces: Default::default(),
-                    links: Default::default(),
-                    name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
-                    port_config: SwitchPortConfigCreate {
-                        geometry: SwitchPortGeometry::Qsfp28x1,
-                    },
-                    routes: Default::default(),
-                });
+        let port = get_port(client, &self.rack, self.switch.into(), &self.port).await?;
+        let mut settings = match port.port_settings_id {
+            Some(id) => create_current(id, client).await?,
+            None => SwitchPortSettingsCreate {
+                addresses: Default::default(),
+                bgp_peers: Default::default(),
+                description: String::default(),
+                groups: Vec::default(),
+                interfaces: Default::default(),
+                links: Default::default(),
+                name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
+                port_config: SwitchPortConfigCreate {
+                    geometry: SwitchPortGeometry::Qsfp28x1,
+                },
+                routes: Default::default(),
+            },
+        };
         let link = LinkConfigCreate {
             link_name: PHY0.parse().unwrap(),
             autoneg: self.autoneg,
@@ -147,11 +148,25 @@ impl AuthenticatedCmd for CmdLinkAdd {
                 settings.links.push(link);
             }
         }
-        client
+        let created = client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
-            .await?;
+            .await?
+            .into_inner();
+        // New settings take effect only once applied to the port.
+        if port.port_settings_id.is_none() {
+            client
+                .networking_switch_port_apply_settings()
+                .port(port.port_name)
+                .rack_id(self.rack)
+                .switch_slot(port.switch_slot)
+                .body(SwitchPortApplySettings {
+                    port_settings: NameOrId::Id(created.id),
+                })
+                .send()
+                .await?;
+        }
         Ok(())
     }
 }
@@ -344,12 +359,25 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
             return Ok(());
         }
 
+        // The response carries no page token, so we request the largest page the
+        // server allows.
+        let description = client
+            .networking_bgp_announce_set_list()
+            .limit(u32::MAX)
+            .send()
+            .await?
+            .into_inner()
+            .into_iter()
+            .find(|set| set.name == self.announce_set)
+            .ok_or_else(|| anyhow::anyhow!("announce set {} not found", *self.announce_set))?
+            .description;
+
         client
             .networking_bgp_announce_set_update()
             .body(BgpAnnounceSetCreate {
                 announcement: current,
                 name: self.announce_set.clone(),
-                description: self.announce_set.to_string(), //TODO?
+                description,
             })
             .send()
             .await?;
@@ -901,7 +929,7 @@ pub struct CmdAddrDel {
 
     /// Address to remove.
     #[arg(long)]
-    addr: oxnet::Ipv4Net,
+    addr: oxnet::IpNet,
 }
 
 #[async_trait]
@@ -1846,16 +1874,27 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
             fec: x.fec,
             mtu: x.mtu,
             speed: x.speed,
-            lldp: LldpLinkConfigCreate {
-                enabled: false,
-                link_name: None,
-                link_description: None,
-                chassis_id: None,
-                system_name: None,
-                system_description: None,
-                management_ip: None,
+            lldp: match &x.lldp_link_config {
+                Some(lldp) => LldpLinkConfigCreate {
+                    enabled: lldp.enabled,
+                    link_name: lldp.link_name.clone(),
+                    link_description: lldp.link_description.clone(),
+                    chassis_id: lldp.chassis_id.clone(),
+                    system_name: lldp.system_name.clone(),
+                    system_description: lldp.system_description.clone(),
+                    management_ip: lldp.management_ip,
+                },
+                None => LldpLinkConfigCreate {
+                    enabled: false,
+                    link_name: None,
+                    link_description: None,
+                    chassis_id: None,
+                    system_name: None,
+                    system_description: None,
+                    management_ip: None,
+                },
             },
-            tx_eq: None,
+            tx_eq: x.tx_eq_config.clone(),
         })
         .collect();
 
@@ -1890,7 +1929,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
     let create = SwitchPortSettingsCreate {
         addresses,
         bgp_peers,
-        description: String::from("switch port settings"),
+        description: current.description,
         groups,
         interfaces,
         links,
