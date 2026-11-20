@@ -12,7 +12,7 @@ base64 = { workspace = true }
 chrono = { workspace = true }
 dirs = { workspace = true }
 futures = { workspace = true }
-oxide-http-signatures = { path = "../../omicron/http-signatures" }
+oxide-http-signatures = { git = "https://github.com/oxidecomputer/omicron", branch = "jmcarp/rfd-770-poc" }
 progenitor-client = { workspace = true }
 rand = { workspace = true }
 regress = { workspace = true }

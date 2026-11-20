@@ -91,6 +91,7 @@ pub(crate) fn sign_request(state: &ClientState, request: &mut reqwest::Request) 
         &signer.key,
         &signer.key_id,
         created,
+        None,
         &Components {
             method: request.method().as_str(),
             authority: &authority,

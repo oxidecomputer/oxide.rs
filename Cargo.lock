@@ -2719,6 +2719,7 @@ dependencies = [
 [[package]]
 name = "oxide-http-signatures"
 version = "0.1.0"
+source = "git+https://github.com/oxidecomputer/omicron?branch=jmcarp%2Frfd-770-poc#22c23383e186a7c4670e92d3e397e760416a0470"
 dependencies = [
  "base64 0.22.1",
  "ed25519-dalek",
