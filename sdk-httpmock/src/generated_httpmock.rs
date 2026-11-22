@@ -6891,6 +6891,17 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
+        pub fn force<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("force", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("force"))
+            }
+        }
+
         pub fn project<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a types::NameOrId>>,
@@ -7328,6 +7339,17 @@ pub mod operations {
             let re =
                 regex::Regex::new(&format!("^/v1/instances/{}/stop$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn force<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("force", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("force"))
+            }
         }
 
         pub fn project<'a, T>(self, value: T) -> Self

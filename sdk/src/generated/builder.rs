@@ -10212,6 +10212,7 @@ impl<'a> InstanceMulticastGroupLeave<'a> {
 pub struct InstanceReboot<'a> {
     client: &'a super::Client,
     instance: Result<types::NameOrId, String>,
+    force: Result<Option<bool>, String>,
     project: Result<Option<types::NameOrId>, String>,
 }
 
@@ -10220,6 +10221,7 @@ impl<'a> InstanceReboot<'a> {
         Self {
             client: client,
             instance: Err("instance was not initialized".to_string()),
+            force: Ok(None),
             project: Ok(None),
         }
     }
@@ -10231,6 +10233,17 @@ impl<'a> InstanceReboot<'a> {
         self.instance = value
             .try_into()
             .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+        self
+    }
+
+    pub fn force<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<bool>,
+    {
+        self.force = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `bool` for force failed".to_string());
         self
     }
 
@@ -10250,9 +10263,11 @@ impl<'a> InstanceReboot<'a> {
         let Self {
             client,
             instance,
+            force,
             project,
         } = self;
         let instance = instance.map_err(Error::InvalidRequest)?;
+        let force = force.map_err(Error::InvalidRequest)?;
         let project = project.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/instances/{}/reboot",
@@ -10272,6 +10287,7 @@ impl<'a> InstanceReboot<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
+            .query(&QueryParam::new("force", &force))
             .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
@@ -10829,6 +10845,7 @@ impl<'a> InstanceStart<'a> {
 pub struct InstanceStop<'a> {
     client: &'a super::Client,
     instance: Result<types::NameOrId, String>,
+    force: Result<Option<bool>, String>,
     project: Result<Option<types::NameOrId>, String>,
 }
 
@@ -10837,6 +10854,7 @@ impl<'a> InstanceStop<'a> {
         Self {
             client: client,
             instance: Err("instance was not initialized".to_string()),
+            force: Ok(None),
             project: Ok(None),
         }
     }
@@ -10848,6 +10866,17 @@ impl<'a> InstanceStop<'a> {
         self.instance = value
             .try_into()
             .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+        self
+    }
+
+    pub fn force<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<bool>,
+    {
+        self.force = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `bool` for force failed".to_string());
         self
     }
 
@@ -10867,9 +10896,11 @@ impl<'a> InstanceStop<'a> {
         let Self {
             client,
             instance,
+            force,
             project,
         } = self;
         let instance = instance.map_err(Error::InvalidRequest)?;
+        let force = force.map_err(Error::InvalidRequest)?;
         let project = project.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/instances/{}/stop",
@@ -10889,6 +10920,7 @@ impl<'a> InstanceStop<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
+            .query(&QueryParam::new("force", &force))
             .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;

@@ -3822,6 +3822,14 @@
           "operation_id": "instance_reboot",
           "args": [
             {
+              "long": "force",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Whether to override the instance's configured Shutdown Policy, if any, and hard-cut the power of the VM guest for this stop or reboot request."
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -3952,6 +3960,14 @@
           "about": "Stop instance",
           "operation_id": "instance_stop",
           "args": [
+            {
+              "long": "force",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Whether to override the instance's configured Shutdown Policy, if any, and hard-cut the power of the VM guest for this stop or reboot request."
+            },
             {
               "long": "instance",
               "help": "Name or ID of the instance"

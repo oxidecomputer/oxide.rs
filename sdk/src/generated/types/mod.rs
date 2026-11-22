@@ -6,6 +6,42 @@ pub mod builder;
 pub mod defaults;
 /// Error types.
 pub mod error;
+/// ACPI power button timeout in seconds.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+#[serde(transparent)]
+pub struct AcpiTimeoutSecs(pub ::std::num::NonZeroU64);
+impl ::std::ops::Deref for AcpiTimeoutSecs {
+    type Target = ::std::num::NonZeroU64;
+    fn deref(&self) -> &::std::num::NonZeroU64 {
+        &self.0
+    }
+}
+
+impl ::std::convert::From<AcpiTimeoutSecs> for ::std::num::NonZeroU64 {
+    fn from(value: AcpiTimeoutSecs) -> Self {
+        value.0
+    }
+}
+
+impl ::std::convert::From<::std::num::NonZeroU64> for AcpiTimeoutSecs {
+    fn from(value: ::std::num::NonZeroU64) -> Self {
+        Self(value)
+    }
+}
+
+impl ::std::fmt::Display for AcpiTimeoutSecs {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl ::std::str::FromStr for AcpiTimeoutSecs {
+    type Err = <::std::num::NonZeroU64 as ::std::str::FromStr>::Err;
+    fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+        Ok(Self(value.parse()?))
+    }
+}
+
 /// An address tied to an address lot.
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct Address {
@@ -5274,6 +5310,10 @@ pub struct Instance {
     /// ID for the project containing this instance
     pub project_id: ::uuid::Uuid,
     pub run_state: InstanceState,
+    /// The method by which the instance will be powered down when transitioning
+    /// to the stopped state, either forcefully or by giving the guest an ACPI
+    /// power button signal first.
+    pub shutdown_policy: InstanceShutdownPolicy,
     /// Timestamp when this resource was created
     pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     /// The timestamp of the most recent time this instance was automatically
@@ -5575,6 +5615,18 @@ pub struct InstanceCreate {
     /// The network interfaces to be created for this instance.
     #[serde(default = "defaults::instance_create_network_interfaces")]
     pub network_interfaces: InstanceNetworkInterfaceAttachment,
+    /// The method by which the instance should be stopped.
+    ///
+    /// This determines what action the control plane performs when stopping
+    /// this instance, either due to a request to the `instance_stop` or
+    /// `instance_reboot` API endpoints, or because the instance must be
+    /// restarted in order to update system software on the sled that was
+    /// hosting it.
+    ///
+    /// If not provided, the current default policy will be selected (hard power
+    /// off without an ACPI soft shutdown).
+    #[serde(default = "defaults::instance_create_shutdown_policy")]
+    pub shutdown_policy: InstanceShutdownPolicy,
     /// An allowlist of SSH public keys to be transferred to the instance via
     /// cloud-init during instance creation.
     ///
@@ -5818,6 +5870,27 @@ impl InstanceSerialConsoleData {
     }
 }
 
+/// The method by which the instance will be powered down when transitioning to
+/// the stopped state or when rebooting: either forcefully or by giving the
+/// guest an ACPI power button signal first.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+#[serde(tag = "action", content = "timeout_secs")]
+pub enum InstanceShutdownPolicy {
+    #[serde(rename = "hard_off")]
+    HardOff,
+    /// Instance is sent PWRBTN_STS as described in ACPI chapter 4. If the VM
+    /// guest has not stopped itself with a power event within the given
+    /// timeout, it is *then* forcefully terminated.
+    #[serde(rename = "power_button")]
+    PowerButton(AcpiTimeoutSecs),
+}
+
+impl ::std::convert::From<AcpiTimeoutSecs> for InstanceShutdownPolicy {
+    fn from(value: AcpiTimeoutSecs) -> Self {
+        Self::PowerButton(value)
+    }
+}
+
 /// Running state of an Instance (primarily: booted or stopped)
 ///
 /// This typically reflects whether it's starting, running, stopping, or
@@ -5987,6 +6060,12 @@ pub struct InstanceUpdate {
     pub multicast_groups: ::std::option::Option<::std::vec::Vec<MulticastGroupJoinSpec>>,
     /// The number of vCPUs to be allocated to the instance
     pub ncpus: InstanceCpuCount,
+    /// The method by which the instance should be stopped. If `null`, the
+    /// instance's shutdown policy is reset to the default value. Changes to
+    /// soft-shutdown timeout do not affect instances that are already in the
+    /// process of shutting down until their next start.
+    #[serde(deserialize_with = "::std::option::Option::deserialize")]
+    pub shutdown_policy: ::std::option::Option<InstanceShutdownPolicy>,
 }
 
 impl InstanceUpdate {

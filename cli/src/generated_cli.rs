@@ -2938,7 +2938,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(false)
+                    .required(true)
                     .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -3413,6 +3413,16 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_instance_reboot() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("force")
+                    .long("force")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether to override the instance's configured Shutdown Policy, if any, \
+                         and hard-cut the power of the VM guest for this stop or reboot request.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("instance")
                     .long("instance")
                     .value_parser(::clap::value_parser!(types::NameOrId))
@@ -3582,6 +3592,16 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_instance_stop() -> ::clap::Command {
         ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("force")
+                    .long("force")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether to override the instance's configured Shutdown Policy, if any, \
+                         and hard-cut the power of the VM guest for this stop or reboot request.",
+                    ),
+            )
             .arg(
                 ::clap::Arg::new("instance")
                     .long("instance")
@@ -14596,6 +14616,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_reboot();
+        if let Some(value) = matches.get_one::<bool>("force") {
+            request = request.force(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -14762,6 +14786,10 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_stop(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_stop();
+        if let Some(value) = matches.get_one::<bool>("force") {
+            request = request.force(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
