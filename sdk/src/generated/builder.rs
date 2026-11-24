@@ -33358,6 +33358,58 @@ impl<'a> UtilizationView<'a> {
     }
 }
 
+/// Builder for [`ClientSystemStatusExt::system_version`]
+///
+/// [`ClientSystemStatusExt::system_version`]: super::ClientSystemStatusExt::system_version
+#[derive(Debug, Clone)]
+pub struct SystemVersion<'a> {
+    client: &'a super::Client,
+}
+
+impl<'a> SystemVersion<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self { client: client }
+    }
+
+    /// Sends a `GET` request to `/v1/version`
+    pub async fn send(self) -> Result<ResponseValue<types::SystemVersion>, Error<types::Error>> {
+        let Self { client } = self;
+        let url = format!("{}/v1/version", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "system_version",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
 /// Builder for [`ClientVpcsExt::vpc_firewall_rules_view`]
 ///
 /// [`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view

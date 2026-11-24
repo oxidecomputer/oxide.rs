@@ -387,6 +387,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UserLogout => Self::cli_user_logout(),
             CliCommand::UserSessionList => Self::cli_user_session_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
+            CliCommand::SystemVersion => Self::cli_system_version(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
             CliCommand::VpcRouterRouteList => Self::cli_vpc_router_route_list(),
@@ -9492,6 +9493,15 @@ impl<T: CliConfig> Cli<T> {
         ::clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
 
+    pub fn cli_system_version() -> ::clap::Command {
+        ::clap::Command::new("").about(
+            "Fetch version information\n\nReturns the latest API version this system supports and \
+             the release number of the system software serving the API. No authentication is \
+             required, so this endpoint can be called before logging in to find the right docs \
+             and CLI or SDK versions.",
+        )
+    }
+
     pub fn cli_vpc_firewall_rules_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -11225,6 +11235,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UserLogout => self.execute_user_logout(matches).await,
             CliCommand::UserSessionList => self.execute_user_session_list(matches).await,
             CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
+            CliCommand::SystemVersion => self.execute_system_version(matches).await,
             CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
             CliCommand::VpcFirewallRulesUpdate => {
                 self.execute_vpc_firewall_rules_update(matches).await
@@ -22156,6 +22167,22 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_version(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.system_version();
+        self.config.execute_system_version(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_vpc_firewall_rules_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -25754,6 +25781,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_version(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemVersion,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_vpc_firewall_rules_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -26282,6 +26317,7 @@ pub enum CliCommand {
     UserLogout,
     UserSessionList,
     UtilizationView,
+    SystemVersion,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
     VpcRouterRouteList,
@@ -26616,6 +26652,7 @@ impl CliCommand {
             CliCommand::UserLogout,
             CliCommand::UserSessionList,
             CliCommand::UtilizationView,
+            CliCommand::SystemVersion,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
             CliCommand::VpcRouterRouteList,
@@ -26973,6 +27010,7 @@ impl CliCommand {
             CliCommand::UserLogout => "user_logout",
             CliCommand::UserSessionList => "user_session_list",
             CliCommand::UtilizationView => "utilization_view",
+            CliCommand::SystemVersion => "system_version",
             CliCommand::VpcFirewallRulesView => "vpc_firewall_rules_view",
             CliCommand::VpcFirewallRulesUpdate => "vpc_firewall_rules_update",
             CliCommand::VpcRouterRouteList => "vpc_router_route_list",

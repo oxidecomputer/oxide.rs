@@ -53,7 +53,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026111100.0.0
+/// Version: 2026112100.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -97,7 +97,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026111100.0.0"
+        "2026112100.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -5871,11 +5871,30 @@ pub trait ClientSystemStatusExt {
     ///    .await;
     /// ```
     fn ping(&self) -> builder::Ping<'_>;
+    /// Fetch version information
+    ///
+    /// Returns the latest API version this system supports and the release
+    /// number of the system software serving the API. No authentication is
+    /// required, so this endpoint can be called before logging in to find the
+    /// right docs and CLI or SDK versions.
+    ///
+    /// Sends a `GET` request to `/v1/version`
+    ///
+    /// ```ignore
+    /// let response = client.system_version()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_version(&self) -> builder::SystemVersion<'_>;
 }
 
 impl ClientSystemStatusExt for Client {
     fn ping(&self) -> builder::Ping<'_> {
         builder::Ping::new(self)
+    }
+
+    fn system_version(&self) -> builder::SystemVersion<'_> {
+        builder::SystemVersion::new(self)
     }
 }
 

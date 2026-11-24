@@ -12460,6 +12460,113 @@ impl<'de> ::serde::Deserialize<'de> for SystemUpdateRepositoryViewSystemVersion 
     }
 }
 
+/// Version information for the API and the system software serving it
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct SystemVersion {
+    /// The latest API version this system supports, e.g., `2026112100.0.0`,
+    /// equal to `info.version` in its OpenAPI document. A request with no
+    /// `api-version` header is handled at this version. A request for a newer
+    /// one is rejected. Clients should send the version they were built for,
+    /// which may be older than this one. The official CLI and SDKs do so
+    /// automatically.
+    pub api_version: SystemVersionApiVersion,
+    /// The release number of the system software serving this API, e.g., `24`
+    /// for release 24. This number does not distinguish patch releases such as
+    /// 24.1. Use it to find the right docs, release notes, and CLI or SDK
+    /// versions.
+    pub system_version: ::std::string::String,
+}
+
+impl SystemVersion {
+    pub fn builder() -> builder::SystemVersion {
+        Default::default()
+    }
+}
+
+/// The latest API version this system supports, e.g., `2026112100.0.0`, equal
+/// to `info.version` in its OpenAPI document. A request with no `api-version`
+/// header is handled at this version. A request for a newer one is rejected.
+/// Clients should send the version they were built for, which may be older than
+/// this one. The official CLI and SDKs do so automatically.
+#[derive(
+    :: serde :: Serialize,
+    Clone,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    schemars :: JsonSchema,
+)]
+#[serde(transparent)]
+pub struct SystemVersionApiVersion(::std::string::String);
+impl ::std::ops::Deref for SystemVersionApiVersion {
+    type Target = ::std::string::String;
+    fn deref(&self) -> &::std::string::String {
+        &self.0
+    }
+}
+
+impl ::std::convert::From<SystemVersionApiVersion> for ::std::string::String {
+    fn from(value: SystemVersionApiVersion) -> Self {
+        value.0
+    }
+}
+
+impl ::std::str::FromStr for SystemVersionApiVersion {
+    type Err = self::error::ConversionError;
+    fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        ::std::convert::TryFrom::try_from(value)
+    }
+}
+
+impl ::std::convert::TryFrom<&str> for SystemVersionApiVersion {
+    type Error = self::error::ConversionError;
+    fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+            ::std::sync::LazyLock::new(|| {
+                ::regress::Regex::with_flags(
+                    "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                     [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?\
+                     (?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "u",
+                )
+                .unwrap()
+            });
+        if PATTERN.find(value).is_none() {
+            return Err("doesn't match pattern \
+                        \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                        [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*\
+                        ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$\""
+                .into());
+        }
+
+        Ok(Self(value.to_string()))
+    }
+}
+
+impl ::std::convert::TryFrom<::std::string::String> for SystemVersionApiVersion {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        ::std::convert::TryFrom::try_from(value.as_str())
+    }
+}
+
+impl<'de> ::serde::Deserialize<'de> for SystemVersionApiVersion {
+    fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+    where
+        D: ::serde::Deserializer<'de>,
+    {
+        ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
+            .map_err(|e: self::error::ConversionError| {
+                <D::Error as ::serde::de::Error>::custom(e.to_string())
+            })
+    }
+}
+
 /// View of a system software target release
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct TargetRelease {

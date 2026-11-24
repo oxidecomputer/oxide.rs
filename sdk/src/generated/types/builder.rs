@@ -26428,6 +26428,66 @@ impl ::std::convert::From<super::SystemNetworkingSettingsUpdate>
 }
 
 #[derive(Clone, Debug)]
+pub struct SystemVersion {
+    api_version: ::std::result::Result<super::SystemVersionApiVersion, ::std::string::String>,
+    system_version: ::std::result::Result<::std::string::String, ::std::string::String>,
+}
+
+impl ::std::default::Default for SystemVersion {
+    fn default() -> Self {
+        Self {
+            api_version: Err("no value supplied for api_version".to_string()),
+            system_version: Err("no value supplied for system_version".to_string()),
+        }
+    }
+}
+
+impl SystemVersion {
+    pub fn api_version<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::SystemVersionApiVersion>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.api_version = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for api_version: {e}"));
+        self
+    }
+
+    pub fn system_version<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.system_version = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for system_version: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<SystemVersion> for super::SystemVersion {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: SystemVersion,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            api_version: value.api_version?,
+            system_version: value.system_version?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::SystemVersion> for SystemVersion {
+    fn from(value: super::SystemVersion) -> Self {
+        Self {
+            api_version: Ok(value.api_version),
+            system_version: Ok(value.system_version),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct TargetRelease {
     time_requested:
         ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
