@@ -53,7 +53,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026112100.0.0
+/// Version: 2026112400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -97,7 +97,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026112100.0.0"
+        "2026112400.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -1087,6 +1087,29 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_>;
+    /// Check whether expunging a working sled or physical disk will create
+    ///
+    /// a problem due to ongoing repairs
+    ///
+    /// The system is designed to survive a limited number of concurrent
+    /// failures. When a sled or physical disk is expunged, the system repairs
+    /// itself by re-replicating both control plane data and data on users'
+    /// distributed disks and by deploying replacement control plane components.
+    /// Each expunged component counts as one failure until these repairs
+    /// finish.  Before expunging a sled or disk that may currently be working,
+    /// operators can use this API to verify that the system is not still
+    /// recovering from previous expungements or repairs. Note that if a sled or
+    /// physical disk is already not working, expunging it will not make things
+    /// worse, so there's no need to use this API in that case.
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/expunge-precheck`
+    ///
+    /// ```ignore
+    /// let response = client.expunge_precheck_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn expunge_precheck_view(&self) -> builder::ExpungePrecheckView<'_>;
     /// Fetch rack cluster membership status
     ///
     /// Returns the status for the most recent change, or a specific version if
@@ -1244,6 +1267,10 @@ impl ClientExperimentalExt for Client {
 
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_> {
         builder::MulticastGroupMemberList::new(self)
+    }
+
+    fn expunge_precheck_view(&self) -> builder::ExpungePrecheckView<'_> {
+        builder::ExpungePrecheckView::new(self)
     }
 
     fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_> {

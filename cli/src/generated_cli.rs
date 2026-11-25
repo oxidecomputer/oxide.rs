@@ -200,6 +200,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
             CliCommand::PhysicalDiskListUnadopted => Self::cli_physical_disk_list_unadopted(),
+            CliCommand::ExpungePrecheckView => Self::cli_expunge_precheck_view(),
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 Self::cli_networking_switch_port_lldp_neighbors()
             }
@@ -5412,6 +5413,21 @@ impl<T: CliConfig> Cli<T> {
                     .help("Maximum number of items returned by a single call"),
             )
             .about("List physical disks that have not yet been adopted for use")
+    }
+
+    pub fn cli_expunge_precheck_view() -> ::clap::Command {
+        ::clap::Command::new("").about(
+            "Check whether expunging a working sled or physical disk will create\n\na problem due \
+             to ongoing repairs\n\nThe system is designed to survive a limited number of \
+             concurrent failures. When a sled or physical disk is expunged, the system repairs \
+             itself by re-replicating both control plane data and data on users' distributed \
+             disks and by deploying replacement control plane components. Each expunged component \
+             counts as one failure until these repairs finish.  Before expunging a sled or disk \
+             that may currently be working, operators can use this API to verify that the system \
+             is not still recovering from previous expungements or repairs. Note that if a sled \
+             or physical disk is already not working, expunging it will not make things worse, so \
+             there's no need to use this API in that case.",
+        )
     }
 
     pub fn cli_networking_switch_port_lldp_neighbors() -> ::clap::Command {
@@ -10918,6 +10934,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::PhysicalDiskListUnadopted => {
                 self.execute_physical_disk_list_unadopted(matches).await
             }
+            CliCommand::ExpungePrecheckView => self.execute_expunge_precheck_view(matches).await,
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 self.execute_networking_switch_port_lldp_neighbors(matches)
                     .await
@@ -16958,6 +16975,26 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_expunge_precheck_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.expunge_precheck_view();
+        self.config
+            .execute_expunge_precheck_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -24605,6 +24642,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_expunge_precheck_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExpungePrecheckView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_switch_port_lldp_neighbors(
         &self,
         matches: &::clap::ArgMatches,
@@ -26170,6 +26215,7 @@ pub enum CliCommand {
     PhysicalDiskList,
     PhysicalDiskView,
     PhysicalDiskListUnadopted,
+    ExpungePrecheckView,
     NetworkingSwitchPortLldpNeighbors,
     RackList,
     RackView,
@@ -26505,6 +26551,7 @@ impl CliCommand {
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
             CliCommand::PhysicalDiskListUnadopted,
+            CliCommand::ExpungePrecheckView,
             CliCommand::NetworkingSwitchPortLldpNeighbors,
             CliCommand::RackList,
             CliCommand::RackView,
@@ -26849,6 +26896,7 @@ impl CliCommand {
             CliCommand::PhysicalDiskList => "physical_disk_list",
             CliCommand::PhysicalDiskView => "physical_disk_view",
             CliCommand::PhysicalDiskListUnadopted => "physical_disk_list_unadopted",
+            CliCommand::ExpungePrecheckView => "expunge_precheck_view",
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 "networking_switch_port_lldp_neighbors"
             }

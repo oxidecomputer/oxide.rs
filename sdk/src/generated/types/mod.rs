@@ -3307,6 +3307,32 @@ impl ::std::convert::TryFrom<::std::string::String> for DiskType {
     }
 }
 
+/// Result of the check that data in distributed storage that was stored on
+/// expunged physical disks has been fully re-replicated
+///
+/// Distributed storage includes distributed disks, snapshots, and images.  It
+/// does not include local disks.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct DistributedStoragePrecheck {
+    /// Number of expunged physical disks that still hold data for distributed
+    /// storage
+    pub expunged_disks_with_data: u64,
+    /// Number of region replacements that have not finished
+    pub region_replacements_in_progress: u64,
+    /// Number of region snapshot replacements that have not finished
+    pub region_snapshot_replacements_in_progress: u64,
+    /// Human-readable descriptions of risks found by this check
+    ///
+    /// If this list is empty, this check passed.
+    pub risks: ::std::vec::Vec<::std::string::String>,
+}
+
+impl DistributedStoragePrecheck {
+    pub fn builder() -> builder::DistributedStoragePrecheck {
+        Default::default()
+    }
+}
+
 /// A distribution is a sequence of bins and counts in those bins, and some
 /// statistical information tracked to compute the mean, standard deviation, and
 /// quantile estimates.
@@ -3400,6 +3426,28 @@ pub struct Error {
 
 impl Error {
     pub fn builder() -> builder::Error {
+        Default::default()
+    }
+}
+
+/// Result of checking whether it'd be dangerous to expunge a working sled or
+/// physical disk
+///
+/// If `ok` is `true`, no check found any risks. Otherwise, each check lists the
+/// risks that it found.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct ExpungePrecheck {
+    /// Whether data in distributed storage that was stored on expunged physical
+    /// disks has been fully re-replicated
+    pub distributed_storage: DistributedStoragePrecheck,
+    /// Whether all checks passed
+    ///
+    /// This is `true` if and only if none of the checks below found any risks.
+    pub ok: bool,
+}
+
+impl ExpungePrecheck {
+    pub fn builder() -> builder::ExpungePrecheck {
         Default::default()
     }
 }

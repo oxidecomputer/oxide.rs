@@ -6985,6 +6985,107 @@ impl ::std::convert::From<super::DiskResultsPage> for DiskResultsPage {
 }
 
 #[derive(Clone, Debug)]
+pub struct DistributedStoragePrecheck {
+    expunged_disks_with_data: ::std::result::Result<u64, ::std::string::String>,
+    region_replacements_in_progress: ::std::result::Result<u64, ::std::string::String>,
+    region_snapshot_replacements_in_progress: ::std::result::Result<u64, ::std::string::String>,
+    risks: ::std::result::Result<::std::vec::Vec<::std::string::String>, ::std::string::String>,
+}
+
+impl ::std::default::Default for DistributedStoragePrecheck {
+    fn default() -> Self {
+        Self {
+            expunged_disks_with_data: Err(
+                "no value supplied for expunged_disks_with_data".to_string()
+            ),
+            region_replacements_in_progress: Err("no value supplied for \
+                                                  region_replacements_in_progress"
+                .to_string()),
+            region_snapshot_replacements_in_progress: Err(
+                "no value supplied for region_snapshot_replacements_in_progress".to_string(),
+            ),
+            risks: Err("no value supplied for risks".to_string()),
+        }
+    }
+}
+
+impl DistributedStoragePrecheck {
+    pub fn expunged_disks_with_data<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.expunged_disks_with_data = value.try_into().map_err(|e| {
+            format!("error converting supplied value for expunged_disks_with_data: {e}")
+        });
+        self
+    }
+
+    pub fn region_replacements_in_progress<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.region_replacements_in_progress = value.try_into().map_err(|e| {
+            format!("error converting supplied value for region_replacements_in_progress: {e}")
+        });
+        self
+    }
+
+    pub fn region_snapshot_replacements_in_progress<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.region_snapshot_replacements_in_progress = value.try_into().map_err(|e| {
+            format!(
+                "error converting supplied value for region_snapshot_replacements_in_progress: {e}"
+            )
+        });
+        self
+    }
+
+    pub fn risks<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.risks = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for risks: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<DistributedStoragePrecheck> for super::DistributedStoragePrecheck {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: DistributedStoragePrecheck,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            expunged_disks_with_data: value.expunged_disks_with_data?,
+            region_replacements_in_progress: value.region_replacements_in_progress?,
+            region_snapshot_replacements_in_progress: value
+                .region_snapshot_replacements_in_progress?,
+            risks: value.risks?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::DistributedStoragePrecheck> for DistributedStoragePrecheck {
+    fn from(value: super::DistributedStoragePrecheck) -> Self {
+        Self {
+            expunged_disks_with_data: Ok(value.expunged_disks_with_data),
+            region_replacements_in_progress: Ok(value.region_replacements_in_progress),
+            region_snapshot_replacements_in_progress: Ok(
+                value.region_snapshot_replacements_in_progress
+            ),
+            risks: Ok(value.risks),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct Distributiondouble {
     bins: ::std::result::Result<::std::vec::Vec<f64>, ::std::string::String>,
     counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
@@ -7429,6 +7530,67 @@ impl ::std::convert::From<super::Error> for Error {
             error_code: Ok(value.error_code),
             message: Ok(value.message),
             request_id: Ok(value.request_id),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ExpungePrecheck {
+    distributed_storage:
+        ::std::result::Result<super::DistributedStoragePrecheck, ::std::string::String>,
+    ok: ::std::result::Result<bool, ::std::string::String>,
+}
+
+impl ::std::default::Default for ExpungePrecheck {
+    fn default() -> Self {
+        Self {
+            distributed_storage: Err("no value supplied for distributed_storage".to_string()),
+            ok: Err("no value supplied for ok".to_string()),
+        }
+    }
+}
+
+impl ExpungePrecheck {
+    pub fn distributed_storage<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::DistributedStoragePrecheck>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.distributed_storage = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for distributed_storage: {e}"));
+        self
+    }
+
+    pub fn ok<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<bool>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.ok = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for ok: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<ExpungePrecheck> for super::ExpungePrecheck {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: ExpungePrecheck,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            distributed_storage: value.distributed_storage?,
+            ok: value.ok?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::ExpungePrecheck> for ExpungePrecheck {
+    fn from(value: super::ExpungePrecheck) -> Self {
+        Self {
+            distributed_storage: Ok(value.distributed_storage),
+            ok: Ok(value.ok),
         }
     }
 }
