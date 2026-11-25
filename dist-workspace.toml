@@ -24,7 +24,7 @@ tap = "oxidecomputer/homebrew-tap"
 # Create versioned Homebrew forumlas
 version-formulas = true
 # Publish jobs to run in CI
-publish-jobs = ["homebrew"]
+publish-jobs = ["homebrew", "./publish-winget"]
 
 [dist.completion-cmds.oxide]
 trigger.subcommand = { name = "completion", format = "arg" }
