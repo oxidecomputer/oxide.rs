@@ -439,6 +439,11 @@ oxide system networking switch-port-settings show — Show the settings applied 
 oxide system networking switch-port-settings view — Get information about switch port
 oxide system policy update — Update top-level IAM policy
 oxide system policy view — Fetch top-level IAM policy
+oxide system support expunge-precheck — Check whether expunging a working sled or physical disk will create
+
+a problem due to ongoing repairs
+
+The system is designed to survive a limited number of concurrent failures. When a sled or physical disk is expunged, the system repairs itself by re-replicating both control plane data and data on users' distributed disks and by deploying replacement control plane components. Each expunged component counts as one failure until these repairs finish.  Before expunging a sled or disk that may currently be working, operators can use this API to verify that the system is not still recovering from previous expungements or repairs. Note that if a sled or physical disk is already not working, expunging it will not make things worse, so there's no need to use this API in that case.
 oxide system update recovery-finish — Clear system recovery status
 
 Instructs the system that a system recovery operation ("mupdate") was completed using the software in the specified release.
@@ -467,6 +472,9 @@ oxide system update trust-root list — List root roles in the updates trust sto
 
 A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.
 oxide system update trust-root view — Fetch trusted root role
+oxide system version — Fetch version information
+
+Returns the latest API version this system supports and the release number of the system software serving the API. No authentication is required, so this endpoint can be called before logging in to find the right docs and CLI or SDK versions.
 oxide user list — List users
 oxide user list-sessions — List user's console sessions
 oxide user list-tokens — List user's access tokens

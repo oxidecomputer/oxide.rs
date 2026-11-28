@@ -705,6 +705,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SystemUpdateRepositoryView => Some("system update repo view"),
         CliCommand::SystemUpdateRecoveryFinish => Some("system update recovery-finish"),
         CliCommand::SystemUpdateRepositoryUpload => None, // Manually implemented
+        CliCommand::SystemVersion => Some("system version"),
 
         CliCommand::SwitchList => Some("system hardware switch list"),
         CliCommand::SwitchView => Some("system hardware switch view"),
@@ -832,6 +833,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SupportBundleDownloadFile
         | CliCommand::SupportBundleHeadFile
         | CliCommand::SupportBundleIndex => None,
+
+        CliCommand::ExpungePrecheckView => Some("system support expunge-precheck"),
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
