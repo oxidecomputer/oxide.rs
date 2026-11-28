@@ -6891,6 +6891,17 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
+        pub fn force<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("force", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("force"))
+            }
+        }
+
         pub fn project<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a types::NameOrId>>,
@@ -7328,6 +7339,17 @@ pub mod operations {
             let re =
                 regex::Regex::new(&format!("^/v1/instances/{}/stop$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn force<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("force", value.to_string()))
+            } else {
+                Self(self.0.query_param_missing("force"))
+            }
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
@@ -11869,6 +11891,61 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UnadoptedPhysicalDiskResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ExpungePrecheckViewWhen(::httpmock::When);
+    impl ExpungePrecheckViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/hardware/expunge-precheck$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct ExpungePrecheckViewThen(::httpmock::Then);
+    impl ExpungePrecheckViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ExpungePrecheck) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -22402,6 +22479,61 @@ pub mod operations {
         }
     }
 
+    pub struct SystemVersionWhen(::httpmock::When);
+    impl SystemVersionWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/version$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SystemVersionThen(::httpmock::Then);
+    impl SystemVersionThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SystemVersion) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct VpcFirewallRulesViewWhen(::httpmock::When);
     impl VpcFirewallRulesViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -25266,6 +25398,9 @@ pub trait MockServerExt {
             operations::PhysicalDiskListUnadoptedWhen,
             operations::PhysicalDiskListUnadoptedThen,
         );
+    fn expunge_precheck_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExpungePrecheckViewWhen, operations::ExpungePrecheckViewThen);
     fn networking_switch_port_lldp_neighbors<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -25872,6 +26007,9 @@ pub trait MockServerExt {
     fn utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::UtilizationViewWhen, operations::UtilizationViewThen);
+    fn system_version<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SystemVersionWhen, operations::SystemVersionThen);
     fn vpc_firewall_rules_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::VpcFirewallRulesViewWhen, operations::VpcFirewallRulesViewThen);
@@ -27924,6 +28062,18 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn expunge_precheck_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ExpungePrecheckViewWhen, operations::ExpungePrecheckViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ExpungePrecheckViewWhen::new(when),
+                operations::ExpungePrecheckViewThen::new(then),
+            )
+        })
+    }
+
     fn networking_switch_port_lldp_neighbors<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -29849,6 +29999,18 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::UtilizationViewWhen::new(when),
                 operations::UtilizationViewThen::new(then),
+            )
+        })
+    }
+
+    fn system_version<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::SystemVersionWhen, operations::SystemVersionThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemVersionWhen::new(when),
+                operations::SystemVersionThen::new(then),
             )
         })
     }

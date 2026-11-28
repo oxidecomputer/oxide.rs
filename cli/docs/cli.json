@@ -3822,6 +3822,14 @@
           "operation_id": "instance_reboot",
           "args": [
             {
+              "long": "force",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Whether to override the instance's configured Shutdown Policy, if any, and hard-cut the power of the VM guest for this stop or reboot request."
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -3952,6 +3960,14 @@
           "about": "Stop instance",
           "operation_id": "instance_stop",
           "args": [
+            {
+              "long": "force",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Whether to override the instance's configured Shutdown Policy, if any, and hard-cut the power of the VM guest for this stop or reboot request."
+            },
             {
               "long": "instance",
               "help": "Name or ID of the instance"
@@ -9602,6 +9618,30 @@
           ]
         },
         {
+          "name": "support",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "expunge-precheck",
+              "about": "Check whether expunging a working sled or physical disk will create\n\na problem due to ongoing repairs\n\nThe system is designed to survive a limited number of concurrent failures. When a sled or physical disk is expunged, the system repairs itself by re-replicating both control plane data and data on users' distributed disks and by deploying replacement control plane components. Each expunged component counts as one failure until these repairs finish.  Before expunging a sled or disk that may currently be working, operators can use this API to verify that the system is not still recovering from previous expungements or repairs. Note that if a sled or physical disk is already not working, expunging it will not make things worse, so there's no need to use this API in that case.",
+              "operation_id": "expunge_precheck_view",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "update",
           "args": [
             {
@@ -9836,6 +9876,18 @@
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "version",
+          "about": "Fetch version information\n\nReturns the latest API version this system supports and the release number of the system software serving the API. No authentication is required, so this endpoint can be called before logging in to find the right docs and CLI or SDK versions.",
+          "operation_id": "system_version",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }

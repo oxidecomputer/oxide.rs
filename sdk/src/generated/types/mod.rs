@@ -6,6 +6,42 @@ pub mod builder;
 pub mod defaults;
 /// Error types.
 pub mod error;
+/// ACPI power button timeout in seconds.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+#[serde(transparent)]
+pub struct AcpiTimeoutSecs(pub ::std::num::NonZeroU64);
+impl ::std::ops::Deref for AcpiTimeoutSecs {
+    type Target = ::std::num::NonZeroU64;
+    fn deref(&self) -> &::std::num::NonZeroU64 {
+        &self.0
+    }
+}
+
+impl ::std::convert::From<AcpiTimeoutSecs> for ::std::num::NonZeroU64 {
+    fn from(value: AcpiTimeoutSecs) -> Self {
+        value.0
+    }
+}
+
+impl ::std::convert::From<::std::num::NonZeroU64> for AcpiTimeoutSecs {
+    fn from(value: ::std::num::NonZeroU64) -> Self {
+        Self(value)
+    }
+}
+
+impl ::std::fmt::Display for AcpiTimeoutSecs {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl ::std::str::FromStr for AcpiTimeoutSecs {
+    type Err = <::std::num::NonZeroU64 as ::std::str::FromStr>::Err;
+    fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+        Ok(Self(value.parse()?))
+    }
+}
+
 /// An address tied to an address lot.
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct Address {
@@ -822,17 +858,7 @@ impl AlertResultsPage {
 /// A webhook event class subscription matches either a single event class
 /// exactly, or a glob pattern including wildcards that may match multiple event
 /// classes
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct AlertSubscription(::std::string::String);
 impl ::std::ops::Deref for AlertSubscription {
@@ -897,6 +923,21 @@ impl<'de> ::serde::Deserialize<'de> for AlertSubscription {
     }
 }
 
+impl ::schemars::JsonSchema for AlertSubscription {
+    fn schema_name() -> ::std::string::String {
+        "AlertSubscription".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$".to_string(),
+        );
+        schema.into()
+    }
+}
+
 /// `AlertSubscriptionCreate`
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct AlertSubscriptionCreate {
@@ -957,6 +998,7 @@ impl AllowListUpdate {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "allow", content = "ips")]
 pub enum AllowedSourceIps {
+    /// Allow traffic from any external IP address.
     #[serde(rename = "any")]
     Any,
     /// Restrict access to a specific set of source IP addresses or subnets.
@@ -1158,6 +1200,10 @@ pub enum AuditLogEntryResult {
         /// HTTP status code
         http_status_code: u16,
     },
+    /// After the logged operation completed, our attempt to write the result to
+    /// the audit log failed, so it was automatically marked completed later by
+    /// a background job. This does not imply that the operation itself timed
+    /// out or failed, only our attempts to log its result.
     #[serde(rename = "unknown")]
     Unknown,
 }
@@ -2310,6 +2356,16 @@ impl ::std::convert::From<BlockSize> for i64 {
     }
 }
 
+impl ::std::str::FromStr for BlockSize {
+    type Err = self::error::ConversionError;
+    fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value
+            .parse::<i64>()
+            .map_err(|e| ::std::string::ToString::to_string(&e).into())
+            .and_then(Self::try_from)
+    }
+}
+
 impl ::std::convert::TryFrom<i64> for BlockSize {
     type Error = self::error::ConversionError;
     fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -2340,9 +2396,9 @@ impl ::schemars::JsonSchema for BlockSize {
         let mut schema = <i64 as ::schemars::JsonSchema>::json_schema(g).into_object();
         schema.enum_values = ::std::option::Option::Some(
             [
-                ::serde_json::from_str("512").unwrap(),
-                ::serde_json::from_str("2048").unwrap(),
-                ::serde_json::from_str("4096").unwrap(),
+                ::serde_json::Value::Number(::serde_json::Number::from(512i64)),
+                ::serde_json::Value::Number(::serde_json::Number::from(2048i64)),
+                ::serde_json::Value::Number(::serde_json::Number::from(4096i64)),
             ]
             .into_iter()
             .collect(),
@@ -3185,18 +3241,25 @@ pub enum DiskSource {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "state", content = "instance")]
 pub enum DiskState {
+    /// Disk is being initialized
     #[serde(rename = "creating")]
     Creating,
+    /// Disk is ready but detached from any Instance
     #[serde(rename = "detached")]
     Detached,
+    /// Disk is ready to receive blocks from an external source
     #[serde(rename = "import_ready")]
     ImportReady,
+    /// Disk is importing blocks from a URL
     #[serde(rename = "importing_from_url")]
     ImportingFromUrl,
+    /// Disk is importing blocks from bulk writes
     #[serde(rename = "importing_from_bulk_writes")]
     ImportingFromBulkWrites,
+    /// Disk is being finalized to state Detached
     #[serde(rename = "finalizing")]
     Finalizing,
+    /// Disk is undergoing maintenance
     #[serde(rename = "maintenance")]
     Maintenance,
     /// Disk is being attached to the given Instance
@@ -3208,8 +3271,10 @@ pub enum DiskState {
     /// Disk is being detached from the given Instance
     #[serde(rename = "detaching")]
     Detaching(::uuid::Uuid),
+    /// Disk has been destroyed
     #[serde(rename = "destroyed")]
     Destroyed,
+    /// Disk is unavailable
     #[serde(rename = "faulted")]
     Faulted,
 }
@@ -3268,6 +3333,32 @@ impl ::std::convert::TryFrom<::std::string::String> for DiskType {
         value: ::std::string::String,
     ) -> ::std::result::Result<Self, self::error::ConversionError> {
         value.parse()
+    }
+}
+
+/// Result of the check that data in distributed storage that was stored on
+/// expunged physical disks has been fully re-replicated
+///
+/// Distributed storage includes distributed disks, snapshots, and images.  It
+/// does not include local disks.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct DistributedStoragePrecheck {
+    /// Number of expunged physical disks that still hold data for distributed
+    /// storage
+    pub expunged_disks_with_data: u64,
+    /// Number of region replacements that have not finished
+    pub region_replacements_in_progress: u64,
+    /// Number of region snapshot replacements that have not finished
+    pub region_snapshot_replacements_in_progress: u64,
+    /// Human-readable descriptions of risks found by this check
+    ///
+    /// If this list is empty, this check passed.
+    pub risks: ::std::vec::Vec<::std::string::String>,
+}
+
+impl DistributedStoragePrecheck {
+    pub fn builder() -> builder::DistributedStoragePrecheck {
+        Default::default()
     }
 }
 
@@ -3364,6 +3455,28 @@ pub struct Error {
 
 impl Error {
     pub fn builder() -> builder::Error {
+        Default::default()
+    }
+}
+
+/// Result of checking whether it'd be dangerous to expunge a working sled or
+/// physical disk
+///
+/// If `ok` is `true`, no check found any risks. Otherwise, each check lists the
+/// risks that it found.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct ExpungePrecheck {
+    /// Whether data in distributed storage that was stored on expunged physical
+    /// disks has been fully re-replicated
+    pub distributed_storage: DistributedStoragePrecheck,
+    /// Whether all checks passed
+    ///
+    /// This is `true` if and only if none of the checks below found any risks.
+    pub ok: bool,
+}
+
+impl ExpungePrecheck {
+    pub fn builder() -> builder::ExpungePrecheck {
         Default::default()
     }
 }
@@ -4615,17 +4728,7 @@ impl Histogramuint8 {
 /// A hostname identifies a host on a network, and is usually a dot-delimited
 /// sequence of labels, where each label contains only letters, digits, or the
 /// hyphen. See RFCs 1035 and 952 for more details.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct Hostname(::std::string::String);
 impl ::std::ops::Deref for Hostname {
@@ -4699,19 +4802,27 @@ impl<'de> ::serde::Deserialize<'de> for Hostname {
     }
 }
 
+impl ::schemars::JsonSchema for Hostname {
+    fn schema_name() -> ::std::string::String {
+        "Hostname".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(1u32);
+        schema.string().max_length = ::std::option::Option::Some(253u32);
+        schema.string().pattern = ::std::option::Option::Some(
+            "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))*$"
+                .to_string(),
+        );
+        schema.into()
+    }
+}
+
 /// An inclusive-inclusive range of ICMP(v6) types or codes. The second value
 /// may be omitted to represent a single parameter.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct IcmpParamRange(::std::string::String);
 impl ::std::ops::Deref for IcmpParamRange {
@@ -4775,6 +4886,22 @@ impl<'de> ::serde::Deserialize<'de> for IcmpParamRange {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for IcmpParamRange {
+    fn schema_name() -> ::std::string::String {
+        "IcmpParamRange".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(1u32);
+        schema.string().max_length = ::std::option::Option::Some(7u32);
+        schema.string().pattern =
+            ::std::option::Option::Some("^[0-9]{1,3}(-[0-9]{1,3})?$".to_string());
+        schema.into()
     }
 }
 
@@ -5204,6 +5331,7 @@ impl ImportBlocksBulkWrite {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "type", content = "value")]
 pub enum ImportExportPolicy {
+    /// Do not perform any filtering.
     #[serde(rename = "no_filtering")]
     NoFiltering,
     #[serde(rename = "allow")]
@@ -5274,6 +5402,10 @@ pub struct Instance {
     /// ID for the project containing this instance
     pub project_id: ::uuid::Uuid,
     pub run_state: InstanceState,
+    /// The method by which the instance will be powered down when transitioning
+    /// to the stopped state, either forcefully or by giving the guest an ACPI
+    /// power button signal first.
+    pub shutdown_policy: InstanceShutdownPolicy,
     /// Timestamp when this resource was created
     pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     /// The timestamp of the most recent time this instance was automatically
@@ -5575,6 +5707,18 @@ pub struct InstanceCreate {
     /// The network interfaces to be created for this instance.
     #[serde(default = "defaults::instance_create_network_interfaces")]
     pub network_interfaces: InstanceNetworkInterfaceAttachment,
+    /// The method by which the instance should be stopped.
+    ///
+    /// This determines what action the control plane performs when stopping
+    /// this instance, either due to a request to the `instance_stop` or
+    /// `instance_reboot` API endpoints, or because the instance must be
+    /// restarted in order to update system software on the sled that was
+    /// hosting it.
+    ///
+    /// If not provided, the current default policy will be selected (hard power
+    /// off without an ACPI soft shutdown).
+    #[serde(default = "defaults::instance_create_shutdown_policy")]
+    pub shutdown_policy: InstanceShutdownPolicy,
     /// An allowlist of SSH public keys to be transferred to the instance via
     /// cloud-init during instance creation.
     ///
@@ -5691,12 +5835,25 @@ pub enum InstanceNetworkInterfaceAttachment {
     /// designated the primary interface for the instance.
     #[serde(rename = "create")]
     Create(::std::vec::Vec<InstanceNetworkInterfaceCreate>),
+    /// Create a single primary interface with an automatically-assigned IPv4
+    /// address.
+    ///
+    /// The IP will be pulled from the Project's default VPC / VPC Subnet.
     #[serde(rename = "default_ipv4")]
     DefaultIpv4,
+    /// Create a single primary interface with an automatically-assigned IPv6
+    /// address.
+    ///
+    /// The IP will be pulled from the Project's default VPC / VPC Subnet.
     #[serde(rename = "default_ipv6")]
     DefaultIpv6,
+    /// Create a single primary interface with automatically-assigned IPv4 and
+    /// IPv6 addresses.
+    ///
+    /// The IPs will be pulled from the Project's default VPC / VPC Subnet.
     #[serde(rename = "default_dual_stack")]
     DefaultDualStack,
+    /// No network interfaces at all will be created for the instance.
     #[serde(rename = "none")]
     None,
 }
@@ -5815,6 +5972,28 @@ pub struct InstanceSerialConsoleData {
 impl InstanceSerialConsoleData {
     pub fn builder() -> builder::InstanceSerialConsoleData {
         Default::default()
+    }
+}
+
+/// The method by which the instance will be powered down when transitioning to
+/// the stopped state or when rebooting: either forcefully or by giving the
+/// guest an ACPI power button signal first.
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+#[serde(tag = "action", content = "timeout_secs")]
+pub enum InstanceShutdownPolicy {
+    /// Instance's VM is forcefully terminated immediately.
+    #[serde(rename = "hard_off")]
+    HardOff,
+    /// Instance is sent PWRBTN_STS as described in ACPI chapter 4. If the VM
+    /// guest has not stopped itself with a power event within the given
+    /// timeout, it is *then* forcefully terminated.
+    #[serde(rename = "power_button")]
+    PowerButton(AcpiTimeoutSecs),
+}
+
+impl ::std::convert::From<AcpiTimeoutSecs> for InstanceShutdownPolicy {
+    fn from(value: AcpiTimeoutSecs) -> Self {
+        Self::PowerButton(value)
     }
 }
 
@@ -5987,6 +6166,12 @@ pub struct InstanceUpdate {
     pub multicast_groups: ::std::option::Option<::std::vec::Vec<MulticastGroupJoinSpec>>,
     /// The number of vCPUs to be allocated to the instance
     pub ncpus: InstanceCpuCount,
+    /// The method by which the instance should be stopped. If `null`, the
+    /// instance's shutdown policy is reset to the default value. Changes to
+    /// soft-shutdown timeout do not affect instances that are already in the
+    /// process of shutting down until their next start.
+    #[serde(deserialize_with = "::std::option::Option::deserialize")]
+    pub shutdown_policy: ::std::option::Option<InstanceShutdownPolicy>,
 }
 
 impl InstanceUpdate {
@@ -6660,6 +6845,7 @@ impl ::std::convert::TryFrom<::std::string::String> for IpVersion {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "type", content = "value")]
 pub enum Ipv4Assignment {
+    /// Automatically assign an IP address from the VPC Subnet.
     #[serde(rename = "auto")]
     Auto,
     /// Explicitly assign a specific address, if available.
@@ -6674,17 +6860,7 @@ impl ::std::convert::From<::std::net::Ipv4Addr> for Ipv4Assignment {
 }
 
 /// An IPv4 subnet, including prefix and prefix length
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct Ipv4Net(::std::string::String);
 impl ::std::ops::Deref for Ipv4Net {
@@ -6753,6 +6929,23 @@ impl<'de> ::serde::Deserialize<'de> for Ipv4Net {
     }
 }
 
+impl ::schemars::JsonSchema for Ipv4Net {
+    fn schema_name() -> ::std::string::String {
+        "Ipv4Net".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.\
+             ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|1[0-9]|2[0-9]|3[0-2])$"
+                .to_string(),
+        );
+        schema.into()
+    }
+}
+
 /// A non-decreasing IPv4 address range, inclusive of both ends.
 ///
 /// The first address must be less than or equal to the last address.
@@ -6772,6 +6965,7 @@ impl Ipv4Range {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "type", content = "value")]
 pub enum Ipv6Assignment {
+    /// Automatically assign an IP address from the VPC Subnet.
     #[serde(rename = "auto")]
     Auto,
     /// Explicitly assign a specific address, if available.
@@ -6786,17 +6980,7 @@ impl ::std::convert::From<::std::net::Ipv6Addr> for Ipv6Assignment {
 }
 
 /// An IPv6 subnet, including prefix and subnet mask
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct Ipv6Net(::std::string::String);
 impl ::std::ops::Deref for Ipv6Net {
@@ -6880,6 +7064,30 @@ impl<'de> ::serde::Deserialize<'de> for Ipv6Net {
     }
 }
 
+impl ::schemars::JsonSchema for Ipv6Net {
+    fn schema_name() -> ::std::string::String {
+        "Ipv6Net".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,\
+             4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,\
+             2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:\
+             [0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,\
+             5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:\
+             [0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,\
+             1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,\
+             1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+             3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$"
+                .to_string(),
+        );
+        schema.into()
+    }
+}
+
 /// A non-decreasing IPv6 address range, inclusive of both ends.
 ///
 /// The first address must be less than or equal to the last address.
@@ -6897,17 +7105,7 @@ impl Ipv6Range {
 
 /// An inclusive-inclusive range of IP ports. The second port may be omitted to
 /// represent a single port.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct L4PortRange(::std::string::String);
 impl ::std::ops::Deref for L4PortRange {
@@ -6971,6 +7169,22 @@ impl<'de> ::serde::Deserialize<'de> for L4PortRange {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for L4PortRange {
+    fn schema_name() -> ::std::string::String {
+        "L4PortRange".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(1u32);
+        schema.string().max_length = ::std::option::Option::Some(11u32);
+        schema.string().pattern =
+            ::std::option::Option::Some("^[0-9]{1,5}(-[0-9]{1,5})?$".to_string());
+        schema.into()
     }
 }
 
@@ -7346,17 +7560,7 @@ impl LoopbackAddressResultsPage {
 }
 
 /// A Media Access Control address, in EUI-48 format
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct MacAddr(::std::string::String);
 impl ::std::ops::Deref for MacAddr {
@@ -7423,6 +7627,22 @@ impl<'de> ::serde::Deserialize<'de> for MacAddr {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for MacAddr {
+    fn schema_name() -> ::std::string::String {
+        "MacAddr".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(5u32);
+        schema.string().max_length = ::std::option::Option::Some(17u32);
+        schema.string().pattern =
+            ::std::option::Option::Some("^([0-9a-fA-F]{0,2}:){5}[0-9a-fA-F]{0,2}$".to_string());
+        schema.into()
     }
 }
 
@@ -7766,17 +7986,7 @@ impl MulticastGroupResultsPage {
 /// lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end with a
 /// '-'. Names cannot be a UUID, but they may contain a UUID. They can be at
 /// most 63 characters long.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct Name(::std::string::String);
 impl ::std::ops::Deref for Name {
@@ -7841,6 +8051,21 @@ impl<'de> ::serde::Deserialize<'de> for Name {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for Name {
+    fn schema_name() -> ::std::string::String {
+        "Name".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(1u32);
+        schema.string().max_length = ::std::option::Option::Some(63u32);
+        schema . string () . pattern = :: std :: option :: Option :: Some ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$" . to_string ()) ;
+        schema.into()
     }
 }
 
@@ -8167,17 +8392,7 @@ impl ::std::convert::TryFrom<::std::string::String> for PaginationOrder {
 }
 
 /// Passwords may be subject to additional constraints.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct Password(::std::string::String);
 impl ::std::ops::Deref for Password {
@@ -8229,6 +8444,19 @@ impl<'de> ::serde::Deserialize<'de> for Password {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for Password {
+    fn schema_name() -> ::std::string::String {
+        "Password".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().max_length = ::std::option::Option::Some(512u32);
+        schema.into()
     }
 }
 
@@ -8416,8 +8644,17 @@ impl PhysicalDiskManufacturerIdentity {
 )]
 #[serde(tag = "kind")]
 pub enum PhysicalDiskPolicy {
+    /// The operator has indicated that the disk is in-service.
     #[serde(rename = "in_service")]
     InService,
+    /// The operator has indicated that the disk has been permanently removed
+    /// from service.
+    ///
+    /// This is a terminal state: once a particular disk ID is expunged, it will
+    /// never return to service. (The actual hardware may be reused, but it will
+    /// be treated as a brand-new disk.)
+    ///
+    /// An expunged disk is always non-provisionable.
     #[serde(rename = "expunged")]
     Expunged,
 }
@@ -9747,6 +9984,7 @@ pub enum RouteTarget {
     /// Forward traffic to an internet gateway
     #[serde(rename = "internet_gateway")]
     InternetGateway(Name),
+    /// Drop matching traffic
     #[serde(rename = "drop")]
     Drop,
 }
@@ -10165,17 +10403,7 @@ impl SetTargetReleaseParams {
 }
 
 /// Version of the system software to make the target release.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct SetTargetReleaseParamsSystemVersion(::std::string::String);
 impl ::std::ops::Deref for SetTargetReleaseParamsSystemVersion {
@@ -10241,6 +10469,24 @@ impl<'de> ::serde::Deserialize<'de> for SetTargetReleaseParamsSystemVersion {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for SetTargetReleaseParamsSystemVersion {
+    fn schema_name() -> ::std::string::String {
+        "SetTargetReleaseParamsSystemVersion".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+             [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+             +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                .to_string(),
+        );
+        schema.into()
     }
 }
 
@@ -10864,6 +11110,14 @@ pub enum SledPolicy {
     /// The operator has indicated that the sled is in-service.
     #[serde(rename = "in_service")]
     InService(SledProvisionPolicy),
+    /// The operator has indicated that the sled has been permanently removed
+    /// from service.
+    ///
+    /// This is a terminal state: once a particular sled ID is expunged, it will
+    /// never return to service. (The actual hardware may be reused, but it will
+    /// be treated as a brand-new sled.)
+    ///
+    /// An expunged sled is always non-provisionable.
     #[serde(rename = "expunged")]
     Expunged,
 }
@@ -11739,6 +11993,8 @@ impl SwitchInterfaceConfigCreate {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "type", content = "vid")]
 pub enum SwitchInterfaceKind {
+    /// Primary interfaces are associated with physical links. There is exactly
+    /// one primary interface per physical link.
     #[serde(rename = "primary")]
     Primary,
     /// VLAN interfaces allow physical interfaces to be multiplexed onto
@@ -11746,6 +12002,8 @@ pub enum SwitchInterfaceKind {
     /// tag.
     #[serde(rename = "vlan")]
     Vlan(u16),
+    /// Loopback interfaces are anchors for IP addresses that are not specific
+    /// to any particular port.
     #[serde(rename = "loopback")]
     Loopback,
 }
@@ -12302,17 +12560,7 @@ impl SystemNetworkingSettingsUpdate {
 }
 
 /// `SystemUpdateRepositoryViewSystemVersion`
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct SystemUpdateRepositoryViewSystemVersion(::std::string::String);
 impl ::std::ops::Deref for SystemUpdateRepositoryViewSystemVersion {
@@ -12381,6 +12629,139 @@ impl<'de> ::serde::Deserialize<'de> for SystemUpdateRepositoryViewSystemVersion 
     }
 }
 
+impl ::schemars::JsonSchema for SystemUpdateRepositoryViewSystemVersion {
+    fn schema_name() -> ::std::string::String {
+        "SystemUpdateRepositoryViewSystemVersion".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+             [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+             +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                .to_string(),
+        );
+        schema.into()
+    }
+}
+
+/// Version information for the API and the system software serving it
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
+pub struct SystemVersion {
+    /// The latest API version this system supports, e.g., `2026112100.0.0`,
+    /// equal to `info.version` in its OpenAPI document. A request with no
+    /// `api-version` header is handled at this version. A request for a newer
+    /// one is rejected. Clients should send the version they were built for,
+    /// which may be older than this one. The official CLI and SDKs do so
+    /// automatically.
+    pub api_version: SystemVersionApiVersion,
+    /// The release number of the system software serving this API, e.g., `24`
+    /// for release 24. This number does not distinguish patch releases such as
+    /// 24.1. Use it to find the right docs, release notes, and CLI or SDK
+    /// versions.
+    pub system_version: ::std::string::String,
+}
+
+impl SystemVersion {
+    pub fn builder() -> builder::SystemVersion {
+        Default::default()
+    }
+}
+
+/// The latest API version this system supports, e.g., `2026112100.0.0`, equal
+/// to `info.version` in its OpenAPI document. A request with no `api-version`
+/// header is handled at this version. A request for a newer one is rejected.
+/// Clients should send the version they were built for, which may be older than
+/// this one. The official CLI and SDKs do so automatically.
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[serde(transparent)]
+pub struct SystemVersionApiVersion(::std::string::String);
+impl ::std::ops::Deref for SystemVersionApiVersion {
+    type Target = ::std::string::String;
+    fn deref(&self) -> &::std::string::String {
+        &self.0
+    }
+}
+
+impl ::std::convert::From<SystemVersionApiVersion> for ::std::string::String {
+    fn from(value: SystemVersionApiVersion) -> Self {
+        value.0
+    }
+}
+
+impl ::std::str::FromStr for SystemVersionApiVersion {
+    type Err = self::error::ConversionError;
+    fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        ::std::convert::TryFrom::try_from(value)
+    }
+}
+
+impl ::std::convert::TryFrom<&str> for SystemVersionApiVersion {
+    type Error = self::error::ConversionError;
+    fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+            ::std::sync::LazyLock::new(|| {
+                ::regress::Regex::with_flags(
+                    "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                     [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?\
+                     (?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "u",
+                )
+                .unwrap()
+            });
+        if PATTERN.find(value).is_none() {
+            return Err("doesn't match pattern \
+                        \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                        [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*\
+                        ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$\""
+                .into());
+        }
+
+        Ok(Self(value.to_string()))
+    }
+}
+
+impl ::std::convert::TryFrom<::std::string::String> for SystemVersionApiVersion {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        ::std::convert::TryFrom::try_from(value.as_str())
+    }
+}
+
+impl<'de> ::serde::Deserialize<'de> for SystemVersionApiVersion {
+    fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+    where
+        D: ::serde::Deserializer<'de>,
+    {
+        ::std::convert::TryFrom::try_from(::std::string::String::deserialize(deserializer)?)
+            .map_err(|e: self::error::ConversionError| {
+                <D::Error as ::serde::de::Error>::custom(e.to_string())
+            })
+    }
+}
+
+impl ::schemars::JsonSchema for SystemVersionApiVersion {
+    fn schema_name() -> ::std::string::String {
+        "SystemVersionApiVersion".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+             [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+             +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                .to_string(),
+        );
+        schema.into()
+    }
+}
+
 /// View of a system software target release
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct TargetRelease {
@@ -12397,17 +12778,7 @@ impl TargetRelease {
 }
 
 /// The specified release of the rack's system software
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct TargetReleaseVersion(::std::string::String);
 impl ::std::ops::Deref for TargetReleaseVersion {
@@ -12473,6 +12844,24 @@ impl<'de> ::serde::Deserialize<'de> for TargetReleaseVersion {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for TargetReleaseVersion {
+    fn schema_name() -> ::std::string::String {
+        "TargetReleaseVersion".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+             [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+             +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                .to_string(),
+        );
+        schema.into()
     }
 }
 
@@ -12567,17 +12956,7 @@ impl TimeseriesDescription {
 /// Names are constructed by concatenating the target and metric names with ':'.
 /// Target and metric names must be lowercase alphanumeric characters with '_'
 /// separating words.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct TimeseriesName(::std::string::String);
 impl ::std::ops::Deref for TimeseriesName {
@@ -12640,6 +13019,21 @@ impl<'de> ::serde::Deserialize<'de> for TimeseriesName {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for TimeseriesName {
+    fn schema_name() -> ::std::string::String {
+        "TimeseriesName".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*)$".to_string(),
+        );
+        schema.into()
     }
 }
 
@@ -12722,17 +13116,7 @@ impl TufRepo {
 }
 
 /// The hash of the repository
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct TufRepoHash(::std::string::String);
 impl ::std::ops::Deref for TufRepoHash {
@@ -12799,6 +13183,21 @@ impl<'de> ::serde::Deserialize<'de> for TufRepoHash {
     }
 }
 
+impl ::schemars::JsonSchema for TufRepoHash {
+    fn schema_name() -> ::std::string::String {
+        "TufRepoHash".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(64u32);
+        schema.string().max_length = ::std::option::Option::Some(64u32);
+        schema.string().pattern = ::std::option::Option::Some("^[0-9a-fA-F]{64}$".to_string());
+        schema.into()
+    }
+}
+
 /// A single page of results
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 pub struct TufRepoResultsPage {
@@ -12819,17 +13218,7 @@ impl TufRepoResultsPage {
 ///
 /// The system version is a top-level version number applied to all the software
 /// in the repository.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct TufRepoSystemVersion(::std::string::String);
 impl ::std::ops::Deref for TufRepoSystemVersion {
@@ -12895,6 +13284,24 @@ impl<'de> ::serde::Deserialize<'de> for TufRepoSystemVersion {
             .map_err(|e: self::error::ConversionError| {
                 <D::Error as ::serde::de::Error>::custom(e.to_string())
             })
+    }
+}
+
+impl ::schemars::JsonSchema for TufRepoSystemVersion {
+    fn schema_name() -> ::std::string::String {
+        "TufRepoSystemVersion".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().pattern = ::std::option::Option::Some(
+            "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+             [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+             +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                .to_string(),
+        );
+        schema.into()
     }
 }
 
@@ -13371,17 +13778,7 @@ impl UserCreate {
 /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end with
 /// a '-'. Usernames cannot be a UUID, but they may contain a UUID. They can be
 /// at most 63 characters long.
-#[derive(
-    :: serde :: Serialize,
-    Clone,
-    Debug,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    schemars :: JsonSchema,
-)]
+#[derive(:: serde :: Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(transparent)]
 pub struct UserId(::std::string::String);
 impl ::std::ops::Deref for UserId {
@@ -13449,6 +13846,21 @@ impl<'de> ::serde::Deserialize<'de> for UserId {
     }
 }
 
+impl ::schemars::JsonSchema for UserId {
+    fn schema_name() -> ::std::string::String {
+        "UserId".to_string()
+    }
+
+    fn json_schema(g: &mut ::schemars::r#gen::SchemaGenerator) -> ::schemars::schema::Schema {
+        let mut schema =
+            <::std::string::String as ::schemars::JsonSchema>::json_schema(g).into_object();
+        schema.string().min_length = ::std::option::Option::Some(1u32);
+        schema.string().max_length = ::std::option::Option::Some(63u32);
+        schema . string () . pattern = :: std :: option :: Option :: Some ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$" . to_string ()) ;
+        schema.into()
+    }
+}
+
 /// Parameters for setting a user's password
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "mode", content = "value")]
@@ -13456,6 +13868,7 @@ pub enum UserPassword {
     /// Sets the user's password to the provided value
     #[serde(rename = "password")]
     Password(Password),
+    /// Invalidates any current password (disabling password authentication)
     #[serde(rename = "login_disallowed")]
     LoginDisallowed,
 }
@@ -13795,6 +14208,7 @@ impl VpcCreateDefaults {
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
 #[serde(tag = "type", content = "defaults")]
 pub enum VpcCreateDefaultsSelection {
+    /// Create all default resources
     #[serde(rename = "all")]
     All,
     /// Create only the default resources listed in `defaults`. Pass `{}` as

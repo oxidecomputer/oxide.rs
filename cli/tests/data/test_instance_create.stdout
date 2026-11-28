@@ -1,6 +1,7 @@
 {
-  "auto_restart_cooldown_expiration": "1964-10-20T17:51:09Z",
   "auto_restart_enabled": false,
+  "auto_restart_policy": "never",
+  "cpu_platform": "amd_turin",
   "description": "description is required for some reason",
   "enable_jumbo_frames": false,
   "hostname": "hostname",
@@ -10,7 +11,11 @@
   "ncpus": 4,
   "project_id": "81e272d3-bfc6-377d-5d3a-7dab4481968f",
   "run_state": "creating",
-  "time_created": "1958-10-29T11:12:56Z",
-  "time_modified": "1993-07-07T01:08:41Z",
-  "time_run_state_updated": "1978-12-19T15:27:23Z"
+  "shutdown_policy": {
+    "action": "hard_off"
+  },
+  "time_created": "1993-07-07T01:08:41Z",
+  "time_last_auto_restarted": "2014-03-14T23:05:20Z",
+  "time_modified": "1978-12-19T15:27:23Z",
+  "time_run_state_updated": "1992-06-10T18:09:26Z"
 }

@@ -200,6 +200,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
             CliCommand::PhysicalDiskListUnadopted => Self::cli_physical_disk_list_unadopted(),
+            CliCommand::ExpungePrecheckView => Self::cli_expunge_precheck_view(),
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 Self::cli_networking_switch_port_lldp_neighbors()
             }
@@ -387,6 +388,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UserLogout => Self::cli_user_logout(),
             CliCommand::UserSessionList => Self::cli_user_session_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
+            CliCommand::SystemVersion => Self::cli_system_version(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
             CliCommand::VpcRouterRouteList => Self::cli_vpc_router_route_list(),
@@ -2938,7 +2940,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(false)
+                    .required(true)
                     .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -3413,6 +3415,16 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_instance_reboot() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("force")
+                    .long("force")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether to override the instance's configured Shutdown Policy, if any, \
+                         and hard-cut the power of the VM guest for this stop or reboot request.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("instance")
                     .long("instance")
                     .value_parser(::clap::value_parser!(types::NameOrId))
@@ -3582,6 +3594,16 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_instance_stop() -> ::clap::Command {
         ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("force")
+                    .long("force")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether to override the instance's configured Shutdown Policy, if any, \
+                         and hard-cut the power of the VM guest for this stop or reboot request.",
+                    ),
+            )
             .arg(
                 ::clap::Arg::new("instance")
                     .long("instance")
@@ -5391,6 +5413,21 @@ impl<T: CliConfig> Cli<T> {
                     .help("Maximum number of items returned by a single call"),
             )
             .about("List physical disks that have not yet been adopted for use")
+    }
+
+    pub fn cli_expunge_precheck_view() -> ::clap::Command {
+        ::clap::Command::new("").about(
+            "Check whether expunging a working sled or physical disk will create\n\na problem due \
+             to ongoing repairs\n\nThe system is designed to survive a limited number of \
+             concurrent failures. When a sled or physical disk is expunged, the system repairs \
+             itself by re-replicating both control plane data and data on users' distributed \
+             disks and by deploying replacement control plane components. Each expunged component \
+             counts as one failure until these repairs finish.  Before expunging a sled or disk \
+             that may currently be working, operators can use this API to verify that the system \
+             is not still recovering from previous expungements or repairs. Note that if a sled \
+             or physical disk is already not working, expunging it will not make things worse, so \
+             there's no need to use this API in that case.",
+        )
     }
 
     pub fn cli_networking_switch_port_lldp_neighbors() -> ::clap::Command {
@@ -9472,6 +9509,15 @@ impl<T: CliConfig> Cli<T> {
         ::clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
 
+    pub fn cli_system_version() -> ::clap::Command {
+        ::clap::Command::new("").about(
+            "Fetch version information\n\nReturns the latest API version this system supports and \
+             the release number of the system software serving the API. No authentication is \
+             required, so this endpoint can be called before logging in to find the right docs \
+             and CLI or SDK versions.",
+        )
+    }
+
     pub fn cli_vpc_firewall_rules_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -10888,6 +10934,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::PhysicalDiskListUnadopted => {
                 self.execute_physical_disk_list_unadopted(matches).await
             }
+            CliCommand::ExpungePrecheckView => self.execute_expunge_precheck_view(matches).await,
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 self.execute_networking_switch_port_lldp_neighbors(matches)
                     .await
@@ -11205,6 +11252,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UserLogout => self.execute_user_logout(matches).await,
             CliCommand::UserSessionList => self.execute_user_session_list(matches).await,
             CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
+            CliCommand::SystemVersion => self.execute_system_version(matches).await,
             CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
             CliCommand::VpcFirewallRulesUpdate => {
                 self.execute_vpc_firewall_rules_update(matches).await
@@ -14596,6 +14644,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_reboot();
+        if let Some(value) = matches.get_one::<bool>("force") {
+            request = request.force(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -14762,6 +14814,10 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_stop(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_stop();
+        if let Some(value) = matches.get_one::<bool>("force") {
+            request = request.force(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -16919,6 +16975,26 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_expunge_precheck_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.expunge_precheck_view();
+        self.config
+            .execute_expunge_precheck_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -22128,6 +22204,22 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_version(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.system_version();
+        self.config.execute_system_version(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_vpc_firewall_rules_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -24550,6 +24642,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_expunge_precheck_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ExpungePrecheckView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_switch_port_lldp_neighbors(
         &self,
         matches: &::clap::ArgMatches,
@@ -25726,6 +25826,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_version(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemVersion,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_vpc_firewall_rules_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -26107,6 +26215,7 @@ pub enum CliCommand {
     PhysicalDiskList,
     PhysicalDiskView,
     PhysicalDiskListUnadopted,
+    ExpungePrecheckView,
     NetworkingSwitchPortLldpNeighbors,
     RackList,
     RackView,
@@ -26254,6 +26363,7 @@ pub enum CliCommand {
     UserLogout,
     UserSessionList,
     UtilizationView,
+    SystemVersion,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
     VpcRouterRouteList,
@@ -26441,6 +26551,7 @@ impl CliCommand {
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
             CliCommand::PhysicalDiskListUnadopted,
+            CliCommand::ExpungePrecheckView,
             CliCommand::NetworkingSwitchPortLldpNeighbors,
             CliCommand::RackList,
             CliCommand::RackView,
@@ -26588,6 +26699,7 @@ impl CliCommand {
             CliCommand::UserLogout,
             CliCommand::UserSessionList,
             CliCommand::UtilizationView,
+            CliCommand::SystemVersion,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
             CliCommand::VpcRouterRouteList,
@@ -26784,6 +26896,7 @@ impl CliCommand {
             CliCommand::PhysicalDiskList => "physical_disk_list",
             CliCommand::PhysicalDiskView => "physical_disk_view",
             CliCommand::PhysicalDiskListUnadopted => "physical_disk_list_unadopted",
+            CliCommand::ExpungePrecheckView => "expunge_precheck_view",
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
                 "networking_switch_port_lldp_neighbors"
             }
@@ -26945,6 +27058,7 @@ impl CliCommand {
             CliCommand::UserLogout => "user_logout",
             CliCommand::UserSessionList => "user_session_list",
             CliCommand::UtilizationView => "utilization_view",
+            CliCommand::SystemVersion => "system_version",
             CliCommand::VpcFirewallRulesView => "vpc_firewall_rules_view",
             CliCommand::VpcFirewallRulesUpdate => "vpc_firewall_rules_update",
             CliCommand::VpcRouterRouteList => "vpc_router_route_list",

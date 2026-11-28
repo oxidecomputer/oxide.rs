@@ -10212,6 +10212,7 @@ impl<'a> InstanceMulticastGroupLeave<'a> {
 pub struct InstanceReboot<'a> {
     client: &'a super::Client,
     instance: Result<types::NameOrId, String>,
+    force: Result<Option<bool>, String>,
     project: Result<Option<types::NameOrId>, String>,
 }
 
@@ -10220,6 +10221,7 @@ impl<'a> InstanceReboot<'a> {
         Self {
             client: client,
             instance: Err("instance was not initialized".to_string()),
+            force: Ok(None),
             project: Ok(None),
         }
     }
@@ -10231,6 +10233,17 @@ impl<'a> InstanceReboot<'a> {
         self.instance = value
             .try_into()
             .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+        self
+    }
+
+    pub fn force<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<bool>,
+    {
+        self.force = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `bool` for force failed".to_string());
         self
     }
 
@@ -10250,9 +10263,11 @@ impl<'a> InstanceReboot<'a> {
         let Self {
             client,
             instance,
+            force,
             project,
         } = self;
         let instance = instance.map_err(Error::InvalidRequest)?;
+        let force = force.map_err(Error::InvalidRequest)?;
         let project = project.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/instances/{}/reboot",
@@ -10272,6 +10287,7 @@ impl<'a> InstanceReboot<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
+            .query(&QueryParam::new("force", &force))
             .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
@@ -10829,6 +10845,7 @@ impl<'a> InstanceStart<'a> {
 pub struct InstanceStop<'a> {
     client: &'a super::Client,
     instance: Result<types::NameOrId, String>,
+    force: Result<Option<bool>, String>,
     project: Result<Option<types::NameOrId>, String>,
 }
 
@@ -10837,6 +10854,7 @@ impl<'a> InstanceStop<'a> {
         Self {
             client: client,
             instance: Err("instance was not initialized".to_string()),
+            force: Ok(None),
             project: Ok(None),
         }
     }
@@ -10848,6 +10866,17 @@ impl<'a> InstanceStop<'a> {
         self.instance = value
             .try_into()
             .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+        self
+    }
+
+    pub fn force<V>(mut self, value: V) -> Self
+    where
+        V: std::convert::TryInto<bool>,
+    {
+        self.force = value
+            .try_into()
+            .map(Some)
+            .map_err(|_| "conversion to `bool` for force failed".to_string());
         self
     }
 
@@ -10867,9 +10896,11 @@ impl<'a> InstanceStop<'a> {
         let Self {
             client,
             instance,
+            force,
             project,
         } = self;
         let instance = instance.map_err(Error::InvalidRequest)?;
+        let force = force.map_err(Error::InvalidRequest)?;
         let project = project.map_err(Error::InvalidRequest)?;
         let url = format!(
             "{}/v1/instances/{}/stop",
@@ -10889,6 +10920,7 @@ impl<'a> InstanceStop<'a> {
                 ::reqwest::header::ACCEPT,
                 ::reqwest::header::HeaderValue::from_static("application/json"),
             )
+            .query(&QueryParam::new("force", &force))
             .query(&QueryParam::new("project", &project))
             .headers(header_map)
             .build()?;
@@ -17690,6 +17722,58 @@ impl<'a> PhysicalDiskListUnadopted<'a> {
             })
             .try_flatten_stream()
             .boxed()
+    }
+}
+
+/// Builder for [`ClientExperimentalExt::expunge_precheck_view`]
+///
+/// [`ClientExperimentalExt::expunge_precheck_view`]: super::ClientExperimentalExt::expunge_precheck_view
+#[derive(Debug, Clone)]
+pub struct ExpungePrecheckView<'a> {
+    client: &'a super::Client,
+}
+
+impl<'a> ExpungePrecheckView<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self { client: client }
+    }
+
+    /// Sends a `GET` request to `/v1/system/hardware/expunge-precheck`
+    pub async fn send(self) -> Result<ResponseValue<types::ExpungePrecheck>, Error<types::Error>> {
+        let Self { client } = self;
+        let url = format!("{}/v1/system/hardware/expunge-precheck", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "expunge_precheck_view",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
     }
 }
 
@@ -33308,6 +33392,58 @@ impl<'a> UtilizationView<'a> {
             .build()?;
         let info = OperationInfo {
             operation_id: "utilization_view",
+        };
+        client.pre(&mut request, &info).await?;
+        let result = client.exec(request, &info).await;
+        client.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16..=499u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            500u16..=599u16 => Err(Error::ErrorResponse(
+                ResponseValue::from_response(response).await?,
+            )),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+}
+
+/// Builder for [`ClientSystemStatusExt::system_version`]
+///
+/// [`ClientSystemStatusExt::system_version`]: super::ClientSystemStatusExt::system_version
+#[derive(Debug, Clone)]
+pub struct SystemVersion<'a> {
+    client: &'a super::Client,
+}
+
+impl<'a> SystemVersion<'a> {
+    pub fn new(client: &'a super::Client) -> Self {
+        Self { client: client }
+    }
+
+    /// Sends a `GET` request to `/v1/version`
+    pub async fn send(self) -> Result<ResponseValue<types::SystemVersion>, Error<types::Error>> {
+        let Self { client } = self;
+        let url = format!("{}/v1/version", client.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = client
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "system_version",
         };
         client.pre(&mut request, &info).await?;
         let result = client.exec(request, &info).await;

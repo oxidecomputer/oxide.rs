@@ -44,6 +44,10 @@ pub(super) fn instance_create_network_interfaces() -> super::InstanceNetworkInte
     super::InstanceNetworkInterfaceAttachment::DefaultDualStack
 }
 
+pub(super) fn instance_create_shutdown_policy() -> super::InstanceShutdownPolicy {
+    super::InstanceShutdownPolicy::HardOff
+}
+
 pub(super) fn instance_network_interface_create_ip_config() -> super::PrivateIpStackCreate {
     super::PrivateIpStackCreate::DualStack {
         v4: super::PrivateIpv4StackCreate {

@@ -10,6 +10,7 @@ oxide vpc router route create
 oxide vpc router route update
 oxide alert receiver webhook create
 oxide disk create
+oxide instance update
 oxide system policy update
 oxide system hardware rack membership add
 oxide system networking address-lot create

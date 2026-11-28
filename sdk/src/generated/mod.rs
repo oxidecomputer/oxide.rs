@@ -53,7 +53,7 @@ pub mod prelude {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026111000.0.0
+/// Version: 2026112400.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -97,7 +97,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026111000.0.0"
+        "2026112400.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -1087,6 +1087,29 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_>;
+    /// Check whether expunging a working sled or physical disk will create
+    ///
+    /// a problem due to ongoing repairs
+    ///
+    /// The system is designed to survive a limited number of concurrent
+    /// failures. When a sled or physical disk is expunged, the system repairs
+    /// itself by re-replicating both control plane data and data on users'
+    /// distributed disks and by deploying replacement control plane components.
+    /// Each expunged component counts as one failure until these repairs
+    /// finish.  Before expunging a sled or disk that may currently be working,
+    /// operators can use this API to verify that the system is not still
+    /// recovering from previous expungements or repairs. Note that if a sled or
+    /// physical disk is already not working, expunging it will not make things
+    /// worse, so there's no need to use this API in that case.
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/expunge-precheck`
+    ///
+    /// ```ignore
+    /// let response = client.expunge_precheck_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn expunge_precheck_view(&self) -> builder::ExpungePrecheckView<'_>;
     /// Fetch rack cluster membership status
     ///
     /// Returns the status for the most recent change, or a specific version if
@@ -1244,6 +1267,10 @@ impl ClientExperimentalExt for Client {
 
     fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_> {
         builder::MulticastGroupMemberList::new(self)
+    }
+
+    fn expunge_precheck_view(&self) -> builder::ExpungePrecheckView<'_> {
+        builder::ExpungePrecheckView::new(self)
     }
 
     fn rack_membership_status(&self) -> builder::RackMembershipStatus<'_> {
@@ -1949,10 +1976,14 @@ pub trait ClientInstancesExt {
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
+    /// - `force`: Whether to override the instance's configured Shutdown
+    ///   Policy, if any, and hard-cut the power of the VM guest for this stop
+    ///   or reboot request.
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.instance_reboot()
     ///    .instance(instance)
+    ///    .force(force)
     ///    .project(project)
     ///    .send()
     ///    .await;
@@ -2056,10 +2087,14 @@ pub trait ClientInstancesExt {
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
+    /// - `force`: Whether to override the instance's configured Shutdown
+    ///   Policy, if any, and hard-cut the power of the VM guest for this stop
+    ///   or reboot request.
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.instance_stop()
     ///    .instance(instance)
+    ///    .force(force)
     ///    .project(project)
     ///    .send()
     ///    .await;
@@ -5863,11 +5898,30 @@ pub trait ClientSystemStatusExt {
     ///    .await;
     /// ```
     fn ping(&self) -> builder::Ping<'_>;
+    /// Fetch version information
+    ///
+    /// Returns the latest API version this system supports and the release
+    /// number of the system software serving the API. No authentication is
+    /// required, so this endpoint can be called before logging in to find the
+    /// right docs and CLI or SDK versions.
+    ///
+    /// Sends a `GET` request to `/v1/version`
+    ///
+    /// ```ignore
+    /// let response = client.system_version()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_version(&self) -> builder::SystemVersion<'_>;
 }
 
 impl ClientSystemStatusExt for Client {
     fn ping(&self) -> builder::Ping<'_> {
         builder::Ping::new(self)
+    }
+
+    fn system_version(&self) -> builder::SystemVersion<'_> {
+        builder::SystemVersion::new(self)
     }
 }
 

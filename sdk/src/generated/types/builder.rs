@@ -6985,6 +6985,107 @@ impl ::std::convert::From<super::DiskResultsPage> for DiskResultsPage {
 }
 
 #[derive(Clone, Debug)]
+pub struct DistributedStoragePrecheck {
+    expunged_disks_with_data: ::std::result::Result<u64, ::std::string::String>,
+    region_replacements_in_progress: ::std::result::Result<u64, ::std::string::String>,
+    region_snapshot_replacements_in_progress: ::std::result::Result<u64, ::std::string::String>,
+    risks: ::std::result::Result<::std::vec::Vec<::std::string::String>, ::std::string::String>,
+}
+
+impl ::std::default::Default for DistributedStoragePrecheck {
+    fn default() -> Self {
+        Self {
+            expunged_disks_with_data: Err(
+                "no value supplied for expunged_disks_with_data".to_string()
+            ),
+            region_replacements_in_progress: Err("no value supplied for \
+                                                  region_replacements_in_progress"
+                .to_string()),
+            region_snapshot_replacements_in_progress: Err(
+                "no value supplied for region_snapshot_replacements_in_progress".to_string(),
+            ),
+            risks: Err("no value supplied for risks".to_string()),
+        }
+    }
+}
+
+impl DistributedStoragePrecheck {
+    pub fn expunged_disks_with_data<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.expunged_disks_with_data = value.try_into().map_err(|e| {
+            format!("error converting supplied value for expunged_disks_with_data: {e}")
+        });
+        self
+    }
+
+    pub fn region_replacements_in_progress<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.region_replacements_in_progress = value.try_into().map_err(|e| {
+            format!("error converting supplied value for region_replacements_in_progress: {e}")
+        });
+        self
+    }
+
+    pub fn region_snapshot_replacements_in_progress<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<u64>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.region_snapshot_replacements_in_progress = value.try_into().map_err(|e| {
+            format!(
+                "error converting supplied value for region_snapshot_replacements_in_progress: {e}"
+            )
+        });
+        self
+    }
+
+    pub fn risks<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.risks = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for risks: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<DistributedStoragePrecheck> for super::DistributedStoragePrecheck {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: DistributedStoragePrecheck,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            expunged_disks_with_data: value.expunged_disks_with_data?,
+            region_replacements_in_progress: value.region_replacements_in_progress?,
+            region_snapshot_replacements_in_progress: value
+                .region_snapshot_replacements_in_progress?,
+            risks: value.risks?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::DistributedStoragePrecheck> for DistributedStoragePrecheck {
+    fn from(value: super::DistributedStoragePrecheck) -> Self {
+        Self {
+            expunged_disks_with_data: Ok(value.expunged_disks_with_data),
+            region_replacements_in_progress: Ok(value.region_replacements_in_progress),
+            region_snapshot_replacements_in_progress: Ok(
+                value.region_snapshot_replacements_in_progress
+            ),
+            risks: Ok(value.risks),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct Distributiondouble {
     bins: ::std::result::Result<::std::vec::Vec<f64>, ::std::string::String>,
     counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
@@ -7429,6 +7530,67 @@ impl ::std::convert::From<super::Error> for Error {
             error_code: Ok(value.error_code),
             message: Ok(value.message),
             request_id: Ok(value.request_id),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ExpungePrecheck {
+    distributed_storage:
+        ::std::result::Result<super::DistributedStoragePrecheck, ::std::string::String>,
+    ok: ::std::result::Result<bool, ::std::string::String>,
+}
+
+impl ::std::default::Default for ExpungePrecheck {
+    fn default() -> Self {
+        Self {
+            distributed_storage: Err("no value supplied for distributed_storage".to_string()),
+            ok: Err("no value supplied for ok".to_string()),
+        }
+    }
+}
+
+impl ExpungePrecheck {
+    pub fn distributed_storage<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::DistributedStoragePrecheck>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.distributed_storage = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for distributed_storage: {e}"));
+        self
+    }
+
+    pub fn ok<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<bool>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.ok = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for ok: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<ExpungePrecheck> for super::ExpungePrecheck {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: ExpungePrecheck,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            distributed_storage: value.distributed_storage?,
+            ok: value.ok?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::ExpungePrecheck> for ExpungePrecheck {
+    fn from(value: super::ExpungePrecheck) -> Self {
+        Self {
+            distributed_storage: Ok(value.distributed_storage),
+            ok: Ok(value.ok),
         }
     }
 }
@@ -11197,6 +11359,7 @@ pub struct Instance {
     ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
     project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
     run_state: ::std::result::Result<super::InstanceState, ::std::string::String>,
+    shutdown_policy: ::std::result::Result<super::InstanceShutdownPolicy, ::std::string::String>,
     time_created:
         ::std::result::Result<::chrono::DateTime<::chrono::offset::Utc>, ::std::string::String>,
     time_last_auto_restarted: ::std::result::Result<
@@ -11226,6 +11389,7 @@ impl ::std::default::Default for Instance {
             ncpus: Err("no value supplied for ncpus".to_string()),
             project_id: Err("no value supplied for project_id".to_string()),
             run_state: Err("no value supplied for run_state".to_string()),
+            shutdown_policy: Err("no value supplied for shutdown_policy".to_string()),
             time_created: Err("no value supplied for time_created".to_string()),
             time_last_auto_restarted: Ok(Default::default()),
             time_modified: Err("no value supplied for time_modified".to_string()),
@@ -11391,6 +11555,17 @@ impl Instance {
         self
     }
 
+    pub fn shutdown_policy<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::InstanceShutdownPolicy>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.shutdown_policy = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for shutdown_policy: {e}"));
+        self
+    }
+
     pub fn time_created<T>(mut self, value: T) -> Self
     where
         T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -11456,6 +11631,7 @@ impl ::std::convert::TryFrom<Instance> for super::Instance {
             ncpus: value.ncpus?,
             project_id: value.project_id?,
             run_state: value.run_state?,
+            shutdown_policy: value.shutdown_policy?,
             time_created: value.time_created?,
             time_last_auto_restarted: value.time_last_auto_restarted?,
             time_modified: value.time_modified?,
@@ -11481,6 +11657,7 @@ impl ::std::convert::From<super::Instance> for Instance {
             ncpus: Ok(value.ncpus),
             project_id: Ok(value.project_id),
             run_state: Ok(value.run_state),
+            shutdown_policy: Ok(value.shutdown_policy),
             time_created: Ok(value.time_created),
             time_last_auto_restarted: Ok(value.time_last_auto_restarted),
             time_modified: Ok(value.time_modified),
@@ -11523,6 +11700,7 @@ pub struct InstanceCreate {
     ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
     network_interfaces:
         ::std::result::Result<super::InstanceNetworkInterfaceAttachment, ::std::string::String>,
+    shutdown_policy: ::std::result::Result<super::InstanceShutdownPolicy, ::std::string::String>,
     ssh_public_keys: ::std::result::Result<
         ::std::option::Option<::std::vec::Vec<super::NameOrId>>,
         ::std::string::String,
@@ -11548,6 +11726,7 @@ impl ::std::default::Default for InstanceCreate {
             name: Err("no value supplied for name".to_string()),
             ncpus: Err("no value supplied for ncpus".to_string()),
             network_interfaces: Ok(super::defaults::instance_create_network_interfaces()),
+            shutdown_policy: Ok(super::defaults::instance_create_shutdown_policy()),
             ssh_public_keys: Ok(Default::default()),
             start: Ok(super::defaults::default_bool::<true>()),
             user_data: Ok(Default::default()),
@@ -11710,6 +11889,17 @@ impl InstanceCreate {
         self
     }
 
+    pub fn shutdown_policy<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::InstanceShutdownPolicy>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.shutdown_policy = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for shutdown_policy: {e}"));
+        self
+    }
+
     pub fn ssh_public_keys<T>(mut self, value: T) -> Self
     where
         T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::NameOrId>>>,
@@ -11764,6 +11954,7 @@ impl ::std::convert::TryFrom<InstanceCreate> for super::InstanceCreate {
             name: value.name?,
             ncpus: value.ncpus?,
             network_interfaces: value.network_interfaces?,
+            shutdown_policy: value.shutdown_policy?,
             ssh_public_keys: value.ssh_public_keys?,
             start: value.start?,
             user_data: value.user_data?,
@@ -11788,6 +11979,7 @@ impl ::std::convert::From<super::InstanceCreate> for InstanceCreate {
             name: Ok(value.name),
             ncpus: Ok(value.ncpus),
             network_interfaces: Ok(value.network_interfaces),
+            shutdown_policy: Ok(value.shutdown_policy),
             ssh_public_keys: Ok(value.ssh_public_keys),
             start: Ok(value.start),
             user_data: Ok(value.user_data),
@@ -12467,6 +12659,10 @@ pub struct InstanceUpdate {
         ::std::string::String,
     >,
     ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
+    shutdown_policy: ::std::result::Result<
+        ::std::option::Option<super::InstanceShutdownPolicy>,
+        ::std::string::String,
+    >,
 }
 
 impl ::std::default::Default for InstanceUpdate {
@@ -12479,6 +12675,7 @@ impl ::std::default::Default for InstanceUpdate {
             memory: Err("no value supplied for memory".to_string()),
             multicast_groups: Ok(Default::default()),
             ncpus: Err("no value supplied for ncpus".to_string()),
+            shutdown_policy: Err("no value supplied for shutdown_policy".to_string()),
         }
     }
 }
@@ -12562,6 +12759,17 @@ impl InstanceUpdate {
             .map_err(|e| format!("error converting supplied value for ncpus: {e}"));
         self
     }
+
+    pub fn shutdown_policy<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::option::Option<super::InstanceShutdownPolicy>>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.shutdown_policy = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for shutdown_policy: {e}"));
+        self
+    }
 }
 
 impl ::std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
@@ -12577,6 +12785,7 @@ impl ::std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
             memory: value.memory?,
             multicast_groups: value.multicast_groups?,
             ncpus: value.ncpus?,
+            shutdown_policy: value.shutdown_policy?,
         })
     }
 }
@@ -12591,6 +12800,7 @@ impl ::std::convert::From<super::InstanceUpdate> for InstanceUpdate {
             memory: Ok(value.memory),
             multicast_groups: Ok(value.multicast_groups),
             ncpus: Ok(value.ncpus),
+            shutdown_policy: Ok(value.shutdown_policy),
         }
     }
 }
@@ -26375,6 +26585,66 @@ impl ::std::convert::From<super::SystemNetworkingSettingsUpdate>
     fn from(value: super::SystemNetworkingSettingsUpdate) -> Self {
         Self {
             external_jumbo_frames_opt_in_enabled: Ok(value.external_jumbo_frames_opt_in_enabled),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct SystemVersion {
+    api_version: ::std::result::Result<super::SystemVersionApiVersion, ::std::string::String>,
+    system_version: ::std::result::Result<::std::string::String, ::std::string::String>,
+}
+
+impl ::std::default::Default for SystemVersion {
+    fn default() -> Self {
+        Self {
+            api_version: Err("no value supplied for api_version".to_string()),
+            system_version: Err("no value supplied for system_version".to_string()),
+        }
+    }
+}
+
+impl SystemVersion {
+    pub fn api_version<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<super::SystemVersionApiVersion>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.api_version = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for api_version: {e}"));
+        self
+    }
+
+    pub fn system_version<T>(mut self, value: T) -> Self
+    where
+        T: ::std::convert::TryInto<::std::string::String>,
+        T::Error: ::std::fmt::Display,
+    {
+        self.system_version = value
+            .try_into()
+            .map_err(|e| format!("error converting supplied value for system_version: {e}"));
+        self
+    }
+}
+
+impl ::std::convert::TryFrom<SystemVersion> for super::SystemVersion {
+    type Error = super::error::ConversionError;
+    fn try_from(
+        value: SystemVersion,
+    ) -> ::std::result::Result<Self, super::error::ConversionError> {
+        Ok(Self {
+            api_version: value.api_version?,
+            system_version: value.system_version?,
+        })
+    }
+}
+
+impl ::std::convert::From<super::SystemVersion> for SystemVersion {
+    fn from(value: super::SystemVersion) -> Self {
+        Self {
+            api_version: Ok(value.api_version),
+            system_version: Ok(value.system_version),
         }
     }
 }
